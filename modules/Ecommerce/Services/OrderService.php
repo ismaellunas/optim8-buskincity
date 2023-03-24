@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
-use Modules\Booking\Entities\Scopes\WithBookingCityScope;
 use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
@@ -447,21 +446,6 @@ class OrderService
         if (! is_null($noneLabel)) {
             $options->prepend(['id' => null, 'value' => $noneLabel]);
         }
-
-        return $options;
-    }
-
-    public function cityOptions(
-        User $user,
-        ?array $scopes = null
-    ): Collection {
-        $options = $this
-            ->conditionsBuilder($user, null, $scopes)
-            ->scoped(new WithBookingCityScope())
-            ->distinct()
-            ->get()
-            ->pluck('city')
-            ->filter();
 
         return $options;
     }
