@@ -15,7 +15,7 @@ use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Socialite\Contracts\User as ProviderUser;
+use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
 class CreateUserFromProvider implements CreatesUserFromProvider
 {
@@ -43,7 +43,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
      * @param  \Laravel\Socialite\Contracts\User  $providerUser
      * @return \App\Models\User
      */
-    public function create(string $provider, ProviderUser $providerUser)
+    public function create(string $provider, ProviderUserContract $providerUser): mixed
     {
         return DB::transaction(function () use ($provider, $providerUser) {
             $name = UserService::splitName($providerUser->getName() ?? $providerUser->getNickname());
