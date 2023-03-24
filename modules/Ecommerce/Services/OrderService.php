@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Services;
 
+use App\Models\Country;
 use App\Models\User;
 use App\Services\CountryService;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\Scopes\WithBookingCityScope;
+use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Services\ProductEventService;
@@ -71,7 +73,7 @@ class OrderService
                                     $query->$scopeName($value);
                                 }
                             );
-                        } elseif ($scopeName == 'city') {
+                        } elseif ($scopeName == 'city' || $scopeName == 'country') {
                             $query->whereHas(
                                 'firstEventLine.purchasable.product',
                                 function (Builder $query) use ($scopeName, $value) {
@@ -221,7 +223,7 @@ class OrderService
             return (object) [
                 'id' => $record->id,
                 'product_name' => $product->displayName,
-                'city' => $product->locations[0]['city'] ?? null,
+                'location' => $product->location,
                 'customer_name' => $record->user->fullName ?? null,
                 'status' => Str::title($record->booking_status),
                 'start_end_time' => $event->displayStartEndTime,
@@ -463,6 +465,7 @@ class OrderService
 
         return $options;
     }
+
     public function getLocationOptions(
         User $user,
         ?array $scopes = null
@@ -505,4 +508,5 @@ class OrderService
                     ->all(),
             ];
         })->all();
+    }
 }
