@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
 use App\Models\User;
+use App\Services\CountryService;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
@@ -104,7 +105,15 @@ class Product extends GetCandyProduct
     {
         return $query->whereHas('metas', function ($q) use ($city) {
             $q->where('key', 'locations');
-            $q->where(DB::raw("value::json->0->>'city'"), "ILIKE", "%{$city}%");
+            $q->where(DB::raw("value::json->0->>'city'"), "ILIKE", $city);
+        });
+    }
+
+    public function scopeCountry($query, ?string $country = null)
+    {
+        return $query->whereHas('metas', function ($q) use ($country) {
+            $q->where('key', 'locations');
+            $q->where(DB::raw("value::json->0->>'country_code'"), "ILIKE", $country);
         });
     }
 
@@ -171,5 +180,21 @@ class Product extends GetCandyProduct
     public function detachGallery(?int $mediaId = null): void
     {
         $this->gallery()->detach($mediaId);
+    }
+
+    public function getLocationAttribute()
+    {
+        $city = $this->locations[0]['city'] ?? null;
+        $countryCode = $this->locations[0]['country_code'] ?? null;
+
+        if ($countryCode) {
+            $countryName = app(CountryService::class)->getCountryName($countryCode);
+
+            return $countryName
+                ? $countryName . ($city ? ', ' . $city : null)
+                : null;
+        }
+
+        return null;
     }
 }
