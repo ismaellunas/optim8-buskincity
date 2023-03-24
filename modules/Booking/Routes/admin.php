@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'middleware' => [
+    'middleware' => array_filter([
         'auth:sanctum',
         'verified',
         'can:system.dashboard',
-        'ensureLoginFromAdminLoginRoute',
-    ],
+        env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+    ]),
 ], function () {
     Route::prefix('booking')->name('booking.')->group(function() {
         Route::middleware('role:'.config('permission.admin_or_super_admin'))->group(function () {

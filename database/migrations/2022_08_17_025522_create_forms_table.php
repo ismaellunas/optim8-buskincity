@@ -39,7 +39,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('field_groups', function (Blueprint $table) {
-            $table->dropForeign('form_id');
+            $table->dropForeign(['form_id']);
             $table->dropColumn('form_id');
         });
 

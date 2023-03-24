@@ -37,7 +37,10 @@
                     v-model="activeTab"
                     class="is-boxed"
                 >
-                    <biz-provide-inject-tab title="Details">
+                    <biz-provide-inject-tab
+                        tab-id="details-tab"
+                        title="Details"
+                    >
                         <form-detail
                             v-model:title="form.title"
                             v-model:slug="form.slug"
@@ -52,6 +55,7 @@
                         />
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
+                        tab-id="builder-tab"
                         title="Builder"
                         :is-rendered="isPageBuilderRendered"
                     >
@@ -63,6 +67,7 @@
                         />
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
+                        tab-id="settings-tab"
                         title="Settings"
                         :is-rendered="isPageSettingRendered"
                     >

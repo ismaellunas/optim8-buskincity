@@ -6,7 +6,10 @@
                     v-model="activeTab"
                     class="is-boxed"
                 >
-                    <biz-provide-inject-tab title="Users">
+                    <biz-provide-inject-tab
+                        tab-id="user-list-tab-trigger"
+                        title="Users"
+                    >
                         <user-list
                             :page-query-params="pageQueryParams"
                             :records="records"
@@ -15,6 +18,7 @@
 
                     <biz-provide-inject-tab
                         v-if="can.manageTrashed"
+                        tab-id="delete-user-tab-trigger"
                         title="Deleted Users"
                     >
                         <user-list-deleted />

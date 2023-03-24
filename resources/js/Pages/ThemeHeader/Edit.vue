@@ -7,6 +7,7 @@
                 <ul>
                     <biz-tab-list
                         v-for="(tab, index) in tabs"
+                        :id="tab.id"
                         :key="index"
                         :is-active="isTabActive(index)"
                     >
@@ -93,8 +94,8 @@
         setup() {
             return {
                 tabs: {
-                    layout: {title: 'Layout'},
-                    navigation: {title: 'Navigation'},
+                    layout: {title: 'Layout', id: 'layout-tab-trigger' },
+                    navigation: {title: 'Navigation', id: 'navigation-tab-trigger' },
                 },
             }
         },
