@@ -25,6 +25,9 @@ class Space extends BaseModel implements TranslatableContract
     use NodeTrait;
     use Translatable;
 
+    const TYPE_LOGO = 'logo';
+    const TYPE_COVER = 'cover';
+
     public $translatedAttributes = [
         'condition',
         'description',
@@ -67,14 +70,24 @@ class Space extends BaseModel implements TranslatableContract
         return $this->belongsTo(GlobalOption::class, 'type_id');
     }
 
-    public function logo()
+    public function logoMedia()
     {
-        return $this->hasOne(Media::class, 'id', 'logo_media_id');
+        return $this->media()->wherePivot('type', self::TYPE_LOGO);
     }
 
-    public function cover()
+    public function getLogoAttribute(): ?Media
     {
-        return $this->hasOne(Media::class, 'id', 'cover_media_id');
+        return $this->logoMedia->first() ?? null;
+    }
+
+    public function coverMedia()
+    {
+        return $this->media()->wherePivot('type', self::TYPE_COVER);
+    }
+
+    public function getCoverAttribute(): ?Media
+    {
+        return $this->coverMedia->first() ?? null;
     }
 
     public function events()
@@ -194,11 +207,9 @@ class Space extends BaseModel implements TranslatableContract
         ?int $width = null,
         ?int $height = null
     ): ?string {
-        if ($this->cover) {
-            return $this->cover->getOptimizedImageUrl($width, $height);
-        }
-
-        return null;
+        return $this->cover
+            ? $this->cover->getOptimizedImageUrl($width, $height)
+            : null;
     }
 
     public function getOptimizedLogoImageUrl(

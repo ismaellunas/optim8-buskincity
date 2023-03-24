@@ -22,8 +22,7 @@ use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
-use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
-use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
+use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
@@ -98,13 +97,13 @@ class ProductController extends CrudController
             'roleOptions' => $this->productService->roleOptions(),
             'imageMimes' => config('constants.extensions.image'),
             'rules' => [
-                'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
             ],
+            'instructions' => $this->getInstructions(),
         ]));
     }
 
-    public function store(ProductCreateRequest $request)
+    public function store(ProductRequest $request)
     {
         $productType = ProductType::where('name', 'Event')->first();
 
@@ -155,17 +154,10 @@ class ProductController extends CrudController
             'schedulable_id' => $product->id,
         ])->create();
 
-        $files = $inputs['gallery']['files'] ?? [];
+        $mediaIds = $inputs['gallery'] ?? [];
 
-        $media = [];
-
-        if (! empty($files)) {
-            foreach ($files as $file) {
-                $media[] = $this->productService->upload(
-                    $product,
-                    $file,
-                );
-            }
+        if (! empty($mediaIds)) {
+            $product->syncMedia($mediaIds);
         }
 
         $this->generateFlashMessage('Successfully updating '.$this->title.'!');
@@ -219,10 +211,11 @@ class ProductController extends CrudController
                     'edit' => $canManageManager,
                 ]
             ],
+            'instructions' => $this->getInstructions(),
         ]));
     }
 
-    public function update(ProductUpdateRequest $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
         $inputs = $request->all();
 
@@ -247,25 +240,10 @@ class ProductController extends CrudController
 
         $product->save();
 
-        $files = $inputs['gallery']['files'] ?? [];
+        $mediaIds = $inputs['gallery'] ?? [];
 
-        $media = [];
-
-        if (! empty($files)) {
-            foreach ($files as $file) {
-                $media[] = $this->productService->upload(
-                    $product,
-                    $file,
-                );
-            }
-        }
-
-        $mediaIds = $inputs['gallery']['deleted_media'] ?? [];
-
-        $deletedMedia = Media::whereIn('id', $mediaIds)->get();
-
-        foreach ($deletedMedia as $medium) {
-            $product->detachGallery($medium->id);
+        if (! empty($mediaIds)) {
+            $product->syncMedia($mediaIds);
         }
 
         $this->generateFlashMessage('Successfully updating '.$this->title.'!');
@@ -288,5 +266,12 @@ class ProductController extends CrudController
             ? $this->baseRouteName.'.index'
             : 'admin.dashboard'
         );
+    }
+
+    private function getInstructions(): array
+    {
+        return [
+            'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+        ];
     }
 }

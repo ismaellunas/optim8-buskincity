@@ -2,7 +2,9 @@
 
 use GetCandy\Base\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class CreateProductTypesTable extends Migration
 {
@@ -27,6 +29,10 @@ class CreateProductTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->prefix.'product_types');
+        if (! Str::startsWith(config('database.default'), 'pgsql')) {
+            Schema::dropIfExists($this->prefix.'product_types');
+        } else {
+            DB::statement("DROP TABLE IF EXISTS ".$this->prefix."product_types CASCADE");
+        }
     }
 }
