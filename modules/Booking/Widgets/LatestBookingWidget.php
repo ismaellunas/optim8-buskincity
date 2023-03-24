@@ -28,14 +28,14 @@ class LatestBookingWidget implements WidgetInterface
             'moduleName' => config('booking.name'),
             'data' => [
                 'baseRouteName' => $this->baseRouteName,
-                'cityOptions' => $orderService->cityOptions(
-                    $this->user,
-                    null
-                ),
                 'statusOptions' => $orderService->statusOptions(
                     $this->user,
                     null,
                     __('Status')
+                ),
+                'locationOptions' => $orderService->getLocationOptions(
+                    $this->user,
+                    null
                 ),
             ],
             'order' => 1,

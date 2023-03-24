@@ -34,31 +34,20 @@
                         </div>
 
                         <div class="control">
-                            <biz-dropdown-search
-                                is-small
-                                :close-on-click="true"
-                                @search="searchCity($event)"
+                            <biz-select
+                                v-model="search.location"
+                                class="is-small"
+                                placeholder="Any"
+                                @change="getRecords()"
                             >
-                                <template #trigger>
-                                    <span>
-                                        {{ search.city ?? 'Any' }}
-                                    </span>
-                                </template>
-
-                                <biz-dropdown-item
-                                    @click="onCityChange()"
+                                <option
+                                    v-for="location in computedLocationOptions"
+                                    :key="location.id"
+                                    :value="location.id"
                                 >
-                                    Any
-                                </biz-dropdown-item>
-
-                                <biz-dropdown-item
-                                    v-for="(option, index) in filteredCities"
-                                    :key="index"
-                                    @click="onCityChange(option)"
-                                >
-                                    {{ option }}
-                                </biz-dropdown-item>
-                            </biz-dropdown-search>
+                                    {{ location.value }}
+                                </option>
+                            </biz-select>
                         </div>
 
                         <div class="control">
@@ -97,7 +86,7 @@
                                     <th>User</th>
                                     <th>Date</th>
                                     <th>Time</th>
-                                    <th>City</th>
+                                    <th>Location</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -127,7 +116,7 @@
                                         <td>{{ record.customer_name }}</td>
                                         <td>{{ record.date }}</td>
                                         <td>{{ record.start_end_time }}</td>
-                                        <td>{{ record.city ?? '-' }}</td>
+                                        <td>{{ record.location ?? '-' }}</td>
                                         <td>
                                             <biz-button-link
                                                 v-if="record.can.read"
@@ -168,8 +157,6 @@
 
 <script>
     import BizButtonLink from '@/Biz/ButtonLink.vue';
-    import BizDropdownItem from '@/Biz/DropdownItem.vue';
-    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
     import BizInput from '@/Biz/Input.vue';
     import BizLoader from '@/Biz/Loader.vue';
@@ -178,7 +165,7 @@
     import BizSelect from '@/Biz/Select.vue';
     import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
-    import { debounce, isEmpty, filter } from 'lodash';
+    import { debounce, each } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
 
     export default {
@@ -186,8 +173,6 @@
 
         components: {
             BizButtonLink,
-            BizDropdownItem,
-            BizDropdownSearch,
             BizFilterDateRange,
             BizInput,
             BizLoader,
@@ -210,13 +195,11 @@
                 search: {
                     term: null,
                     status: null,
-                    city: null,
-                    cityTerm: null,
+                    location: null,
                 },
-                filteredCities: this.data.cityOptions.slice(0, 10),
                 dates: [],
-                cityOptions: this.data.cityOptions ?? [],
                 statusOptions: this.data.statusOptions ?? [],
+                locationOptions: this.data.locationOptions ?? [],
             };
         },
 
@@ -227,6 +210,44 @@
 
             totalStatusSelected() {
                 return this.search.statuses.length;
+            },
+
+            computedLocationOptions() {
+                const options = [];
+
+                each(this.locationOptions, (location, key) => {
+                    options.push({
+                        id: key,
+                        value: location.country,
+                    });
+
+                    each(location.cities, (city) => {
+                        options.push({
+                            id: key +'-'+ city,
+                            value: ' - '+ city,
+                        });
+                    });
+                });
+
+                return options;
+            },
+
+            locationParts() {
+                const countryCity = {
+                    country: null,
+                    city: null,
+                };
+
+                if (!this.search.location) {
+                    return countryCity;
+                }
+
+                const locationParts = this.search.location.split('-');
+
+                return {
+                    country: locationParts[0],
+                    city: locationParts[1],
+                };
             },
         },
 
@@ -246,7 +267,8 @@
                         params: {
                             term: self.search.term,
                             status: self.search.status,
-                            city: self.search.city,
+                            country: self.locationParts.country,
+                            city: self.locationParts.city,
                             dates: self.dates.filter(Boolean),
                         },
                     }
@@ -254,11 +276,10 @@
                     .then((response) => {
                         self.records = response.data.records;
                         self.statusOptions = response.data.options.status;
-                        self.cityOptions = response.data.options.city;
+                        self.locationOptions = response.data.options.location;
                     })
                     .then(() => {
                         self.isLoading = false;
-                        self.filteredCities = self.filterCities();
                     });
             },
 
@@ -267,29 +288,6 @@
                     this.getRecords();
                 }
             }, debounceTime),
-
-            filterCities() {
-                const self = this;
-
-                if (!isEmpty(this.search.cityTerm) && this.search.cityTerm.length > 1) {
-                    return filter(this.cityOptions, function (city) {
-                        return new RegExp(self.search.cityTerm, 'i').test(city);
-                    }).slice(0, 10);
-                } else {
-                    return this.cityOptions.slice(0, 10);
-                }
-            },
-
-            searchCity: debounce(function(term) {
-                this.search.cityTerm = term;
-                this.filteredCities = this.filterCities();
-            }, debounceTime),
-
-            onCityChange(city = null) {
-                this.search.city = city;
-
-                this.getRecords();
-            },
         }
     }
 </script>
