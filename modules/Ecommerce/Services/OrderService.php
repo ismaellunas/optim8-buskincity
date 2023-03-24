@@ -432,10 +432,14 @@ class OrderService
     public function statusOptions(
         User $user,
         ?array $scopes = null,
-        ?string $noneLabel = null
+        ?string $noneLabel = null,
+        bool $isRelatedUser = false,
     ): Collection {
         $statuses = $this
             ->conditionsBuilder($user, null, $scopes)
+            ->when($isRelatedUser, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
             ->scoped(new WithBookingStatusScope())
             ->distinct()
             ->get();
@@ -452,10 +456,14 @@ class OrderService
 
     public function getLocationOptions(
         User $user,
-        ?array $scopes = null
+        ?array $scopes = null,
+        bool $isRelatedUser = false,
     ): Array {
         $locations = $this
             ->conditionsBuilder($user, null, $scopes)
+            ->when($isRelatedUser, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
             ->scoped(new WithBookingLocationScope())
             ->get()
             ->map(function ($order) {

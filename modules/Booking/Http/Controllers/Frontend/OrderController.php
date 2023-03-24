@@ -74,11 +74,13 @@ class OrderController extends CrudController
             'locationOptions' => $this->orderService->getLocationOptions(
                 auth()->user(),
                 $scopes->except('city', 'country')->all(),
+                true
             ),
             'statusOptions' => $this->orderService->statusOptions(
                 $user,
                 $scopes->only('city')->all(),
-                __('Status')
+                __('Status'),
+                true
             ),
         ]));
     }
