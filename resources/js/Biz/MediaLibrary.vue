@@ -44,6 +44,7 @@
                     <div class="column">
                         <biz-filter-search
                             v-model="term"
+                            :placeholder="i18n.search"
                             @search="search"
                         />
                     </div>
@@ -56,7 +57,7 @@
                             :close-on-click="false"
                         >
                             <template #trigger>
-                                <span>Filter</span>
+                                <span>{{ i18n.filter }}</span>
                                 <span
                                     v-if="types.length > 0"
                                     class="ml-1"
@@ -141,7 +142,7 @@
         >
             <template #header>
                 <p class="modal-card-title">
-                    Media Detail
+                    {{ i18n.media_detail }}
                 </p>
                 <biz-button
                     aria-label="close"
@@ -183,7 +184,7 @@
                                 class="is-link"
                                 @click="onSubmit()"
                             >
-                                Submit
+                                {{ i18n.save }}
                             </biz-button>
 
                             <biz-button
@@ -191,7 +192,7 @@
                                 type="button"
                                 @click="closeEditModal"
                             >
-                                Cancel
+                                {{ i18n.cancel }}
                             </biz-button>
                         </div>
                     </div>
@@ -271,6 +272,21 @@
             MixinHasModal,
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    search : 'Search',
+                    filter : 'Filter',
+                    media_detail : 'Media Detail',
+                    save : 'Save',
+                    cancel : 'Cancel',
+                    are_you_sure : 'Are you sure you want to delete this resource?',
+                    delete_resource : 'Delete Resource',
+                    warning_delete_resource : 'This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.',
+                })
+            },
+        },
 
         props: {
             acceptedTypes: {type: Array, default: acceptedFileTypes},
@@ -400,8 +416,8 @@
 
                 if (!record.canDeleted) {
                     confirmAlert(
-                        'Delete Media?',
-                        'This media is still being used in another place. If you delete this media, it may have an effect on that other place.',
+                        self.i18n.delete_resource,
+                        self.i18n.warning_delete_resource,
                         'Yes',
                         {
                             icon: 'warning'
@@ -419,7 +435,7 @@
             deleteRecord(record) {
                 const self = this;
 
-                confirmDelete('Are you sure?').then((result) => {
+                confirmDelete(self.i18n.are_you_sure).then((result) => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', {id: record.id}),
@@ -552,7 +568,7 @@
             onDeleteEdit(index) {
                 const self = this;
 
-                confirmDelete().then((result) => {
+                confirmDelete(self.i18n.delete_resource).then((result) => {
                     if (result.isConfirmed) {
                         self.formMedia.splice(index, 1);
 

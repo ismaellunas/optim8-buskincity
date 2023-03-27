@@ -4,13 +4,13 @@
             <thead>
                 <tr>
                     <th />
-                    <th>File Name</th>
-                    <th>Date Modified</th>
-                    <th>Type</th>
-                    <th>Size</th>
+                    <th>{{ i18n.file_name }}</th>
+                    <th>{{ i18n.date_modified }}</th>
+                    <th>{{ i18n.type }}</th>
+                    <th>{{ i18n.size }}</th>
                     <th>
                         <div class="level-right">
-                            Actions
+                            {{ i18n.actions }}
                         </div>
                     </th>
                 </tr>
@@ -75,6 +75,18 @@
         mixins: [
             HasModalMixin,
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    file_name : 'File Name',
+                    date_modified : 'Date Modified',
+                    type : 'Type',
+                    size : 'Size',
+                    actions : 'Actions',
+                })
+            },
+        },
 
         props: {
             isDeleteEnabled: { type: Boolean, default: true },
