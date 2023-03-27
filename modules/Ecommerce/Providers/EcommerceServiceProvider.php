@@ -4,9 +4,10 @@ namespace Modules\Ecommerce\Providers;
 
 use App\Models\User;
 use App\Services\MediaService;
-use GetCandy\Base\OrderReferenceGenerator;
-use GetCandy\Base\OrderReferenceGeneratorInterface;
+use Lunar\Base\OrderReferenceGenerator;
+use Lunar\Base\OrderReferenceGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
+use Modules\Ecommerce\Console\UpgradingLunarRemoveGetCandyTables;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
@@ -38,6 +39,10 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        $this->commands([
+            UpgradingLunarRemoveGetCandyTables::class,
+        ]);
 
         User::resolveRelationUsing('products', function ($userModel) {
             return $userModel->belongsToMany(Product::class, 'product_user');
