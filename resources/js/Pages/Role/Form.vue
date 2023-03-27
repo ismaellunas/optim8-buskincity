@@ -2,7 +2,8 @@
     <div>
         <biz-form-input
             v-model="form.name"
-            label="Role Name"
+            label="Name"
+            name="name"
             required
             maxlength="255"
             :message="error('name')"

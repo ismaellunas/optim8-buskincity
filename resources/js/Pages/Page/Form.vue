@@ -40,6 +40,7 @@
                     class="is-boxed"
                 >
                     <biz-provide-inject-tab
+                        tab-id="details-tab"
                         :title="i18n.details"
                     >
                         <form-detail
@@ -56,6 +57,7 @@
                         />
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
+                        tab-id="builder-tab"
                         :title="i18n.builder"
                         :is-rendered="isPageBuilderRendered"
                     >
@@ -67,6 +69,7 @@
                         />
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
+                        tab-id="settings-tab"
                         :title="i18n.settings"
                         :is-rendered="isPageSettingRendered"
                     >

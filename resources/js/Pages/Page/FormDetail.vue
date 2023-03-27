@@ -4,6 +4,7 @@
             <div class="column is-4">
                 <biz-form-input
                     v-model="computedTitle"
+                    name="title"
                     :label="i18n.title"
                     placeholder="e.g A Good News"
                     required
@@ -16,6 +17,7 @@
             <div class="column is-4">
                 <biz-form-slug
                     v-model="computedSlug"
+                    name="slug"
                     :label="i18n.slug"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.slug')"
@@ -25,6 +27,7 @@
                 <biz-form-select
                     v-model="computedStatus"
                     class="is-fullwidth"
+                    name="status"
                     :label="i18n.status"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.status')"

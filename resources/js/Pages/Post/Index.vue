@@ -94,6 +94,7 @@
                     <ul>
                         <biz-tab-list
                             v-for="tab, index in tabs"
+                            :id="tab.id"
                             :key="index"
                             :is-active="isTabActive(index)"
                         >
@@ -236,9 +237,9 @@
                 term: ref(props.pageQueryParams?.term ?? null),
                 view: ref(props.pageQueryParams?.view ?? 'gallery'),
                 tabs: {
-                    published: { title: props.i18n.published },
-                    scheduled: { title: props.i18n.scheduled },
-                    draft: { title: props.i18n.draft },
+                    published: { title: props.i18n.published, id: 'published-tab-trigger' },
+                    scheduled: { title: props.i18n.scheduled, id: 'scheduled-tab-trigger' },
+                    draft: { title: props.i18n.draft, id: 'draft-tab-trigger' },
                 },
             };
         },

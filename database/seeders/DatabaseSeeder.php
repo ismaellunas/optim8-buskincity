@@ -29,7 +29,9 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             PostSeeder::class,
             MenuSeeder::class,
+            MenuItemSeeder::class,
             StripeSeeder::class,
+            StripeSettingSeeder::class,
             DashboardWidgetSeeder::class,
         ]);
 

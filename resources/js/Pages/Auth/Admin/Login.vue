@@ -26,6 +26,7 @@
                         v-model="form.email"
                         label="Email"
                         type="email"
+                        name="email"
                         placeholder="Enter your email"
                         required
                         autofocus
@@ -35,6 +36,7 @@
                         v-model="form.password"
                         autocomplete="current-password"
                         label="Password"
+                        name="password"
                         placeholder="Enter your password"
                         :required="true"
                     />

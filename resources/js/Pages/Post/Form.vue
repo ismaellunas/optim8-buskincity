@@ -14,6 +14,7 @@
                         <ul>
                             <biz-tab-list
                                 v-for="(tab, index) in tabs"
+                                :id="tab.id"
                                 :key="index"
                                 :is-active="isTabActive(index)"
                             >
@@ -27,9 +28,10 @@
                     <div v-show="isTabActive('content')">
                         <biz-form-input
                             v-model="form.title"
+                            name="title"
+                            placeholder="e.g A Good News"
                             :label="i18n.title"
                             :message="error('title')"
-                            placeholder="e.g A Good News"
                             required
                             @on-blur="populateSlug"
                             @on-keypress="keyPressTitle"
@@ -37,6 +39,7 @@
 
                         <biz-form-slug
                             v-model="form.slug"
+                            name="slug"
                             :label="i18n.slug"
                             :message="error('slug')"
                             :disabled="isInputDisabled"
@@ -398,8 +401,8 @@
                 editorConfig,
                 form: useModelWrapper(props, emit),
                 tabs: {
-                    content: { title: "Content"},
-                    seo: { title: "SEO"},
+                    content: { title: "Content", id: 'content-tab-trigger' },
+                    seo: { title: "SEO", id: 'seo-tab-trigger' },
                 },
             };
         },

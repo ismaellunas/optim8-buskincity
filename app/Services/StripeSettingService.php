@@ -3,12 +3,9 @@
 namespace App\Services;
 
 use App\Entities\Caches\SettingCache;
-use App\Entities\CloudinaryStorage;
 use App\Models\Media;
 use App\Models\Setting;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Illuminate\Http\UploadedFile;
 
 class StripeSettingService
 {

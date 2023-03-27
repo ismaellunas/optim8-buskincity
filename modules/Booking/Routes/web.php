@@ -21,12 +21,12 @@ use Modules\Booking\Http\Controllers\ProductEventController;
 |
 */
 
-Route::prefix('admin/booking')->name('admin.booking.')->middleware([
+Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter([
     'auth:sanctum',
     'verified',
     'can:system.dashboard',
-    'ensureLoginFromAdminLoginRoute',
-])->group(function () {
+    env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+]))->group(function () {
 
     Route::resource('products', ProductController::class)
         ->except(['show']);
@@ -59,11 +59,11 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware([
         ->can('rescheduleBooking', 'order');
 });
 
-Route::prefix('booking')->name('booking.')->middleware([
+Route::prefix('booking')->name('booking.')->middleware(array_filter([
     'auth:sanctum',
     'verified',
-    'ensureLoginFromLoginRoute',
-])->group(function () {
+    env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromLoginRoute' : null,
+]))->group(function () {
 
     Route::prefix('products')->name('products.')->group(function () {
 

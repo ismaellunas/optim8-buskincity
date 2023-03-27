@@ -12,7 +12,7 @@ use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\OrderLineType;
 
-class WithBookingCityScope implements Scope
+class WithBookingLocationScope implements Scope
 {
     private $orderTable;
     private $orderLineTable;
@@ -20,7 +20,7 @@ class WithBookingCityScope implements Scope
     private $productVariantTable;
 
     public function __construct(
-        public string $columnName = 'city',
+        public string $columnName = 'location',
         public bool $isSelectAll = false,
     ) {
         $this->orderTable = (new Order())->getTable();
@@ -40,7 +40,7 @@ class WithBookingCityScope implements Scope
     {
         $builder->addSubSelect($this->columnName, function ($builder) {
             return $builder
-                ->select(DB::raw("value::json->0->>'city'"))
+                ->select(DB::raw("value::json->0"))
                 ->from($this->productMetaTable)
                 ->join($this->productVariantTable,
                     $this->productMetaTable.'.product_id', '=', $this->productVariantTable.'.product_id'
