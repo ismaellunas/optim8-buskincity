@@ -15,7 +15,7 @@ use App\Services\{
     UserService,
 };
 use Carbon\Carbon;
-use GetCandy\Base\Traits\GetCandyUser;
+use Lunar\Base\Traits\LunarUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
@@ -35,7 +34,7 @@ use App\Traits\HasMacros;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use GetCandyUser;
+    use LunarUser;
     use HasApiTokens;
     use HasConnectedAccounts;
     use HasFactory;

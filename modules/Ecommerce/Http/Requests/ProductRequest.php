@@ -31,7 +31,7 @@ class ProductRequest extends FormRequest
             ],
             'roles' => [
                 'nullable',
-                Rule::in(app(ProductService::class)->roleOptions()->pluck('id'))
+                Rule::in(app(ProductService::class)->roleOptions()->pluck('id')->filter())
             ],
             'is_check_in_required' => [
                 'required',

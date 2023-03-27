@@ -3,7 +3,7 @@
 namespace Modules\Ecommerce\Entities;
 
 use App\Models\User;
-use GetCandy\Models\Order as GetCandyOrder;
+use Lunar\Models\Order as LunarOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Booking\Entities\Event as BookingEvent;
 use Modules\Booking\Entities\OrderCheckIn;
@@ -11,12 +11,12 @@ use Modules\Ecommerce\Database\factories\OrderFactory;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\ModuleService;
 
-class Order extends GetCandyOrder
+class Order extends LunarOrder
 {
     /**
      * Return a new factory instance for the model.
      *
-     * @return \GetCandy\Database\Factories\OrderFactory
+     * @return \Lunar\Database\Factories\OrderFactory
      */
     protected static function newFactory(): OrderFactory
     {
