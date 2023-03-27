@@ -129,7 +129,10 @@ class MigrateGetCandy extends LunarMigrationGetCandy
             return Command::SUCCESS;
 
         } catch (\Throwable $th) {
-            DB::commit();
+
+            $this->error($th->getMessage());
+
+            DB::rollBack();
 
             return Command::FAILURE;
         }
