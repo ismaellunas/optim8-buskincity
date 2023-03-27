@@ -27,7 +27,7 @@
                     <div v-show="isTabActive('content')">
                         <biz-form-input
                             v-model="form.title"
-                            label="Title"
+                            :label="i18n.title"
                             :message="error('title')"
                             placeholder="e.g A Good News"
                             required
@@ -37,7 +37,7 @@
 
                         <biz-form-slug
                             v-model="form.slug"
-                            label="Slug"
+                            :label="i18n.slug"
                             :message="error('slug')"
                             :disabled="isInputDisabled"
                         />
@@ -45,7 +45,7 @@
                         <biz-form-select
                             v-model="form.locale"
                             class="is-fullwidth"
-                            label="Language"
+                            :label="i18n.language"
                             required
                             :message="error('locale')"
                         >
@@ -59,7 +59,9 @@
                         </biz-form-select>
 
                         <div class="field">
-                            <biz-label>Category</biz-label>
+                            <biz-label>
+                                {{ i18n.category }}
+                            </biz-label>
 
                             <div class="buttons">
                                 <biz-button
@@ -73,7 +75,9 @@
                                 </biz-button>
                             </div>
 
-                            <p>Select The Primary Category</p>
+                            <p>
+                                {{ i18n.select_primary_category }}
+                            </p>
                             <biz-form-select
                                 v-model="form.primary_category"
                                 class="is-fullwidth"
@@ -95,7 +99,9 @@
                         </div>
 
                         <div class="field">
-                            <biz-label>Thumbnail</biz-label>
+                            <biz-label>
+                                {{ i18n.thumbnail }}
+                            </biz-label>
 
                             <biz-button-icon
                                 v-if="!hasCover"
@@ -105,7 +111,9 @@
                                 :disabled="!can.media.browse"
                                 @click="openModal()"
                             >
-                                <span>Open Media</span>
+                                <span>
+                                    {{ i18n.open_media }}
+                                </span>
                             </biz-button-icon>
                             <div
                                 v-else
@@ -123,14 +131,18 @@
                                                 type="button"
                                                 @click="openModal"
                                             >
-                                                <span>Open Media</span>
+                                                <span>
+                                                    {{ i18n.open_media }}
+                                                </span>
                                             </biz-button-icon>
                                             <biz-button
                                                 class="card-footer-item is-borderless is-shadowless is-inverted"
                                                 type="button"
                                                 @click="removeCover"
                                             >
-                                                <span>Remove</span>
+                                                <span>
+                                                    {{ i18n.remove }}
+                                                </span>
                                             </biz-button>
                                         </footer>
                                     </div>
@@ -140,7 +152,7 @@
 
                         <biz-form-textarea
                             v-model="form.excerpt"
-                            label="Excerpt"
+                            :label="i18n.excerpt"
                             placeholder="..."
                             rows="2"
                             :message="error('excerpt')"
@@ -148,7 +160,7 @@
 
                         <biz-form-text-editor-full
                             v-model="form.content"
-                            label="Content"
+                            :label="i18n.content"
                             :config="editorConfig"
                             :disabled="isInputDisabled"
                             :is-download-enabled="can.media.read"
@@ -162,16 +174,16 @@
                     <div v-show="isTabActive('seo')">
                         <biz-form-input
                             v-model="form.meta_title"
-                            label="Meta Title"
-                            placeholder="Meta title"
+                            :label="i18n.meta_title"
+                            :placeholder="i18n.meta_title"
                             :maxlength="maxLength.meta_title"
                             :message="error('meta_title')"
                         />
 
                         <biz-form-textarea
                             v-model="form.meta_description"
-                            label="Meta Description"
-                            placeholder="Meta description"
+                            :label="i18n.meta_description"
+                            :placeholder="i18n.meta_description"
                             rows="2"
                             :maxlength="maxLength.meta_description"
                             :message="error('meta_description')"
@@ -187,13 +199,13 @@
                 >
                     <biz-tab>
                         <biz-tab-list>
-                            Publish Options
+                            {{ i18n.publish_options }}
                         </biz-tab-list>
                     </biz-tab>
                     <biz-form-select
                         v-model="form.status"
                         class="is-fullwidth"
-                        label="Status"
+                        :label="i18n.status"
                         required
                         :disabled="isInputDisabled"
                         :message="error('status')"
@@ -210,7 +222,7 @@
                     <biz-form-date-time
                         v-if="form.status === 2"
                         v-model="form.scheduled_at"
-                        label="Scheduled At"
+                        :label="i18n.scheduled_at"
                         required
                         :message="error('scheduled_at')"
                     />
@@ -222,16 +234,16 @@
                             :href="route(baseRouteName+'.index')"
                             class="is-link is-light"
                         >
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button-link>
                     </div>
                     <div class="control">
                         <biz-button class="is-link">
                             <template v-if="isNew">
-                                Create
+                                {{ i18n.create }}
                             </template>
                             <template v-else>
-                                Update
+                                {{ i18n.update }}
                             </template>
                         </biz-button>
                     </div>
@@ -310,6 +322,32 @@
             MixinHasTab,
             MixinImageLibrary,
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    content : 'Content',
+                    seo : 'SEO',
+                    title : 'Title',
+                    slug : 'Slug',
+                    language : 'Language',
+                    category : 'Category',
+                    select_primary_category : 'Select The Primary Category',
+                    thumbnail : 'Thumbnail',
+                    excerpt : 'Excerpt',
+                    status : 'Status',
+                    publish_options : 'Publish Options',
+                    scheduled_at : 'Scheduled at',
+                    open_media : 'Open Media',
+                    remove : 'Remove',
+                    meta_title : 'Meta Title',
+                    meta_description : 'Meta Description',
+                    create : 'Create',
+                    update : 'Update',
+                    cancel: 'Cancel',
+                })
+            },
+        },
 
         props: {
             can: { type: Object, required: true },

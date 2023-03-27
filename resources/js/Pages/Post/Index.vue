@@ -5,6 +5,7 @@
                 <div class="column">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -14,7 +15,9 @@
                         :close-on-click="false"
                     >
                         <template #trigger>
-                            <span>Filter</span>
+                            <span>
+                                {{ i18n.filter }}
+                            </span>
                             <span
                                 v-if="filterCounter"
                                 class="ml-1"
@@ -25,7 +28,7 @@
                         </template>
 
                         <biz-dropdown-item>
-                            Categories
+                            {{ i18n.category }}
                         </biz-dropdown-item>
 
                         <biz-dropdown-scroll
@@ -48,7 +51,7 @@
                         <hr class="dropdown-divider">
 
                         <biz-dropdown-item>
-                            Languages
+                            {{ i18n.language }}
                         </biz-dropdown-item>
 
                         <biz-dropdown-scroll
@@ -77,7 +80,9 @@
                         :href="route(baseRouteName+'.create')"
                     >
                         <biz-icon :icon="icon.add" />
-                        <span>Create New</span>
+                        <span>
+                            {{ i18n.create_new }}
+                        </span>
                     </biz-button-link>
                 </div>
             </div>
@@ -161,7 +166,7 @@
     import BizTabList from '@/Biz/TabList.vue';
     import BizTableInfo from '@/Biz/TableInfo.vue';
     import icon from '@/Libs/icon-class';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, success as successAlert } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/vue3';
@@ -203,7 +208,19 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                create_new : 'Create New',
+                published : 'Published',
+                scheduled : 'Scheduled',
+                draft : 'Draft',
+                filter : 'Filter',
+                category : 'Category',
+                language : 'Language',
+                are_you_sure : 'Are you sure you want to delete this resource?',
+            }) }
         },
+
         setup(props) {
             const queryParams = merge(
                 {view: 'gallery'},
@@ -219,12 +236,13 @@
                 term: ref(props.pageQueryParams?.term ?? null),
                 view: ref(props.pageQueryParams?.view ?? 'gallery'),
                 tabs: {
-                    published: { title: 'Published'},
-                    scheduled: {title: 'Scheduled'},
-                    draft: {title: 'Draft'},
+                    published: { title: props.i18n.published },
+                    scheduled: { title: props.i18n.scheduled },
+                    draft: { title: props.i18n.draft },
                 },
             };
         },
+
         data() {
             return {
                 activeTab: this.queryParams?.status ?? head(keys(this.tabs)),
@@ -232,6 +250,7 @@
                 loader: null,
             };
         },
+
         computed: {
             isGalleryView() {
                 return this.view === 'gallery';
@@ -240,22 +259,29 @@
                 return this.categories.length + this.languages.length;
             },
         },
+
         methods: {
             deleteRecord(record) {
                 const self = this;
-                confirmDelete().then(result => {
+
+                confirmDelete(self.i18n.are_you_sure).then(result => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', record.id),
-                            {},
                             {
                                 onStart: () => this.onStartLoadingOverlay(),
                                 onFinish: () => this.onEndLoadingOverlay(),
+                                onSuccess: self.onSuccess,
                             }
                         );
                     }
                 })
             },
+
+            onSuccess(page) {
+                successAlert(page.props.flash.message);
+            },
+
             onTabSelected(tab) {
                 this.queryParams['status'] = tab;
                 this.$inertia.get(
@@ -268,6 +294,7 @@
                     }
                 );
             },
+
             onViewChanged(view) {
                 this.queryParams['view'] = view;
                 const clonedQueryParam = clone(this.queryParams);
@@ -286,10 +313,12 @@
                     }
                 );
             },
+
             onLanguagesChanged() {
                 this.queryParams['languages'] = this.languages;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
+
             onCategoriesChanged() {
                 this.queryParams['categories'] = this.categories;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
