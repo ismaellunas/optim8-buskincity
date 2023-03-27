@@ -5,6 +5,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -16,7 +17,9 @@
                         :href="route(baseRouteName+'.create')"
                     >
                         <biz-icon :icon="iconAdd" />
-                        <span>Create New</span>
+                        <span>
+                            {{ i18n.create_new }}
+                        </span>
                     </biz-button-link>
                 </div>
             </div>
@@ -36,7 +39,7 @@
                         </th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -85,7 +88,7 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import { add as iconAdd, edit as iconEdit, remove as iconRemove } from '@/Libs/icon-class';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/vue3';
@@ -113,6 +116,12 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                actions : 'Actions',
+                create_new : 'Create New',
+                are_you_sure : 'Are you sure you want to delete this resource?',
+            }) }
         },
 
         setup(props) {
@@ -131,13 +140,23 @@
         methods: {
             deleteRow(record) {
                 const self = this;
-                confirmDelete().then((result) => {
+
+                confirmDelete(self.i18n.are_you_sure).then((result) => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
-                            route(self.baseRouteName+'.destroy', record.id)
+                            route(self.baseRouteName+'.destroy', record.id),
+                            {
+                                onStart: () => this.onStartLoadingOverlay(),
+                                onFinish: () => this.onEndLoadingOverlay(),
+                                onSuccess: self.onSuccess,
+                            }
                         );
                     }
                 });
+            },
+
+            onSuccess(page) {
+                successAlert(page.props.flash.message);
             },
 
             getNameByLocale(record, locale) {

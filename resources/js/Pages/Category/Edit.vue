@@ -41,6 +41,12 @@
             MixinHasLoader
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            }
+        },
+
         layout: AppLayout,
 
         props: {
@@ -48,6 +54,7 @@
             errors: { type: Object, default:() => {} },
             record: { type: Object, required: true },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => {} }
         },
 
         setup(props) {
