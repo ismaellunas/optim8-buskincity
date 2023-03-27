@@ -3,7 +3,6 @@
 namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\User;
 use App\Services\UserService;
 
 class LatestRegistrationWidget implements WidgetInterface
@@ -11,7 +10,6 @@ class LatestRegistrationWidget implements WidgetInterface
     private $baseRouteName = "admin.users";
     private $componentName = "LatestRegistration";
     private $data = [];
-    private $recordLimit = 4;
     private $title = "Latest Registrations";
     private $user;
     private $userService;
@@ -27,10 +25,19 @@ class LatestRegistrationWidget implements WidgetInterface
     public function data(): array
     {
         return [
-            'title' => $this->title,
+            'title' => __($this->title),
             'componentName' => $this->componentName,
             'data' => $this->data,
             'order' => 2,
+            'i18n' => [
+                'add_new' => __('Add New'),
+                'type' => __('Type'),
+                'view_detail' => __('View Detail'),
+                'view_all' => __('View All'),
+                'registered' => __('Registered'),
+                'no_data' => __('No Data'),
+                'search' => __('Search'),
+            ]
         ];
     }
 

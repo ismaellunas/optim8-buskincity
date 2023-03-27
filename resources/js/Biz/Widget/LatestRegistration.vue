@@ -15,7 +15,7 @@
                             <span class="icon is-small">
                                 <i :class="icon.add" />
                             </span>
-                            <span>Add New</span>
+                            <span>{{ i18n.add_new }}</span>
                         </biz-button-link>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                             <biz-input
                                 v-model="search.term"
                                 class="is-small"
-                                placeholder="Search..."
+                                :placeholder="i18n.search"
                                 maxlength="255"
                                 @keyup.prevent="onSearch(search.term)"
                             />
@@ -45,7 +45,9 @@
                                 class-button="is-small"
                             >
                                 <template #trigger>
-                                    <span>Type ({{ totalRoleSelected }})</span>
+                                    <span>
+                                        {{ `${i18n.type} (${totalRoleSelected})` }}
+                                    </span>
 
                                     <span class="icon is-small">
                                         <i
@@ -100,7 +102,7 @@
                                         <br>
 
                                         <span class="is-size-7 has-text-grey">
-                                            Registered, {{ record.registered_at }}
+                                            {{ `${i18n.registered}, ${record.registered_at}` }}
                                         </span>
                                         <br>
                                     </p>
@@ -113,7 +115,7 @@
                                     class="is-primary is-outlined is-small"
                                     :href="route(data.baseRouteName+'.edit', record.id)"
                                 >
-                                    View Detail
+                                    {{ i18n.view_detail }}
                                 </biz-button-link>
                             </div>
                         </div>
@@ -122,7 +124,7 @@
 
                 <template v-else>
                     <biz-panel-block>
-                        Data empty.
+                        {{ i18n.no_data }}
                     </biz-panel-block>
                 </template>
 
@@ -137,7 +139,7 @@
                                 class="is-primary is-outlined is-small"
                                 :href="route(data.baseRouteName+'.index')"
                             >
-                                View All
+                                {{ i18n.view_all }}
                             </biz-button-link>
                         </div>
                     </div>
@@ -166,39 +168,41 @@
         name: 'LatestRegistration',
 
         components: {
-            BizLoader,
             BizButtonLink,
-            BizImage,
-            BizPanel,
-            BizPanelBlock,
-            BizInput,
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizImage,
+            BizInput,
+            BizLoader,
+            BizPanel,
+            BizPanelBlock,
         },
 
         props: {
-            data: {
-                type: Object,
-                required: true,
-            },
-
-            title: {
-                type: String,
-                default: "",
-            },
+            data: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                add_new : 'Add New',
+                type : 'Type',
+                view_detail : 'View Detail',
+                view_all : 'View All',
+                registered : 'Registered',
+                no_data : 'No Data',
+                search : 'Search',
+            }) },
+            title: { type: String, default: "" },
         },
 
         data() {
             return {
-                isLoading: false,
                 icon,
-                userImage: userImage,
+                isLoading: false,
                 records: [],
                 search: {
                     term: null,
                     roles: [],
                 },
+                userImage: userImage,
             };
         },
 

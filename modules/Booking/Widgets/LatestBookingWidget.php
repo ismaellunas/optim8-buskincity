@@ -23,7 +23,7 @@ class LatestBookingWidget implements WidgetInterface
         $orderService = app(OrderService::class);
 
         return [
-            'title' => $this->title,
+            'title' => __($this->title),
             'componentName' => $this->componentName,
             'moduleName' => config('booking.name'),
             'data' => [
@@ -39,6 +39,19 @@ class LatestBookingWidget implements WidgetInterface
                 ),
             ],
             'order' => 1,
+            'i18n' => [
+                'status' => __('Status'),
+                'name' => __('Name'),
+                'user' => __('User'),
+                'date' => __('Date'),
+                'time' => __('Time'),
+                'city' => __('City'),
+                'any' => __('Any'),
+                'view_detail' => __('View Detail'),
+                'view_all' => __('View All'),
+                'no_data' => __('No Data'),
+                'search' => __('Search'),
+            ]
         ];
     }
 

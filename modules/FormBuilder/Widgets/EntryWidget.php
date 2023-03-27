@@ -21,7 +21,7 @@ class EntryWidget implements WidgetInterface
     public function data(): array
     {
         return [
-            'title' => $this->title,
+            'title' => __($this->title),
             'componentName' => $this->componentName,
             'moduleName' => config('formbuilder.name'),
             'data' => [
@@ -29,6 +29,11 @@ class EntryWidget implements WidgetInterface
                 'baseRouteName' => $this->baseRouteName,
             ],
             'order' => 3,
+            'i18n' => [
+                'view_detail' => __('View Detail'),
+                'view_all' => __('View All'),
+                'no_data' => __('No Data'),
+            ]
         ];
     }
 

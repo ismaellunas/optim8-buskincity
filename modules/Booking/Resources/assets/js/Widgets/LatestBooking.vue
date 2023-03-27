@@ -41,14 +41,14 @@
                             >
                                 <template #trigger>
                                     <span>
-                                        {{ search.city ?? 'Any' }}
+                                        {{ search.city ?? i18n.any }}
                                     </span>
                                 </template>
 
                                 <biz-dropdown-item
                                     @click="onCityChange()"
                                 >
-                                    Any
+                                    {{ i18n.any }}
                                 </biz-dropdown-item>
 
                                 <biz-dropdown-item
@@ -92,12 +92,12 @@
                         <biz-table is-fullwidth>
                             <thead>
                                 <tr>
-                                    <th>Status</th>
-                                    <th>Name</th>
-                                    <th>User</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>City</th>
+                                    <th>{{ i18n.status }}</th>
+                                    <th>{{ i18n.name }}</th>
+                                    <th>{{ i18n.user }}</th>
+                                    <th>{{ i18n.date }}</th>
+                                    <th>{{ i18n.time }}</th>
+                                    <th>{{ i18n.city }}</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -110,7 +110,7 @@
                                             class="has-text-centered"
                                             colspan="7"
                                         >
-                                            Empty
+                                            {{ i18n.no_data }}
                                         </td>
                                     </tr>
                                 </template>
@@ -135,7 +135,7 @@
                                                 title="Detail"
                                                 :href="route(data.baseRouteName+'.show', record.id)"
                                             >
-                                                View Detail
+                                                {{ i18n.view_detail }}
                                             </biz-button-link>
                                         </td>
                                     </tr>
@@ -156,7 +156,7 @@
                                 class="is-primary is-outlined is-small"
                                 :href="route(data.baseRouteName + '.index')"
                             >
-                                View All
+                                {{ i18n.view_all }}
                             </biz-button-link>
                         </div>
                     </div>
@@ -199,6 +199,19 @@
 
         props: {
             data: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                status :'Status',
+                name :'Name',
+                user :'User',
+                date :'Date',
+                time :'Time',
+                city :'City',
+                any :'Any',
+                view_detail :'View Detail',
+                view_all :'View All',
+                no_data :'No Data',
+                search :'Search',
+            }) },
             title: { type: String, default: "" },
         },
 
