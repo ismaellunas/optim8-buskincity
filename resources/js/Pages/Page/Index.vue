@@ -7,6 +7,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -20,7 +21,9 @@
                         <span class="icon is-small">
                             <i :class="icon.add" />
                         </span>
-                        <span>Create New</span>
+                        <span>
+                            {{ i18n.create_new }}
+                        </span>
                     </biz-button-link>
                 </div>
             </div>
@@ -32,15 +35,15 @@
                 <template #thead>
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
-                        <th>Slug</th>
-                        <th>Status</th>
-                        <th>M.Title</th>
-                        <th>M.Description</th>
-                        <th>Language</th>
+                        <th>{{ i18n.title }}</th>
+                        <th>{{ i18n.slug }}</th>
+                        <th>{{ i18n.status }}</th>
+                        <th>{{ i18n.meta_title }}</th>
+                        <th>{{ i18n.meta_description }}</th>
+                        <th>{{ i18n.language }}</th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -164,6 +167,25 @@
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
             defaultLocale: { type: String, required: true },
+            i18n: {
+                type: Object,
+                default: () => ({
+                    search : 'Search',
+                    create_new : 'Create New',
+                    title : 'Title',
+                    slug : 'Slug',
+                    status : 'Status',
+                    meta_title : 'Meta Title',
+                    meta_description : 'Meta Description',
+                    language : 'Language',
+                    actions : 'Actions',
+                    are_you_sure : 'Are you sure you want to delete this resource?',
+                    remove_page_from_navigation_message : 'This action will also remove the page on the navigation menu.',
+                    yes : 'Yes',
+                    duplicate_page : 'Duplicate Page',
+                    duplicate_page_message : 'Are you sure want to duplicate this page?',
+                })
+            },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             title: { type: String, required: true },
@@ -241,20 +263,26 @@
             },
 
             async canDeletePage(pageId) {
+                const self = this;
+
                 try {
-                    const isUsedByMenu = await this.isUsedByMenu(pageId);
+                    const isUsedByMenu = await self.isUsedByMenu(pageId);
 
                     if (isUsedByMenu) {
                         const confirmResult = await confirmDelete(
-                            'Are You Sure?',
-                            'This action will also remove the page on the navigation menu.',
-                            'Yes'
+                            self.i18n.are_you_sure,
+                            self.i18n.remove_page_from_navigation_message,
+                            self.i18n.yes,
                         );
 
                         return !!confirmResult.value;
                     }
 
-                    return await confirmDelete().then(result => {
+                    return await confirmDelete(
+                        self.i18n.are_you_sure,
+                        null,
+                        self.i18n.yes,
+                    ).then(result => {
                         return result.isConfirmed;
                     });
 
@@ -279,8 +307,8 @@
                 const self = this;
 
                 confirm(
-                    'Duplicate Page',
-                    'Are you sure want to duplicate this page?'
+                    self.i18n.duplicate_page,
+                    self.i18n.duplicate_page_message,
                 )
                     .then(result => {
                         if (result.isConfirmed) {

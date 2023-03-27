@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <h2>
-                    <b>Layout</b>
+                    <b>
+                        {{ i18n.layout }}
+                    </b>
                 </h2>
             </div>
 
@@ -14,7 +16,7 @@
                     :message="error(selectedLocale+'.settings.layout')"
                 >
                     <option :value="null">
-                        (Default)
+                        {{ '(' + i18n.default + ')' }}
                     </option>
                     <option
                         v-for="option in templateOptions"
@@ -30,7 +32,9 @@
         <div class="columns">
             <div class="column">
                 <h2>
-                    <b>Main Background Color</b>
+                    <b>
+                        {{ i18n.main_background_color }}
+                    </b>
                 </h2>
             </div>
 
@@ -41,7 +45,7 @@
                     :message="error(selectedLocale+'.settings.main_background_color')"
                 >
                     <option :value="null">
-                        (Default)
+                        {{ '(' + i18n.default + ')' }}
                     </option>
                     <option
                         v-for="(option, index) in backgroundColorOptions"
@@ -57,7 +61,9 @@
         <div class="columns">
             <div class="column">
                 <h2>
-                    <b>Page Height</b>
+                    <b>
+                        {{ i18n.page_height }}
+                    </b>
                 </h2>
             </div>
 
@@ -98,7 +104,17 @@
             MixinHasPageErrors,
         ],
 
-        inject: ['settingOptions'],
+        inject: {
+            settingOptions: {},
+            i18n: {
+                default: () => ({
+                    layout: 'Layout',
+                    main_background_color: 'Main background color',
+                    page_height: 'Page height',
+                    default: 'Default',
+                })
+            },
+        },
 
         props: {
             errors: { type: Object, default:() => {} },

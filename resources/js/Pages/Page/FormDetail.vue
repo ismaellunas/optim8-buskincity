@@ -4,7 +4,7 @@
             <div class="column is-4">
                 <biz-form-input
                     v-model="computedTitle"
-                    label="Title"
+                    :label="i18n.title"
                     placeholder="e.g A Good News"
                     required
                     :disabled="disableInput"
@@ -16,7 +16,7 @@
             <div class="column is-4">
                 <biz-form-slug
                     v-model="computedSlug"
-                    label="Slug"
+                    :label="i18n.slug"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.slug')"
                 />
@@ -25,7 +25,7 @@
                 <biz-form-select
                     v-model="computedStatus"
                     class="is-fullwidth"
-                    label="Status"
+                    :label="i18n.status"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.status')"
                 >
@@ -41,7 +41,7 @@
         </div>
         <biz-form-textarea
             v-model="computedExcerpt"
-            label="Excerpt"
+            :label="i18n.excerpt"
             placeholder="..."
             rows="2"
             :disabled="disableInput"
@@ -49,16 +49,16 @@
         />
         <biz-form-input
             v-model="computedMetaTitle"
-            label="Meta Title"
-            placeholder="Meta title"
+            :label="i18n.meta_title"
+            :placeholder="i18n.meta_title"
             :disabled="disableInput"
             :maxlength="maxLength.meta_title"
             :message="error(selectedLocale+'.meta_title')"
         />
         <biz-form-textarea
             v-model="computedMetaDescription"
-            label="Meta Description"
-            placeholder="Meta description"
+            :label="i18n.meta_description"
+            :placeholder="i18n.meta_description"
             rows="2"
             :disabled="disableInput"
             :maxlength="maxLength.meta_description"
@@ -86,6 +86,19 @@
         },
 
         mixins: [MixinHasPageErrors],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    title : 'Title',
+                    slug : 'Slug',
+                    status : 'Status',
+                    excerpt : 'Excerpt',
+                    meta_title : 'Meta Title',
+                    meta_description : 'Meta Description',
+                })
+            },
+        },
 
         props: {
             disableInput: { type: Boolean, default: false },
