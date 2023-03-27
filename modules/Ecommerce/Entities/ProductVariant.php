@@ -2,10 +2,9 @@
 
 namespace Modules\Ecommerce\Entities;
 
-use GetCandy\Models\ProductVariant as GetCandyProductVariant;
-use Modules\Ecommerce\Entities\Product;
+use Lunar\Models\ProductVariant as LunarProductVariant;
 
-class ProductVariant extends GetCandyProductVariant
+class ProductVariant extends LunarProductVariant
 {
     public function product()
     {

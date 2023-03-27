@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create(config('getcandy.database.table_prefix').'products_meta', function (Blueprint $table) {
+        Schema::create(config('lunar.database.table_prefix').'products_meta', function (Blueprint $table) {
             $table->id();
 
             $table->string('type')->default('null');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table
                 ->foreignId('product_id')
                 ->nullable()
-                ->constrained(config('getcandy.database.table_prefix').'products')
+                ->constrained(config('lunar.database.table_prefix').'products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('getcandy.database.table_prefix').'products_meta');
+        Schema::dropIfExists(config('lunar.database.table_prefix').'products_meta');
     }
 };
