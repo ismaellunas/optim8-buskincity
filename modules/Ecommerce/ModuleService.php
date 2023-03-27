@@ -28,6 +28,6 @@ class ModuleService
 
     public static function tablePrefix()
     {
-        return config('getcandy.database.table_prefix');
+        return config('lunar.database.table_prefix');
     }
 }
