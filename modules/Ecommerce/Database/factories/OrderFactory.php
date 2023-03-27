@@ -2,9 +2,9 @@
 
 namespace Modules\Ecommerce\Database\factories;
 
-use GetCandy\Database\Factories\OrderFactory as GetCandyOrderFactory;
+use Lunar\Database\Factories\OrderFactory as LunarOrderFactory;
 
-class OrderFactory extends GetCandyOrderFactory
+class OrderFactory extends LunarOrderFactory
 {
     protected $model = \Modules\Ecommerce\Entities\Order::class;
 

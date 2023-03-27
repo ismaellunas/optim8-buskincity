@@ -2,11 +2,11 @@
 
 namespace Modules\Ecommerce\Entities;
 
-use GetCandy\Models\OrderLine as GetCandyOrderLine;
+use Lunar\Models\OrderLine as LunarOrderLine;
 use Modules\Ecommerce\Database\factories\OrderLineFactory;
-use GetCandy\Models\Currency;
+use Lunar\Models\Currency;
 
-class OrderLine extends GetCandyOrderLine
+class OrderLine extends LunarOrderLine
 {
     protected static function newFactory(): OrderLineFactory
     {

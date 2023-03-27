@@ -2,9 +2,9 @@
 
 namespace Modules\Ecommerce\Database\factories;
 
-use GetCandy\Database\Factories\OrderLineFactory as GetCandyOrderLineFactory;
+use Lunar\Database\Factories\OrderLineFactory as LunarOrderLineFactory;
 
-class OrderLineFactory extends GetCandyOrderLineFactory
+class OrderLineFactory extends LunarOrderLineFactory
 {
     /**
      * The name of the factory's corresponding model.
