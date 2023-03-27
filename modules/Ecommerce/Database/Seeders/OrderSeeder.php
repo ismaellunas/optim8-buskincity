@@ -4,10 +4,10 @@ namespace Modules\Ecommerce\Database\Seeders;
 
 use App\Models\User;
 use Carbon\Carbon;
-use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Models\Channel;
-use GetCandy\Models\Currency;
-use GetCandy\Models\Order;
+use Lunar\Base\OrderReferenceGeneratorInterface;
+use Lunar\Models\Channel;
+use Lunar\Models\Currency;
+use Lunar\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
