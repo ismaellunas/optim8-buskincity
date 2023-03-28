@@ -186,15 +186,14 @@ class Product extends LunarProduct
     {
         $city = $this->locations[0]['city'] ?? null;
         $countryCode = $this->locations[0]['country_code'] ?? null;
+        $countryName = null;
 
         if ($countryCode) {
             $countryName = app(CountryService::class)->getCountryName($countryCode);
-
-            return $countryName
-                ? $countryName . ($city ? ', ' . $city : null)
-                : null;
         }
 
-        return null;
+        return $city
+            ? $city . ($countryName ? ', ' . $countryName : null)
+            : $countryName;
     }
 }
