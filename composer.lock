@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af69a085d2810a155b9bf21a08ddb3ac",
+    "content-hash": "4bcdd671f4fe00025964915e6b0fcf3c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3303,16 +3303,16 @@
         },
         {
             "name": "joelbutcher/socialstream",
-            "version": "v3.9.2",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joelbutcher/socialstream.git",
-                "reference": "ebd637d64b21354c17d7784758ab8f0760953579"
+                "reference": "ccdca7bbd3241cd83afaceeb7f84ab66f4e16cbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/ebd637d64b21354c17d7784758ab8f0760953579",
-                "reference": "ebd637d64b21354c17d7784758ab8f0760953579",
+                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/ccdca7bbd3241cd83afaceeb7f84ab66f4e16cbe",
+                "reference": "ccdca7bbd3241cd83afaceeb7f84ab66f4e16cbe",
                 "shasum": ""
             },
             "require": {
@@ -3386,7 +3386,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-05T14:57:53+00:00"
+            "time": "2023-03-08T12:50:42+00:00"
         },
         {
             "name": "kalnoy/nestedset",
