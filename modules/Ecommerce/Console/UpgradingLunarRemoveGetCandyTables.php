@@ -82,6 +82,8 @@ class UpgradingLunarRemoveGetCandyTables extends Command
                 DB::commit();
             }
         } catch (\Throwable $th) {
+            $this->error($th->getMessage());
+
             DB::rollBack();
         }
     }
