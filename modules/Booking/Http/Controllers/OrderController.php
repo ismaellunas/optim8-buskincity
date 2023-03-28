@@ -7,7 +7,6 @@ use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
-use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\OrderCancelRequest;
@@ -61,8 +60,9 @@ class OrderController extends CrudController
         $user = auth()->user();
 
         $scopes = collect([
-            'inStatus' => $request->status ? [$request->status] : null,
             'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
+            'inStatus' => $request->status ? [$request->status] : null,
         ]);
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -73,19 +73,19 @@ class OrderController extends CrudController
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter($request->only(
                 'city',
+                'country',
                 'dates',
                 'status',
                 'term',
-                'cityTerm',
             )),
             'records' => $this->orderService->getRecords(
                 $user,
                 $request->get('term'),
                 $scopes->all(),
             ),
-            'cityOptions' => $this->orderService->cityOptions(
-                $user,
-                $scopes->except('city')->all(),
+            'locationOptions' => $this->orderService->getLocationOptions(
+                auth()->user(),
+                $scopes->except('city', 'country')->all(),
             ),
             'statusOptions' => $this->orderService->statusOptions(
                 $user,

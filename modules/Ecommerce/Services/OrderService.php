@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
-use Modules\Booking\Entities\Scopes\WithBookingCityScope;
 use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
@@ -204,7 +203,7 @@ class OrderService
                         ->setTimezone($event->schedule->timezone)
                         ->format('H:i')
                     : null,
-                'city' => $product->locations[0]['city'] ?? null,
+                'location' => $product->location,
                 'can' => [
                     'cancel' => $user->can('cancelBooking', $record),
                     'reschedule' => $user->can('rescheduleBooking', $record),
@@ -433,10 +432,14 @@ class OrderService
     public function statusOptions(
         User $user,
         ?array $scopes = null,
-        ?string $noneLabel = null
+        ?string $noneLabel = null,
+        bool $isRelatedUser = false,
     ): Collection {
         $statuses = $this
             ->conditionsBuilder($user, null, $scopes)
+            ->when($isRelatedUser, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
             ->scoped(new WithBookingStatusScope())
             ->distinct()
             ->get();
@@ -451,27 +454,16 @@ class OrderService
         return $options;
     }
 
-    public function cityOptions(
-        User $user,
-        ?array $scopes = null
-    ): Collection {
-        $options = $this
-            ->conditionsBuilder($user, null, $scopes)
-            ->scoped(new WithBookingCityScope())
-            ->distinct()
-            ->get()
-            ->pluck('city')
-            ->filter();
-
-        return $options;
-    }
-
     public function getLocationOptions(
         User $user,
-        ?array $scopes = null
+        ?array $scopes = null,
+        bool $isRelatedUser = false,
     ): Array {
         $locations = $this
             ->conditionsBuilder($user, null, $scopes)
+            ->when($isRelatedUser, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
             ->scoped(new WithBookingLocationScope())
             ->get()
             ->map(function ($order) {
