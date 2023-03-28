@@ -32,31 +32,19 @@
             </div>
 
             <div class="column is-narrow is-3-widescreen">
-                <biz-dropdown-search
-                    class="is-fullwidth"
-                    :close-on-click="true"
-                    @search="searchCity($event)"
+                <biz-select
+                    v-model="location"
+                    placeholder="Any"
+                    @change="onLocationChanged()"
                 >
-                    <template #trigger>
-                        <span>
-                            {{ queryParams.city ?? 'Any' }}
-                        </span>
-                    </template>
-
-                    <biz-dropdown-item
-                        @click="onCityChange()"
+                    <option
+                        v-for="locationOption in computedLocationOptions"
+                        :key="locationOption.id"
+                        :value="locationOption.id"
                     >
-                        Any
-                    </biz-dropdown-item>
-
-                    <biz-dropdown-item
-                        v-for="(option, index) in filteredCities"
-                        :key="index"
-                        @click="onCityChange(option)"
-                    >
-                        {{ option }}
-                    </biz-dropdown-item>
-                </biz-dropdown-search>
+                        {{ locationOption.value }}
+                    </option>
+                </biz-select>
             </div>
         </div>
 
@@ -68,7 +56,7 @@
                 <tr>
                     <th>Status</th>
                     <th>Name</th>
-                    <th>City</th>
+                    <th>Location</th>
                     <th>User</th>
                     <th>Date</th>
                     <th>Timezone</th>
@@ -88,7 +76,7 @@
             >
                 <td>{{ record.status }}</td>
                 <td>{{ record.product_name }}</td>
-                <td>{{ record.city }}</td>
+                <td>{{ record.location ?? '-' }}</td>
                 <td>{{ record.customer_name ?? '-' }}</td>
                 <td>{{ record.date }}</td>
                 <td>{{ record.timezone }}</td>
@@ -181,7 +169,6 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
-    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
     import BizIcon from '@/Biz/Icon.vue';
@@ -191,8 +178,7 @@
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
-    import { debounceTime } from '@/Libs/defaults';
+    import { isArray, each } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/vue3';
 
@@ -202,7 +188,6 @@
             BizButtonLink,
             BizDropdown,
             BizDropdownItem,
-            BizDropdownSearch,
             BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
@@ -225,13 +210,19 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             statusOptions: { type: Object, required: true },
-            cityOptions: { type: Object, required: true },
+            locationOptions: { type: Object, required: true },
         },
 
         setup(props) {
             const form = {
                 message: null,
             };
+
+            const country = props.pageQueryParams?.country;
+            const city = props.pageQueryParams?.city;
+            const location = country
+                ? country + (city ? '-' + city : '')
+                : null;
 
             return {
                 queryParams: ref({ ...{}, ...props.pageQueryParams }),
@@ -241,12 +232,51 @@
                 ),
                 status: ref(props.pageQueryParams?.status ?? null),
                 term: ref(props.pageQueryParams?.term ?? null),
-                cityTerm: ref(null),
+                location: ref(location),
                 form: useForm(form),
                 selectedOrder: ref(null),
                 icon,
-                filteredCities: ref(props.cityOptions.slice(0, 10)),
             };
+        },
+
+        computed: {
+            computedLocationOptions() {
+                const options = [];
+
+                each(this.locationOptions, (location, key) => {
+                    options.push({
+                        id: key,
+                        value: location.country,
+                    });
+
+                    each(location.cities, (city) => {
+                        options.push({
+                            id: key +'-'+ city,
+                            value: ' - '+ city,
+                        });
+                    });
+                });
+
+                return options;
+            },
+
+            locationParts() {
+                const countryCity = {
+                    country: null,
+                    city: null,
+                };
+
+                if (!this.location) {
+                    return countryCity;
+                }
+
+                const locationParts = this.location.split('-');
+
+                return {
+                    country: locationParts[0],
+                    city: locationParts[1],
+                };
+            },
         },
 
         methods: {
@@ -282,8 +312,9 @@
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
-            onCityChange(city = null) {
-                this.queryParams['city'] = city;
+            onLocationChanged() {
+                this.queryParams['city'] = this.locationParts.city;
+                this.queryParams['country'] = this.locationParts.country;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
@@ -318,22 +349,6 @@
             hasMoreAction(record) {
                 return (record.can.reschedule || record.can.cancel);
             },
-
-            filterCities() {
-                const self = this;
-                if (!isEmpty(this.cityTerm) && this.cityTerm.length > 1) {
-                    return filter(this.cityOptions, function (city) {
-                        return new RegExp(self.cityTerm, 'i').test(city);
-                    }).slice(0, 10);
-                } else {
-                    return this.cityOptions.slice(0, 10);
-                }
-            },
-
-            searchCity: debounce(function(term) {
-                this.cityTerm = term;
-                this.filteredCities = this.filterCities();
-            }, debounceTime),
         },
     };
 </script>
