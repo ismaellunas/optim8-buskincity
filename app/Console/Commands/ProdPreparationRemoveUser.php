@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Media;
+use App\Models\Page;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
@@ -68,15 +69,24 @@ class ProdPreparationRemoveUser extends Command
             ->get(['profile_photo_media_id'])
             ->pluck('profile_photo_media_id');
 
+        $this->updateAssociatedPage();
+
         $users = User::where('id', '>', 6)->withTrashed()->get();
 
+        $this->removeUsers($users);
+
+        $this->removeProfilePictureMedia($mediaIds);
+    }
+
+    private function removeUsers($users)
+    {
         $this->info('Delete user records');
 
         $bar = $this->output->createProgressBar(count($users));
         $bar->start();
 
         foreach ($users as $user) {
-            DB::statement("DELETE FROM public.users WHERE id=?", [$user->id]);
+            User::where('id', $user->id)->delete();
 
             $bar->advance();
         }
@@ -84,7 +94,10 @@ class ProdPreparationRemoveUser extends Command
         $bar->finish();
 
         $this->newLine();
+    }
 
+    private function removeProfilePictureMedia($mediaIds)
+    {
         $this->info('Delete media records');
 
         $bar = $this->output->createProgressBar(count($mediaIds));
@@ -92,6 +105,30 @@ class ProdPreparationRemoveUser extends Command
 
         if ($mediaIds->isNotEmpty()) {
             Media::whereIn('id', $mediaIds->all())->delete();
+
+            $bar->advance();
+        }
+
+        $bar->finish();
+
+        $this->newLine();
+    }
+
+    private function updateAssociatedPage()
+    {
+        $pageIds = Page::where('author_id', '>', 6)->get(['id'])->pluck('id');
+
+        if ($pageIds->isEmpty()) {
+            return;
+        }
+
+        $this->info('Update page author');
+
+        $bar = $this->output->createProgressBar(count($pageIds));
+        $bar->start();
+
+        foreach ($pageIds->all() as $pageId) {
+            Page::where('id', $pageId)->update(['author_id' => 1]);
 
             $bar->advance();
         }
