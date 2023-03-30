@@ -2,10 +2,10 @@
 
 namespace Modules\FormBuilder\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class FormNotificationSetting extends Model
+class FormNotificationSetting extends BaseModel
 {
     use HasFactory;
 
