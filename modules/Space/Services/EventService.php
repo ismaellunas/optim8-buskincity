@@ -54,10 +54,9 @@ class EventService
     public function createEvent($space, $inputs)
     {
         $event = new SpaceEvent();
+        $event->space_id = $space->id;
 
         $this->updateEvent($event, $inputs);
-
-        $space->events()->save($event);
 
         return $event;
     }
