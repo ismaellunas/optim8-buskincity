@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\MenuItem;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,8 @@ class ProdPreparationRemoveUnusedData extends Command
 
         try {
             $this->process();
+
+            $this->fixingMenu();
 
             if ($this->option('rollback')) {
 
@@ -211,5 +214,38 @@ class ProdPreparationRemoveUnusedData extends Command
         $numberOfUserWhenEnd = \App\Models\User::count();
 
         $this->info("User count start: $numberOfUserWhenStart ... end: $numberOfUserWhenEnd");
+    }
+
+    private function fixingMenu()
+    {
+        $menuItemIds = [
+            18,
+            21,
+            22,
+            29,
+            30,
+            31,
+            34,
+            35,
+            36,
+            61,
+            49,
+            50,
+            51,
+        ];
+
+        $this->info('Removing menuItems');
+        $bar = $this->output->createProgressBar(count($menuItemIds));
+        $bar->start();
+
+        foreach ($menuItemIds as $menuItemId) {
+            MenuItem::where('id', $menuItemId)->delete();
+
+            $bar->advance();
+        }
+
+        $bar->finish();
+
+        $this->newLine();
     }
 }
