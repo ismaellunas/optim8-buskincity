@@ -7,6 +7,7 @@ use App\Models\Page;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class ProdPreparationRemoveUser extends Command
@@ -43,9 +44,13 @@ class ProdPreparationRemoveUser extends Command
             $this->process();
 
             if ($this->option('rollback')) {
+
                 throw new Exception('rollback option is true');
-            } else {
+
+            } elseif ($this->confirm('Do you wish to commit the changes?')) {
+
                 DB::commit();
+
                 $this->info('committed');
             }
 
@@ -70,6 +75,10 @@ class ProdPreparationRemoveUser extends Command
         $this->removeProfilePictureMedia();
 
         $this->removeUsers();
+
+        $this->setExistingUserAsSuperAdmin();
+
+        $this->removeAttachedRoles();
     }
 
     private function removeUsers()
@@ -82,7 +91,7 @@ class ProdPreparationRemoveUser extends Command
         $bar->start();
 
         foreach ($users as $user) {
-            User::where('id', $user->id)->delete();
+            DB::table('users')->where('id', $user->id)->delete();
 
             $bar->advance();
         }
@@ -131,6 +140,55 @@ class ProdPreparationRemoveUser extends Command
 
         foreach ($pageIds->all() as $pageId) {
             Page::where('id', $pageId)->update(['author_id' => 1]);
+
+            $bar->advance();
+        }
+
+        $bar->finish();
+
+        $this->newLine();
+    }
+
+    private function setExistingUserAsSuperAdmin()
+    {
+        $users = User::get();
+
+        $this->info('Delete media records');
+
+        $bar = $this->output->createProgressBar(count($users));
+        $bar->start();
+
+        foreach ($users as $user) {
+            $user->syncRoles(config('permission.super_admin_role'));
+
+            $bar->advance();
+        }
+
+        $bar->finish();
+
+        $this->newLine();
+    }
+
+    private function removeAttachedRoles()
+    {
+        $modelHasRoles = DB::table('model_has_roles')
+            ->where('model_type', 'App\Models\User')
+            ->whereNotExists(function (Builder $query) {
+                $query
+                    ->select(DB::raw(1))
+                    ->from('users')
+                    ->whereColumn('users.id', 'model_has_roles.model_id');
+            })
+            ->get();
+
+        $bar = $this->output->createProgressBar(count($modelHasRoles));
+        $bar->start();
+
+        foreach ($modelHasRoles as $modelHasRole) {
+            DB::table('model_has_roles')
+                ->where('model_type', 'App\Models\User')
+                ->where('model_id', $modelHasRole->model_id)
+                ->delete();
 
             $bar->advance();
         }
