@@ -67,9 +67,9 @@ class ProdPreparationRemoveUser extends Command
     {
         $this->updateAssociatedPage();
 
-        $this->removeUsers();
-
         $this->removeProfilePictureMedia();
+
+        $this->removeUsers();
     }
 
     private function removeUsers()
