@@ -41,9 +41,13 @@ class ProdPreparationRemoveUnusedData extends Command
             $this->process();
 
             if ($this->option('rollback')) {
+
                 throw new Exception('rollback option is true');
-            } else {
+
+            } elseif ($this->confirm('Do you wish to commit the changes?')) {
+
                 DB::commit();
+
                 $this->info('committed');
             }
 
