@@ -65,21 +65,17 @@ class ProdPreparationRemoveUser extends Command
 
     private function process()
     {
-        $mediaIds = User::whereNotNull('profile_photo_media_id')
-            ->get(['profile_photo_media_id'])
-            ->pluck('profile_photo_media_id');
-
         $this->updateAssociatedPage();
 
-        $users = User::where('id', '>', 6)->withTrashed()->get();
+        $this->removeUsers();
 
-        $this->removeUsers($users);
-
-        $this->removeProfilePictureMedia($mediaIds);
+        $this->removeProfilePictureMedia();
     }
 
-    private function removeUsers($users)
+    private function removeUsers()
     {
+        $users = User::where('id', '>', 6)->withTrashed()->get();
+
         $this->info('Delete user records');
 
         $bar = $this->output->createProgressBar(count($users));
@@ -96,8 +92,13 @@ class ProdPreparationRemoveUser extends Command
         $this->newLine();
     }
 
-    private function removeProfilePictureMedia($mediaIds)
+    private function removeProfilePictureMedia()
     {
+        $mediaIds = User::whereNotNull('profile_photo_media_id')
+            ->where('id', '>', 6)
+            ->withTrashed()
+            ->get(['profile_photo_media_id'])
+            ->pluck('profile_photo_media_id');
         $this->info('Delete media records');
 
         $bar = $this->output->createProgressBar(count($mediaIds));
