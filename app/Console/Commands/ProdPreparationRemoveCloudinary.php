@@ -115,7 +115,19 @@ class ProdPreparationRemoveCloudinary extends Command
                 ! $this->option('rollback')
                 && $this->confirm('Are you sure you want to remove unused assets for good?')
             ) {
-                cloudinary()->admin()->deleteAssets($unusedPublicIds);
+                $chunks = $unusedPublicIds->chunk(100);
+
+                $bar = $this->output->createProgressBar(count($chunks));
+                $bar->start();
+
+                foreach ($chunks as $chunk) {
+                    cloudinary()->admin()->deleteAssets($chunk->all());
+                    $bar->advance();
+                }
+
+                $bar->finish();
+
+                $this->newLine();
 
                 $this->line('Successfully deleted assets from Cloudinary');
             }
