@@ -3,7 +3,7 @@
 namespace Modules\Ecommerce\Entities;
 
 use App\Models\User;
-use GetCandy\Models\Order as GetCandyOrder;
+use Lunar\Models\Order as LunarOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Booking\Entities\Event as BookingEvent;
 use Modules\Booking\Entities\OrderCheckIn;
@@ -11,12 +11,12 @@ use Modules\Ecommerce\Database\factories\OrderFactory;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\ModuleService;
 
-class Order extends GetCandyOrder
+class Order extends LunarOrder
 {
     /**
      * Return a new factory instance for the model.
      *
-     * @return \GetCandy\Database\Factories\OrderFactory
+     * @return \Lunar\Database\Factories\OrderFactory
      */
     protected static function newFactory(): OrderFactory
     {
@@ -98,8 +98,8 @@ class Order extends GetCandyOrder
                 return $query->orderByCheckIn($order);
                 break;
 
-            case 'city':
-                return $query->orderByCity($order);
+            case 'location':
+                return $query->orderByLocation($order);
                 break;
 
             default:
@@ -148,13 +148,13 @@ class Order extends GetCandyOrder
         , $order);
     }
 
-    public function scopeOrderByCity($query, string $order)
+    public function scopeOrderByLocation($query, string $order)
     {
         $tablePrefix = ModuleService::tablePrefix();
         $moduleName = ModuleService::getName();
 
         return $query->orderBy(
-            Product::selectRaw("prod_meta.value::json->0->>'city'")
+            Product::selectRaw("concat(prod_meta.value::json->0->>'city', ', ', prod_meta.value::json->0->>'country_code')")
                 ->join("{$tablePrefix}products_meta as prod_meta", function ($join) use ($tablePrefix) {
                     $join
                         ->on("prod_meta.product_id", "=", "{$tablePrefix}products.id")

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table(config('getcandy.database.table_prefix').'products', function (Blueprint $table) {
+        Schema::table(config('lunar.database.table_prefix').'products', function (Blueprint $table) {
             $table->nullableMorphs('productable');
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table(config('getcandy.database.table_prefix').'products', function (Blueprint $table) {
+        Schema::table(config('lunar.database.table_prefix').'products', function (Blueprint $table) {
             $table->dropMorphs('productable');
         });
     }

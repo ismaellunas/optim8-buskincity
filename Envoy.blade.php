@@ -76,7 +76,9 @@
 @endstory
 
 @task('heroku:migration')
-    heroku run php artisan migrate --force
+    @if (! $skipMigration)
+        heroku run php artisan migrate --force
+    @endif
 @endtask
 
 @task('heroku:clean-after-deploy')

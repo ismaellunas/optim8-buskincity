@@ -5,15 +5,15 @@ namespace Modules\Ecommerce\Entities;
 use App\Models\Media;
 use App\Models\User;
 use App\Services\CountryService;
-use GetCandy\FieldTypes\TranslatedText;
-use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Kodeine\Metable\Metable;
+use Lunar\FieldTypes\TranslatedText;
+use Lunar\Models\Product as LunarProduct;
 use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
 
-class Product extends GetCandyProduct
+class Product extends LunarProduct
 {
     use Metable;
 
@@ -24,7 +24,7 @@ class Product extends GetCandyProduct
 
     public function getMetaTable(): string
     {
-        return config('getcandy.database.table_prefix').'products_meta';
+        return config('lunar.database.table_prefix').'products_meta';
     }
 
     public function variants()
@@ -186,15 +186,14 @@ class Product extends GetCandyProduct
     {
         $city = $this->locations[0]['city'] ?? null;
         $countryCode = $this->locations[0]['country_code'] ?? null;
+        $countryName = null;
 
         if ($countryCode) {
             $countryName = app(CountryService::class)->getCountryName($countryCode);
-
-            return $countryName
-                ? $countryName . ($city ? ', ' . $city : null)
-                : null;
         }
 
-        return null;
+        return $city
+            ? $city . ($countryName ? ', ' . $countryName : null)
+            : $countryName;
     }
 }

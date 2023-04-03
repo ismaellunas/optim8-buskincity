@@ -30,7 +30,7 @@ return new class extends Migration
             $table
                 ->foreignId('order_line_id')
                 ->nullable()
-                ->constrained(config('getcandy.database.table_prefix').'order_lines')
+                ->constrained(config('lunar.database.table_prefix').'order_lines')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
