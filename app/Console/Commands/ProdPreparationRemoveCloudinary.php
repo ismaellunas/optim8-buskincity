@@ -44,10 +44,14 @@ class ProdPreparationRemoveCloudinary extends Command
             $this->process();
 
             if ($this->option('rollback')) {
+
                 throw new Exception('rollback option is true');
-            } else {
+
+            } elseif ($this->confirm('Do you wish to commit the changes?')) {
+
                 DB::commit();
-                $this->line('committed');
+
+                $this->info('committed');
             }
 
             return Command::SUCCESS;
@@ -111,7 +115,19 @@ class ProdPreparationRemoveCloudinary extends Command
                 ! $this->option('rollback')
                 && $this->confirm('Are you sure you want to remove unused assets for good?')
             ) {
-                cloudinary()->admin()->deleteAssets($unusedPublicIds);
+                $chunks = $unusedPublicIds->chunk(100);
+
+                $bar = $this->output->createProgressBar(count($chunks));
+                $bar->start();
+
+                foreach ($chunks as $chunk) {
+                    cloudinary()->admin()->deleteAssets($chunk->all());
+                    $bar->advance();
+                }
+
+                $bar->finish();
+
+                $this->newLine();
 
                 $this->line('Successfully deleted assets from Cloudinary');
             }
