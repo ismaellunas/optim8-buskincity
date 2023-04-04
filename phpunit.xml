@@ -14,6 +14,10 @@
         <testsuite name="FeatureRolePermission">
             <directory suffix="Test.php">./tests/Feature/RolePermission</directory>
         </testsuite>
+        <testsuite name="Modules">
+          <directory suffix="Test.php">./Modules/*/Tests/Feature</directory>
+          <directory suffix="Test.php">./Modules/*/Tests/Unit</directory>
+        </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
