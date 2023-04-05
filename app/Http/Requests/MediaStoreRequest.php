@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Media;
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
 use App\Services\TranslationService;
