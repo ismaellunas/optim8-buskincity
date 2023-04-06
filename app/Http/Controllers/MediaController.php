@@ -71,27 +71,7 @@ class MediaController extends CrudController
                     ]),
                 ],
             ],
-            'i18n' => [
-                'search' => __('Search'),
-                'filter' => __('Filter'),
-                'file_name' => __('File Name'),
-                'alternative_text' => __('Alternative Text'),
-                'description' => __('Description'),
-                'date_modified' => __('Date Modified'),
-                'type' => __('Type'),
-                'size' => __('Size'),
-                'actions' => __('Actions'),
-                'media_detail' => __('Media Detail'),
-                'save' => __('Save'),
-                'cancel' => __('Cancel'),
-                'delete' => __('Delete'),
-                'save_as_new' => __('Save As New'),
-                'done' => __('Done'),
-                'edit_image' => __('Edit :resource', ['resource' => 'Image']),
-                'are_you_sure' => __('Are you sure you want to delete this resource?'),
-                'delete_resource' => __('Delete Resource'),
-                'warning_delete_resource' => __('This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.'),
-            ],
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -156,7 +136,9 @@ class MediaController extends CrudController
         if (!empty($storeInputs)) {
             $this->storeProcess($storeInputs);
 
-            $this->generateFlashMessage('A new media has been created.');
+            $this->generateFlashMessage('The :resource was created!', [
+                'resource' => __('Media')
+            ]);
         }
 
         $updateInputs = collect($request->all())
@@ -166,7 +148,9 @@ class MediaController extends CrudController
         if (!empty($updateInputs)) {
             $this->updateProsess($updateInputs);
 
-            $this->generateFlashMessage('The media has been edited.');
+            $this->generateFlashMessage('The :resource was updated!', [
+                'resource' => __('Media')
+            ]);
         }
     }
 
@@ -233,7 +217,9 @@ class MediaController extends CrudController
     {
         $this->mediaService->destroy($media, new CloudinaryStorage());
 
-        $this->generateFlashMessage('Media deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Media')
+        ]);
 
         return redirect()->back();
     }
@@ -265,7 +251,9 @@ class MediaController extends CrudController
                 return $translation->replicate();
             }));
 
-        $this->generateFlashMessage('A new media has been created.');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Media')
+        ]);
 
         return redirect()->back();
     }
@@ -296,5 +284,30 @@ class MediaController extends CrudController
             ->contains(
                 collect($type)->implode(',')
             );
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'filter' => __('Filter'),
+            'file_name' => __('File Name'),
+            'alternative_text' => __('Alternative Text'),
+            'description' => __('Description'),
+            'date_modified' => __('Date Modified'),
+            'type' => __('Type'),
+            'size' => __('Size'),
+            'actions' => __('Actions'),
+            'media_detail' => __('Media Detail'),
+            'save' => __('Save'),
+            'cancel' => __('Cancel'),
+            'delete' => __('Delete'),
+            'save_as_new' => __('Save As New'),
+            'done' => __('Done'),
+            'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
+            'are_you_sure' => __('Are you sure?'),
+            'delete_resource' => __('Delete :resource', ['resource' => __('Media')]),
+            'warning_delete_resource' => __('This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.'),
+        ];
     }
 }
