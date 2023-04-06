@@ -112,15 +112,17 @@ class SpaceStoreRequest extends FormRequest
         $user = auth()->user();
         $spaceService = app(SpaceService::class);
 
-        $rules['parent_id'] = ['integer'];
-
         $managedSpaces = null;
+
+        $rules['parent_id'] = ['integer'];
 
         if ($user->can('space.add')) {
 
-            $rules['parent_id'][] = ['nullable'];
+            $rules['parent_id'][] = 'nullable';
 
         } else {
+
+            $rules['parent_id'][] = 'required';
 
             $managedSpaces = $user->spaces;
         }

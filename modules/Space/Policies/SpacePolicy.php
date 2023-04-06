@@ -13,7 +13,7 @@ class SpacePolicy
     public function viewAny(User $user)
     {
         return (
-            $user->can('space.read')
+            $user->can('space.browse')
             || $user->spaces->isNotEmpty()
         );
     }

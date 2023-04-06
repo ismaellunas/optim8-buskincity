@@ -224,10 +224,10 @@ class Space extends BaseModel implements TranslatableContract
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
-        $this->latitude = $inputs['latitude'];
-        $this->longitude = $inputs['longitude'];
-        $this->address = $inputs['address'];
-        $this->type_id = $inputs['type_id'];
+        $this->latitude = $inputs['latitude'] ?? null;
+        $this->longitude = $inputs['longitude'] ?? null;
+        $this->address = $inputs['address'] ?? null;
+        $this->type_id = $inputs['type_id'] ?? null;
         $this->contacts = $inputs['contacts'] ?? [];
 
         if (array_key_exists('parent_id', $inputs)) {
