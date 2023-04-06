@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                Duplicate Menu
+                {{ i18n.duplicate_menu }}
             </p>
             <button
                 class="delete"
@@ -18,7 +18,7 @@
                 <biz-form-select
                     v-model="form.locale"
                     class="is-fullwidth"
-                    label="To"
+                    :label="i18n.to"
                     required
                     :message="error('locale', null, errors)"
                 >
@@ -33,7 +33,7 @@
 
                 <biz-form-input
                     v-model="form.title"
-                    label="Title"
+                    :label="i18n.title"
                     required
                     :message="error('title', null, errors)"
                 />
@@ -41,7 +41,7 @@
                 <biz-form-select
                     v-model="form.type"
                     class="is-fullwidth"
-                    label="Type"
+                    :label="i18n.type"
                     required
                     :message="error('type', null, errors)"
                     @change="onChangedType"
@@ -58,7 +58,7 @@
                 <biz-form-input
                     v-if="isTypeUrl"
                     v-model="form.url"
-                    label="Url"
+                    :label="i18n.url"
                     placeholder="e.g https://www.example.com/"
                     :message="error('url', null, errors)"
                 />
@@ -66,7 +66,7 @@
                 <biz-form-select
                     v-else
                     v-model="form.menu_itemable_id"
-                    label="Menu"
+                    :label="i18n.menu"
                     class="is-fullwidth"
                     :message="error('menu_itemable_id', null, errors)"
                     :required="true"
@@ -90,7 +90,9 @@
                     v-model:checked="form.is_blank"
                     :value="true"
                 >
-                    Open link in a new tab
+                    <span class="ml-2">
+                        {{ i18n.open_link }}
+                    </span>
                 </biz-checkbox>
             </fieldset>
         </form>
@@ -103,14 +105,14 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
                         <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click="onSubmit()"
                         >
-                            Duplicate
+                            {{ i18n.duplicate }}
                         </biz-button>
                     </div>
                 </div>
@@ -144,6 +146,20 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                duplicate_menu: 'Duplicate Menu',
+                to: 'To',
+                title : 'Title',
+                type : 'Type',
+                url : 'Url',
+                menu : 'Menu',
+                open_link : 'Open link in a new tab',
+                cancel : 'Cancel',
+                duplicate: 'Duplicate',
+            }) },
+        },
 
         props: {
             errors: {

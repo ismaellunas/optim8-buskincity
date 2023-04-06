@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? 'Add' : 'Edit' }} Menu Item
+                {{ isCreate ? i18n.add_menu_item : i18n.edit_menu_item }}
             </p>
             <button
                 class="delete"
@@ -17,7 +17,7 @@
             <fieldset>
                 <biz-form-input
                     v-model="form.title"
-                    label="Title"
+                    :label="i18n.title"
                     required
                     :message="error('title', null, errors)"
                 />
@@ -25,7 +25,7 @@
                 <biz-form-select
                     v-model="form.type"
                     class="is-fullwidth"
-                    label="Type"
+                    :label="i18n.type"
                     required
                     :message="error('type', null, errors)"
                     @change="onChangedType"
@@ -42,7 +42,7 @@
                 <biz-form-input
                     v-if="isTypeUrl"
                     v-model="form.url"
-                    label="Url"
+                    :label="i18n.url"
                     placeholder="e.g https://www.example.com/"
                     :message="error('url', null, errors)"
                 />
@@ -50,7 +50,7 @@
                 <biz-form-select
                     v-else
                     v-model="form.menu_itemable_id"
-                    label="Menu"
+                    :label="i18n.menu"
                     class="is-fullwidth"
                     :message="error('menu_itemable_id', null, errors)"
                     :required="true"
@@ -74,7 +74,9 @@
                     v-model:checked="form.is_blank"
                     :value="true"
                 >
-                    Open link in a new tab
+                    <span class="ml-2">
+                        {{ i18n.open_link }}
+                    </span>
                 </biz-checkbox>
             </fieldset>
         </form>
@@ -87,14 +89,14 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
                         <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click="onSubmit()"
                         >
-                            {{ isCreate ? 'Create' : 'Update' }}
+                            {{ isCreate ? i18n.create : i18n.update }}
                         </biz-button>
                     </div>
                 </div>
@@ -129,6 +131,21 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                add_menu_item : 'Add menu item',
+                edit_menu_item : 'Edit menu item',
+                title : 'Title',
+                type : 'Type',
+                url : 'Url',
+                menu : 'Menu',
+                open_link : 'Open link in a new tab',
+                cancel : 'Cancel',
+                create : 'Create',
+                update : 'Update',
+            }) },
+        },
 
         props: {
             baseRouteName: {

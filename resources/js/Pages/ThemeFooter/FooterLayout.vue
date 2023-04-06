@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Footer Layout</b><br>
+                    <b>
+                        {{ i18n.footer_layout }}
+                    </b>
                 </div>
             </div>
         </div>
@@ -16,7 +18,7 @@
                 >
                     <div class="card-content">
                         <div class="content">
-                            Layout 1
+                            {{ i18n.layout + ' 1' }}
                         </div>
                     </div>
                 </div>
@@ -24,7 +26,7 @@
                     class="has-text-weight-semibold mt-2"
                     :class="modelValue == 1 ? 'has-text-link' : ''"
                 >
-                    Standard
+                    {{ i18n.standard }}
                 </p>
             </div>
         </div>
@@ -36,6 +38,14 @@
 
     export default {
         name: 'FooterLayout',
+
+        inject: {
+            i18n: { default: () => ({
+                footer_layout : 'Footer Layout',
+                standard : 'Standard',
+                layout : 'Layout',
+            }) },
+        },
 
         props: {
             modelValue: {

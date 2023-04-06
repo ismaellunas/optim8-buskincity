@@ -35,6 +35,7 @@ class ThemeFontController extends CrudController
                 'buttonsFont' => $this->settingService->getFont('buttons_font'),
                 'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.$googleApiKey,
                 'baseUrlGoogleFont' => 'https://fonts.googleapis.com/css2',
+                'i18n' => $this->translations(),
             ])
         );
     }
@@ -78,8 +79,27 @@ class ThemeFontController extends CrudController
 
         CompileThemeCss::dispatch();
 
-        $this->generateFlashMessage($this->title.' updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    private function translations(): array
+    {
+        return [
+            'typography' => __('Typography'),
+            'save' => __('Save'),
+            'uppercase_text' => __('Uppercase Text'),
+            'content_paragraph_width' => __('Content Paragraph Width'),
+            'heading_font' => __('Heading Font'),
+            'font_family' => __('Font Family'),
+            'font_weight' => __('Font Weight'),
+            'font_style' => __('Font Style'),
+            'preview' => __('Preview'),
+            'main_text_font' => __('Main Text Font'),
+            'button_font' => __('Buttons Font'),
+        ];
     }
 }

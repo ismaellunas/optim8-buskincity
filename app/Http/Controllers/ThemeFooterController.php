@@ -50,6 +50,7 @@ class ThemeFooterController extends CrudController
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
                 'menuOptions' => $this->menuService->getMenuOptions(),
                 'typeSegment' => (new SegmentOption)->getKey(),
+                'i18n' => $this->translations(),
             ]),
         );
     }
@@ -71,7 +72,9 @@ class ThemeFooterController extends CrudController
 
         $menu->syncSocialMedia($request->social_media_menus);
 
-        $this->generateFlashMessage('Footer layout updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Footer Layout')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }
@@ -80,6 +83,38 @@ class ThemeFooterController extends CrudController
     {
         return [
             'passed' => true
+        ];
+    }
+
+    private function translations(): array
+    {
+        return [
+            'layout' => __('Layout'),
+            'navigation' => __('Navigation'),
+            'footer_layout' => __('Footer Layout'),
+            'standard' => __('Standard'),
+            'social_media' => __('Social Media'),
+            'social_media_items' => __('Social Media Items'),
+            'add_social_media' => __('Add :resource', ['resource' => __('Media Item')]),
+            'edit_social_media' => __('Edit :resource', ['resource' => __('Media Item')]),
+            'icon' => __('Icon'),
+            'link' => __('Link'),
+            'save' => __('Save'),
+            'menu_items' => __('Menu Items'),
+            'add_menu_item' => __('Add :resource', ['resource' => __('Menu Item')]),
+            'edit_menu_item' => __('Edit :resource', ['resource' => __('Menu Item')]),
+            'duplicate_menu' => __('Duplicate :resource', ['resource' => __('Menu')]),
+            'to' => __('To'),
+            'title' => __('Title'),
+            'type' => __('Type'),
+            'url' => __('Url'),
+            'menu' => __('Menu'),
+            'open_link' => __('Open link in a new tab'),
+            'cancel' => __('Cancel'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+            'duplicate' => __('Duplicate'),
+            'add_new_segment' => __('Add :resource', ['resource' => __('New Segment')]),
         ];
     }
 }

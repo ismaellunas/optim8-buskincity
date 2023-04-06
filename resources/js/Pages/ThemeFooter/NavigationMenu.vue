@@ -40,7 +40,7 @@
                         aria-hidden="true"
                     />
                 </span>
-                Add new menu item
+                {{ i18n.add_menu_item }}
             </a>
         </template>
     </draggable>
@@ -59,6 +59,12 @@
         components: {
             Draggable,
             ThemeMenuItem,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                add_menu_item : 'Add new menu item',
+            }) }
         },
 
         props: {

@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Social Media</b><br>
+                    <b>
+                        {{ i18n.social_media }}
+                    </b>
                 </div>
             </div>
         </div>
@@ -11,7 +13,7 @@
             <div class="column">
                 <nav class="panel">
                     <div class="panel-block p-4 has-text-weight-bold">
-                        Social Media Items
+                        {{ i18n.social_media_items }}
                     </div>
                     <div
                         v-for="(socialMedia, index) in socialMediaMenus"
@@ -61,7 +63,9 @@
                                 aria-hidden="true"
                             />
                         </span>
-                        Add social media
+                        <span class="ml-2">
+                            {{ i18n.add_social_media }}
+                        </span>
                     </a>
                 </nav>
             </div>
@@ -99,6 +103,14 @@
         mixins: [
             MixinHasModal,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                social_media : 'Social Media',
+                social_media_items : 'Social Media Items',
+                add_social_media : 'Add social media',
+            }) },
+        },
 
         props: {
             modelValue: {

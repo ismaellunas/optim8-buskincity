@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Menu Items</b><br>
+                    <b>
+                        {{ i18n.menu_items }}
+                    </b>
                 </div>
             </div>
             <div class="column">
@@ -77,6 +79,12 @@
         mixins: [
             MixinHasModal,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                menu_items : 'Menu Items',
+            }) }
+        },
 
         props: {
             menu: {
