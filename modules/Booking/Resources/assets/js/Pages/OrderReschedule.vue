@@ -9,6 +9,14 @@
                         </h4>
 
                         <table-event-reschedule-detail :event="firstEvent" />
+
+                        <div class="buttons">
+                            <biz-button-link
+                                :href="route(baseRouteName + '.show', order.id)"
+                            >
+                                Back
+                            </biz-button-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -59,6 +67,7 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BookingTime from '@booking/Pages/BookingTime.vue';
     import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation.vue';
     import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail.vue';
@@ -70,6 +79,7 @@
     export default {
         components: {
             BizButton,
+            BizButtonLink,
             BookingTime,
             ModalTimeConfirmation,
             TableEventRescheduleDetail,
