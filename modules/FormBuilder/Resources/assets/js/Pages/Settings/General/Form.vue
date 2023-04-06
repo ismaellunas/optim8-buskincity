@@ -44,8 +44,8 @@
 
         <div class="columns">
             <div class="column">
-                <biz-button class="is-primary is-pulled-right">
-                    Update
+                <biz-button class="is-link is-pulled-right">
+                    {{ i18n.update }}
                 </biz-button>
             </div>
         </div>
@@ -72,6 +72,15 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                submit_button: 'Submit Button',
+                text: 'Text',
+                position: 'Position',
+                update: 'Update',
+            }) },
+        },
 
         props: {
             modelValue: { type: Object, required: true },

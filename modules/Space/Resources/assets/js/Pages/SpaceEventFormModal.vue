@@ -98,7 +98,7 @@
                         </biz-button>
 
                         <biz-button
-                            class="is-primary ml-1"
+                            class="is-link ml-1"
                             type="button"
                             @click="submit"
                         >
