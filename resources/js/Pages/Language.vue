@@ -16,14 +16,14 @@
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
                         <div class="columns">
                             <div class="column">
                                 <biz-form-dropdown-search
-                                    label="Default Language"
+                                    :label="i18n.default_language"
                                     :close-on-click="true"
                                     @search="searchLanguage($event)"
                                 >
@@ -47,7 +47,7 @@
                         <div class="columns mt-2 is-multiline">
                             <div class="column is-full">
                                 <biz-label>
-                                    {{ trans.labels["Supported Languages"] }}
+                                    {{ i18n.supported_languages }}
                                 </biz-label>
                             </div>
 
@@ -84,7 +84,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
     import BizLabel from '@/Biz/Label.vue';
-    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { success as successAlert } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
@@ -114,6 +114,11 @@
             languageOptions: {type: Object, required: true},
             defaultLanguage: {type: Number, required: true},
             title: {type: String, required: true},
+            i18n: {type: Object, default: () => ({
+                default_language : 'Default Language',
+                supported_languages : 'Supported Languages',
+                update : 'Update',
+            })},
         },
 
         setup(props) {
@@ -133,11 +138,6 @@
                 loader: null,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 supportedLanguageOptions: this.initSupportedLanguageOptions(),
-                trans: {
-                    labels: {
-                        "Supported Languages": "Supported Languages",
-                    }
-                },
             };
         },
 
