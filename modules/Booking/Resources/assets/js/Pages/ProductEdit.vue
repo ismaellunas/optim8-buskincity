@@ -37,12 +37,12 @@
                                     :href="route(baseRouteName+'.index')"
                                     class="is-link is-light"
                                 >
-                                    Cancel
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                 <form @submit.prevent="eventSubmit">
                     <div class="box">
                         <h5 class="title is-5 mb-2">
-                            Details
+                            {{ i18n.details }}
                         </h5>
 
                         <hr class="mt-0">
@@ -67,7 +67,7 @@
                             <div class="column is-6">
                                 <biz-form-select
                                     v-model="eventForm.duration"
-                                    label="Duration"
+                                    :label="i18n.duration"
                                     :message="error('duration', 'eventForm')"
                                     has-addons
                                     required
@@ -94,7 +94,7 @@
                             <div class="column is-6">
                                 <biz-form-number-addons
                                     v-model="eventForm.bookable_date_range"
-                                    label="Bookable date range (Calendar days into the future)"
+                                    :label="i18n.bookable_date_range"
                                     max="365"
                                     min="0"
                                     required
@@ -115,7 +115,7 @@
                             <div class="column is-6">
                                 <biz-form-textarea
                                     v-model="eventForm.location.address"
-                                    label="Address"
+                                    :label="i18n.address"
                                     placeholder="Address"
                                     rows="5"
                                     maxlength="500"
@@ -124,7 +124,7 @@
 
                                 <biz-form-input
                                     v-model="eventForm.location.city"
-                                    label="City"
+                                    :label="i18n.city"
                                     maxlength="64"
                                     required
                                     :message="error('location.city', eventErrorBag)"
@@ -132,7 +132,7 @@
 
                                 <biz-form-select
                                     v-model="eventForm.location.country_code"
-                                    label="Country"
+                                    :label="i18n.country"
                                     required
                                 >
                                     <option
@@ -150,14 +150,14 @@
                                     <div class="column is-12">
                                         <biz-form-input
                                             v-model="eventForm.location.latitude"
-                                            label="Latitude"
+                                            :label="i18n.latitude"
                                             :message="error('location.latitude', eventErrorBag)"
                                         />
                                     </div>
                                     <div class="column is-12">
                                         <biz-form-input
                                             v-model="eventForm.location.longitude"
-                                            label="Longitude"
+                                            :label="i18n.longitude"
                                             :message="error('location.longitude', eventErrorBag)"
                                         />
                                     </div>
@@ -167,7 +167,7 @@
                             <div class="column is-1">
                                 <div class="field">
                                     <label class="label">
-                                        Map
+                                        {{ i18n.map }}
                                     </label>
                                     <span class="control">
                                         <biz-button-icon
@@ -201,14 +201,14 @@
 
                     <div class="box">
                         <h5 class="title is-5 mb-2">
-                            Schedule
+                            {{ i18n.schedule }}
                         </h5>
 
                         <hr class="mt-0">
 
                         <biz-form-select
                             v-model="eventForm.timezone"
-                            label="Timezone"
+                            :label="i18n.timezone"
                             :message="error('timezone', 'eventForm')"
                             required
                         >
@@ -228,7 +228,7 @@
                                 <div class="card">
                                     <header class="card-header">
                                         <p class="card-header-title">
-                                            Weekly hours
+                                            {{ i18n.weekly_hours }}
                                         </p>
                                     </header>
                                     <div class="card-content">
@@ -273,14 +273,14 @@
                                 <div class="card">
                                     <header class="card-header">
                                         <p class="card-header-title">
-                                            Date overrides
+                                            {{ i18n.date_overrides }}
                                         </p>
                                     </header>
 
                                     <div class="card-content">
                                         <div class="columns is-multiline">
                                             <div class="column is-full has-text-centered">
-                                                Add dates when your availability changes from your weekly hours
+                                                {{ i18n.date_overrides_description }}
                                             </div>
 
                                             <div class="column is-full has-text-centered">
@@ -289,7 +289,7 @@
                                                     type="button"
                                                     @click="openDateOverrideModal()"
                                                 >
-                                                    Add Date
+                                                    {{ i18n.add_date }}
                                                 </biz-button>
                                             </div>
 
@@ -319,7 +319,7 @@
 
                                                         <template v-else>
                                                             <biz-tag class="is-warning is-medium is-italic">
-                                                                Unavailable
+                                                                {{ i18n.unavailable }}
                                                             </biz-tag>
                                                         </template>
                                                     </div>
@@ -372,12 +372,12 @@
                                     :href="route(baseRouteName+'.index')"
                                     class="is-link is-light"
                                 >
-                                    Cancel
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
@@ -396,14 +396,14 @@
                 >
                     <biz-form-assign-user
                         v-model="productManagers"
-                        label="Choose Product Manager"
+                        :label="i18n.choose_product_manager"
                         :get-users-url="route(productManagerBaseRoute+'.search', product.id)"
                     />
 
                     <div class="field is-grouped is-grouped-right mt-4">
                         <div class="control">
                             <biz-button class="is-link">
-                                Update
+                                {{ i18n.update }}
                             </biz-button>
                         </div>
                     </div>
@@ -480,6 +480,12 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -505,6 +511,31 @@
             productManagerBaseRoute: { type: String, required: true },
             rules: { type: Object, required: true },
             instructions: {type: Object, default: () => {}},
+            i18n: { type: Object, default: () => ({
+                details : 'Details',
+                cancel : 'Cancel',
+                update : 'Update',
+                product : 'Product',
+                event : 'Event',
+                manager : 'Manager',
+                duration : 'Duration',
+                bookable_date_range : 'Bookable date range (Calendar days into the future)',
+                address : 'Address',
+                city : 'City',
+                country : 'Country',
+                latitude : 'Latitude',
+                longitude : 'Longitude',
+                schedule : 'Schedule',
+                timezone : 'Timezone',
+                weekly_hours : 'Weekly Hours',
+                date_overrides : 'Date Override',
+                date_overrides_description : 'Add dates when your availability changes from your weekly hours',
+                add_date : 'Add Date',
+                map : 'Map',
+                unavailable : 'Unavailable',
+                choose_product_manager : 'Choose Product Manager',
+
+            }) },
         },
 
         setup(props) {

@@ -5,7 +5,7 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Email"
+                :title="i18n.email"
                 tab-id="email-tab-trigger"
             >
                 <form
@@ -16,26 +16,26 @@
                     <biz-form-text-editor
                         v-model="form.email_new_booking"
                         height="200"
-                        label="New booking"
+                        :label="i18n.new_booking"
                         mode="email"
                     />
                     <biz-form-text-editor
                         v-model="form.email_reminder"
                         height="200"
-                        label="Booking reminder"
+                        :label="i18n.booking_remainder"
                         mode="email"
                     />
                     <biz-form-text-editor
                         v-model="form.email_cancellation"
                         height="200"
-                        label="Booking cancellation"
+                        :label="i18n.booking_cancellation"
                         mode="email"
                     />
 
                     <div class="field is-grouped is-grouped-right mt-4">
                         <div class="control">
                             <biz-button class="is-link">
-                                Save
+                                {{ i18n.save }}
                             </biz-button>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
             </biz-provide-inject-tab>
 
             <biz-provide-inject-tab
-                title="Check In"
+                :title="i18n.check_in"
                 tab-id="check-in-tab-trigger"
             >
                 <form
@@ -55,7 +55,7 @@
                         <div class="column is-6">
                             <biz-form-select
                                 v-model="form.allowed_early_check_in"
-                                label="Available check in before"
+                                :label="i18n.available_check_in"
                                 :message="error('duration')"
                                 has-addons
                                 is-fullwidth
@@ -81,7 +81,7 @@
                         <div class="column is-6">
                             <biz-form-number-addons
                                 v-model="form.check_in_radius.value"
-                                label="Check-in radius"
+                                :label="i18n.check_in_radius"
                                 max="1000"
                                 min="0"
                                 :message="error('bookable_date_range')"
@@ -110,7 +110,7 @@
                     <div class="field is-grouped is-grouped-right mt-4">
                         <div class="control">
                             <biz-button class="is-link">
-                                Save
+                                {{ i18n.save }}
                             </biz-button>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
-    import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
     import { ref } from 'vue';
 
@@ -158,6 +158,16 @@
         props: {
             bookingSettings: { type: Object, required: true },
             title: { type: String, default: "Settings" },
+            i18n: { type: Object, default: () => ({
+                email : 'Email',
+                check_in : 'Check-In',
+                new_booking : 'New booking',
+                booking_remainder : 'Booking remainder',
+                booking_cancellation : 'Booking cancellation',
+                available_check_in : 'Available check-in before',
+                check_in_radius : 'Check-in radius',
+                save : 'Save',
+            }) },
         },
 
         setup(props) {
