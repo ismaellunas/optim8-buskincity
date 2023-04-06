@@ -18,6 +18,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import NotificationForm from './Form.vue';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
     import { provide } from 'vue';
 
@@ -78,6 +79,7 @@
                     {
                         onStart: () => self.onStartLoadingOverlay(),
                         onFinish: () => self.onEndLoadingOverlay(),
+                        onSuccess: (page) => successAlert(page.props.flash.message),
                     }
                 )
             }

@@ -154,7 +154,7 @@ class Order extends LunarOrder
         $moduleName = ModuleService::getName();
 
         return $query->orderBy(
-            Product::selectRaw("concat(prod_meta.value::json->0->>'country_code', ', ', prod_meta.value::json->0->>'city')")
+            Product::selectRaw("concat(prod_meta.value::json->0->>'city', ', ', prod_meta.value::json->0->>'country_code')")
                 ->join("{$tablePrefix}products_meta as prod_meta", function ($join) use ($tablePrefix) {
                     $join
                         ->on("prod_meta.product_id", "=", "{$tablePrefix}products.id")

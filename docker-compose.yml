@@ -28,7 +28,7 @@ services:
             - selenium
             - memcached
 #            - meilisearch
-            - mailhog
+            - mailpit
     pgsql:
         image: '${DOCKER_IMAGE_DB:-postgres:15}'
         ports:
@@ -87,19 +87,13 @@ services:
 #            test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
 #            retries: 3
 #            timeout: 5s
-    mailhog:
-        image: 'mailhog/mailhog:latest'
+    mailpit:
+        image: 'axllent/mailpit:latest'
         ports:
-            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
-            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
-        deploy:
-          resources:
-            limits:
-              memory: 200M
-            reservations:
-              memory: 10M
     selenium:
         image: '${DOCKER_IMAGE_SELENIUM:-selenium/standalone-chrome}'
         extra_hosts:

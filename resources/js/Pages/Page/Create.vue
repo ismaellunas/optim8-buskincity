@@ -27,7 +27,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
-    import { oops as oopsAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/vue3';
 
@@ -110,8 +110,12 @@
                 this.form.post(submitRoute, {
                     onStart: this.onStartLoadingOverlay,
                     onFinish: this.onEndLoadingOverlay,
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
                 });
             },
+
             onChangeLocale() {
                 let locale = {};
                 this.localeOptions.map(localeOption => {
