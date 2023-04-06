@@ -6,7 +6,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                Request
+                {{ i18n.request }}
             </p>
 
             <button
@@ -23,21 +23,21 @@
                         <th
                             colspan="100"
                         >
-                            Request Details
+                            {{ i18n.request_details }}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>Time</th>
+                        <th>{{ i18n.time }}</th>
                         <td>{{ entry.created_at }}</td>
                     </tr>
                     <tr>
-                        <th>Hostname</th>
+                        <th>{{ i18n.hostname }}</th>
                         <td>{{ entry.content.hostname }}</td>
                     </tr>
                     <tr>
-                        <th>Method</th>
+                        <th>{{ i18n.method }}</th>
                         <td>
                             <biz-tag>
                                 {{ entry.content.method }}
@@ -45,23 +45,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Controller Action</th>
+                        <th>{{ i18n.controller_action }}</th>
                         <td>{{ entry.content.controller_action }}</td>
                     </tr>
                     <tr>
-                        <th>Middleware</th>
+                        <th>{{ i18n.middleware }}</th>
                         <td>{{ entry.content.middleware.join(',') }}</td>
                     </tr>
                     <tr>
-                        <th>Path</th>
+                        <th>{{ i18n.path }}</th>
                         <td>{{ entry.content.uri }}</td>
                     </tr>
                     <tr>
-                        <th>Duration</th>
+                        <th>{{ i18n.duration }}</th>
                         <td>{{ entry.content.duration }} ms</td>
                     </tr>
                     <tr>
-                        <th>Status</th>
+                        <th>{{ i18n.status }}</th>
                         <td>
                             <biz-tag :class="statusCodeColor(entry.content.response_status)">
                                 {{ entry.content.response_status }}
@@ -69,11 +69,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>IP address</th>
+                        <th>{{ i18n.ip_address }}</th>
                         <td>{{ entry.content.ip_address }}</td>
                     </tr>
                     <tr>
-                        <th>Memory</th>
+                        <th>{{ i18n.memory }}</th>
                         <td>{{ entry.content.memory }} MB</td>
                     </tr>
                 </tbody>
@@ -92,21 +92,21 @@
                         <th
                             colspan="100"
                         >
-                            Authenticated User
+                            {{ i18n.authenticated_user }}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>ID</th>
+                        <th>{{ i18n.id }}</th>
                         <td>{{ entry.content.user.id }}</td>
                     </tr>
                     <tr>
-                        <th>Email address</th>
+                        <th>{{ i18n.email_address }}</th>
                         <td>{{ entry.content.user.email }}</td>
                     </tr>
                     <tr>
-                        <th>Name</th>
+                        <th>{{ i18n.name }}</th>
                         <td>{{ entry.content.user.name }}</td>
                     </tr>
                 </tbody>
@@ -121,7 +121,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close-modal')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
                     </div>
                 </div>
@@ -145,6 +145,28 @@
             BizModalCard,
             BizTable,
             BizTag,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                request : 'Request',
+                request_details : 'Request Details',
+                time : 'Time',
+                hostname : 'Hostname',
+                method : 'Method',
+                controller_action : 'Controller Action',
+                middleware : 'Middleware',
+                path : 'Path',
+                duration : 'Duration',
+                status : 'Status',
+                ip_address : 'Ip Address',
+                memory : 'Memory',
+                authenticated_user : 'Authenticated User',
+                id : 'ID',
+                email_address : 'Email Address',
+                name : 'Name',
+                cancel : 'Cancel',
+            }) },
         },
 
         props: {

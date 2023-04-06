@@ -10,14 +10,14 @@
                     >
                         <template #trigger>
                             <span :style="{'min-width': '4rem'}">
-                                {{ selectedUser?.value ?? 'Select User' }}
+                                {{ selectedUser?.value ?? i18n.select_user }}
                             </span>
                         </template>
 
                         <biz-dropdown-item
                             @click="selectedUser = null"
                         >
-                            (None)
+                            {{ '(' + i18n.none + ')' }}
                         </biz-dropdown-item>
 
                         <biz-dropdown-item
@@ -35,12 +35,12 @@
                 <biz-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
-                            <th>Verb</th>
-                            <th>Path</th>
-                            <th>Status</th>
-                            <th>User</th>
-                            <th>Happened At</th>
-                            <th>Actions</th>
+                            <th>{{ i18n.verb }}</th>
+                            <th>{{ i18n.path }}</th>
+                            <th>{{ i18n.status }}</th>
+                            <th>{{ i18n.user }}</th>
+                            <th>{{ i18n.happened_at }}</th>
+                            <th>{{ i18n.actions }}</th>
                         </tr>
                     </thead>
 
@@ -56,11 +56,11 @@
                                     type="button"
                                     @click.prevent="loadNewEntries"
                                 >
-                                    <span>Load New Entries</span>
+                                    <span>{{ i18n.load_new_entries }}</span>
                                 </biz-button>
 
                                 <biz-tag v-if="loadingNewEntries">
-                                    Loading ...
+                                    {{ i18n.loading }} ...
                                 </biz-tag>
                             </td>
                         </tr>
@@ -118,11 +118,11 @@
                                     type="button"
                                     @click.prevent="loadOlderEntries"
                                 >
-                                    <span>Load More</span>
+                                    <span>{{ i18n.load_more }}</span>
                                 </biz-button>
 
                                 <biz-tag v-if="loadingMoreEntries">
-                                    Loading ...
+                                    {{ i18n.loading }} ...
                                 </biz-tag>
                             </td>
                         </tr>
@@ -174,12 +174,31 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
             can: { type: Object, default: () => {} },
             pageQueryParams: { type: Object, required: true},
             tagAuth: { type: [Object, null], default: null },
+            i18n: { type: Object, default: () => ({
+                select_user : 'Select User',
+                none : 'None',
+                verb : 'Verb',
+                path : 'Path',
+                status : 'Status',
+                user : 'User',
+                happened_at : 'Happened At',
+                actions : 'Actions',
+                load_new_entries : 'Load New Entries',
+                loading : 'Loading',
+                load_more : 'Load More',
+            }) },
         },
 
         data() {
