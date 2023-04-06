@@ -281,7 +281,7 @@
                     media_detail : 'Media Detail',
                     save : 'Save',
                     cancel : 'Cancel',
-                    are_you_sure : 'Are you sure you want to delete this resource?',
+                    are_you_sure : 'Are you sure?',
                     delete_resource : 'Delete Resource',
                     warning_delete_resource : 'This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.',
                 })
