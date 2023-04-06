@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-4">
         <div class="columns box">
             <div class="column is-5">
                 <div class="card">
@@ -72,7 +72,7 @@
     import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation.vue';
     import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail.vue';
     import moment from 'moment';
-    import { reactive, ref } from 'vue';
+    import { ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
