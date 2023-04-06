@@ -61,7 +61,13 @@ class TranslationManagerController extends CrudController
                 ],
                 'referenceLocale' => $this->referenceLocale,
                 'groupOptions' => config('constants.translations.groups'),
-                'title' => $this->getCreateTitle()
+                'title' => $this->getCreateTitle(),
+                'i18n' => [
+                    'key' => __('Key'),
+                    'value' => __('Value'),
+                    'create' => __('Create'),
+                    'cancel' => __('Cancel'),
+                ],
             ])
         );
     }
@@ -87,7 +93,9 @@ class TranslationManagerController extends CrudController
             }
         }
 
-        $this->generateFlashMessage('Translation created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Translation')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit');
     }
@@ -118,14 +126,28 @@ class TranslationManagerController extends CrudController
                     $request->term,
                     $this->recordsPerPage,
                 ),
-                'i18n' => [
+                'instructions' => [
                     'fileInputNotes' => [
                         __('Accepted file extension: :extensions', [
                             'extensions' => implode(',', config('constants.extensions.import'))
                         ]),
                         __('Max file size: :size', ['size' => '5MB']),
                     ]
-                ]
+                ],
+                'i18n' => [
+                    'export' => __('Export'),
+                    'import' => __('Import'),
+                    'add_new' => __('Add New'),
+                    'update' => __('Update'),
+                    'search' => __('Search'),
+                    'group' => __('Group'),
+                    'key' => __('Key'),
+                    'value' => __('Value'),
+                    'actions' => __('Actions'),
+                    'file' => __('File'),
+                    'submit' => __('Submit'),
+                    'cancel' => __('Cancel'),
+                ],
             ])
         );
     }
@@ -144,7 +166,9 @@ class TranslationManagerController extends CrudController
             );
         }
 
-        $this->generateFlashMessage('Translation updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Translation')
+        ]);
 
         return redirect()->back();
     }
@@ -163,7 +187,9 @@ class TranslationManagerController extends CrudController
             );
         }
 
-        $this->generateFlashMessage('Translation deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Translation')
+        ]);
 
         return redirect()->back();
     }
@@ -211,7 +237,9 @@ class TranslationManagerController extends CrudController
             $this->translationCache->flushLocale($locale);
         }
 
-        $this->generateFlashMessage('Translation imported successfully!');
+        $this->generateFlashMessage('The :resource was imported!', [
+            'resource' => __('Translation')
+        ]);
 
         $failures = $translationImport->failures();
 
