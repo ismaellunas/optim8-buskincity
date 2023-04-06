@@ -22,7 +22,7 @@
                         <span class="icon is-small">
                             <i :class="icon.add" />
                         </span>
-                        <span>Add New</span>
+                        <span>{{ i18n.add_new }}</span>
                     </biz-button>
                 </div>
             </div>
@@ -35,10 +35,10 @@
             >
                 <template #thead>
                     <tr>
-                        <th>Name</th>
+                        <th>{{ i18n.name }}</th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -218,7 +218,9 @@
             onDelete(type) {
                 const self = this;
 
-                confirmDelete().then(result => {
+                confirmDelete(
+                    self.are_you_sure,
+                ).then(result => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(this.baseRouteName+'.destroy', type.id),

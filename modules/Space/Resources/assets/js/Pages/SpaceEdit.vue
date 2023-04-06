@@ -10,7 +10,7 @@
                     :icon="iconPreview"
                     @click="previewPage"
                 >
-                    <span>Page Preview</span>
+                    <span>{{ i18n.page_preview }}</span>
                 </biz-button-icon>
             </p>
         </template>
@@ -63,12 +63,12 @@
                                                 :href="routeIndex"
                                                 class="is-link is-light"
                                             >
-                                                Cancel
+                                                {{ i18n.cancel }}
                                             </biz-button-link>
                                         </div>
                                         <div class="control">
                                             <biz-button class="is-link">
-                                                Update
+                                                {{ i18n.update }}
                                             </biz-button>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                     </biz-provide-inject-tab>
 
                     <biz-provide-inject-tab
-                        title="Event"
+                        :title="i18n.event"
                         :is-rendered="isEventRendered"
                     >
                         <space-event
@@ -87,7 +87,7 @@
                     </biz-provide-inject-tab>
 
                     <biz-provide-inject-tab
-                        title="Manager"
+                        :title="i18n.manager"
                         :is-rendered="isManagerRendered"
                     >
                         <form
@@ -96,14 +96,14 @@
                         >
                             <biz-form-assign-user
                                 v-model="managers"
-                                label="Choose Manager"
+                                :label="i18n.choose_manager"
                                 :get-users-url="route('admin.spaces.search-managers')"
                             />
 
                             <div class="field is-grouped is-grouped-right mt-4">
                                 <div class="control">
                                     <biz-button class="is-link">
-                                        Update
+                                        {{ i18n.update }}
                                     </biz-button>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                     </biz-provide-inject-tab>
 
                     <biz-provide-inject-tab
-                        title="Page"
+                        :title="i18n.page"
                         :is-rendered="isPageRendered"
                     >
                         <page-form
@@ -134,7 +134,7 @@
                                             class="is-link is-light"
                                             :href="route('admin.spaces.index')"
                                         >
-                                            Cancel
+                                            {{ i18n.cancel }}
                                         </biz-button-link>
                                     </div>
                                     <div class="control">
@@ -142,7 +142,7 @@
                                             class="is-link"
                                             @click="submitPage"
                                         >
-                                            {{ pageFormProps.isNew ? 'Create' : 'Update' }}
+                                            {{ pageFormProps.isNew ? i18n.create : i18n.update }}
                                         </biz-button>
                                     </div>
                                 </div>
@@ -204,6 +204,7 @@
         provide() {
             return {
                 can: this.can,
+                i18n: this.i18n,
             }
         },
 
@@ -223,7 +224,20 @@
             statusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
-            i18n: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => ({
+                space: 'Space',
+                event: 'Event',
+                manager: 'Manager',
+                page: 'Page',
+                cancel: 'Cancel',
+                create: 'Create',
+                update: 'Update',
+                are_you_sure: 'Are you sure?',
+                page_preview: 'Page Preview',
+                remove_page_confirmation: 'This action will also remove the page on the navigation menu.',
+                yes: 'Yes',
+                choose_manager: 'Choose Manager',
+            }) },
             typeOptions: { type: Object, default: () => {} },
         },
 
@@ -438,9 +452,9 @@
                     ) {
                         if (await this.isUsedByMenu()) {
                             const confirmResult = await confirmDelete(
-                                'Are You Sure?',
-                                'This action will also remove the page on the navigation menu.',
-                                'Yes'
+                                this.i18n.are_you_sure,
+                                this.i18n.remove_page_confirmation,
+                                this.i18n.yes
                             );
 
                             return !!confirmResult.value;
