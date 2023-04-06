@@ -37,6 +37,13 @@ class RoleController extends CrudController
                 $this->recordsPerPage,
             ),
             'title' => $this->getIndexTitle(),
+            'i18n' => [
+                'search' => __('Search'),
+                'create_new' => __('Create New'),
+                'name' => __('Name'),
+                'actions' => __('Actions'),
+                'are_you_sure' => __('Are you sure?'),
+            ],
         ]));
     }
 
@@ -59,6 +66,7 @@ class RoleController extends CrudController
             ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'title' => $this->getCreateTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -76,7 +84,9 @@ class RoleController extends CrudController
 
         $role->syncPermissions($request->permissions);
 
-        $this->generateFlashMessage('Role created successfully!');
+        $this->generateFlashMessage('The :updated was created!', [
+            'resource' => __('Role')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $role->id);
     }
@@ -103,6 +113,7 @@ class RoleController extends CrudController
             'permissions' => $this->roleService->getPermissionOptions(),
             'record' => $role,
             'title' => $this->getEditTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -113,7 +124,9 @@ class RoleController extends CrudController
 
         $role->syncPermissions($request->permissions);
 
-        $this->generateFlashMessage('Role updated successfully!');
+        $this->generateFlashMessage('The :updated was deleted!', [
+            'resource' => __('Role')
+        ]);
 
         return redirect()->back();
     }
@@ -122,8 +135,20 @@ class RoleController extends CrudController
     {
         $role->delete();
 
-        $this->generateFlashMessage('Role deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Role')
+        ]);
 
         return redirect()->back();
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            'name' => __('Name'),
+            'cancel' => __('Cancel'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+        ];
     }
 }

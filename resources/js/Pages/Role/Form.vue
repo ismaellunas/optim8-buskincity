@@ -2,7 +2,7 @@
     <div>
         <biz-form-input
             v-model="form.name"
-            label="Name"
+            :label="i18n.name"
             name="name"
             required
             maxlength="255"
@@ -63,6 +63,12 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                name: 'Name',
+            }) }
+        },
 
         props: {
             errors: { type: Object, default: () => {} },
