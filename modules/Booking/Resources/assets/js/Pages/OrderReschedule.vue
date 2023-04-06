@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-4">
         <div class="columns box">
             <div class="column is-5">
                 <div class="card">
