@@ -218,7 +218,7 @@
                 filter : 'Filter',
                 category : 'Category',
                 language : 'Language',
-                are_you_sure : 'Are you sure you want to delete this resource?',
+                are_you_sure : 'Are you sure?',
             }) }
         },
 
