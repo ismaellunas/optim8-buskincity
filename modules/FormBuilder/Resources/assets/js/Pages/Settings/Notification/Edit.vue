@@ -4,8 +4,6 @@
             :errors="$page.props.errors"
         />
 
-        <biz-flash-notifications :flash="$page.props.flash" />
-
         <notification-form
             v-model="form"
             :active-options="activeOptions"
@@ -19,8 +17,8 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import NotificationForm from './Form.vue';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
     import { provide } from 'vue';
 
@@ -29,7 +27,6 @@
 
         components: {
             BizErrorNotifications,
-            BizFlashNotifications,
             NotificationForm,
         },
 
@@ -70,6 +67,7 @@
                     {
                         onStart: () => self.onStartLoadingOverlay(),
                         onFinish: () => self.onEndLoadingOverlay(),
+                        onSuccess: (page) => successAlert(page.props.flash.message),
                     }
                 )
             }
