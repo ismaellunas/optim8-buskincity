@@ -144,10 +144,24 @@ class OrderController extends CrudController
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
 
+        $product = app(ProductService::class)->formResource($product);
+
         return Inertia::render('Booking::OrderReschedule', $this->getData([
-            'title' => 'Reschedule Event',
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $product['name'],
+                    'url' => route($this->baseRouteName.'.show', $order->id),
+                ],
+                [
+                    'title' => __('Reschedule Event'),
+                ],
+            ],
             'order' => $this->orderService->getRecord($order),
-            'product' => app(ProductService::class)->formResource($product),
+            'product' => $product,
             'minDate' => $minDate->toDateString(),
             'maxDate' => $maxDate->toDateString(),
             'timezone' => $eventLine->latestEvent->schedule->timezone,
