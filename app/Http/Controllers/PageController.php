@@ -9,6 +9,7 @@ use App\Models\{
     PageTranslation,
 };
 use App\Services\{
+    MediaService,
     MenuService,
     PageService,
     StorageService,
@@ -54,22 +55,7 @@ class PageController extends CrudController
             ),
             'defaultLocale' => defaultLocale(),
             'title' => $this->getIndexTitle(),
-            'i18n' => [
-                'search' => __('Search'),
-                'create_new' => __('Create New'),
-                'title' => __('Title'),
-                'slug' => __('Slug'),
-                'status' => __('Status'),
-                'meta_title' => __('Meta Title'),
-                'meta_description' => __('Meta Description'),
-                'language' => __('Language'),
-                'actions' => __('Actions'),
-                'are_you_sure' => __('Are you sure you want to delete this resource?'),
-                'remove_page_from_navigation_message' => __('This action will also remove the page on the navigation menu.'),
-                'yes' => __('Yes'),
-                'duplicate_page' => __('Duplicate Page'),
-                'duplicate_page_message' => __('Are you sure want to duplicate this page?'),
-            ],
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -119,23 +105,7 @@ class PageController extends CrudController
             'settingOptions' => [
                 'templates' => PageSettingLayout::options(),
             ],
-            'i18n' => [
-                'details' => __('Details'),
-                'builder' => __('Builder'),
-                'settings' => __('Settings'),
-                'title' => __('Title'),
-                'slug' => __('Slug'),
-                'status' => __('Status'),
-                'excerpt' => __('Excerpt'),
-                'meta_title' => __('Meta Title'),
-                'meta_description' => __('Meta Description'),
-                'cancel' => __('Cancel'),
-                'create' => __('Create'),
-                'layout' => __('Layout'),
-                'main_background_color' => __('Main background color'),
-                'page_height' => __('Page height'),
-                'default' => __('Default'),
-            ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -218,29 +188,7 @@ class PageController extends CrudController
             'settingOptions' => [
                 'templates' => PageSettingLayout::options(),
             ],
-            'i18n' => [
-                'details' => __('Details'),
-                'builder' => __('Builder'),
-                'settings' => __('Settings'),
-                'title' => __('Title'),
-                'slug' => __('Slug'),
-                'status' => __('Status'),
-                'excerpt' => __('Excerpt'),
-                'meta_title' => __('Meta Title'),
-                'meta_description' => __('Meta Description'),
-                'cancel' => __('Cancel'),
-                'create' => __('Create'),
-                'update' => __('Update'),
-                'layout' => __('Layout'),
-                'main_background_color' => __('Main background color'),
-                'page_height' => __('Page height'),
-                'default' => __('Default'),
-                'duplicate' => __('Duplicate'),
-                'remove' => __('Remove'),
-                'duplicate_translation' => __('Duplicate Translation'),
-                'select_translation' => __('Select Translation'),
-                'page_preview' => __('Page Preview'),
-            ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -318,5 +266,55 @@ class PageController extends CrudController
         ]);
 
         return redirect()->back();
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'create_new' => __('Create New'),
+            'title' => __('Title'),
+            'slug' => __('Slug'),
+            'status' => __('Status'),
+            'meta_title' => __('Meta Title'),
+            'meta_description' => __('Meta Description'),
+            'language' => __('Language'),
+            'actions' => __('Actions'),
+            'are_you_sure' => __('Are you sure?'),
+            'remove_page_from_navigation_message' => __('This action will also remove the page on the navigation menu.'),
+            'yes' => __('Yes'),
+            'duplicate_menu' => __('Duplicate :resource', ['resource' => __('Page')]),
+            'duplicate_page_message' => __('Are you sure want to duplicate this page?'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            ...[
+                'details' => __('Details'),
+                'builder' => __('Builder'),
+                'settings' => __('Settings'),
+                'title' => __('Title'),
+                'slug' => __('Slug'),
+                'status' => __('Status'),
+                'excerpt' => __('Excerpt'),
+                'meta_title' => __('Meta Title'),
+                'meta_description' => __('Meta Description'),
+                'cancel' => __('Cancel'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'layout' => __('Layout'),
+                'main_background_color' => __('Main background color'),
+                'page_height' => __('Page height'),
+                'default' => __('Default'),
+                'duplicate' => __('Duplicate'),
+                'remove' => __('Remove'),
+                'duplicate_translation' => __('Duplicate :resource', ['resource' => __('Translation')]),
+                'select_translation' => __('Select :resource', ['resource' => __('Translation')]),
+                'page_preview' => __('Page Preview'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }

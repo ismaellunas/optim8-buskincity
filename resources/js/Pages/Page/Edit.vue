@@ -4,8 +4,6 @@
             :errors="$page.props.errors"
         />
 
-        <biz-flash-notifications :flash="$page.props.flash" />
-
         <div class="box mb-6">
             <page-form
                 v-model="form[selectedLocale]"
@@ -31,7 +29,6 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import PageForm from '@/Pages/Page/Form.vue';
     import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { find } from 'lodash';
@@ -48,7 +45,6 @@
 
         components: {
             BizErrorNotifications,
-            BizFlashNotifications,
             PageForm,
         },
 
@@ -205,13 +201,15 @@
                     this.form.put(submitRoute, {
                         onStart: this.onStartLoadingOverlay,
                         onFinish: this.onEndLoadingOverlay,
-                        onSuccess: () => {
+                        onSuccess: (page) => {
                             const translatedPage = getTranslation(
                                 this.page,
                                 this.selectedLocale
                             );
 
                             this.form[this.selectedLocale]['id'] = translatedPage.id;
+
+                            successAlert(page.props.flash.message);
                         },
                     });
                 }
