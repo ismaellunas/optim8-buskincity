@@ -3,6 +3,7 @@
 namespace Tests\Feature\RolePermission;
 
 use App\Models\Media;
+use App\Models\User;
 use App\Services\MediaService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
@@ -73,52 +74,6 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function updateCanBeAccessedByUserWithMediaEditPermission()
-    {
-        // Arrange
-        $media = Media::factory()->create();
-
-        // Act
-        $this->givePermissionToRole('edit');
-
-        $response = $this->put(
-            route($this->baseRouteName.'.update', $media->id),
-            [
-                'file_name' => $media->file_name,
-                'translations' => [
-                    'en' => [
-                        'alt' => $this->faker->sentence(),
-                        'description' => $this->faker->sentence(),
-                    ],
-                ],
-            ]
-        );
-
-        // Assert
-        $response->assertSessionHasNoErrors();
-        $response->assertStatus(302);
-    }
-
-    /**
-     * @test
-     */
-    public function updateCannotBeAccessedByUserWhoHasNoMediaEditPermission()
-    {
-        // Arrange
-        $media = Media::factory()->create();
-
-        // Act
-        $this->revokePermissionToRole('edit');
-
-        $response = $this->put(route($this->baseRouteName.'.update', $media->id), []);
-
-        // Assert
-        $response->assertForbidden();
-    }
-
-    /**
-     * @test
-     */
     public function createCanBeAccessedByUserWithMediaAddPermission()
     {
         // Act
@@ -175,10 +130,16 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
 
         $response = $this->post(
             route($this->baseRouteName.'.store'),
-            [
+            [[
                 'file_name' => Str::slug($this->faker->sentence()),
                 'file' => UploadedFile::fake()->image($fileName),
-            ]
+                'translations' => [
+                    'en' => [
+                        'alt' => null,
+                        'description' => null,
+                    ],
+                ],
+            ]]
         );
 
         // Assert
@@ -203,12 +164,12 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function deleteCanBeDoneByUserWithMediaDeletePermission()
+    public function deleteDefaultTypeMediaCanBePerformedByTheAuthorWithDeletePermission()
     {
         // Arrange
         $this->givePermissionToRole('delete');
 
-        $media = Media::factory()->create();
+        $media = Media::factory()->author($this->user)->create();
 
         $this->mockMediaService('destroy', $media);
 
@@ -222,13 +183,41 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function deleteCannotBeDoneByUserWhoHasNoDeletePermission()
+    public function deleteDefaultTypeMediaCanBePerformedByNonAuthorWithDeleteOtherUserMediaPermission()
+    {
+        // Arrange
+        $this->givePermissionToRole(['delete', 'other_users']);
+
+        $media = Media::factory()->author(User::factory()->create())->create();
+
+        $this->mockMediaService('destroy', $media);
+
+        // Act
+        $response = $this->delete(route($this->baseRouteName.'.destroy', [$media->id]));
+
+        // Assert
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteDefaultTypeMediaCannotBePerformedByUserWithoutDeletePermission()
     {
         // Arrange
         $media = Media::factory()->create();
+        $usersMedia = Media::factory()->author($this->user)->create();
 
         // Act
         $this->revokePermissionToRole('delete');
+
+        $response = $this->delete(route($this->baseRouteName.'.destroy', [$usersMedia->id]));
+
+        // Assert
+        $response->assertForbidden();
+
+        // Act
+        $this->givePermissionToRole('other_users');
 
         $response = $this->delete(route($this->baseRouteName.'.destroy', [$media->id]));
 
@@ -239,10 +228,29 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function updateImageCanBeAccessedByUserWhoHasMediaEditPermission()
+    public function deleteDefaultTypeMediaCannotBePerformedByNonAuthorWithoutDeleteOtherUsersMediaPermission()
     {
         // Arrange
-        $media = Media::factory()->create();
+        $media = Media::factory()
+            ->author(User::factory()->create())
+            ->create();
+
+        // Act
+        $this->givePermissionToRole('delete');
+
+        $response = $this->delete(route($this->baseRouteName.'.destroy', [$media->id]));
+
+        // Assert
+        $response->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
+    public function updateImageCanBeAccessedByMediaAuthorWithEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->author($this->user)->create();
 
         $this->mockMediaService('replace', $media);
 
@@ -262,13 +270,68 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function updateImageCannotBeAccessedByUserWhoHasNoMediaEditPermission()
+    public function updateImageCanBeAccessedByNonMediaAuthorWithEditOtherUserMediaPermission()
     {
         // Arrange
-        $media = Media::factory()->create();
+        $media = Media::factory()->author(User::factory()->create())->create();
+
+        $this->mockMediaService('replace', $media);
+
+        // Act
+        $this->givePermissionToRole(['edit', 'other_users']);
+
+        $response = $this->post(
+            route($this->baseRouteName.'.update-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertSessionHasNoErrors();
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function updateImageCannotBeAccessedByUserWithoutMediaEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->author(User::factory()->create())->create();
+        $usersMedia = Media::factory()->author($this->user)->create();
 
         // Act
         $this->revokePermissionToRole('edit');
+        $this->givePermissionToRole('other_users');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.update-image', ['medium' => $usersMedia->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertForbidden();
+
+        // Act
+        $response = $this->post(
+            route($this->baseRouteName.'.update-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
+    public function updateImageCannotBeAccessedByNonMediaAuthorWithoutEditOtherUsersMediaPermission()
+    {
+        // Arrange
+        $media = Media::factory()->author(User::factory()->create())->create();
+
+        // Act
+        $this->givePermissionToRole('edit');
+        $this->revokePermissionToRole('other_users');
 
         $response = $this->post(
             route($this->baseRouteName.'.update-image', ['medium' => $media->id]),
@@ -282,10 +345,10 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function saveAsMediaCanBeAccessedByUserWhoHasMediaEditPermission()
+    public function saveAsMediaCanBeAccessedByAuthorWithEditPermission()
     {
         // Arrange
-        $media = Media::factory()->create();
+        $media = Media::factory()->author($this->user)->create();
 
         $this->mockMediaService('duplicateImage', $media);
 
@@ -304,13 +367,68 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function saveAsMediaCannotBeAccessedByUserWhoHasNoMediaEditPermission()
+    public function saveAsMediaCanBeAccessedByNonAuthorWithEditOtherUsersMediaPermission()
     {
         // Arrange
-        $media = Media::factory()->create();
+        $media = Media::factory()->author(User::factory()->create())->create();
+
+        $this->mockMediaService('duplicateImage', $media);
+
+        // Act
+        $this->givePermissionToRole(['edit', 'other_users']);
+
+        $response = $this->post(
+            route($this->baseRouteName.'.save-as-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @test
+     */
+    public function saveAsMediaCannotBeAccessedByUserWithoutEditPermission()
+    {
+        // Arrange
+        $media = Media::factory(User::factory()->create())->create();
+        $usersMedia = Media::factory($this->user)->create();
 
         // Act
         $this->revokePermissionToRole('edit');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.save-as-image', ['medium' => $usersMedia->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertForbidden();
+
+        // Act
+        $this->givePermissionToRole('other_users');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.save-as-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
+    public function saveAsMediaCannotBeAccessedByNonAuthorWithoutEditOtherUsersMediaPermission()
+    {
+        // Arrange
+        $media = Media::factory(User::factory()->create())->create();
+
+        // Act
+        $this->givePermissionToRole('edit');
+        $this->revokePermissionToRole('other_users');
 
         $response = $this->post(
             route($this->baseRouteName.'.save-as-image', ['medium' => $media->id]),
