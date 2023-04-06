@@ -37,13 +37,22 @@ class BaseRolePermissionTestCase extends TestCase
         $this->actingAs($this->user);
     }
 
-    protected function givePermissionToRole(string $permission, string $basePermission = null)
+    protected function givePermissionToRole(string|array $permission, string $basePermission = null)
     {
-        $this->role->givePermissionTo(
-            (is_null($basePermission) ? $this->basePermissionName : $basePermission).
-            '.'.
-            $permission
-        );
+        $permissionNames = [];
+
+        if (is_string($permission)) {
+            $permission = [$permission];
+        }
+
+        foreach ($permission as $permissionName) {
+            $permissionNames[] = (
+                (is_null($basePermission) ? $this->basePermissionName : $basePermission).
+                '.'.$permissionName
+            );
+        }
+
+        $this->role->givePermissionTo($permissionNames);
     }
 
     protected function revokePermissionToRole(string $permission, string $basePermission = null)

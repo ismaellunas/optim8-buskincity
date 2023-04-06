@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Media;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MediaFactory extends Factory
@@ -27,6 +28,16 @@ class MediaFactory extends Factory
             'file_type' => 'image',
             'file_url' => $this->faker->imageUrl(360, 360, null, true, null, true),
             'size' => $this->faker->numberBetween(512),
+            'type' => Media::TYPE_DEFAULT,
         ];
+    }
+
+    public function author(int|User $user)
+    {
+        return $this->state(function (array $attributes) use ($user) {
+            return [
+                'user_id' => is_int($user) ? $user : $user->id,
+            ];
+        });
     }
 }
