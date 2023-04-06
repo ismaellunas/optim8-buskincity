@@ -5,6 +5,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -24,7 +25,7 @@
                         :icon="icon.remove"
                         @click.prevent="deleteCheckedRecords()"
                     >
-                        <span>Delete Checked Records</span>
+                        <span>{{ i18n.delete_checked_records }}</span>
                     </biz-button-icon>
 
                     <biz-button-icon
@@ -35,7 +36,7 @@
                         :disabled="!hasRecords"
                         @click.prevent="deleteAllRecords()"
                     >
-                        <span>Delete All</span>
+                        <span>{{ i18n.delete_all }}</span>
                     </biz-button-icon>
                 </div>
             </div>
@@ -47,14 +48,14 @@
                 <template #thead>
                     <tr>
                         <th>#</th>
-                        <th>Created At</th>
-                        <th>URL</th>
-                        <th>Total Hit</th>
+                        <th>{{ i18n.created_at }}</th>
+                        <th>{{ i18n.url }}</th>
+                        <th>{{ i18n.total_hit }}</th>
                         <th width="30%">
-                            Message
+                            {{ i18n.message }}
                         </th>
                         <th width="12%">
-                            Actions
+                            {{ i18n.actions }}
                         </th>
                     </tr>
                 </template>
@@ -141,6 +142,12 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -148,6 +155,16 @@
             can: { type: Object, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                delete_all : 'Delete All',
+                delete_checked_records : 'Delete Checked Records',
+                created_at : 'Created At',
+                url : 'URL',
+                total_hit : 'Total Hit',
+                message : 'Message',
+                actions : 'Actions',
+            }) },
         },
 
         setup(props) {

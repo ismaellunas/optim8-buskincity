@@ -38,7 +38,8 @@ class ErrorLogController extends Controller
             'can' => [
                 'read' => $user->can('error_log.read'),
                 'delete' => $user->can('error_log.delete'),
-            ]
+            ],
+            'i18n' => $this->translations(),
         ]);
     }
 
@@ -61,5 +62,27 @@ class ErrorLogController extends Controller
         ErrorLog::whereIn('id', $request->recordIds)->delete();
 
         return redirect()->back();
+    }
+
+    private function translations(): array
+    {
+        return [
+            'search' => __('Search'),
+            'delete_all' => __('Delete All'),
+            'delete_checked_records' => __('Delete Checked Records'),
+            'error_log_details' => __('Error Log Details'),
+            'created_at' => __('Created At'),
+            'url' => __('Url'),
+            'file' => __('File'),
+            'line' => __('Line'),
+            'total_hit' => __('Total Hit'),
+            'message' => __('Message'),
+            'trace' => __('Trace'),
+            'actions' => __('Actions'),
+            'function' => __('Function'),
+            'class' => __('Class'),
+            'type' => __('Type'),
+            'close' => __('Close'),
+        ];
     }
 }
