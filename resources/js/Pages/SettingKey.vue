@@ -7,7 +7,7 @@
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <biz-button class="is-link">
-                            Save
+                            {{ i18n.save }}
                         </biz-button>
                     </div>
                 </div>
@@ -87,6 +87,9 @@
             groups: {type: Array, required: true},
             keys: {type: Object, required: true},
             title: {type: String, required: true},
+            i18n: {type: Object, default: () => ({
+                save: 'Save',
+            })},
         },
 
         setup(props) {
