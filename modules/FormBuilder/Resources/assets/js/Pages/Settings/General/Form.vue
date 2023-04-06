@@ -1,13 +1,13 @@
 <template>
     <form @submit.prevent="$emit('on-submit')">
         <h2 class="title is-4 mt-5">
-            Submit Button
+            {{ i18n.submit_button }}
         </h2>
 
         <div class="columns pl-2">
             <div class="column">
                 <h2>
-                    <b>Text</b>
+                    <b>{{ i18n.text }}</b>
                 </h2>
             </div>
 
@@ -22,7 +22,7 @@
         <div class="columns pl-2">
             <div class="column">
                 <h2>
-                    <b>Position</b>
+                    <b>{{ i18n.position }}</b>
                 </h2>
             </div>
 

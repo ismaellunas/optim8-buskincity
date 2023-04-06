@@ -5,6 +5,7 @@
                 <div class="is-pulled-left">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -18,7 +19,7 @@
                         <span class="icon is-small">
                             <i :class="icon.add" />
                         </span>
-                        <span>Add New</span>
+                        <span>{{ i18n.create_new }}</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -32,12 +33,12 @@
         >
             <template #thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>Status</th>
+                    <th>{{ i18n.name }}</th>
+                    <th>{{ i18n.subject }}</th>
+                    <th>{{ i18n.status }}</th>
                     <th>
                         <div class="level-right">
-                            Actions
+                            {{ i18n.actions }}
                         </div>
                     </th>
                 </tr>
@@ -110,6 +111,18 @@
             MixinHasLoader,
         ],
 
+        inject: {
+            i18n: { default: () => ({
+                search: 'Search',
+                create_new: 'Create New',
+                name: 'Name',
+                subject: 'Subject',
+                status: 'Status',
+                actions: 'Actions',
+                are_you_sure: 'Are you sure?',
+            }) },
+        },
+
         setup() {
             return {
                 baseRouteNameSetting: usePage().props.baseRouteNameSetting,
@@ -160,7 +173,9 @@
             onDelete(record) {
                 const self = this;
 
-                confirmDelete().then(result => {
+                confirmDelete(
+                    self.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(this.baseRouteName+'.destroy', {

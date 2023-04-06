@@ -44,6 +44,15 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
+            'i18n' => [
+                'search' => __('search'),
+                'create_new' => __('Create New'),
+                'name' => __('Name'),
+                'form_id' => __('Form ID'),
+                'entries' => __('Entries'),
+                'actions' => __('Actions'),
+                'are_you_sure' => __('Are you sure?'),
+            ],
         ]));
     }
 
@@ -60,6 +69,7 @@ class FormBuilderController extends CrudController
                 ],
             ],
             'title' => $this->getCreateTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -76,7 +86,9 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $form->id);
         }
 
-        $this->generateFlashMessage('Form created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $form->id);
     }
@@ -105,6 +117,7 @@ class FormBuilderController extends CrudController
             'title' => __('Editing :name Form', [
                 'name' => $formBuilder['name']
             ]),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -120,7 +133,9 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $formBuilder->id);
         }
 
-        $this->generateFlashMessage('Form updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
@@ -129,7 +144,9 @@ class FormBuilderController extends CrudController
     {
         $formBuilder->delete();
 
-        $this->generateFlashMessage('Form deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -158,6 +175,32 @@ class FormBuilderController extends CrudController
         return [
             'success' => true,
             'message' => __('Thank you for filling out the form.'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            'builder' => __('Builder'),
+            'notifications' => __('Notifications'),
+            'settings' => __('Settings'),
+            'name' => __('Name'),
+            'form_id' => __('Form ID'),
+            'general' => __('General'),
+            'add_field_group' => __('Add :resource', ['resource' => __('Field Group')]),
+            'cancel' => __('Cancel'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+            'search' => __('Search'),
+            'create_new' => __('Create New'),
+            'subject' => __('Subject'),
+            'status' => __('Status'),
+            'actions' => __('Actions'),
+            'are_you_sure' => __('Are you sure?'),
+            'submit_button' => __('Submit Button'),
+            'text' => __('Text'),
+            'position' => __('Position'),
+            'update' => __('Update'),
         ];
     }
 }

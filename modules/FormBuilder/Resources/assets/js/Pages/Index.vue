@@ -7,6 +7,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -20,7 +21,7 @@
                         <span class="icon is-small">
                             <i :class="icon.add" />
                         </span>
-                        <span>Create New</span>
+                        <span>{{ i18n.create_new }}</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -31,12 +32,12 @@
             >
                 <template #thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Form ID</th>
-                        <th>Entries</th>
+                        <th>{{ i18n.name }}</th>
+                        <th>{{ i18n.form_id }}</th>
+                        <th>{{ i18n.entries }}</th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -131,6 +132,15 @@
             can: { type: Object, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => ({
+                search : 'search',
+                create_new : 'Create New',
+                name : 'Name',
+                form_id : 'Form ID',
+                entries : 'Entries',
+                actions : 'Actions',
+                are_you_sure : 'Are you sure?',
+            }) },
         },
 
         setup(props) {
@@ -150,7 +160,9 @@
             deleteRow(formId) {
                 const self = this;
 
-                confirmDelete().then((result) => {
+                confirmDelete(
+                    self.i18n.are_you_sure
+                ).then((result) => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', formId),

@@ -6,19 +6,19 @@
         <div class="column is-two-thirds">
             <div class="box">
                 <h4 class="title is-size-4">
-                    Details
+                    {{ i18n.details }}
                 </h4>
 
                 <biz-form-input
                     v-model="form.name"
-                    label="Name"
+                    :label="i18n.name"
                     :required="true"
                     :message="error('name')"
                 />
 
                 <biz-form-input
                     v-model="form.send_to"
-                    label="Send To Email"
+                    :label="i18n.send_to_email"
                     placeholder="Separate by comma"
                     :required="true"
                     :message="error('send_to')"
@@ -32,7 +32,7 @@
 
                 <biz-form-input-addons
                     v-model="form.from_name"
-                    label="From Name"
+                    :label="i18n.from_name"
                     :message="error('from_name')"
                 >
                     <template #afterInput>
@@ -52,7 +52,7 @@
 
                 <biz-form-input-addons
                     v-model="form.from_email"
-                    label="From Email"
+                    :label="i18n.from_email"
                     :message="error('from_email')"
                 >
                     <template #afterInput>
@@ -72,7 +72,7 @@
 
                 <biz-form-input-addons
                     v-model="form.reply_to"
-                    label="Reply To"
+                    :label="i18n.reply_to"
                     :message="error('reply_to')"
                 >
                     <template #afterInput>
@@ -92,7 +92,7 @@
 
                 <biz-form-input
                     v-model="form.bcc"
-                    label="Bcc"
+                    :label="i18n.bcc"
                     placeholder="Separate by comma"
                     :message="error('bcc')"
                 >
@@ -105,7 +105,7 @@
 
                 <biz-form-input-addons
                     v-model="form.subject"
-                    label="Subject"
+                    :label="i18n.subject"
                     :required="true"
                     :message="error('subject')"
                 >
@@ -120,7 +120,7 @@
 
                 <biz-form-text-editor
                     v-model="form.message"
-                    label="Message"
+                    :label="i18n.message"
                     :config="messageConfig"
                 />
             </div>
@@ -129,11 +129,11 @@
         <div class="column">
             <div class="box">
                 <h4 class="title is-size-4">
-                    Options
+                    {{ i18n.options }}
                 </h4>
                 <biz-form-select
                     v-model="form.is_active"
-                    label="Is Activated?"
+                    :label="i18n.is_activated"
                 >
                     <option
                         v-for="(option, index) in activeOptions"
@@ -151,14 +151,14 @@
                         class="is-link is-light"
                         :href="route('admin.form-builders.edit', formBuilderId)"
                     >
-                        {{ !isEditMode ? 'Cancel' : 'Back' }}
+                        {{ i18n.cancel }}
                     </biz-button-link>
                 </div>
                 <div class="control">
                     <biz-button
                         class="is-link"
                     >
-                        {{ !isEditMode ? 'Create' : 'Update' }}
+                        {{ !isEditMode ? i18n.create : i18n.update }}
                     </biz-button>
                 </div>
             </div>
@@ -201,6 +201,21 @@
             formBuilderId: {},
             fieldNotes: { default: () => {} },
             isEditMode: { default: false },
+            i18n: { default: () => ({
+                details: 'Details',
+                send_to_email: 'Send To Email',
+                from_name: 'From Name',
+                from_email: 'From Email',
+                reply_to: 'Reply To',
+                bcc: 'Bcc',
+                subject: 'Subject',
+                message: 'Message',
+                options: 'Options',
+                is_activated: 'Is Activated?',
+                cancel: 'Cancel',
+                create: 'Create',
+                update: 'Update',
+            }) },
         },
 
         props: {

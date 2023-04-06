@@ -33,6 +33,12 @@
             MixinHasLoader,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -41,6 +47,7 @@
             fieldNameOptions: { type: Array, default: () => [] },
             fieldNotes: { type: Object, default: () => {} },
             formBuilder: { type: Object, required: true },
+            i18n: { type: Object, default: () => {} },
         },
 
         setup(props) {

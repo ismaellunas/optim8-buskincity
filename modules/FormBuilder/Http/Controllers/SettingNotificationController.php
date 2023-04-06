@@ -57,6 +57,7 @@ class SettingNotificationController extends CrudController
             'fieldNotes' => $this->fieldNotes(),
             'fieldNameOptions' => $this->settingNotificationService
                 ->getFieldNameOptions($formBuilder),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -69,7 +70,9 @@ class SettingNotificationController extends CrudController
 
         $notificationSetting->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Notification setting created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Notification setting')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,
@@ -105,6 +108,7 @@ class SettingNotificationController extends CrudController
             'fieldNotes' => $this->fieldNotes(),
             'fieldNameOptions' => $this->settingNotificationService
                 ->getFieldNameOptions($formBuilder),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -118,7 +122,9 @@ class SettingNotificationController extends CrudController
 
         $notification->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Notification setting updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Notification setting')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,
@@ -132,7 +138,9 @@ class SettingNotificationController extends CrudController
     ) {
         $notification->delete();
 
-        $this->generateFlashMessage('Notification setting deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Notification setting')
+        ]);
 
         return redirect()->back();
     }
@@ -140,16 +148,35 @@ class SettingNotificationController extends CrudController
     private function fieldNotes(): array
     {
         return [
-            'send_to' => 'Enter the email address you would like the notification email sent to.',
-            'from_name' => 'Enter the name you would like the notification email sent from, or select the name from available name fields.',
-            'from_email' => 'Enter an authorized email address you would like the notification email sent from. To avoid deliverability issues, always use your site domain in the from email.',
-            'reply_to' => 'Enter the email address you would like to be used as the reply to address for the notification email.',
-            'bcc' => 'Enter a comma separated list of email addresses you would like to receive a BCC of the notification email.'
+            'send_to' => __('Enter the email address you would like the notification email sent to.'),
+            'from_name' => __('Enter the name you would like the notification email sent from, or select the name from available name fields.'),
+            'from_email' => __('Enter an authorized email address you would like the notification email sent from. To avoid deliverability issues, always use your site domain in the from email.'),
+            'reply_to' => __('Enter the email address you would like to be used as the reply to address for the notification email.'),
+            'bcc' => __('Enter a comma separated list of email addresses you would like to receive a BCC of the notification email.')
         ];
     }
 
     private function convertJsonToString($jsonValue): string
     {
         return implode(",", json_decode($jsonValue));
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            'details' => __('Details'),
+            'send_to_email' => __('Send To Email'),
+            'from_name' => __('From Name'),
+            'from_email' => __('From Email'),
+            'reply_to' => __('Reply To'),
+            'bcc' => __('Bcc'),
+            'subject' => __('Subject'),
+            'message' => __('Message'),
+            'options' => __('Options'),
+            'is_activated' => __('Is Activated?'),
+            'cancel' => __('Cancel'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+        ];
     }
 }
