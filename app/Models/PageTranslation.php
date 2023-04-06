@@ -12,9 +12,9 @@ use App\Models\Page;
 use App\Services\PageService;
 use App\Traits\HasLocale;
 use App\Traits\Mediable;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Collection;
 
 class PageTranslation extends BaseModel implements PublishableInterface
 {
@@ -96,7 +96,9 @@ class PageTranslation extends BaseModel implements PublishableInterface
         $css = "";
 
         $styledComponents = $this->getStyledComponents(
-            $this->data->get('entities')
+            ($this->data instanceof Collection)
+                ? $this->data->get('entities')
+                : $this->data->entities ?? []
         );
 
         $css .= $this->getCssStyleBlocks($styledComponents['desktop']);
