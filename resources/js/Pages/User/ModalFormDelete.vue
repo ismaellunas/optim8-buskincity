@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                Delete User: {{ user.full_name }}
+                {{ i18n.delete_user }}: {{ user.full_name }}
             </p>
 
             <button
@@ -16,7 +16,7 @@
 
         <div class="content">
             <p>
-                What should be done with content owned by the user?
+                {{ i18n.delete_user_action }}
             </p>
         </div>
 
@@ -29,7 +29,7 @@
                             name="delete"
                             :value="false"
                         >
-                            Delete all content.
+                            {{ i18n.delete_all_content }}
                         </biz-radio>
                     </div>
                 </div>
@@ -41,13 +41,13 @@
                             name="delete"
                             :value="true"
                         >
-                            Attribute all content to:
+                            {{ i18n.attribute_all_content_to }}:
                         </biz-radio>
                         <biz-form-select
                             v-model="form.assigned_user"
                             class="is-fullwidth"
                             field-class="ml-4"
-                            placeholder="Select a user"
+                            :placeholder="i18n.select_user"
                             :disabled="!form.is_reassigned"
                             :message="error('assigned_user', 'deleteUser', form.errors)"
                         >
@@ -72,7 +72,7 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
 
                         <biz-button
@@ -80,7 +80,7 @@
                             type="button"
                             @click="submit"
                         >
-                            Delete
+                            {{ i18n.delete }}
                         </biz-button>
                     </div>
                 </div>
@@ -110,6 +110,18 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                delete_user : 'Delete User',
+                delete_user_action : 'What should be done with content owned by the user?',
+                delete_all_content : 'Delete all content',
+                attribute_all_content_to : 'Attribute all content to',
+                select_user : 'Select a user',
+                cancel : 'Cancel',
+                delete : 'Delete',
+            }) },
+        },
 
         props: {
             errors: {

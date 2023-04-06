@@ -6,9 +6,9 @@
                     <biz-form-image-square
                         v-model="form.photo"
                         v-model:photo-url="imageUrl"
-                        label="Profile picture"
+                        :label="i18n.profile_picture"
                         is-rounded-preview
-                        modal-title="Profile picture"
+                        :modal-title="i18n.profile_picture"
                         wrapper-class="field-body is-align-items-center"
                         :message="error('photo', errorBag)"
                         :original-image="photoUrl"
@@ -38,7 +38,7 @@
                         title="Profile Page Url"
                         :href="profilePageUrl"
                     >
-                        Open Public Profile &nbsp;
+                        {{ i18n.open_public_profile }} &nbsp;
                         <i :class="icon.idCard" />
                     </a>
                 </div>
@@ -47,21 +47,21 @@
 
         <biz-form-input
             v-model="form.first_name"
-            label="First Name"
+            :label="i18n.first_name"
             required
             :message="error('first_name', errorBag)"
         />
 
         <biz-form-input
             v-model="form.last_name"
-            label="Last Name"
+            :label="i18n.last_name"
             required
             :message="error('last_name', errorBag)"
         />
 
         <biz-form-input
             v-model="form.email"
-            label="Email"
+            :label="i18n.email"
             required
             type="email"
             :message="error('email', errorBag)"
@@ -70,7 +70,7 @@
         <biz-form-select
             v-if="canSetRole"
             v-model="form.role"
-            label="Role"
+            :label="i18n.role"
             placeholder="- Select a Role -"
             :message="error('role', errorBag)"
         >
@@ -84,7 +84,7 @@
         </biz-form-select>
 
         <biz-form-dropdown-search
-            label="Language"
+            :label="i18n.language"
             required
             :close-on-click="true"
             :message="error('language_id', errorBag)"
@@ -136,6 +136,20 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                profile_picture : 'Profile Picture',
+                Choose_a_picture : 'Choose a picture',
+                first_name : 'First Name',
+                last_name : 'Last Name',
+                email : 'Email',
+                role : 'Role',
+                select_a_role : 'Select a Role',
+                language : 'Language',
+                open_public_profile: 'Open Public Profile',
+            }) },
+        },
 
         props: {
             canSetRole: {type: Boolean, default: true},
