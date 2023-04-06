@@ -64,6 +64,7 @@ class StripeController extends Controller
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
             'title' => __('Stripe'),
+            'i18n' => $this->translations(),
         ]);
     }
 
@@ -109,8 +110,32 @@ class StripeController extends Controller
             dispatch($job);
         }
 
-        $this->generateFlashMessage('Stripe updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Stripe')
+        ]);
 
         return redirect()->back();
+    }
+
+    private function translations(): array
+    {
+        return [
+            ...[
+                'settings' => __('Settings'),
+                'is_enabled' => __('Is Enabled?'),
+                'default_country' => __('Default Country'),
+                'application_fee_percentage' => __('Application Fee Percentage'),
+                'payment_currencies' => __('Payment Currencies'),
+                'primary_color' => __('Primary Color'),
+                'secondary_color' => __('Secondary Color'),
+                'logo' => __('Logo'),
+                'open_media_library' => __('Open Media Library'),
+                'save' => __('Save'),
+                'currency' => __('Currency'),
+                'minimal_payment' => __('Minimal Payment'),
+                'amount_options' => __('Amount Options'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }
