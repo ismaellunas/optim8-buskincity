@@ -17,6 +17,7 @@
                 </biz-button-link>
 
                 <biz-button-link
+                    v-if="space.can.edit"
                     class="is-ghost has-text-black"
                     :href="route(routeEdit, space.id)"
                 >

@@ -33,7 +33,7 @@ class MediaPolicy extends BasePermissionPolicy
         );
     }
 
-    public function  manageOtherMedia(User $user)
+    public function manageOtherMedia(User $user)
     {
         return $user->can($this->basePermission.'.other_users');
     }
