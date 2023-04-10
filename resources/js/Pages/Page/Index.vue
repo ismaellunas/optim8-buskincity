@@ -1,6 +1,5 @@
 <template>
     <div>
-        <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box">
             <div class="columns">
@@ -134,11 +133,10 @@
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
-    import { confirmDelete, confirm } from '@/Libs/alert';
+    import { confirmDelete, confirm, success as successAlert } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
 
@@ -149,7 +147,6 @@
             BizButton,
             BizButtonLink,
             BizFilterSearch,
-            BizFlashNotifications,
             BizTableIndex,
             BizTag,
         },
@@ -271,8 +268,19 @@
                 if (await self.canDeletePage(page.id)) {
                     const deleteRoute = route('admin.pages.destroy', {id: page.id});
 
-                    self.$inertia.delete(deleteRoute);
+                    self.$inertia.delete(
+                        deleteRoute,
+                        {
+                            onStart: () => this.onStartLoadingOverlay(),
+                            onFinish: () => this.onEndLoadingOverlay(),
+                            onSuccess: self.onSuccess,
+                        }
+                    );
                 }
+            },
+
+            onSuccess(page) {
+                successAlert(page.props.flash.message);
             },
 
             duplicateRow(page) {
