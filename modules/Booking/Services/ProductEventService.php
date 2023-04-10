@@ -116,11 +116,11 @@ class ProductEventService
             $offsetPrefix = $offset < 0 ? '-' : '+';
             $offsetFormatted = gmdate( 'H:i', abs($offset) );
 
-            $prettyOffset = "UTC${offsetPrefix}${offsetFormatted}";
+            $prettyOffset = "UTC{$offsetPrefix}{$offsetFormatted}";
 
             $timezoneList[] = [
                 'id' => $timezone,
-                'value' => "(${prettyOffset}) $timezone",
+                'value' => "({$prettyOffset}) $timezone",
             ];
         }
 

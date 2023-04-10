@@ -6220,9 +6220,9 @@ vue-recaptcha@^2.0.1:
     vue-demi "^0.13.11"
 
 vue-slider-component@^4.1.0-beta.6:
-  version "4.1.0-beta.6"
-  resolved "https://registry.yarnpkg.com/vue-slider-component/-/vue-slider-component-4.1.0-beta.6.tgz#682f37a720e774f781e743bcd37ffa696e4386f0"
-  integrity sha512-7lxWWUrSIvxs4D6j0G9ypZeMoUjzpecC2nm5jLesre7BpZ9f+AHdniXI/ZdUYE2R1mNlPyVAnMtHf/DYL9cY5Q==
+  version "4.1.0-beta.7"
+  resolved "https://registry.yarnpkg.com/vue-slider-component/-/vue-slider-component-4.1.0-beta.7.tgz#f6aaac2557df8b9d5460482e2576a009d0ed2dae"
+  integrity sha512-Qb7K920ZG7PoQswoF6Ias+i3W2rd3k4fpk04JUl82kEUcN86Yg6et7bVSKWt/7VpQe8a5IT3BqCKSCOZ7AJgCA==
 
 vue-social-sharing@^4.0.0-alpha4:
   version "4.0.0-alpha4"

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->removeIndexPhpFromUrl();
+
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -112,5 +115,17 @@ class RouteServiceProvider extends ServiceProvider
     private function basePathRoute(string $fileName): string
     {
         return base_path() . '/routes/' . $fileName;
+    }
+
+    private function removeIndexPhpFromUrl()
+    {
+        if (Str::contains(request()->getRequestUri(), '/index.php/')) {
+            $url = Str::replace('index.php/', '', request()->getRequestUri());
+
+            if (strlen($url) > 0) {
+                header("Location: $url", true, 301);
+                exit;
+            }
+        }
     }
 }
