@@ -20,7 +20,6 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     RegisteredUserController,
     SitemapController,
-    SystemLogController,
     TwoFactorAuthenticatedSessionController,
     UserPasswordController,
     UserProfileController,
