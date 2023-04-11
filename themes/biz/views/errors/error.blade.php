@@ -6,7 +6,7 @@
         {{ $statusCode }}
     </h1>
     <p class="is-size-1 has-text-weight-bold has-text-grey-lighter">
-        {{ __('Opss! Something Error') }}
+        {{ __('Opss! Something went wrong') }}
     </p>
-    <p class="is-size-5">{{ $message }}</pclass=>
+    <p class="is-size-5">{{ $message }}</p>
 </x-layouts.exception>
