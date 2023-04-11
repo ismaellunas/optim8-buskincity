@@ -21,13 +21,13 @@ class ModuleService
             'isEnabled' => $canManageSpace,
             'children' => [
                 [
-                    'title' => 'Manage',
+                    'title' => __('Manage'),
                     'link' => route('admin.spaces.index'),
                     'isActive' => $request->routeIs('admin.spaces.index'),
                     'isEnabled' => $canManageSpace,
                 ],
                 [
-                    'title' => 'Settings',
+                    'title' => __('Settings'),
                     'link' => route('admin.spaces.settings.index'),
                     'isActive' => $request->routeIs('admin.spaces.settings.index'),
                     'isEnabled' => $user->can('viewAny', GlobalOption::class),
