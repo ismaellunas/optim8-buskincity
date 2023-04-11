@@ -1,7 +1,5 @@
 <template>
     <div>
-        <biz-flash-notifications :flash="$page.props.flash" />
-
         <biz-error-notifications
             :bags="['default']"
             :errors="$page.props.errors"
@@ -301,7 +299,6 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizField from '@/Biz/Field.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import BizFormFile from '@/Biz/Form/File.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import BizInput from '@/Biz/Input.vue';
@@ -330,7 +327,6 @@
             BizErrorNotifications,
             BizField,
             BizFilterSearch,
-            BizFlashNotifications,
             BizFormFile,
             BizIcon,
             BizInput,
