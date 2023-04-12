@@ -203,7 +203,7 @@ Route::prefix(Localization::setLocale())
 
         Route::get('/', [PageController::class, 'homePage'])
             ->name('homepage')
-            ->middleware('redirectLanguage');
+            ->middleware('redirectOriginLanguage');
 
         Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
             ->name('sitemap');
