@@ -20,7 +20,7 @@ class ChangeLanguage
         $locale = $request->route('new_locale');
 
         if (
-            !app(TranslationService::class)->isSupportedLocale($locale)
+            ! app(TranslationService::class)->isSupportedLocale($locale)
         ) {
             return redirect('/' . currentLocale());
         }
