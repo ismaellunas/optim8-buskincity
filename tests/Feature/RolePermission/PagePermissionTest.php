@@ -122,10 +122,13 @@ class PagePermissionTest extends BaseRolePermissionTestCase
         // Act
         $this->givePermissionToRole('edit');
 
-        $response = $this->put(
-            route($this->baseRouteName.'.update', $pageTranslation->page_id),
-            $this->generateInputs($pageTranslation)
-        );
+        $response = PageTranslation::withoutEvents(function () use ($pageTranslation) {
+            $response = $this->put(
+                route($this->baseRouteName.'.update', $pageTranslation->page_id),
+                $this->generateInputs($pageTranslation)
+            );
+            return $response;
+        });
 
         // Assert
         $response->assertStatus(302);

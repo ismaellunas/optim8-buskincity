@@ -20,10 +20,17 @@ class ChangeLanguageController extends Controller
     {
         $url = url()->previous();
         $defaultLocale = defaultLocale();
+        $newLocale = $newLocale != '' ? $newLocale : $defaultLocale;
+
+        if (
+            !app(TranslationService::class)->isSupportedLocale($newLocale)
+        ) {
+            return redirect('/' . currentLocale());
+        }
 
         app(LifetimeCookie::class)->set(
             'origin_language',
-            $newLocale != '' ? $newLocale : $defaultLocale
+            $newLocale
         );
 
         if (!empty($url)) {
@@ -80,8 +87,13 @@ class ChangeLanguageController extends Controller
         $uriSegments = explode('/', $uriPath);
         $locales = app(TranslationService::class)->getLocales();
 
-        if (in_array($uriSegments[1], $locales)) {
-            $uriPath = Str::replaceFirst('/'.$uriSegments[1], '', $uriPath);
+        $locale = $uriSegments[1] ?? null;
+
+        if (
+            $locale
+            && in_array($locale, $locales)
+        ) {
+            $uriPath = Str::replaceFirst('/'.$locale, '', $uriPath);
         }
 
         return config('app.url').$uriPath;
