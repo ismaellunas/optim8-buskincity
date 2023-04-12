@@ -39,7 +39,7 @@ return [
     'facebook' => [
         'client_id' => null,
         'client_secret' => null,
-        'redirect' => env('APP_URL').'/oauth/facebook/callback',
+        'redirect' => env('FACEBOOK_AUTHORIZED_URL', env('APP_URL')).'/oauth/facebook/callback',
     ],
 
     'twitter' => [
