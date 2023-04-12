@@ -80,8 +80,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         return $entry->content['method'] == "POST"
             && Str::startsWith($entry->content['uri'], [
-                '/register',
+                '/forgot-password',
                 '/login',
+                '/register',
             ]);
     }
 
