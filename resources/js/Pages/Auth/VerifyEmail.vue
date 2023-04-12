@@ -33,7 +33,7 @@
                         <input
                             type="hidden"
                             name="_token"
-                            :value="csrfToken"
+                            :value="$page.props.csrfToken"
                         >
 
                         <biz-button
@@ -51,6 +51,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button.vue';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -65,11 +66,10 @@
             status: { default: null, type: String }
         },
 
-        data() {
+        setup() {
             return {
-                form: this.$inertia.form(),
-                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
+                form: useForm({}),
+            };
         },
 
         computed: {
@@ -80,7 +80,7 @@
 
         methods: {
             submit() {
-                this.form.post(this.route('verification.send'), {
+                this.form.post(route('verification.send'), {
                     onStart: () => this.onStartLoadingOverlay(),
                     onFinish: () => this.onEndLoadingOverlay(),
                 })
@@ -88,7 +88,7 @@
 
             logout() {
                 if (route().current('admin*')) {
-                    this.$inertia.post(route('logout'));
+                    this.form.post(route('logout'));
                 } else {
                     this.$refs.logout.submit();
                 }
