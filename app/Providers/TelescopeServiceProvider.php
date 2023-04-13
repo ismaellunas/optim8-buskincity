@@ -57,10 +57,40 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         return (
             $isRequest &&
-            Str::startsWith($entry->content['uri'], '/admin/') &&
             !Str::endsWith($entry->content['uri'], '.js.map') &&
-            !Str::startsWith($entry->content['uri'], '/admin/system-log')
+            !Str::startsWith($entry->content['uri'], '/admin/system-log') &&
+            (
+                $this->isBackendRequest($entry) ||
+                $this->isAuthenticationRequest($entry) ||
+                $this->isSuccessOauthRequest($entry)
+            )
         );
+    }
+
+    private function isBackendRequest(IncomingEntry $entry): bool
+    {
+        return in_array('auth:sanctum', $entry->content['middleware'] ?? []) &&
+            Str::startsWith($entry->content['uri'], [
+                '/admin/',
+                '/logout',
+            ]);
+    }
+
+    private function isAuthenticationRequest(IncomingEntry $entry): bool
+    {
+        return $entry->content['method'] == "POST"
+            && Str::startsWith($entry->content['uri'], [
+                '/forgot-password',
+                '/login',
+                '/register',
+            ]);
+    }
+
+    private function isSuccessOauthRequest(IncomingEntry $entry): bool
+    {
+        return $entry->content['response_status'] < 400
+            && $entry->content['response_status'] > 199
+            && Str::startsWith($entry->content['uri'], '/oauth');
     }
 
     /**
