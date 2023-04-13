@@ -18,14 +18,15 @@ class DashboardWidgetSeeder extends Seeder
         $widgets = [
             [
                 "uuid" => Str::uuid(),
-                "widget" => "Modules\FormBuilder\Widgets\TotalEntriesWidget",
-                "module" => "FormBuilder",
+                "widget" => "App\Entities\Widgets\TotalUsersWidget",
+                "module" => null,
                 "title" => "Performers",
                 "background_color" => "#6ac158",
                 "order" => 1,
                 "grid" => 6,
                 "setting" => [
                     'form_id' => 3,
+                    'role_id' => 4,
                 ],
             ],
             [
