@@ -8,7 +8,6 @@ use App\Models\{
     ErrorLog,
     Media,
     Menu,
-    MenuItem,
     Page,
     Post,
     Role,
@@ -19,7 +18,6 @@ use App\Services\{
     LanguageService,
     LoginService,
     ModuleService,
-    TranslationService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -27,7 +25,6 @@ use App\Entities\Caches\{
     SettingCache,
 };
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -354,7 +351,7 @@ class MenuService
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => __('Font Sizes'),
+                            'title' => Str::title(__('Font sizes')),
                             'link' => route('admin.theme.font-size.edit'),
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
                             'isEnabled' => true,
@@ -385,7 +382,7 @@ class MenuService
                             'isEnabled' => $user->can('system.language'),
                         ],
                         [
-                            'title' => __('Translation Manager'),
+                            'title' => Str::title(__('Translation manager')),
                             'link' => route('admin.settings.translation-manager.edit'),
                             'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
                             'isEnabled' => $user->can('system.translation'),
@@ -403,13 +400,13 @@ class MenuService
                             'isEnabled' => $user->can('manageKeys', Setting::class),
                         ],
                         [
-                            'title' => __('System Log'),
+                            'title' => Str::title(__('System log')),
                             'link' => route('admin.system-log.index'),
                             'isActive' => $request->routeIs('admin.system-log.*'),
                             'isEnabled' => $user->can('system.log'),
                         ],
                         [
-                            'title' => __('Error Log'),
+                            'title' => Str::title(__('Error log')),
                             'link' => route('admin.error-log.index'),
                             'isActive' => $request->routeIs('admin.error-log.*'),
                             'isEnabled' => $user->can('viewAny', ErrorLog::class),
@@ -422,7 +419,7 @@ class MenuService
                     'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
                     'children' => [
                         [
-                            'title' => __('All Users'),
+                            'title' => Str::title(__('All users')),
                             'link' => route('admin.users.index'),
                             'isActive' => $request->routeIs('admin.users.*'),
                             'isEnabled' => $user->can('viewAny', User::class),
