@@ -36,7 +36,9 @@ class DashboardWidgetSeeder extends Seeder
                 "background_color" => "#58b6c2",
                 "order" => 2,
                 "grid" => 6,
-                "setting" => [],
+                "setting" => [
+                    'form_id' => 3,
+                ],
             ],
             [
                 "uuid" => Str::uuid(),
