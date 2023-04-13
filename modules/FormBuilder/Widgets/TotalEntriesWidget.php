@@ -3,8 +3,6 @@
 namespace Modules\FormBuilder\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Support\Arr;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
@@ -29,17 +27,12 @@ class TotalEntriesWidget implements WidgetInterface
         ]);
     }
 
-    private function viewFormUrl($queryParams = [])
+    private function viewUrl($queryParams = [])
     {
         return route('admin.form-builders.entries.index', array_merge(
             [ 'form_builder' => $this->formId ],
             $queryParams,
         ));
-    }
-
-    private function viewUserUrl($queryParams = [])
-    {
-        return route('admin.users.index', $queryParams);
     }
 
     public function data(): array
@@ -62,32 +55,21 @@ class TotalEntriesWidget implements WidgetInterface
 
     public function response()
     {
-        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
+        $subTotal = FormEntry::where('form_id', $this->formId)
             ->read(false)
             ->count();
 
-        $performerRole = Role::findByName(
-                config('permission.role_names.performer'),
-                'web'
-            );
-
-        $performerTotal = User::role(
-                $performerRole->id ?? null
-            )
-            ->available()
-            ->count();
+        $total = FormEntry::where('form_id', $this->formId)->count();
 
         return response()->json([
             'totals' => [
                 [
-                    'text' => $unreadFormTotal,
-                    'url' => $this->viewFormUrl(['read' => 0]),
+                    'text' => $subTotal,
+                    'url' => $this->viewUrl(['read' => 0]),
                 ],
                 [
-                    'text' => $performerTotal,
-                    'url' => $this->viewUserUrl(
-                        ['roles' => [ $performerRole->id ?? null ]]
-                    ),
+                    'text' => $total,
+                    'url' => $this->viewUrl(),
                 ]
             ],
         ]);
