@@ -497,6 +497,15 @@ class SettingService
         return $this->getKey('tinymce_api_key');
     }
 
+    public function getDomainRedirections(): array
+    {
+        return app(SettingCache::class)->remember('domain_redirections', function () {
+            $domainRedirections = Setting::key('domain_redirections')->value('value');
+
+            return ($domainRedirections) ? json_decode($domainRedirections) : [];
+        });
+    }
+
     private function getKeysByGroup(string $group): array
     {
         return Setting::select([
