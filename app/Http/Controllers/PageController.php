@@ -272,18 +272,18 @@ class PageController extends CrudController
     {
         return [
             'search' => __('Search'),
-            'create_new' => __('Create New'),
+            'create_new' => __('Create new'),
             'title' => __('Title'),
             'slug' => __('Slug'),
             'status' => __('Status'),
-            'meta_title' => __('Meta Title'),
-            'meta_description' => __('Meta Description'),
+            'meta_title' => __('Meta title'),
+            'meta_description' => __('Meta description'),
             'language' => __('Language'),
             'actions' => __('Actions'),
             'are_you_sure' => __('Are you sure?'),
             'remove_page_from_navigation_message' => __('This action will also remove the page on the navigation menu.'),
             'yes' => __('Yes'),
-            'duplicate_menu' => __('Duplicate :resource', ['resource' => __('Page')]),
+            'duplicate_page' => __('Duplicate :resource', ['resource' => __('Page')]),
             'duplicate_page_message' => __('Are you sure want to duplicate this page?'),
         ];
     }
@@ -299,8 +299,8 @@ class PageController extends CrudController
                 'slug' => __('Slug'),
                 'status' => __('Status'),
                 'excerpt' => __('Excerpt'),
-                'meta_title' => __('Meta Title'),
-                'meta_description' => __('Meta Description'),
+                'meta_title' => __('Meta title'),
+                'meta_description' => __('Meta description'),
                 'cancel' => __('Cancel'),
                 'create' => __('Create'),
                 'update' => __('Update'),
@@ -312,7 +312,7 @@ class PageController extends CrudController
                 'remove' => __('Remove'),
                 'duplicate_translation' => __('Duplicate :resource', ['resource' => __('Translation')]),
                 'select_translation' => __('Select :resource', ['resource' => __('Translation')]),
-                'page_preview' => __('Page Preview'),
+                'page_preview' => __('Page preview'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

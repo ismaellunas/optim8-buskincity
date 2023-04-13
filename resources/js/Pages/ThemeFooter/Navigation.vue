@@ -38,7 +38,7 @@
                     </span>
 
                     <span class="ml-2">
-                        {{ i18n.add_new_segment }}
+                        {{ sentenceCase(i18n.add_new_segment) }}
                     </span>
                 </biz-button>
             </div>
@@ -65,6 +65,7 @@
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/vue3';
+    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'ThemeFooterNavigation',
@@ -82,7 +83,7 @@
 
         inject: {
             i18n: { default: () => ({
-                menu_items : 'Menu Items',
+                menu_items : 'Menu items',
                 add_new_segment : 'Add new segment',
             }) }
         },
@@ -273,6 +274,8 @@
                     },
                 });
             },
+
+            sentenceCase,
         }
     };
 </script>

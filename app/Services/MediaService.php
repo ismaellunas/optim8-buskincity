@@ -428,8 +428,8 @@ class MediaService
     {
         return [
             'search' => __('Search'),
-            'file_name' => __('File Name'),
-            'date_modified' => __('Date Modified'),
+            'file_name' => __('File name'),
+            'date_modified' => __('Date modified'),
             'type' => __('Type'),
             'size' => __('Size'),
             'actions' => __('Actions'),

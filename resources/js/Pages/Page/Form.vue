@@ -237,9 +237,9 @@
                     update: 'Update',
                     duplicate: 'Duplicate',
                     remove: 'Remove',
-                    duplicate_translation : 'Duplicate Translation',
-                    select_translation : 'Select Translation',
-                    page_preview: 'Page Preview',
+                    duplicate_translation : 'Duplicate translation',
+                    select_translation : 'Select translation',
+                    page_preview: 'Page preview',
                 })
             },
         },

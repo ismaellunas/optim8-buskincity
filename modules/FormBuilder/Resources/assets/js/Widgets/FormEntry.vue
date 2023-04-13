@@ -4,7 +4,7 @@
             <template #heading>
                 <div class="columns">
                     <div class="column">
-                        {{ title }}
+                        {{ capitalCase(title) }}
                     </div>
                     <div
                         v-if="hasFormLists"
@@ -132,6 +132,7 @@
     import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { head, isEmpty } from 'lodash';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'FormBuilderEntryWidget',
@@ -149,9 +150,9 @@
         props: {
             data: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
-                view_detail : 'View Detail',
-                view_all : 'View All',
-                no_data : 'No Data',
+                view_detail : 'View detail',
+                view_all : 'View all',
+                no_data : 'No data',
             }) },
             title: { type: String, default: "" },
         },
@@ -207,6 +208,8 @@
             onSelectedFormChange() {
                 this.getRecords();
             },
+
+            capitalCase,
         }
     }
 </script>

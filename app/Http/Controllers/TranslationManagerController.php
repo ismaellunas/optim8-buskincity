@@ -137,7 +137,7 @@ class TranslationManagerController extends CrudController
                 'i18n' => [
                     'export' => __('Export'),
                     'import' => __('Import'),
-                    'add_new' => __('Add New'),
+                    'add_new' => __('Add new'),
                     'update' => __('Update'),
                     'search' => __('Search'),
                     'group' => __('Group'),

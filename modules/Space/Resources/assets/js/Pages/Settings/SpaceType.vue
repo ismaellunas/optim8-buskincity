@@ -2,7 +2,7 @@
     <div>
         <biz-list-section>
             <template #title>
-                {{ i18n.spaceType }}
+                {{ capitalCase(i18n.spaceType) }}
             </template>
 
             <div class="columns">
@@ -82,7 +82,7 @@
             @on-submit="onSubmit"
         >
             <template #header>
-                {{ !selectedType.id ? i18n.createSpaceType : i18n.editSpaceType }}
+                {{ capitalCase(!selectedType.id ? i18n.createSpaceType : i18n.editSpaceType) }}
             </template>
         </space-type-form-modal>
     </div>
@@ -99,6 +99,7 @@
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'SpaceType',
@@ -239,6 +240,8 @@
                     }
                 })
             },
+
+            capitalCase,
         }
     };
 </script>

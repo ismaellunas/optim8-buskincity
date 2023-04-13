@@ -2,7 +2,7 @@
     <biz-modal-card @close="$emit('close')">
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? i18n.add_social_media : i18n.edit_social_media }}
+                {{ capitalCase(isCreate ? i18n.add_social_media : i18n.edit_social_media) }}
             </p>
             <button
                 class="delete"
@@ -76,6 +76,7 @@
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
     import { reactive } from 'vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'FooterSocialMediaForm',
@@ -174,6 +175,8 @@
                 this.form['icon'] = fields['icon'];
                 this.form['is_blank'] = fields['is_blank'];
             },
+
+            capitalCase,
         },
     }
 </script>

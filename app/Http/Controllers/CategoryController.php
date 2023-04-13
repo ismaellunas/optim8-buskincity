@@ -155,7 +155,7 @@ class CategoryController extends CrudController
         return [
             'search' => __('Search'),
             'actions' => __('Actions'),
-            'create_new' => __('Create New'),
+            'create_new' => __('Create new'),
             'are_you_sure' => __('Are you sure?'),
         ];
     }
@@ -165,8 +165,8 @@ class CategoryController extends CrudController
         return [
             'name' => __('Name'),
             'slug' => __('Slug'),
-            'meta_title' => __('Meta Title'),
-            'meta_description' => __('Meta Description'),
+            'meta_title' => __('Meta title'),
+            'meta_description' => __('Meta description'),
             'create' => __('Create'),
             'update' => __('Update'),
             'cancel' => __('Cancel'),

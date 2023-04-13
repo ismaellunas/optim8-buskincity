@@ -4,8 +4,8 @@
             <thead>
                 <tr>
                     <th />
-                    <th>{{ i18n.file_name }}</th>
-                    <th>{{ i18n.date_modified }}</th>
+                    <th>{{ capitalCase(i18n.file_name )}}</th>
+                    <th>{{ capitalCase(i18n.date_modified) }}</th>
                     <th>{{ i18n.type }}</th>
                     <th>{{ i18n.size }}</th>
                     <th>
@@ -62,6 +62,7 @@
     import BizTable from '@/Biz/Table.vue';
     import BizMediaListItem from '@/Biz/Media/ListItem.vue';
     import BizModal from '@/Biz/Modal.vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'MediaList',
@@ -79,8 +80,8 @@
         inject: {
             i18n: {
                 default: () => ({
-                    file_name : 'File Name',
-                    date_modified : 'Date Modified',
+                    file_name : 'File name',
+                    date_modified : 'Date modified',
                     type : 'Type',
                     size : 'Size',
                     actions : 'Actions',
@@ -112,6 +113,8 @@
                 this.previewImageSrc = media.file_url;
                 this.openModal();
             },
+
+            capitalCase,
         },
     };
 </script>

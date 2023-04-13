@@ -97,8 +97,8 @@
                     slug : 'Slug',
                     status : 'Status',
                     excerpt : 'Excerpt',
-                    meta_title : 'Meta Title',
-                    meta_description : 'Meta Description',
+                    meta_title : 'Meta title',
+                    meta_description : 'Meta description',
                 })
             },
         },

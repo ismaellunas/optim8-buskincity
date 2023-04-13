@@ -39,7 +39,7 @@ class RoleController extends CrudController
             'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
-                'create_new' => __('Create New'),
+                'create_new' => __('Create new'),
                 'name' => __('Name'),
                 'actions' => __('Actions'),
                 'are_you_sure' => __('Are you sure?'),

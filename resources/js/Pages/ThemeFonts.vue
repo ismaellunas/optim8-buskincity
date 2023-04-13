@@ -395,15 +395,15 @@
             i18n: { type: Object, default: () => ({
                 typography: 'Typography',
                 save: 'Save',
-                uppercase_text : 'Uppercase Text',
-                content_paragraph_width : 'Content Paragraph Width',
-                heading_font : 'Heading Font',
-                font_family : 'Font Family',
-                font_weight : 'Font Weight',
-                font_style : 'Font Style',
+                uppercase_text : 'Uppercase text',
+                content_paragraph_width : 'Content paragraph width',
+                heading_font : 'Heading font',
+                font_family : 'Font family',
+                font_weight : 'Font weight',
+                font_style : 'Font style',
                 preview : 'Preview',
-                main_text_font : 'Main Text Font',
-                button_font : 'Buttons Font',
+                main_text_font : 'Main text font',
+                button_font : 'Buttons font',
             }) }
         },
 

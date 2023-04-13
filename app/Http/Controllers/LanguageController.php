@@ -29,8 +29,8 @@ class LanguageController extends Controller
             'defaultLanguage' => $this->languageService->getDefaultId(),
             'languageOptions' => $this->languageService->getShownLanguageOptions(),
             'i18n' => [
-                'default_language' => __('Default Language'),
-                'supported_languages' => __('Supported Languages'),
+                'default_language' => __('Default language'),
+                'supported_languages' => __('Supported languages'),
                 'update' => __('Update'),
             ],
         ]);

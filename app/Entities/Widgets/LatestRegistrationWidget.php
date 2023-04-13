@@ -10,7 +10,7 @@ class LatestRegistrationWidget implements WidgetInterface
     private $baseRouteName = "admin.users";
     private $componentName = "LatestRegistration";
     private $data = [];
-    private $title = "Latest Registrations";
+    private $title = "Latest registrations";
     private $user;
     private $userService;
 
@@ -30,12 +30,12 @@ class LatestRegistrationWidget implements WidgetInterface
             'data' => $this->data,
             'order' => 2,
             'i18n' => [
-                'add_new' => __('Add New'),
+                'add_new' => __('Add new'),
                 'type' => __('Type'),
-                'view_detail' => __('View Detail'),
-                'view_all' => __('View All'),
+                'view_detail' => __('View detail'),
+                'view_all' => __('View all'),
                 'registered' => __('Registered'),
-                'no_data' => __('No Data'),
+                'no_data' => __('No data'),
                 'search' => __('Search'),
             ]
         ];

@@ -156,9 +156,9 @@
             typeOptions: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
                 search: 'Search',
-                select_parent: 'Select Parent',
+                select_parent: 'Select parent',
                 type: 'Type',
-                create_new: 'Create New',
+                create_new: 'Create new',
                 name: 'Name',
                 parents: 'Parents',
                 type: 'Type',

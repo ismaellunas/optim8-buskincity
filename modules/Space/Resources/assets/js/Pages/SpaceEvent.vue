@@ -104,13 +104,13 @@
 
         inject: {
             i18n: { default: () => ({
-                add_new: 'Add New',
+                add_new: 'Add new',
                 title: 'Title',
-                started_at: 'Started At',
-                ended_at: 'Ended At',
+                started_at: 'Started at',
+                ended_at: 'Ended at',
                 actions: 'Actions',
-                add_new_event: 'Add New Event',
-                started_and_ended_at: 'Started at and Ended at',
+                add_new_event: 'Add new event',
+                started_and_ended_at: 'Started at and ended at',
                 description: 'Description',
                 are_you_sure: 'Are you sure?',
             }) }

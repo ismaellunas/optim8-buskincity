@@ -35,7 +35,7 @@
         inject: {
             i18n: { default: () => ({
                 password : 'Password',
-                password_confirmation : 'Password Confirmation',
+                password_confirmation : 'Password confirmation',
             }) },
         },
 

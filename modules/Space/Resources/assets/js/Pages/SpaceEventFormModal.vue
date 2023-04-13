@@ -5,7 +5,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isNew ? i18n.add_new_event : i18n.edit_event }}
+                {{ capitalCase(isNew ? i18n.add_new_event : i18n.edit_event) }}
             </p>
 
             <button
@@ -124,6 +124,7 @@
     import { ref } from 'vue';
     import { confirmLeaveProgress, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'SpaceEventFormModal',
@@ -144,9 +145,9 @@
         inject: {
             i18n: { default: () => ({
                 title: 'Title',
-                add_new_event: 'Add New Event',
-                edit_event: 'Edit Event',
-                started_and_ended_at: 'Started at and Ended at',
+                add_new_event: 'Add new event',
+                edit_event: 'Edit event',
+                started_and_ended_at: 'Started at and ended at',
                 excerpt: 'Excerpt',
                 description: 'Description',
                 cancel: 'Cancel',
@@ -364,6 +365,8 @@
                         self.formErrors = error.response.data.errors;
                     });
             },
+
+            capitalCase,
         },
     };
 </script>

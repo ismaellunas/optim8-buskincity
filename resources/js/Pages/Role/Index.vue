@@ -101,7 +101,7 @@
             title: { type: String, required: true },
             i18n: { type: Object, default: () => ({
                 search : 'Search',
-                create_new : 'Create New',
+                create_new : 'Create new',
                 name : 'Name',
                 actions : 'Actions',
                 are_you_sure : 'Are you sure?',

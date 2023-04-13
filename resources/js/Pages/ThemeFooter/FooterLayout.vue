@@ -41,7 +41,7 @@
 
         inject: {
             i18n: { default: () => ({
-                footer_layout : 'Footer Layout',
+                footer_layout : 'Footer layout',
                 standard : 'Standard',
                 layout : 'Layout',
             }) },

@@ -6,7 +6,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ i18n.error_log_details }}
+                {{ capitalCase(i18n.error_log_details) }}
             </p>
 
             <button
@@ -20,7 +20,7 @@
             <tbody>
                 <tr>
                     <td width="30%">
-                        {{ i18n.created_at }}
+                        {{ capitalCase(i18n.created_at) }}
                     </td>
                     <td>{{ entry.createdAtFormatted }}</td>
                 </tr>
@@ -37,7 +37,7 @@
                     <td>{{ entry.line ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td>{{ i18n.total_hit }}</td>
+                    <td>{{ capitalCase(i18n.total_hit) }}</td>
                     <td>{{ entry.total_hit }}</td>
                 </tr>
                 <tr>
@@ -105,6 +105,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
     import { isEmpty, upperFirst } from 'lodash';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'ModalEntryDetail',
@@ -117,12 +118,12 @@
 
         inject: {
             i18n: { default: () => ({
-                error_log_details : 'Error Log Details',
-                created_at : 'Created At',
+                error_log_details : 'Error log details',
+                created_at : 'Created at',
                 url : 'URL',
                 file : 'File',
                 line : 'Line',
-                total_hit : 'Total Hit',
+                total_hit : 'Total hit',
                 message : 'Message',
                 trace : 'Trace',
                 actions : 'Actions',
@@ -150,6 +151,8 @@
 
         methods: {
             upperFirst,
+
+            capitalCase,
         },
     };
 </script>

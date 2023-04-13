@@ -144,10 +144,10 @@
         inject: {
             i18n: {
                 default: () => ({
-                    edit_image : 'Edit Image',
+                    edit_image : 'Edit image',
                     delete : 'Delete',
                     save : 'Save',
-                    save_as_new : 'Save As New',
+                    save_as_new : 'Save as new',
                     cancel : 'Cancel',
                     done : 'Done',
                 })

@@ -82,7 +82,7 @@
 
         inject: {
             i18n: { default: () => ({
-                menu_items : 'Menu Items',
+                menu_items : 'Menu items',
             }) }
         },
 

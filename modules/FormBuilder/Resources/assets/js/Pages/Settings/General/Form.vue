@@ -75,7 +75,7 @@
 
         inject: {
             i18n: { default: () => ({
-                submit_button: 'Submit Button',
+                submit_button: 'Submit button',
                 text: 'Text',
                 position: 'Position',
                 update: 'Update',

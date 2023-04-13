@@ -64,7 +64,7 @@
                             />
                         </span>
                         <span class="ml-2">
-                            {{ i18n.add_social_media }}
+                            {{ sentenceCase(i18n.add_social_media) }}
                         </span>
                     </a>
                 </nav>
@@ -91,6 +91,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
     import icon from '@/Libs/icon-class';
+    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'FooterSocialMedia',
@@ -106,8 +107,8 @@
 
         inject: {
             i18n: { default: () => ({
-                social_media : 'Social Media',
-                social_media_items : 'Social Media Items',
+                social_media : 'Social media',
+                social_media_items : 'Social media items',
                 add_social_media : 'Add social media',
             }) },
         },
@@ -176,7 +177,9 @@
                         this.isModalOpen = false;
                     }
                 });
-            }
+            },
+
+            sentenceCase,
         },
     }
 </script>

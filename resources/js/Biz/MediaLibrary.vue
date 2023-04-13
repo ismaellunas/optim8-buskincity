@@ -278,11 +278,11 @@
                 default: () => ({
                     search : 'Search',
                     filter : 'Filter',
-                    media_detail : 'Media Detail',
+                    media_detail : 'Media detail',
                     save : 'Save',
                     cancel : 'Cancel',
                     are_you_sure : 'Are you sure?',
-                    delete_resource : 'Delete Resource',
+                    delete_resource : 'Delete resource',
                     warning_delete_resource : 'This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.',
                 })
             },

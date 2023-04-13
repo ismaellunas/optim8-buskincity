@@ -202,7 +202,7 @@
                 >
                     <biz-tab>
                         <biz-tab-list>
-                            {{ i18n.publish_options }}
+                            {{ capitalCase(i18n.publish_options) }}
                         </biz-tab-list>
                     </biz-tab>
                     <biz-form-select
@@ -298,6 +298,7 @@
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { usePage } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'PostForm',
@@ -335,16 +336,16 @@
                     slug : 'Slug',
                     language : 'Language',
                     category : 'Category',
-                    select_primary_category : 'Select The Primary Category',
+                    select_primary_category : 'Select the primary category',
                     thumbnail : 'Thumbnail',
                     excerpt : 'Excerpt',
                     status : 'Status',
-                    publish_options : 'Publish Options',
+                    publish_options : 'Publish options',
                     scheduled_at : 'Scheduled at',
-                    open_media : 'Open Media',
+                    open_media : 'Open media',
                     remove : 'Remove',
-                    meta_title : 'Meta Title',
-                    meta_description : 'Meta Description',
+                    meta_title : 'Meta title',
+                    meta_description : 'Meta description',
                     create : 'Create',
                     update : 'Update',
                     cancel: 'Cancel',
@@ -472,6 +473,7 @@
                 }
                 return true;
             },
+            capitalCase,
         },
     };
 </script>

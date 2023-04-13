@@ -79,10 +79,10 @@
 
         inject: {
             i18n: { default: () => ({
-                header_layout : 'Header Layout',
+                header_layout : 'Header layout',
                 standard : 'Standard',
-                centered_logo : 'Centered Logo',
-                standard_with_social_media : 'Standard With Social Media',
+                centered_logo : 'Centered logo',
+                standard_with_social_media : 'Standard with social media',
                 layout : 'Layout',
             }) },
         },

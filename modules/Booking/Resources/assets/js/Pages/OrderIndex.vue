@@ -233,7 +233,7 @@
                 reschedule : 'Reschedule',
                 cancel : 'Cancel',
                 yes : 'Yes for sure',
-                cancel_event :'Cancel Event',
+                cancel_event :'Cancel event',
             }) },
         },
 

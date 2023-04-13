@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? i18n.add_menu_item : i18n.edit_menu_item }}
+                {{ capitalCase(isCreate ? i18n.add_menu_item : i18n.edit_menu_item) }}
             </p>
             <button
                 class="delete"
@@ -116,6 +116,7 @@
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
     import { usePage } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'NavigationFormMenu',
@@ -236,7 +237,9 @@
             onChangedType() {
                 this.form.url = null;
                 this.form.menu_itemable_id = null;
-            }
+            },
+
+            capitalCase,
         },
     };
 </script>

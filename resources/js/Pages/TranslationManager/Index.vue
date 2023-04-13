@@ -394,7 +394,7 @@
                 default: () => ({
                     export : 'Export',
                     import : 'Import',
-                    add_new : 'Add New',
+                    add_new : 'Add new',
                     update : 'Update',
                     search : 'Search',
                     group : 'Group',
