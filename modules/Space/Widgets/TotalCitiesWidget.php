@@ -5,6 +5,9 @@ namespace Modules\Space\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Models\GlobalOption;
 use App\Services\ModuleService;
+use Illuminate\Support\Arr;
+use Modules\FormBuilder\Entities\Form;
+use Modules\FormBuilder\Entities\FormEntry;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\SpaceService;
 
@@ -13,10 +16,12 @@ class TotalCitiesWidget implements WidgetInterface
     private $vueComponent = 'TotalWidget';
     private $vueComponentModule = null;
     private array $storedSetting;
+    private $formId;
 
     public function __construct(array $storedSetting)
     {
         $this->storedSetting = $storedSetting;
+        $this->formId = Arr::get($storedSetting, 'setting.form_id');
     }
 
     private function url(): string
@@ -26,7 +31,15 @@ class TotalCitiesWidget implements WidgetInterface
         ]);
     }
 
-    private function viewUrl($queryParams = [])
+    private function viewFormUrl($queryParams = [])
+    {
+        return route('admin.form-builders.entries.index', array_merge(
+            [ 'form_builder' => $this->formId ],
+            $queryParams,
+        ));
+    }
+
+    private function viewCityUrl($queryParams = [])
     {
         return route('admin.spaces.index', $queryParams);
     }
@@ -49,11 +62,16 @@ class TotalCitiesWidget implements WidgetInterface
         return (
             app(ModuleService::class)->isModuleActive('space')
             && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, 19])
+            && auth()->user()->can('viewAny', Form::class)
         );
     }
 
     public function response()
     {
+        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
+            ->read(false)
+            ->count();
+
         $spaceTypeId = GlobalOption::type(config('space.type_option'))
             ->name('City')
             ->select('id')
@@ -62,11 +80,15 @@ class TotalCitiesWidget implements WidgetInterface
         return response()->json([
             'totals' => [
                 [
+                    'text' => $unreadFormTotal,
+                    'url' => $this->viewFormUrl(['read' => 0]),
+                ],
+                [
                     'text' => app(SpaceService::class)->totalSpaceByType(
                         auth()->user(),
                         $spaceTypeId
                     ),
-                    'url' => $this->viewUrl(['types' => [$spaceTypeId]]),
+                    'url' => $this->viewCityUrl(['types' => [$spaceTypeId]]),
                 ]
             ]
         ]);
