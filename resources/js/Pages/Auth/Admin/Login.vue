@@ -44,8 +44,8 @@
                     <div class="field columns">
                         <div class="column has-text-left">
                             <biz-checkbox
-                                name="remember"
                                 v-model:checked="form.remember"
+                                name="remember"
                             >
                                 <span class="pl-1">Remember me</span>
                             </biz-checkbox>
@@ -91,6 +91,7 @@
     import BizLink from '@/Biz/Link.vue';
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import { back as iconBack, signIn as iconSignIn } from '@/Libs/icon-class';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'AuthAdminLogin',
@@ -122,7 +123,7 @@
             return {
                 canLogin: true,
                 canRegister: true,
-                form: this.$inertia.form({
+                form: useForm({
                     email: '',
                     password: '',
                     remember: false,

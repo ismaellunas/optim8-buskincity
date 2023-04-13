@@ -74,6 +74,7 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizLink from '@/Biz/Link.vue';
     import { back as iconBack } from '@/Libs/icon-class';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -102,11 +103,11 @@
             },
         },
 
-        data() {
+        setup(props) {
             return {
-                form: this.$inertia.form({
-                    token: this.token,
-                    email: this.email,
+                form: useForm({
+                    token: props.token,
+                    email: props.email,
                     password: '',
                     password_confirmation: '',
                     processing: true,
