@@ -15,7 +15,7 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
      * @param  string  $provider
      * @return \Laravel\Socialite\AbstractUser
      */
-    public function resolve($provider): User
+    public function resolve(string $provider): User
     {
         $user = Socialite::driver($provider)->user();
 

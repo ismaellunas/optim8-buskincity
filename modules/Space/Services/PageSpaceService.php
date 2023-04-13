@@ -18,7 +18,7 @@ class PageSpaceService
     {
         $pageTranslation = $this->getPageTranslationFromRequest();
 
-        if ($pageTranslation) {
+        if ($pageTranslation && $pageTranslation->page->space) {
             $this->space = $pageTranslation->page->space;
         }
     }
