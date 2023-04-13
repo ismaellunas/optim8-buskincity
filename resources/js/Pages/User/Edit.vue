@@ -92,7 +92,7 @@
                         :disabled="isProcessing"
                     >
                         <h3 class="title is-3">
-                            {{ i18n.profile_information }}
+                            {{ capitalCase(i18n.profile_information) }}
                         </h3>
                         <hr>
 
@@ -131,6 +131,7 @@
     import FormUserProfile from '@/Pages/User/FormProfile.vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'UserEdit',
@@ -157,7 +158,7 @@
                 cancel : 'Cancel',
                 update : 'Update',
                 profile : 'Profile',
-                profile_information : 'Profile Information',
+                profile_information : 'Profile information',
                 password : 'Password',
             }) },
         },
@@ -246,6 +247,8 @@
                     }
                 });
             },
+
+            capitalCase,
         },
     };
 </script>

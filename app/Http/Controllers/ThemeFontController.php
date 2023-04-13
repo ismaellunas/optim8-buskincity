@@ -91,15 +91,15 @@ class ThemeFontController extends CrudController
         return [
             'typography' => __('Typography'),
             'save' => __('Save'),
-            'uppercase_text' => __('Uppercase Text'),
-            'content_paragraph_width' => __('Content Paragraph Width'),
-            'heading_font' => __('Heading Font'),
-            'font_family' => __('Font Family'),
-            'font_weight' => __('Font Weight'),
-            'font_style' => __('Font Style'),
+            'uppercase_text' => __('Uppercase text'),
+            'content_paragraph_width' => __('Content paragraph width'),
+            'heading_font' => __('Heading font'),
+            'font_family' => __('Font family'),
+            'font_weight' => __('Font weight'),
+            'font_style' => __('Font style'),
             'preview' => __('Preview'),
-            'main_text_font' => __('Main Text Font'),
-            'button_font' => __('Buttons Font'),
+            'main_text_font' => __('Main text font'),
+            'button_font' => __('Buttons font'),
         ];
     }
 }

@@ -152,7 +152,7 @@
                 search : 'Search',
                 filter : 'Filter',
                 status : 'Status',
-                create_new : 'Create New',
+                create_new : 'Create new',
                 name : 'Name',
                 status : 'Status',
                 actions : 'Actions',

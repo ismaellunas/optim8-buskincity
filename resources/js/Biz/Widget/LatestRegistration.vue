@@ -4,7 +4,7 @@
             <template #heading>
                 <div class="columns">
                     <div class="column">
-                        {{ title }}
+                        {{ capitalCase(title) }}
                     </div>
                     <div class="column">
                         <biz-button-link
@@ -163,6 +163,7 @@
     import { debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { userImage } from '@/Libs/defaults';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'LatestRegistration',
@@ -182,12 +183,12 @@
         props: {
             data: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
-                add_new : 'Add New',
+                add_new : 'Add new',
                 type : 'Type',
-                view_detail : 'View Detail',
-                view_all : 'View All',
+                view_detail : 'View detail',
+                view_all : 'View all',
                 registered : 'Registered',
-                no_data : 'No Data',
+                no_data : 'No data',
                 search : 'Search',
             }) },
             title: { type: String, default: "" },
@@ -244,6 +245,8 @@
                     this.getRecords();
                 }
             }, debounceTime),
+
+            capitalCase,
         }
     }
 </script>

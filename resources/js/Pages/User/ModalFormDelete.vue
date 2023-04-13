@@ -113,7 +113,7 @@
 
         inject: {
             i18n: { default: () => ({
-                delete_user : 'Delete User',
+                delete_user : 'Delete user',
                 delete_user_action : 'What should be done with content owned by the user?',
                 delete_all_content : 'Delete all content',
                 attribute_all_content_to : 'Attribute all content to',

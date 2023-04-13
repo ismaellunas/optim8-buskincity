@@ -313,16 +313,16 @@ class UserController extends CrudController
     {
         return [
             'users' => __('Users'),
-            'deleted_users' => __('Deleted Users'),
+            'deleted_users' => __('Deleted users'),
             'search' => __('Search'),
             'filter' => __('Filter'),
             'filter_by_role' => __('Filter by Role'),
-            'create_new' => __('Create New'),
+            'create_new' => __('Create new'),
             'name' => __('Name'),
             'email' => __('Email'),
             'role' => __('Role'),
             'actions' => __('Actions'),
-            'delete_user' => __('Delete User'),
+            'delete_user' => __('Delete user'),
             'delete_user_action' => __('What should be done with content owned by the user?'),
             'delete_all_content' => __('Delete all content'),
             'attribute_all_content_to' => __('Attribute all content to'),
@@ -331,7 +331,7 @@ class UserController extends CrudController
             'delete' => __('Delete'),
             'are_you_sure' => __('Are you sure?'),
             'delete_confirmation' => __('Once you hit "Confirm Deletion", the user will be permanently removed.'),
-            'confirm_deletion' => __('Confirm Deletion'),
+            'confirm_deletion' => __('Confirm deletion'),
             'suspend_user_confirmation' => __('The user will be suspended.'),
             'unsuspend_user_confirmation' => __('The user will be unsuspended.'),
         ];
@@ -340,22 +340,22 @@ class UserController extends CrudController
     private function translationCreateEditPage(): array
     {
         return [
-            'profile_picture' => __('Profile Picture'),
+            'profile_picture' => __('Profile picture'),
             'Choose_a_picture' => __('Choose a picture'),
-            'first_name' => __('First Name'),
-            'last_name' => __('Last Name'),
+            'first_name' => __('First name'),
+            'last_name' => __('Last name'),
             'email' => __('Email'),
             'role' => __('Role'),
             'select_a_role' => __('Select a Role'),
             'language' => __('Language'),
             'password' => __('Password'),
-            'password_confirmation' => __('Password Confirmation'),
+            'password_confirmation' => __('Password confirmation'),
             'cancel' => __('Cancel'),
             'create' => __('Create'),
             'update' => __('Update'),
             'profile' => __('Profile'),
-            'profile_information' => __('Profile Information'),
-            'open_public_profile' => __('Open Public Profile'),
+            'profile_information' => __('Profile information'),
+            'open_public_profile' => __('Open public profile'),
         ];
     }
 }

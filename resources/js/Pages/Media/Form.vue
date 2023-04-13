@@ -124,8 +124,8 @@
         inject: {
             i18n: {
                 default: () => ({
-                    file_name: 'File Name',
-                    alternative_text: 'Alternative Text',
+                    file_name: 'File name',
+                    alternative_text: 'Alternative text',
                     description: 'Description',
                 })
             },

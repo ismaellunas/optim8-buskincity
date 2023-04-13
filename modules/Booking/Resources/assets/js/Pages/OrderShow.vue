@@ -135,7 +135,7 @@
             i18n: { type: Object, default: () => ({
                 reschedule : 'Reschedule',
                 cancel : 'Cancel',
-                cancel_event : 'Cancel Event',
+                cancel_event : 'Cancel event',
                 yes : 'Yes for sure',
             }) },
         },

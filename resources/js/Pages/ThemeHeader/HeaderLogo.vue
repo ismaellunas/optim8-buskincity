@@ -38,7 +38,7 @@
             instructions: {},
             i18n: { default: () => ({
                 logo : 'Logo',
-                open_media_library : 'Open Media Library',
+                open_media_library : 'Open media library',
             }) },
         },
 

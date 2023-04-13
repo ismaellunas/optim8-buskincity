@@ -115,8 +115,8 @@
             defaultLanguage: {type: Number, required: true},
             title: {type: String, required: true},
             i18n: {type: Object, default: () => ({
-                default_language : 'Default Language',
-                supported_languages : 'Supported Languages',
+                default_language : 'Default language',
+                supported_languages : 'Supported languages',
                 update : 'Update',
             })},
         },

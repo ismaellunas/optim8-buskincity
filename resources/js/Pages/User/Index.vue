@@ -19,7 +19,7 @@
                     <biz-provide-inject-tab
                         v-if="can.manageTrashed"
                         tab-id="delete-user-tab-trigger"
-                        :title="i18n.deleted_users"
+                        :title="capitalCase(i18n.deleted_users)"
                     >
                         <user-list-deleted />
                     </biz-provide-inject-tab>
@@ -42,6 +42,7 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import UserList from './List.vue';
     import UserListDeleted from './ListDeleted.vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'UserIndex',
@@ -73,7 +74,7 @@
             title: { type: String, required: true },
             i18n: { type: Object, default: () => ({
                 users : 'Users',
-                deleted_users : 'Deleted Users',
+                deleted_users : 'Deleted users',
             }) },
         },
 
@@ -88,5 +89,9 @@
                 return this.can.manageTrashed;
             },
         },
+
+        methods: {
+            capitalCase,
+        }
     };
 </script>

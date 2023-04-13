@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ title }}
+                {{ capitalCase(title) }}
             </p>
 
             <button
@@ -72,6 +72,7 @@
     import BizTable from '@/Biz/Table.vue';
     import bookingIcon from '@booking/Libs/booking-icon';
     import { useModelWrapper } from '@/Libs/utils';
+    import { capitalCase } from 'change-case';
 
     export default {
         components: {
@@ -113,6 +114,8 @@
             close() {
                 this.$emit('close');
             },
+
+            capitalCase,
         },
     };
 </script>

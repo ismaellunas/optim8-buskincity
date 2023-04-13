@@ -8,7 +8,7 @@
             <div class="hero-body">
                 <div class="container">
                     <h3 class="title is-size-3">
-                        {{ title ?? titleChild }}
+                        {{ capitalCase(title ?? titleChild) }}
                     </h3>
                 </div>
             </div>
@@ -47,6 +47,7 @@
     import BizNavbarMenu from '@/Biz/NavbarMenu.vue';
     import { Head as HeadTag } from '@inertiajs/vue3';
     import { head, isEmpty } from 'lodash';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'AppLayout',
@@ -75,6 +76,10 @@
             hasSideBreadcrumbsSlot() {
                 return !!this.$slots.sideBreadcrumbs;
             },
+        },
+
+        methods: {
+            capitalCase,
         },
     };
 </script>

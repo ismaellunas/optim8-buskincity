@@ -108,7 +108,7 @@
             i18n: { default: () => ({
                 details : 'Details',
                 name : 'Name',
-                short_description : 'Short Description',
+                short_description : 'Short description',
                 description : 'Description',
                 status : 'Status',
                 check_in_required : 'Is a check-in required?',

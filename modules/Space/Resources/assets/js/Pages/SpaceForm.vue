@@ -202,7 +202,7 @@
                 logo: 'Logo',
                 cover: 'Cover',
                 contacts: 'Contacts',
-                add_contact: 'Add Contact',
+                add_contact: 'Add contact',
                 email: 'Email',
                 phone: 'Phone',
             }) },

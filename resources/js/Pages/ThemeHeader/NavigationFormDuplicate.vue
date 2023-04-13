@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ i18n.duplicate_menu }}
+                {{ capitalCase(i18n.duplicate_menu) }}
             </p>
             <button
                 class="delete"
@@ -131,6 +131,7 @@
     import { cloneDeep } from 'lodash';
     import { reactive } from 'vue';
     import { usePage } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'NavigationFormDuplicate',
@@ -149,7 +150,7 @@
 
         inject: {
             i18n: { default: () => ({
-                duplicate_menu: 'Duplicate Menu',
+                duplicate_menu: 'Duplicate menu',
                 to: 'To',
                 title : 'Title',
                 type : 'Type',
@@ -211,7 +212,9 @@
             onChangedType() {
                 this.form.url = null;
                 this.form.menu_itemable_id = null;
-            }
+            },
+
+            capitalCase,
         },
     };
 </script>

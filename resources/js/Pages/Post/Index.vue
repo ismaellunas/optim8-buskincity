@@ -211,7 +211,7 @@
             title: { type: String, required: true },
             i18n: { type: Object, default: () => ({
                 search : 'Search',
-                create_new : 'Create New',
+                create_new : 'Create new',
                 published : 'Published',
                 scheduled : 'Scheduled',
                 draft : 'Draft',

@@ -118,4 +118,9 @@ class TranslationService
         }
         return $translatedAttributes;
     }
+
+    public function isSupportedLocale(string $locale): bool
+    {
+        return in_array($locale, $this->getLocales());
+    }
 }

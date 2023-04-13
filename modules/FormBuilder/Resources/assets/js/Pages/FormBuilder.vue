@@ -205,7 +205,7 @@
                 name : 'Name',
                 form_id : 'Form ID',
                 general : 'General',
-                add_field_group : 'Add Field Group',
+                add_field_group : 'Add field group',
                 cancel : 'Cancel',
                 create : 'Create',
             }) },

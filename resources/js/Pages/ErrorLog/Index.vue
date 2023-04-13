@@ -48,9 +48,9 @@
                 <template #thead>
                     <tr>
                         <th>#</th>
-                        <th>{{ i18n.created_at }}</th>
+                        <th>{{ capitalCase(i18n.created_at) }}</th>
                         <th>{{ i18n.url }}</th>
-                        <th>{{ i18n.total_hit }}</th>
+                        <th>{{ capitalCase(i18n.total_hit) }}</th>
                         <th width="30%">
                             {{ i18n.message }}
                         </th>
@@ -124,6 +124,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';
     import { ref } from 'vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'ErrorLog',
@@ -157,11 +158,11 @@
             records: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
                 search : 'Search',
-                delete_all : 'Delete All',
-                delete_checked_records : 'Delete Checked Records',
-                created_at : 'Created At',
+                delete_all : 'Delete all',
+                delete_checked_records : 'Delete checked records',
+                created_at : 'Created at',
                 url : 'URL',
-                total_hit : 'Total Hit',
+                total_hit : 'Total hit',
                 message : 'Message',
                 actions : 'Actions',
             }) },
@@ -281,7 +282,9 @@
                 }
 
                 return text;
-            }
+            },
+
+            capitalCase,
         },
     };
 </script>

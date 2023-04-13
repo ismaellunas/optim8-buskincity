@@ -39,7 +39,7 @@
                             <th>{{ i18n.path }}</th>
                             <th>{{ i18n.status }}</th>
                             <th>{{ i18n.user }}</th>
-                            <th>{{ i18n.happened_at }}</th>
+                            <th>{{ capitalCase(i18n.happened_at) }}</th>
                             <th>{{ i18n.actions }}</th>
                         </tr>
                     </thead>
@@ -155,6 +155,7 @@
     import { debounceTime } from '@/Libs/defaults';
     import { eye as iconEye } from '@/Libs/icon-class';
     import { statusCodeColor } from '@/Libs/utils';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'SystemLog',
@@ -187,17 +188,17 @@
             pageQueryParams: { type: Object, required: true},
             tagAuth: { type: [Object, null], default: null },
             i18n: { type: Object, default: () => ({
-                select_user : 'Select User',
+                select_user : 'Select user',
                 none : 'None',
                 verb : 'Verb',
                 path : 'Path',
                 status : 'Status',
                 user : 'User',
-                happened_at : 'Happened At',
+                happened_at : 'Happened at',
                 actions : 'Actions',
-                load_new_entries : 'Load New Entries',
+                load_new_entries : 'Load new entries',
                 loading : 'Loading',
-                load_more : 'Load More',
+                load_more : 'Load more',
             }) },
         },
 
@@ -435,6 +436,8 @@
             }, debounceTime),
 
             statusCodeColor: statusCodeColor,
+
+            capitalCase,
         },
     };
 </script>

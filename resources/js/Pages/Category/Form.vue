@@ -109,8 +109,8 @@
                 default: () => ({
                     name : 'Name',
                     slug : 'Slug',
-                    meta_title : 'Meta Title',
-                    meta_description : 'Meta Description',
+                    meta_title : 'Meta title',
+                    meta_description : 'Meta description',
                     create : 'Create',
                     update : 'Update',
                     cancel: 'Cancel',

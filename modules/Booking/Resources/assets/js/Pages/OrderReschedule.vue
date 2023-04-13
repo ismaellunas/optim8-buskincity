@@ -109,7 +109,7 @@
             product: { type: Object, required: true },
             timezone: { type: String, required: true },
             i18n: { type: Object, default: () => ({
-                reschedule_event : 'Reschedule Event',
+                reschedule_event : 'Reschedule event',
                 reschedule : 'Reschedule',
             }) },
         },

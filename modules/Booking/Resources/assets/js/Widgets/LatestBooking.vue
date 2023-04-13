@@ -4,7 +4,7 @@
             <template #heading>
                 <div class="columns">
                     <div class="column">
-                        {{ title }}
+                        {{ capitalCase(title) }}
                     </div>
                 </div>
             </template>
@@ -167,6 +167,7 @@
     import icon from '@/Libs/icon-class';
     import { debounce, each } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'LatestBookingWidget',
@@ -192,9 +193,9 @@
                 time :'Time',
                 location :'Location',
                 any :'Any',
-                view_detail :'View Detail',
-                view_all :'View All',
-                no_data :'No Data',
+                view_detail :'View detail',
+                view_all :'View all',
+                no_data :'No data',
                 search :'Search',
             }) },
             title: { type: String, default: "" },
@@ -301,6 +302,8 @@
                     this.getRecords();
                 }
             }, debounceTime),
+
+            capitalCase,
         }
     }
 </script>

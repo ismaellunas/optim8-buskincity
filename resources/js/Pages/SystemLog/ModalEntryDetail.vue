@@ -23,7 +23,7 @@
                         <th
                             colspan="100"
                         >
-                            {{ i18n.request_details }}
+                            {{ capitalCase(i18n.request_details) }}
                         </th>
                     </tr>
                 </thead>
@@ -45,7 +45,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>{{ i18n.controller_action }}</th>
+                        <th>{{ capitalCase(i18n.controller_action) }}</th>
                         <td>{{ entry.content.controller_action }}</td>
                     </tr>
                     <tr>
@@ -69,7 +69,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>{{ i18n.ip_address }}</th>
+                        <th>{{ capitalCase(i18n.ip_address) }}</th>
                         <td>{{ entry.content.ip_address }}</td>
                     </tr>
                     <tr>
@@ -92,7 +92,7 @@
                         <th
                             colspan="100"
                         >
-                            {{ i18n.authenticated_user }}
+                            {{ capitalCase(i18n.authenticated_user) }}
                         </th>
                     </tr>
                 </thead>
@@ -102,7 +102,7 @@
                         <td>{{ entry.content.user.id }}</td>
                     </tr>
                     <tr>
-                        <th>{{ i18n.email_address }}</th>
+                        <th>{{ capitalCase(i18n.email_address) }}</th>
                         <td>{{ entry.content.user.email }}</td>
                     </tr>
                     <tr>
@@ -136,6 +136,7 @@
     import BizTable from '@/Biz/Table.vue';
     import BizTag from '@/Biz/Tag.vue';
     import { statusCodeColor } from '@/Libs/utils';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'ModalEntryDetail',
@@ -150,20 +151,20 @@
         inject: {
             i18n: { default: () => ({
                 request : 'Request',
-                request_details : 'Request Details',
+                request_details : 'Request details',
                 time : 'Time',
                 hostname : 'Hostname',
                 method : 'Method',
-                controller_action : 'Controller Action',
+                controller_action : 'Controller action',
                 middleware : 'Middleware',
                 path : 'Path',
                 duration : 'Duration',
                 status : 'Status',
-                ip_address : 'Ip Address',
+                ip_address : 'Ip address',
                 memory : 'Memory',
-                authenticated_user : 'Authenticated User',
+                authenticated_user : 'Authenticated user',
                 id : 'ID',
-                email_address : 'Email Address',
+                email_address : 'Email address',
                 name : 'Name',
                 cancel : 'Cancel',
             }) },
@@ -180,6 +181,8 @@
 
         methods: {
             statusCodeColor: statusCodeColor,
+
+            capitalCase,
         },
     };
 </script>

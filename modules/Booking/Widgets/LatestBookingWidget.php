@@ -10,7 +10,7 @@ class LatestBookingWidget implements WidgetInterface
     private $user;
 
     private $componentName = "LatestBooking";
-    private $title = "Latest Bookings";
+    private $title = "Latest bookings";
     private $baseRouteName = "admin.booking.orders";
 
     public function __construct($request)
@@ -47,9 +47,9 @@ class LatestBookingWidget implements WidgetInterface
                 'time' => __('Time'),
                 'location' => __('Location'),
                 'any' => __('Any'),
-                'view_detail' => __('View Detail'),
-                'view_all' => __('View All'),
-                'no_data' => __('No Data'),
+                'view_detail' => __('View detail'),
+                'view_all' => __('View all'),
+                'no_data' => __('No data'),
                 'search' => __('Search'),
             ]
         ];

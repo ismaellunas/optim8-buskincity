@@ -139,15 +139,15 @@
 
         inject: {
             i18n: { default: () => ({
-                profile_picture : 'Profile Picture',
+                profile_picture : 'Profile picture',
                 Choose_a_picture : 'Choose a picture',
-                first_name : 'First Name',
-                last_name : 'Last Name',
+                first_name : 'First name',
+                last_name : 'Last name',
                 email : 'Email',
                 role : 'Role',
-                select_a_role : 'Select a Role',
+                select_a_role : 'Select a role',
                 language : 'Language',
-                open_public_profile: 'Open Public Profile',
+                open_public_profile: 'Open public profile',
             }) },
         },
 

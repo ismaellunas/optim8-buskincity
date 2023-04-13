@@ -36,8 +36,8 @@
                         <th>{{ i18n.title }}</th>
                         <th>{{ i18n.slug }}</th>
                         <th>{{ i18n.status }}</th>
-                        <th>{{ i18n.meta_title }}</th>
-                        <th>{{ i18n.meta_description }}</th>
+                        <th>{{ capitalCase(i18n.meta_title) }}</th>
+                        <th>{{ capitalCase(i18n.meta_description) }}</th>
                         <th>{{ i18n.language }}</th>
                         <th>
                             <div class="level-right">
@@ -141,6 +141,7 @@
     import { confirmDelete, confirm, success as successAlert } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'PageIndex',
@@ -167,18 +168,18 @@
                 type: Object,
                 default: () => ({
                     search : 'Search',
-                    create_new : 'Create New',
+                    create_new : 'Create new',
                     title : 'Title',
                     slug : 'Slug',
                     status : 'Status',
-                    meta_title : 'Meta Title',
-                    meta_description : 'Meta Description',
+                    meta_title : 'Meta title',
+                    meta_description : 'Meta description',
                     language : 'Language',
                     actions : 'Actions',
                     are_you_sure : 'Are you sure?',
                     remove_page_from_navigation_message : 'This action will also remove the page on the navigation menu.',
                     yes : 'Yes',
-                    duplicate_page : 'Duplicate Page',
+                    duplicate_page : 'Duplicate page',
                     duplicate_page_message : 'Are you sure want to duplicate this page?',
                 })
             },
@@ -316,6 +317,10 @@
                 confirm(
                     self.i18n.duplicate_page,
                     self.i18n.duplicate_page_message,
+                    self.i18n.yes,
+                    {
+                        icon: 'warning',
+                    }
                 )
                     .then(result => {
                         if (result.isConfirmed) {
@@ -325,6 +330,8 @@
                         }
                     });
             },
+
+            capitalCase,
         },
     }
 </script>

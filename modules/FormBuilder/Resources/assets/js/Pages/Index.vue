@@ -134,7 +134,7 @@
             records: { type: Object, default: () => {} },
             i18n: { type: Object, default: () => ({
                 search : 'search',
-                create_new : 'Create New',
+                create_new : 'Create new',
                 name : 'Name',
                 form_id : 'Form ID',
                 entries : 'Entries',

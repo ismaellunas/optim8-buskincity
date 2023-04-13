@@ -119,7 +119,7 @@
             i18n: { type: Object, default: () => ({
                 search : 'Search',
                 actions : 'Actions',
-                create_new : 'Create New',
+                create_new : 'Create new',
                 are_you_sure : 'Are you sure?',
             }) }
         },

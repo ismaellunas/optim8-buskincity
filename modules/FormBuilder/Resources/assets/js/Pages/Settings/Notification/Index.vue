@@ -114,7 +114,7 @@
         inject: {
             i18n: { default: () => ({
                 search: 'Search',
-                create_new: 'Create New',
+                create_new: 'Create new',
                 name: 'Name',
                 subject: 'Subject',
                 status: 'Status',
