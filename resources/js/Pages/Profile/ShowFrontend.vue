@@ -15,8 +15,7 @@
             />
 
             <div
-                v-else
-                v-show="can.set_password"
+                v-else-if="can.set_password"
                 class="mb-5"
             >
                 <set-password-form class="mt-10 sm:mt-0" />
