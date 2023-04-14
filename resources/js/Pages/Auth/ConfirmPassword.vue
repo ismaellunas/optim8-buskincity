@@ -32,6 +32,7 @@
     import JetInput from '@/Jetstream/Input.vue';
     import JetLabel from '@/Jetstream/Label.vue';
     import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -43,12 +44,12 @@
             JetValidationErrors
         },
 
-        data() {
+        setup() {
             return {
-                form: this.$inertia.form({
+                form: useForm({
                     password: '',
                 })
-            }
+            };
         },
 
         methods: {
