@@ -111,7 +111,7 @@
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
-    import { usePage } from '@inertiajs/vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'ProfileUpdateProfileInformationForm',
@@ -152,7 +152,7 @@
             return {
                 cropper: null,
                 acceptedTypes: acceptedImageTypes,
-                form: this.$inertia.form({
+                form: useForm({
                     _method: 'PUT',
                     first_name: this.user.first_name,
                     last_name: this.user.last_name,

@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('unique_key', 16)->unique();
             $table->string('first_name', 128);
             $table->string('last_name', 128);
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -30,6 +30,15 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        /**
+         * References
+         * https://halimsamy.com/sql-soft-deleting-and-unique-constraint
+         * https://www.youtube.com/watch?v=fqfoiiqPuMo
+         */
+        if (Str::startsWith(config('database.default'), 'pgsql')) {
+            DB::statement('CREATE UNIQUE INDEX users_email_unique on users(email) WHERE deleted_at IS NULL');
+        }
     }
 
     /**

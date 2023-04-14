@@ -54,7 +54,7 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import TranslationManagerForm from '@/Pages/TranslationManager/Form.vue';
-    import { oops as oopsAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
@@ -110,6 +110,9 @@
                     onStart: () => {
                         self.loader = self.$loading.show();
                         self.isProcessing = true;
+                    },
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
                         self.loader.hide();
