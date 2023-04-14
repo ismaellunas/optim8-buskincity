@@ -39,7 +39,7 @@
                     <input
                         type="hidden"
                         name="_token"
-                        :value="csrfToken"
+                        :value="$page.props.csrfToken"
                     >
 
                     <biz-form-input
@@ -82,6 +82,7 @@
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin.vue';
     import { back as iconBack } from '@/Libs/icon-class';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -104,14 +105,13 @@
             status: { type: String, default: '' },
         },
 
-        data() {
+        setup() {
             return {
-                form: this.$inertia.form({
+                form: useForm({
                     email: '',
                 }),
-                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 iconBack,
-            }
+            };
         },
 
         methods: {
