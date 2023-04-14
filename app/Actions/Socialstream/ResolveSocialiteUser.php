@@ -2,6 +2,7 @@
 
 namespace App\Actions\Socialstream;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User;
@@ -21,6 +22,8 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
         try {
             $user = Socialite::driver($provider)->user();
         } catch (\Throwable $th) {
+            Debugbar::addThrowable($th);
+
             return abort(Response::HTTP_NOT_FOUND);
         }
 
