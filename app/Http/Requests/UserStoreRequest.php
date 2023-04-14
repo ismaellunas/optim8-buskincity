@@ -25,7 +25,9 @@ class UserStoreRequest extends BaseFormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user'))
+                Rule::unique('users')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                })
             ],
             'password' => $this->passwordRules(),
             'role' => [
