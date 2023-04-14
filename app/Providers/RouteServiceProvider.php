@@ -48,8 +48,12 @@ class RouteServiceProvider extends ServiceProvider
 
             foreach ($domainRedirections as $destination) {
                 Route::domain($destination->from)->group(function () use ($destination) {
-                    Route::any('/{any?}', fn ($any) => redirect($destination->to."/$any", 301));
-                    Route::any('/admin/{any?}', fn ($any) => redirect($destination->to."/admin/$any", 301));
+                    Route::any('/{any}', function (Request $request, $any) use ($destination) {
+                        return redirect((
+                            $destination->to."/".$any
+                            .(!empty($request->query()) ? "?".$request->getQueryString() : "")
+                        ), 301);
+                    })->where('any', '.*');
                 });
             }
 
