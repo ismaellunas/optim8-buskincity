@@ -33,27 +33,18 @@ class Recaptcha
                         GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
                         $response->getErrorCodes()
                     )
-                ) {
-                    RecaptchaService::siteKeyError();
-
-                    return $next($request);
-                }
-
-                if (
-                    in_array(
+                    || in_array(
                         'invalid-input-secret',
                         $response->getErrorCodes()
                     )
                 ) {
-                    RecaptchaService::secretKeyError();
-
                     return $next($request);
                 }
 
                 if (!$request->expectsJson()) {
                     return redirect()
                         ->back()
-                        ->with('failed', 'Recaptcha failed. Please try again.');
+                        ->with('failed', __('Recaptcha failed. Please try again.'));
                 }
 
                 return response([

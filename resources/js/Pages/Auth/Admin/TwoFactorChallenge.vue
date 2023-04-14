@@ -93,6 +93,7 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import { back as iconBack, signIn as iconSignIn } from '@/Libs/icon-class';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -116,7 +117,7 @@
         data() {
             return {
                 recovery: false,
-                form: this.$inertia.form({
+                form: useForm({
                     code: '',
                     recovery_code: '',
                 }),
