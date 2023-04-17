@@ -30,12 +30,12 @@
                                     :href="route(baseRouteName+'.index')"
                                     class="is-link is-light"
                                 >
-                                    Cancel
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Create
+                                    {{ i18n.create }}
                                 </biz-button>
                             </div>
                         </div>
@@ -58,6 +58,7 @@
 
     export default {
         name: 'UserCreate',
+
         components: {
             BizButton,
             BizButtonLink,
@@ -65,14 +66,27 @@
             FormUserPassword,
             FormUserProfile,
         },
+
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
+
         props: {
             errors: { type: Object, default: () => {} },
             supportedLanguageOptions: { type: Array, default: () => [] },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                cancel : 'Cancel',
+                Create : 'Create',
+            }) },
         },
+
         setup(props) {
             const form = {
                 first_name: null,
@@ -91,6 +105,7 @@
                 form: useForm(form),
             };
         },
+
         data() {
             return {
                 baseRouteName: 'admin.users',
@@ -99,6 +114,7 @@
                 loader: null,
             };
         },
+
         methods: {
             onSubmit() {
                 const self = this;

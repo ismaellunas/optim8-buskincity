@@ -4,7 +4,7 @@
             <div class="column">
                 <biz-form-input
                     v-model="form.name"
-                    label="Name"
+                    :label="i18n.name"
                     placeholder="Contact Form"
                     :required="true"
                     :message="error('name')"
@@ -14,7 +14,7 @@
             <div class="column">
                 <biz-form-key
                     v-model="form.form_id"
-                    label="Form ID"
+                    :label="i18n.form_id"
                     placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('form_id')"
@@ -37,7 +37,7 @@
                             :is-expanding-on-load="true"
                         >
                             <template #headerTitle>
-                                General
+                                {{ i18n.general }}
                             </template>
 
                             <draggable
@@ -128,7 +128,7 @@
                             class="is-primary"
                             @click="addFieldGroup()"
                         >
-                            Add Field Group
+                            {{ i18n.add_field_group }}
                         </biz-button>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                     class="is-link is-light"
                     :href="route(baseRouteName + '.index')"
                 >
-                    Cancel
+                    {{ i18n.cancel }}
                 </biz-button-link>
             </div>
             <div class="control">
@@ -149,7 +149,7 @@
                     class="is-link"
                     @click="onSubmit"
                 >
-                    {{ !isEditMode ? 'Create' : 'Update' }}
+                    {{ !isEditMode ? i18n.create : i18n.update }}
                 </biz-button>
             </div>
         </div>
@@ -201,6 +201,14 @@
 
         inject: {
             isEditMode: { default: false },
+            i18n: { default: () => ({
+                name : 'Name',
+                form_id : 'Form ID',
+                general : 'General',
+                add_field_group : 'Add field group',
+                cancel : 'Cancel',
+                create : 'Create',
+            }) },
         },
 
         props: {

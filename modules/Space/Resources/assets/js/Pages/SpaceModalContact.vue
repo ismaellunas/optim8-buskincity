@@ -6,7 +6,7 @@
     >
         <template #header>
             <p class="modal-card-title">
-                Contact
+                {{ i18n.contact }}
             </p>
 
             <biz-button
@@ -22,7 +22,7 @@
                 <div class="column is-half">
                     <biz-form-input
                         v-model="contact.name"
-                        label="Name"
+                        :label="i18n.name"
                         required
                         maxlength="128"
                         :message="error('name', null, contactErrors)"
@@ -30,7 +30,7 @@
 
                     <biz-form-input
                         v-model="contact.email"
-                        label="Email"
+                        :label="i18n.email"
                         maxlength="255"
                         :message="error('email', null, contactErrors)"
                     />
@@ -39,7 +39,7 @@
                 <div class="column is-half">
                     <biz-form-phone
                         v-model="contact.phone"
-                        label="Phone"
+                        :label="i18n.phone"
                         :country-options="countryOptions"
                         :default-country="defaultCountry"
                         :dropdown-max-height="180"
@@ -57,14 +57,14 @@
                     type="button"
                     @click="$emit('add')"
                 >
-                    Save
+                    {{ i18n.save }}
                 </a>
                 <a
                     class="button"
                     type="button"
                     @click="$emit('close')"
                 >
-                    Cancel
+                    {{ i18n.cancel }}
                 </a>
             </div>
         </template>
@@ -90,6 +90,16 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                contact: 'Contact',
+                email: 'Email',
+                phone: 'Phone',
+                cancel: 'Cancel',
+                save: 'Save',
+            }) },
+        },
 
         props: {
             contactErrors: { type: Object, default: () => {} },

@@ -2,7 +2,7 @@
     <biz-modal-card @close="$emit('close')">
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? 'Add' : 'Edit' }} Social Media
+                {{ capitalCase(isCreate ? i18n.add_social_media : i18n.edit_social_media) }}
             </p>
             <button
                 class="delete"
@@ -15,7 +15,7 @@
             <fieldset>
                 <biz-form-input-icon
                     v-model="form.icon"
-                    label="Icon"
+                    :label="i18n.icon"
                     placeholder="e.g fas fa-square-full"
                     required
                     :icon-classes="iconClasses"
@@ -24,7 +24,7 @@
 
                 <biz-form-input
                     v-model="form.url"
-                    label="Link"
+                    :label="i18n.link"
                     placeholder="e.g https:://example.com/"
                     required
                     :message="error('url', null, errors)"
@@ -34,7 +34,9 @@
                     v-model:checked="form.is_blank"
                     :value="true"
                 >
-                    Open link in a new tab
+                    <span class="ml-2">
+                        {{ i18n.open_link }}
+                    </span>
                 </biz-checkbox>
             </fieldset>
         </form>
@@ -46,14 +48,14 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click.prevent="onClose()">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
                         <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click.prevent="onSubmit()"
                         >
-                            {{ isCreate ? 'Create' : 'Update' }}
+                            {{ isCreate ? i18n.create : i18n.update }}
                         </biz-button>
                     </div>
                 </div>
@@ -74,6 +76,7 @@
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
     import { reactive } from 'vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'FooterSocialMediaForm',
@@ -89,6 +92,19 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                add_social_media : 'Add social media',
+                edit_social_media : 'Edit social media',
+                icon : 'Icon',
+                link : 'Link',
+                cancel : 'Cancel',
+                create : 'Create',
+                update : 'Update',
+                open_link : 'Open link in a new tab',
+            }) },
+        },
 
         props: {
             errors: {
@@ -159,6 +175,8 @@
                 this.form['icon'] = fields['icon'];
                 this.form['is_blank'] = fields['is_blank'];
             },
+
+            capitalCase,
         },
     }
 </script>
