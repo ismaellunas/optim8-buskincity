@@ -14,7 +14,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">Profile</h3>
                         <hr>
@@ -29,7 +29,10 @@
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
                         />
 
-                        <div class="field is-grouped is-grouped-right">
+                        <div
+                            v-if="! record.isTrashed"
+                            class="field is-grouped is-grouped-right"
+                        >
                             <div class="control">
                                 <biz-button-link
                                     :href="route(baseRouteName+'.index')"
@@ -56,7 +59,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">Password</h3>
                         <hr>
@@ -66,7 +69,10 @@
                             :error-bag="errorBag"
                         />
 
-                        <div class="field is-grouped is-grouped-right">
+                        <div
+                            v-if="! record.isTrashed"
+                            class="field is-grouped is-grouped-right"
+                        >
                             <div class="control">
                                 <biz-button class="is-link">
                                     Update
@@ -84,7 +90,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">
                             Profile
@@ -98,17 +104,7 @@
                             :locale="$page.props.user.origin_language_code"
                             @loaded-empty-field="isFormBuilderShown = false"
                             @loaded-successfully="isFormBuilderShown = true"
-                        >
-                            <template #buttons>
-                                <div class="field is-grouped is-grouped-right">
-                                    <div class="control">
-                                        <biz-button class="is-link">
-                                            Update
-                                        </biz-button>
-                                    </div>
-                                </div>
-                            </template>
-                        </form-builder>
+                        />
                     </fieldset>
                 </div>
             </div>
@@ -186,6 +182,13 @@
                 isProcessing: false,
                 loader: null,
             };
+        },
+
+        computed: {
+            isFormDisabled() {
+                return this.isProcessing
+                    || this.record.isTrashed
+            },
         },
 
         methods: {
