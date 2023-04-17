@@ -22,7 +22,9 @@
                     class="is-primary ml-2"
                     @click="onSave(activeTab)"
                 >
-                    <span>Save</span>
+                    <span>
+                        {{ i18n.save }}
+                    </span>
                 </biz-button>
             </biz-tab>
 
@@ -56,6 +58,7 @@
 
     export default {
         name: 'ThemeFooterEdit',
+
         components: {
             Layout,
             Navigation,
@@ -64,10 +67,19 @@
             BizTab,
             BizTabList,
         },
+
         mixins: [
             MixinHasTab,
         ],
+
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
+
         props: {
             baseRouteName: {
                 type: String,
@@ -95,20 +107,28 @@
                 type: String,
                 default: "-"
             },
+            i18n: { type: Object, default: () => ({
+                layout : 'Layout',
+                navigation : 'Navigation',
+                save : 'Save',
+            }) },
         },
-        setup() {
+
+        setup(props) {
             return {
                 tabs: {
-                    layout: {title: 'Layout', id: 'layout-tab-trigger' },
-                    navigation: {title: 'Navigation', id: 'navigation-tab-trigger' },
+                    layout: { title: props.i18n.layout, id: 'layout-tab-trigger' },
+                    navigation: { title: props.i18n.navigation, id: 'navigation-tab-trigger' },
                 },
             }
         },
+
         data() {
             return {
                 activeTab: 'layout',
             };
         },
+
         methods: {
             setActiveTab(tab) {
                 if (tab === this.activeTab) {

@@ -423,4 +423,16 @@ class MediaService
             ]),
         ];
     }
+
+    public static function defaultMediaLibraryTranslations(): array
+    {
+        return [
+            'search' => __('Search'),
+            'file_name' => __('File name'),
+            'date_modified' => __('Date modified'),
+            'type' => __('Type'),
+            'size' => __('Size'),
+            'actions' => __('Actions'),
+        ];
+    }
 }

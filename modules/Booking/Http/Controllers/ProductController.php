@@ -2,10 +2,8 @@
 
 namespace Modules\Booking\Http\Controllers;
 
-use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
-use App\Models\Media;
 use App\Services\CountryService;
 use App\Services\IPService;
 use App\Services\MediaService;
@@ -32,18 +30,15 @@ class ProductController extends CrudController
     protected $baseRouteName = "admin.booking.products";
 
     private $productService;
-    private $mediaService;
     private $productEventService;
 
     public function __construct(
         ProductService $productService,
-        MediaService $mediaService,
         ProductEventService $productEventService
     ) {
         $this->authorizeResource(Product::class, 'product');
 
         $this->productService = $productService;
-        $this->mediaService = $mediaService;
         $this->productEventService = $productEventService;
     }
 
@@ -68,6 +63,7 @@ class ProductController extends CrudController
             'can' => [
                 'add' => $user->can('product.add'),
             ],
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -100,6 +96,7 @@ class ProductController extends CrudController
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
             ],
             'instructions' => $this->getInstructions(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -160,7 +157,9 @@ class ProductController extends CrudController
             $product->syncMedia($mediaIds);
         }
 
-        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => $this->title
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
     }
@@ -212,6 +211,7 @@ class ProductController extends CrudController
                 ]
             ],
             'instructions' => $this->getInstructions(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -246,7 +246,9 @@ class ProductController extends CrudController
             $product->syncMedia($mediaIds);
         }
 
-        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
     }
@@ -257,7 +259,9 @@ class ProductController extends CrudController
 
         $product->delete();
 
-        $this->generateFlashMessage($this->title.' deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => $this->title
+        ]);
 
         $user->load('products');
 
@@ -272,6 +276,62 @@ class ProductController extends CrudController
     {
         return [
             'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+        ];
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'filter' => __('Filter'),
+            'status' => __('Status'),
+            'create_new' => __('Create new'),
+            'name' => __('Name'),
+            'status' => __('Status'),
+            'actions' => __('Actions'),
+            'are_you_sure' => __('Are you sure?'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            ...[
+                'details' => __('Details'),
+                'name' => __('Name'),
+                'short_description' => __('Short description'),
+                'description' => __('Description'),
+                'status' => __('Status'),
+                'check_in_required' => __('Is a check-in required?'),
+                'visibility' => __('Visibility'),
+                'roles' => __('Roles'),
+                'select' => __('Select'),
+                'gallery' => __('Gallery'),
+                'upload' => __('Upload'),
+                'cancel' => __('Cancel'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'product' => __('Product'),
+                'event' => __('Event'),
+                'manager' => __('Manager'),
+                'duration' => __('Duration'),
+                'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),
+                'address' => __('Address'),
+                'city' => __('City'),
+                'country' => __('Country'),
+                'latitude' => __('Latitude'),
+                'longitude' => __('Longitude'),
+                'schedule' => __('Schedule'),
+                'timezone' => __('Timezone'),
+                'weekly_hours' => __('Weekly hours'),
+                'date_overrides' => __('Date override'),
+                'date_overrides_description' => __('Add dates when your availability changes from your weekly hours'),
+                'add_date' => __('Add :resource', ['resource' => __('Date')]),
+                'map' => __('Map'),
+                'unavailable' => __('Unavailable'),
+                'choose_product_manager' => __('Choose product manager'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
         ];
     }
 }

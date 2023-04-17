@@ -17,12 +17,12 @@
                         :href="routeIndex"
                         class="is-link is-light"
                     >
-                        Cancel
+                        {{ i18n.cancel }}
                     </biz-button-link>
                 </div>
                 <div class="control">
                     <biz-button class="is-link">
-                        Create
+                        {{ i18n.create }}
                     </biz-button>
                 </div>
             </div>
@@ -50,6 +50,12 @@
             MixinHasLoader,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -60,6 +66,10 @@
             parentOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
             typeOptions: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => ({
+                cancel: 'Cancel',
+                create: 'Create',
+            }) },
         },
 
         setup(props) {

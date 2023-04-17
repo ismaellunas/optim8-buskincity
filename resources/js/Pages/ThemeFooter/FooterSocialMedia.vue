@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Social Media</b><br>
+                    <b>
+                        {{ i18n.social_media }}
+                    </b>
                 </div>
             </div>
         </div>
@@ -11,7 +13,7 @@
             <div class="column">
                 <nav class="panel">
                     <div class="panel-block p-4 has-text-weight-bold">
-                        Social Media Items
+                        {{ i18n.social_media_items }}
                     </div>
                     <div
                         v-for="(socialMedia, index) in socialMediaMenus"
@@ -61,7 +63,9 @@
                                 aria-hidden="true"
                             />
                         </span>
-                        Add social media
+                        <span class="ml-2">
+                            {{ sentenceCase(i18n.add_social_media) }}
+                        </span>
                     </a>
                 </nav>
             </div>
@@ -87,6 +91,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
     import icon from '@/Libs/icon-class';
+    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'FooterSocialMedia',
@@ -99,6 +104,14 @@
         mixins: [
             MixinHasModal,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                social_media : 'Social media',
+                social_media_items : 'Social media items',
+                add_social_media : 'Add social media',
+            }) },
+        },
 
         props: {
             modelValue: {
@@ -164,7 +177,9 @@
                         this.isModalOpen = false;
                     }
                 });
-            }
+            },
+
+            sentenceCase,
         },
     }
 </script>

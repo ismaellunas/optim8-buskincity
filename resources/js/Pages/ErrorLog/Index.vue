@@ -5,6 +5,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -24,7 +25,7 @@
                         :icon="icon.remove"
                         @click.prevent="deleteCheckedRecords()"
                     >
-                        <span>Delete Checked Records</span>
+                        <span>{{ i18n.delete_checked_records }}</span>
                     </biz-button-icon>
 
                     <biz-button-icon
@@ -35,7 +36,7 @@
                         :disabled="!hasRecords"
                         @click.prevent="deleteAllRecords()"
                     >
-                        <span>Delete All</span>
+                        <span>{{ i18n.delete_all }}</span>
                     </biz-button-icon>
                 </div>
             </div>
@@ -47,14 +48,14 @@
                 <template #thead>
                     <tr>
                         <th>#</th>
-                        <th>Created At</th>
-                        <th>URL</th>
-                        <th>Total Hit</th>
+                        <th>{{ capitalCase(i18n.created_at) }}</th>
+                        <th>{{ i18n.url }}</th>
+                        <th>{{ capitalCase(i18n.total_hit) }}</th>
                         <th width="30%">
-                            Message
+                            {{ i18n.message }}
                         </th>
                         <th width="12%">
-                            Actions
+                            {{ i18n.actions }}
                         </th>
                     </tr>
                 </template>
@@ -123,6 +124,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';
     import { ref } from 'vue';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'ErrorLog',
@@ -141,6 +143,12 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -148,6 +156,16 @@
             can: { type: Object, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                delete_all : 'Delete all',
+                delete_checked_records : 'Delete checked records',
+                created_at : 'Created at',
+                url : 'URL',
+                total_hit : 'Total hit',
+                message : 'Message',
+                actions : 'Actions',
+            }) },
         },
 
         setup(props) {
@@ -264,7 +282,9 @@
                 }
 
                 return text;
-            }
+            },
+
+            capitalCase,
         },
     };
 </script>

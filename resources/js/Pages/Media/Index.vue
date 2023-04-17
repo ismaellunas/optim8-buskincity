@@ -40,6 +40,12 @@
             MixinFilterDataHandle,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            }
+        },
+
         layout: AppLayout,
 
         props: {
@@ -51,6 +57,7 @@
             records: { type: Object, required: true },
             title: { type: String, required: true },
             instructions: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => {} }
         },
 
         setup(props) {

@@ -42,7 +42,7 @@
         <modal-time-confirmation
             v-if="isModalOpen"
             v-model="form.message"
-            title="Reschedule Event"
+            :title="i18n.reschedule_event"
             :product-name="product.name"
             :event="firstEvent"
             :selected-date="form.date"
@@ -55,7 +55,7 @@
                     type="button"
                     @click="reschedule()"
                 >
-                    Reschedule
+                    {{ i18n.reschedule }}
                 </biz-button>
             </template>
         </modal-time-confirmation>
@@ -90,6 +90,12 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -102,6 +108,10 @@
             order: { type: Object, required: true },
             product: { type: Object, required: true },
             timezone: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                reschedule_event : 'Reschedule event',
+                reschedule : 'Reschedule',
+            }) },
         },
 
         setup(props) {

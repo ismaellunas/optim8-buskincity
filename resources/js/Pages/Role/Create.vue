@@ -25,12 +25,12 @@
                                     class="is-link is-light"
                                     :href="route(baseRouteName+'.index')"
                                 >
-                                    Cancel
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Create
+                                    {{ i18n.create }}
                                 </biz-button>
                             </div>
                         </div>
@@ -52,21 +52,34 @@
 
     export default {
         name: 'RoleCreate',
+
         components: {
             BizButton,
             BizButtonLink,
             BizErrorNotifications,
             FormRole,
         },
+
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
+
         props: {
             baseRouteName: String,
             errors: Object,
             permissions: {},
             title: String,
+            i18n: { type: Object, default: () => ({
+                cancel : 'Cancel',
+                create : 'Create',
+            }) },
         },
+
         setup(props) {
-            const role = props.record;
             const form = {
                 name: null,
                 permissions: [],
@@ -76,16 +89,19 @@
                 form: useForm(form),
             };
         },
+
         data() {
             return {
                 isProcessing: false,
                 loader: null,
             };
         },
+
         methods: {
             onSubmit() {
                 const self = this;
                 const form = self.form;
+
                 form.post(route(this.baseRouteName+'.store'), {
                     preserveScroll: false,
                     onStart: () => {

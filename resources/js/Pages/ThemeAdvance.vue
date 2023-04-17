@@ -14,7 +14,7 @@
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Save
+                                    {{ i18n.save }}
                                 </biz-button>
                             </div>
                         </div>
@@ -23,7 +23,9 @@
 
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Home Page</b></h2>
+                        <h2>
+                            <b>{{ i18n.homepage }}</b>
+                        </h2>
                     </div>
                     <div class="column">
                         <biz-form-select
@@ -52,19 +54,22 @@
 
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Favicon</b></h2>
+                        <h2>
+                            <b>{{ i18n.favicon }}</b>
+                        </h2>
                     </div>
                 </div>
 
                 <div class="columns">
                     <div class="column">
-                        <b>Icon</b>
+                        <b>{{ i18n.icon }}</b>
                     </div>
 
                     <div class="column">
                         <biz-form-media-library
                             v-model="form.favicon"
                             image-preview-size="6"
+                            :placeholder="i18n.open_media_library"
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
@@ -78,13 +83,17 @@
 
                 <div class="columns">
                     <div class="column">
-                        <h2><b>QR Code Public Page</b></h2>
+                        <h2>
+                            <b>{{ i18n.qr_code }}</b>
+                        </h2>
                     </div>
                 </div>
 
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Is displayed?</b></h2>
+                        <h2>
+                            <b>{{ i18n.is_displayed }}</b>
+                        </h2>
                     </div>
                     <div class="column">
                         <biz-form-select
@@ -103,13 +112,14 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Logo</b>
+                        <b>{{ i18n.logo }}</b>
                     </div>
 
                     <div class="column">
                         <biz-form-media-library
                             v-model="form.qrcode_public_page_logo"
                             image-preview-size="6"
+                            :placeholder="i18n.open_media_library"
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
@@ -123,7 +133,9 @@
 
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Additional Code</b></h2>
+                        <h2>
+                            <b>{{ i18n.additional_code }}</b>
+                        </h2>
                     </div>
                 </div>
 
@@ -156,7 +168,9 @@
                         class="columns"
                     >
                         <div class="column is-half">
-                            <h3><b>{{ additionalCode.display_name }}</b></h3>
+                            <h3>
+                                <b>{{ additionalCode.display_name }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <biz-textarea
@@ -222,6 +236,17 @@
             qrCodeMedia: { type: Object, default: () => {} },
             title: {type: String, required: true},
             trackingCodes: {type: Object, required: true},
+            i18n: { type: Object, default: () => ({
+                save : 'Save',
+                homepage : 'Homepage',
+                favicon : 'Favicon',
+                icon : 'Icon',
+                qr_code : 'QR code public page',
+                logo : 'Logo',
+                additional_code : 'Additional code',
+                open_media_library : 'Open media library',
+                is_displayed : 'Is displayed?',
+            }) }
         },
 
         setup(props) {

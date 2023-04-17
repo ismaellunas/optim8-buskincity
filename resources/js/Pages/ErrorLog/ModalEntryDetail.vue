@@ -6,7 +6,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                Error Log Details
+                {{ capitalCase(i18n.error_log_details) }}
             </p>
 
             <button
@@ -19,31 +19,33 @@
         <biz-table class="is-striped is-fullwidth">
             <tbody>
                 <tr>
-                    <td width="30%">Created At</td>
+                    <td width="30%">
+                        {{ capitalCase(i18n.created_at) }}
+                    </td>
                     <td>{{ entry.createdAtFormatted }}</td>
                 </tr>
                 <tr>
-                    <td>URL</td>
+                    <td>{{ i18n.url }}</td>
                     <td>{{ entry.url }}</td>
                 </tr>
                 <tr>
-                    <td>File</td>
+                    <td>{{ i18n.file }}</td>
                     <td>{{ entry.file ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td>Line</td>
+                    <td>{{ i18n.line }}</td>
                     <td>{{ entry.line ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td>Total Hit</td>
+                    <td>{{ capitalCase(i18n.total_hit) }}</td>
                     <td>{{ entry.total_hit }}</td>
                 </tr>
                 <tr>
-                    <td>Message</td>
+                    <td>{{ i18n.message }}</td>
                     <td>{{ entry.message }}</td>
                 </tr>
                 <tr>
-                    <td>Trace</td>
+                    <td>{{ i18n.trace }}</td>
                     <td v-if="isTraceExists">
                         <biz-table
                             id="trace"
@@ -52,11 +54,11 @@
                         >
                             <thead>
                                 <tr>
-                                    <th>File</th>
-                                    <th>Line</th>
-                                    <th>Function</th>
-                                    <th>Class</th>
-                                    <th>Type</th>
+                                    <th>{{ i18n.file }}</th>
+                                    <th>{{ i18n.line }}</th>
+                                    <th>{{ i18n.function }}</th>
+                                    <th>{{ i18n.class }}</th>
+                                    <th>{{ i18n.type }}</th>
                                 </tr>
                             </thead>
 
@@ -89,7 +91,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close-modal')">
-                            Close
+                            {{ i18n.close }}
                         </biz-button>
                     </div>
                 </div>
@@ -103,6 +105,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
     import { isEmpty, upperFirst } from 'lodash';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'ModalEntryDetail',
@@ -111,6 +114,24 @@
             BizButton,
             BizModalCard,
             BizTable,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                error_log_details : 'Error log details',
+                created_at : 'Created at',
+                url : 'URL',
+                file : 'File',
+                line : 'Line',
+                total_hit : 'Total hit',
+                message : 'Message',
+                trace : 'Trace',
+                actions : 'Actions',
+                function : 'Function',
+                class : 'Class',
+                type : 'Type',
+                close : 'Close',
+            }) }
         },
 
         props: {
@@ -130,6 +151,8 @@
 
         methods: {
             upperFirst,
+
+            capitalCase,
         },
     };
 </script>

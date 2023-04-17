@@ -89,13 +89,26 @@ class SettingService
             $query = Setting::group($groupName);
         }
 
-        return $query->get([
+        $result = $query->get([
                 'display_name',
                 'key',
                 'value',
                 'order',
                 'group',
             ]);
+
+        $this->transformSetting($result);
+
+        return $result;
+    }
+
+    private function transformSetting(Collection $result): void
+    {
+        $result->transform(function ($item) {
+            $item->display_name = __($item->display_name);
+
+            return $item;
+        });
     }
 
     public function getColors(): array
@@ -495,6 +508,15 @@ class SettingService
     public function getTinyMCEKey(): string
     {
         return $this->getKey('tinymce_api_key');
+    }
+
+    public function getDomainRedirections(): array
+    {
+        return app(SettingCache::class)->remember('domain_redirections', function () {
+            $domainRedirections = Setting::key('domain_redirections')->value('value');
+
+            return ($domainRedirections) ? json_decode($domainRedirections) : [];
+        });
     }
 
     private function getKeysByGroup(string $group): array
