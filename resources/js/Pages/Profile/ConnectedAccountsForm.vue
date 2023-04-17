@@ -87,6 +87,7 @@
     import BizButton from '@/Biz/Button.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import ConnectedAccountIcon from '@/Socialstream/ConnectedAccountIcon.vue';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -109,7 +110,7 @@
             return {
                 accountId: null,
 
-                form: this.$inertia.form({
+                form: useForm({
                     '_method': 'DELETE',
                 }, {
                     bag: 'removeConnectedAccount'
