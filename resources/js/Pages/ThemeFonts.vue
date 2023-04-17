@@ -38,13 +38,15 @@
             >
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Typography</b></h2>
+                        <h2>
+                            <b>{{ i18n.typography }}</b>
+                        </h2>
                     </div>
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Save
+                                    {{ i18n.save }}
                                 </biz-button>
                             </div>
                         </div>
@@ -54,7 +56,9 @@
                 <fieldset :disabled="isProcessing">
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Uppercase Text</b></h3>
+                            <h3>
+                                <b>{{ i18n.uppercase_text }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <div class="field is-grouped is-grouped-multiline">
@@ -82,7 +86,9 @@
 
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Content Paragraph Width</b></h3>
+                            <h3>
+                                <b>{{ i18n.content_paragraph_width }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <div class="field has-addons">
@@ -106,11 +112,13 @@
 
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Headings Font</b></h3>
+                            <h3>
+                                <b>{{ i18n.heading_font }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <biz-form-dropdown-search
-                                label="Font Family"
+                                :label="i18n.font_family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'headings_font_family')"
                             >
@@ -135,7 +143,7 @@
 
                             <biz-form-select
                                 v-model="form.headings_font_weight"
-                                label="Font Weight"
+                                :label="i18n.font_weight"
                                 :message="error('headings_font_weight')"
                             >
                                 <option
@@ -149,7 +157,7 @@
 
                             <biz-form-select
                                 v-model="form.headings_font_style"
-                                label="Font Style"
+                                :label="i18n.font_style"
                                 :message="error('headings_font_style')"
                             >
                                 <option
@@ -161,7 +169,9 @@
                                 </option>
                             </biz-form-select>
 
-                            <biz-label>Preview</biz-label>
+                            <biz-label>
+                                {{ i18n.preview }}
+                            </biz-label>
                             <div
                                 id="preview-headings"
                                 class="box"
@@ -175,11 +185,13 @@
 
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Main Text Font</b></h3>
+                            <h3>
+                                <b>{{ i18n.main_text_font }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <biz-form-dropdown-search
-                                label="Font Family"
+                                :label="i18n.font_family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'main_text_font_family')"
                             >
@@ -204,7 +216,7 @@
 
                             <biz-form-select
                                 v-model="form.main_text_font_weight"
-                                label="Font Weight"
+                                :label="i18n.font_weight"
                                 :message="error('main_text_font_weight')"
                             >
                                 <option
@@ -218,7 +230,7 @@
 
                             <biz-form-select
                                 v-model="form.main_text_font_style"
-                                label="Font Style"
+                                :label="i18n.font_style"
                                 :message="error('main_text_font_style')"
                             >
                                 <option
@@ -230,7 +242,9 @@
                                 </option>
                             </biz-form-select>
 
-                            <biz-label>Preview</biz-label>
+                            <biz-label>
+                                {{ i18n.preview }}
+                            </biz-label>
                             <div
                                 id="preview-main-text"
                                 class="box"
@@ -244,11 +258,13 @@
 
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Buttons Font</b></h3>
+                            <h3>
+                                <b>{{ i18n.button_font }}</b>
+                            </h3>
                         </div>
                         <div class="column">
                             <biz-form-dropdown-search
-                                label="Font Family"
+                                :label="i18n.font_family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'buttons_font_family')"
                             >
@@ -273,7 +289,7 @@
 
                             <biz-form-select
                                 v-model="form.buttons_font_weight"
-                                label="Font Weight"
+                                :label="i18n.font_weight"
                                 :message="error('buttons_font_weight')"
                             >
                                 <option
@@ -287,7 +303,7 @@
 
                             <biz-form-select
                                 v-model="form.buttons_font_style"
-                                label="Font Style"
+                                :label="i18n.font_style"
                                 :message="error('buttons_font_style')"
                             >
                                 <option
@@ -299,7 +315,9 @@
                                 </option>
                             </biz-form-select>
 
-                            <biz-label>Preview</biz-label>
+                            <biz-label>
+                                {{ i18n.preview }}
+                            </biz-label>
                             <p
                                 id="preview-buttons"
                                 class="box buttons"
@@ -374,6 +392,19 @@
             uppercaseOptions: {type: Object, required: true},
             baseUrlGoogleFont: {type: String, required: true},
             webfontsUrl: {type: String, required: true},
+            i18n: { type: Object, default: () => ({
+                typography: 'Typography',
+                save: 'Save',
+                uppercase_text : 'Uppercase text',
+                content_paragraph_width : 'Content paragraph width',
+                heading_font : 'Heading font',
+                font_family : 'Font family',
+                font_weight : 'Font weight',
+                font_style : 'Font style',
+                preview : 'Preview',
+                main_text_font : 'Main text font',
+                button_font : 'Buttons font',
+            }) }
         },
 
         setup(props) {

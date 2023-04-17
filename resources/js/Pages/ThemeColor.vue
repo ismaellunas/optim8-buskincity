@@ -12,7 +12,7 @@
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <biz-button class="is-link">
-                            Save
+                            {{ i18n.save }}
                         </biz-button>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizInputColor from '@/Biz/InputColor.vue';
     import BizInputError from '@/Biz/InputError.vue';
-    import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
+    import { has, isEmpty, mapValues, sortBy } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
@@ -95,6 +95,12 @@
                 type: String,
                 required: true,
             },
+            i18n: {
+                type: Object,
+                default: () => ({
+                    save: 'Save',
+                })
+            }
         },
 
         setup(props) {

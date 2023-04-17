@@ -98,6 +98,7 @@ class OrderController extends CrudController
                     || $user->isProductManager()
                 ),
             ],
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -133,6 +134,15 @@ class OrderController extends CrudController
                 'reschedule' => $user->can('rescheduleBooking', $order),
             ],
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
+            'i18n' => [
+                'reschedule' => __('Reschedule'),
+                'cancel' => __('Cancel'),
+                'cancel_event' => __('Cancel event'),
+                'are_you_sure_cancel_event' => __('Are you sure you want to cancel this event?'),
+                'message' => __('Message'),
+                'no' => __('No'),
+                'yes' => __('Yes for sure'),
+            ],
         ]));
     }
 
@@ -147,6 +157,7 @@ class OrderController extends CrudController
         $product = app(ProductService::class)->formResource($product);
 
         return Inertia::render('Booking::OrderReschedule', $this->getData([
+            'title' => __('Reschedule Event'),
             'breadcrumbs' => [
                 [
                     'title' => $this->getIndexTitle(),
@@ -167,6 +178,12 @@ class OrderController extends CrudController
             'timezone' => $eventLine->latestEvent->schedule->timezone,
             'allowedDatesRouteName' => 'admin.booking.products.allowed-dates',
             'availableTimesRouteName' => $this->productEventService->availableTimesOrderRouteName(),
+            'i18n' => [
+                'reschedule_event' => __('Reschedule event'),
+                'message' => __('Message'),
+                'cancel' => __('Cancel'),
+                'reschedule' => __('Reschedule'),
+            ],
         ]));
     }
 
@@ -194,5 +211,29 @@ class OrderController extends CrudController
         $schedule = $product->eventSchedule;
 
         return $this->eventService->availableTimes($schedule, $date);
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'any' => __('Any'),
+            'status' => __('Status'),
+            'name' => __('Name'),
+            'location' => __('Location'),
+            'user' => __('User'),
+            'date' => __('Date'),
+            'timezone' => __('Timezone'),
+            'time' => __('Time'),
+            'check_in' => __('Check-In'),
+            'actions' => __('Actions'),
+            'reschedule' => __('Reschedule'),
+            'cancel' => __('Cancel'),
+            'cancel_event' => __('Cancel event'),
+            'are_you_sure_cancel_event' => __('Are you sure you want to cancel this event?'),
+            'message' => __('Message'),
+            'no' => __('No'),
+            'yes' => __('Yes for sure'),
+        ];
     }
 }

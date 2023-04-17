@@ -4,7 +4,7 @@
             <template #heading>
                 <div class="columns">
                     <div class="column">
-                        {{ title }}
+                        {{ capitalCase(title) }}
                     </div>
                 </div>
             </template>
@@ -37,7 +37,7 @@
                             <biz-select
                                 v-model="search.location"
                                 class="is-small"
-                                placeholder="Any"
+                                :placeholder="i18n.any"
                                 @change="getRecords()"
                             >
                                 <option
@@ -81,12 +81,12 @@
                         <biz-table is-fullwidth>
                             <thead>
                                 <tr>
-                                    <th>Status</th>
-                                    <th>Name</th>
-                                    <th>User</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Location</th>
+                                    <th>{{ i18n.status }}</th>
+                                    <th>{{ i18n.name }}</th>
+                                    <th>{{ i18n.user }}</th>
+                                    <th>{{ i18n.date }}</th>
+                                    <th>{{ i18n.time }}</th>
+                                    <th>{{ i18n.location }}</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -99,7 +99,7 @@
                                             class="has-text-centered"
                                             colspan="7"
                                         >
-                                            Empty
+                                            {{ i18n.no_data }}
                                         </td>
                                     </tr>
                                 </template>
@@ -124,7 +124,7 @@
                                                 title="Detail"
                                                 :href="route(data.baseRouteName+'.show', record.id)"
                                             >
-                                                View Detail
+                                                {{ i18n.view_detail }}
                                             </biz-button-link>
                                         </td>
                                     </tr>
@@ -145,7 +145,7 @@
                                 class="is-primary is-outlined is-small"
                                 :href="route(data.baseRouteName + '.index')"
                             >
-                                View All
+                                {{ i18n.view_all }}
                             </biz-button-link>
                         </div>
                     </div>
@@ -167,6 +167,7 @@
     import icon from '@/Libs/icon-class';
     import { debounce, each } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'LatestBookingWidget',
@@ -184,6 +185,19 @@
 
         props: {
             data: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                status :'Status',
+                name :'Name',
+                user :'User',
+                date :'Date',
+                time :'Time',
+                location :'Location',
+                any :'Any',
+                view_detail :'View detail',
+                view_all :'View all',
+                no_data :'No data',
+                search :'Search',
+            }) },
             title: { type: String, default: "" },
         },
 
@@ -288,6 +302,8 @@
                     this.getRecords();
                 }
             }, debounceTime),
+
+            capitalCase,
         }
     }
 </script>

@@ -9,6 +9,7 @@ use App\Models\{
     PageTranslation,
 };
 use App\Services\{
+    MediaService,
     MenuService,
     PageService,
     StorageService,
@@ -54,6 +55,7 @@ class PageController extends CrudController
             ),
             'defaultLocale' => defaultLocale(),
             'title' => $this->getIndexTitle(),
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -103,6 +105,7 @@ class PageController extends CrudController
             'settingOptions' => [
                 'templates' => PageSettingLayout::options(),
             ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -121,7 +124,9 @@ class PageController extends CrudController
         $page->saveAuthorId(Auth::id());
         $page->syncMediaFromInputs($inputs);
 
-        $this->generateFlashMessage('Page created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Page')
+        ]);
 
         return redirect()->route('admin.pages.edit', $page->id);
     }
@@ -183,6 +188,7 @@ class PageController extends CrudController
             'settingOptions' => [
                 'templates' => PageSettingLayout::options(),
             ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -202,7 +208,9 @@ class PageController extends CrudController
         $page->saveFromInputs($inputs);
         $page->syncMediaFromInputs($inputs);
 
-        $this->generateFlashMessage('Page updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Page')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $page->id);
     }
@@ -217,7 +225,10 @@ class PageController extends CrudController
     {
         $page->delete();
 
-        $this->generateFlashMessage('Page deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Page')
+        ]);
+
         return redirect()->route('admin.pages.index');
     }
 
@@ -230,6 +241,10 @@ class PageController extends CrudController
         $pageTranslation->delete();
 
         $this->generateFlashMessage('Page translation deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Page Translation')
+        ]);
+
         return redirect()->back();
     }
 
@@ -246,8 +261,60 @@ class PageController extends CrudController
 
         $duplicatePage->saveAuthorId(Auth::id());
 
-        $this->generateFlashMessage('Page duplicated successfully!');
+        $this->generateFlashMessage('The :resource was duplicated!', [
+            'resource' => __('Page')
+        ]);
 
         return redirect()->back();
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'create_new' => __('Create new'),
+            'title' => __('Title'),
+            'slug' => __('Slug'),
+            'status' => __('Status'),
+            'meta_title' => __('Meta title'),
+            'meta_description' => __('Meta description'),
+            'language' => __('Language'),
+            'actions' => __('Actions'),
+            'are_you_sure' => __('Are you sure?'),
+            'remove_page_from_navigation_message' => __('This action will also remove the page on the navigation menu.'),
+            'yes' => __('Yes'),
+            'duplicate_page' => __('Duplicate :resource', ['resource' => __('Page')]),
+            'duplicate_page_message' => __('Are you sure want to duplicate this page?'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            ...[
+                'details' => __('Details'),
+                'builder' => __('Builder'),
+                'settings' => __('Settings'),
+                'title' => __('Title'),
+                'slug' => __('Slug'),
+                'status' => __('Status'),
+                'excerpt' => __('Excerpt'),
+                'meta_title' => __('Meta title'),
+                'meta_description' => __('Meta description'),
+                'cancel' => __('Cancel'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'layout' => __('Layout'),
+                'main_background_color' => __('Main background color'),
+                'page_height' => __('Page height'),
+                'default' => __('Default'),
+                'duplicate' => __('Duplicate'),
+                'remove' => __('Remove'),
+                'duplicate_translation' => __('Duplicate :resource', ['resource' => __('Translation')]),
+                'select_translation' => __('Select :resource', ['resource' => __('Translation')]),
+                'page_preview' => __('Page preview'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }

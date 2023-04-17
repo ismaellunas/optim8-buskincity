@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Header Layout</b><br>
+                    <b>
+                        {{ i18n.header_layout }}
+                    </b>
                 </div>
             </div>
         </div>
@@ -16,7 +18,7 @@
                 >
                     <div class="card-content">
                         <div class="content">
-                            Layout 1
+                            {{ i18n.layout + ' 1' }}
                         </div>
                     </div>
                 </div>
@@ -24,7 +26,7 @@
                     class="has-text-weight-semibold mt-2"
                     :class="modelValue == 1 ? 'has-text-link' : ''"
                 >
-                    Standard
+                    {{ i18n.standard }}
                 </p>
             </div>
             <div class="column is-3">
@@ -35,7 +37,7 @@
                 >
                     <div class="card-content">
                         <div class="content">
-                            Layout 2
+                            {{ i18n.layout + ' 2' }}
                         </div>
                     </div>
                 </div>
@@ -43,7 +45,7 @@
                     class="has-text-weight-semibold mt-2"
                     :class="modelValue == 2 ? 'has-text-link' : ''"
                 >
-                    Centered Logo
+                    {{ i18n.centered_logo }}
                 </p>
             </div>
             <div class="column is-3">
@@ -54,7 +56,7 @@
                 >
                     <div class="card-content">
                         <div class="content">
-                            Layout 3
+                            {{ i18n.layout + ' 3' }}
                         </div>
                     </div>
                 </div>
@@ -62,7 +64,7 @@
                     class="has-text-weight-semibold mt-2"
                     :class="modelValue == 3 ? 'has-text-link' : ''"
                 >
-                    Standard With Social Media
+                    {{ i18n.standard_with_social_media }}
                 </p>
             </div>
         </div>
@@ -74,6 +76,16 @@
 
     export default {
         name: 'HeaderLayout',
+
+        inject: {
+            i18n: { default: () => ({
+                header_layout : 'Header layout',
+                standard : 'Standard',
+                centered_logo : 'Centered logo',
+                standard_with_social_media : 'Standard with social media',
+                layout : 'Layout',
+            }) },
+        },
 
         props: {
             modelValue: {

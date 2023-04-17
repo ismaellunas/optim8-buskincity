@@ -30,6 +30,7 @@ class SystemLogController extends Controller
                     'edit' => $user->can('user.edit'),
                 ]
             ],
+            'i18n' => $this->translations(),
         ]);
     }
 
@@ -66,5 +67,38 @@ class SystemLogController extends Controller
                     'value' => $user->fullName,
                 ];
             });
+    }
+
+    private function translations(): array
+    {
+        return [
+            'select_user' => __('Select User'),
+            'none' => __('None'),
+            'verb' => __('Verb'),
+            'path' => __('Path'),
+            'status' => __('Status'),
+            'user' => __('User'),
+            'happened_at' => __('Happened at'),
+            'actions' => __('Actions'),
+            'load_new_entries' => __('Load new entries'),
+            'loading' => __('Loading'),
+            'load_more' => __('Load more'),
+            'request' => __('Request'),
+            'request_details' => __('Request details'),
+            'time' => __('Time'),
+            'hostname' => __('Hostname'),
+            'method' => __('Method'),
+            'controller_action' => __('Controller action'),
+            'middleware' => __('Middleware'),
+            'duration' => __('Duration'),
+            'status' => __('Status'),
+            'ip_address' => __('Ip address'),
+            'memory' => __('Memory'),
+            'authenticated_user' => __('Authenticated user'),
+            'id' => __('ID'),
+            'email_address' => __('Email address'),
+            'name' => __('Name'),
+            'cancel' => __('Cancel'),
+        ];
     }
 }

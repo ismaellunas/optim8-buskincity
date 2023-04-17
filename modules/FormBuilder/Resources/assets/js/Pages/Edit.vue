@@ -33,8 +33,11 @@
             FormBuilder,
         },
 
-        provide: {
-            isEditMode: true,
+        provide() {
+            return {
+                isEditMode: true,
+                i18n: this.i18n,
+            };
         },
 
         layout: AppLayout,
@@ -42,6 +45,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             formBuilder: { type: Object, required: true },
+            i18n: { type: Object, default: () => {} }
         },
 
         setup(props) {
