@@ -136,8 +136,10 @@ class UserController extends CrudController
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($userId)
     {
+        $user = User::withTrashed()->findOrFail($userId);
+
         $canPublicPage = $user->hasPublicPage;
 
         $user->load(['roles' => function ($query) {
@@ -148,6 +150,7 @@ class UserController extends CrudController
         $user->append(
             'isSuperAdministrator',
             'profilePageUrl',
+            'isTrashed',
         );
 
         $user->roles->makeHidden('pivot');
