@@ -15,8 +15,6 @@ class UserUpdateRequest extends UserStoreRequest
 
     public function rules(): array
     {
-        $userId = $this->route('user')->id;
-
         $rules = [
             'first_name' => ['required', 'string', 'max:128'],
             'last_name' => ['required', 'string', 'max:128'],
@@ -25,9 +23,9 @@ class UserUpdateRequest extends UserStoreRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->where(function ($query) use ($userId) {
+                Rule::unique('users')->where(function ($query) {
                     $query->whereNull('deleted_at')
-                        ->whereNotIn('id', [$userId]);
+                        ->where('id', '<>', $this->route('user')->id);
                 })
             ],
             'photo' => [
