@@ -490,7 +490,7 @@ class MenuService
                         'isEnabled' => true,
                     ],
                 ];
-            } else {
+            } else if ($user->hasVerifiedEmail()) {
                 $dropdownRightMenus = [
                     [
                         'title' => 'Dashboard',
