@@ -98,9 +98,7 @@
                                 @endif
                             @endforeach
 
-                            @if (!empty($menus['dropdownRightMenus']))
-                                <hr class="navbar-divider">
-                            @endif
+                            <hr class="navbar-divider">
 
                             <form
                                 id="form-logout"

@@ -86,7 +86,7 @@
 
                         <div class="navbar-dropdown is-right">
                             <template
-                                v-for="(dropdownMenu, index) in dropdownRightMenus"
+                                v-for="(dropdownMenu, index) in $page.props.menus.dropdownRightMenus"
                                 :key="index"
                             >
                                 <biz-navbar-item
@@ -108,10 +108,7 @@
                                 API Tokens
                             </biz-link>
 
-                            <hr
-                                v-if="hasDropdownRightMenus"
-                                class="navbar-divider"
-                            >
+                            <hr class="navbar-divider">
 
                             <form
                                 ref="logout"
@@ -145,7 +142,7 @@
     import BizNavbarItem from '@/Biz/NavbarItem.vue';
     import { computed, onMounted, onUnmounted } from 'vue';
     import { usePage } from '@inertiajs/vue3';
-    import { isEmpty } from 'lodash';
+    import { ref } from 'vue';
 
     export default {
         components: {
@@ -157,8 +154,6 @@
             const navLogo = computed(() => usePage().props.menus.navLogo);
 
             const appLogoImageUrl = computed(() => usePage().props.appLogoUrl);
-
-            const dropdownRightMenus = computed(() => usePage().props.menus.dropdownRightMenus);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
@@ -196,7 +191,6 @@
             return {
                 appLogoImageUrl,
                 navLogo,
-                dropdownRightMenus,
             };
         },
 
@@ -210,10 +204,6 @@
         computed: {
             navMenus() {
                 return this.$page.props.menus.nav;
-            },
-
-            hasDropdownRightMenus() {
-                return !isEmpty(this.dropdownRightMenus);
             },
         },
 
