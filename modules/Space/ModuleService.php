@@ -48,14 +48,6 @@ class ModuleService
         ]);
     }
 
-    public static function mediaTypes(): array
-    {
-        return [
-            'logo' => self::MEDIA_TYPE_LOGO,
-            'cover' => self::MEDIA_TYPE_COVER,
-        ];
-    }
-
     public static function maxLengths(): array
     {
         return [
