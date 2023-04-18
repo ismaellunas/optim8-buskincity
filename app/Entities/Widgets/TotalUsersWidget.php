@@ -3,7 +3,6 @@
 namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\Role;
 use App\Models\User;
 use App\Services\ModuleService;
 use Illuminate\Support\Arr;
@@ -32,15 +31,7 @@ class TotalUsersWidget implements WidgetInterface
         ]);
     }
 
-    private function viewFormUrl($queryParams = [])
-    {
-        return route('admin.form-builders.entries.index', array_merge(
-            [ 'form_builder' => $this->formId ],
-            $queryParams,
-        ));
-    }
-
-    private function viewUserUrl($queryParams = [])
+    private function viewUrl($queryParams = [])
     {
         return route('admin.users.index', array_merge(
             ['roles' => [ $this->roleId ]] ,
@@ -63,36 +54,51 @@ class TotalUsersWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return (
-            app(ModuleService::class)->isModuleActive('formbuilder')
-            && auth()->user()->can('viewAny', User::class)
-            && auth()->user()->can('viewAny', Form::class)
-        );
+        return auth()->user()->can('viewAny', User::class);
     }
 
     public function response()
     {
-        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
-            ->read(false)
-            ->count();
-
-        $performerTotal = User::role(
+        $total = User::role(
                 $this->roleId ?? null
             )
             ->available()
             ->count();
 
-        return response()->json([
-            'totals' => [
+        $totals = collect([
+                [ ...$this->moduleResponseForm() ],
                 [
-                    'text' => $unreadFormTotal,
-                    'url' => $this->viewFormUrl(['read' => 0]),
-                ],
-                [
-                    'text' => $performerTotal,
-                    'url' => $this->viewUserUrl(),
+                    'text' => $total,
+                    'url' => $this->viewUrl(),
                 ]
-            ],
+            ])
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'totals' => $totals,
         ]);
+    }
+
+    private function moduleResponseForm(): array
+    {
+        if (
+            ! app(ModuleService::class)->isModuleActive('formbuilder')
+            || ! auth()->user()->can('viewAny', Form::class)
+        ) {
+            return [];
+        }
+
+        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
+            ->read(false)
+            ->count();
+
+        return [
+            'text' => $unreadFormTotal,
+            'url' => route('admin.form-builders.entries.index', [
+                'form_builder' => $this->formId,
+                'read' => 0,
+            ]),
+        ];
     }
 }
