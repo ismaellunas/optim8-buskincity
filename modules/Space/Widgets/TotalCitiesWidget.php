@@ -31,15 +31,7 @@ class TotalCitiesWidget implements WidgetInterface
         ]);
     }
 
-    private function viewFormUrl($queryParams = [])
-    {
-        return route('admin.form-builders.entries.index', array_merge(
-            [ 'form_builder' => $this->formId ],
-            $queryParams,
-        ));
-    }
-
-    private function viewCityUrl($queryParams = [])
+    private function viewUrl($queryParams = []): string
     {
         return route('admin.spaces.index', $queryParams);
     }
@@ -62,35 +54,53 @@ class TotalCitiesWidget implements WidgetInterface
         return (
             app(ModuleService::class)->isModuleActive('space')
             && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, 19])
-            && auth()->user()->can('viewAny', Form::class)
         );
     }
 
     public function response()
     {
-        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
-            ->read(false)
-            ->count();
-
         $spaceTypeId = GlobalOption::type(config('space.type_option'))
             ->name('City')
             ->select('id')
             ->first()->id;
 
-        return response()->json([
-            'totals' => [
-                [
-                    'text' => $unreadFormTotal,
-                    'url' => $this->viewFormUrl(['read' => 0]),
-                ],
+        $totals = collect([
+                [ ...$this->moduleResponseForm() ],
                 [
                     'text' => app(SpaceService::class)->totalSpaceByType(
                         auth()->user(),
                         $spaceTypeId
                     ),
-                    'url' => $this->viewCityUrl(['types' => [$spaceTypeId]]),
+                    'url' => $this->viewUrl(['types' => [$spaceTypeId]]),
                 ]
-            ]
+            ])
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'totals' => $totals,
         ]);
+    }
+
+    private function moduleResponseForm(): array
+    {
+        if (
+            ! app(ModuleService::class)->isModuleActive('formbuilder')
+            || ! auth()->user()->can('viewAny', Form::class)
+        ) {
+            return [];
+        }
+
+        $unreadFormTotal = FormEntry::where('form_id', $this->formId)
+            ->read(false)
+            ->count();
+
+        return [
+            'text' => $unreadFormTotal,
+            'url' => route('admin.form-builders.entries.index', [
+                'form_builder' => $this->formId,
+                'read' => 0,
+            ]),
+        ];
     }
 }
