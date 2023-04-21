@@ -11,7 +11,9 @@
                         :disabled="!canPreview"
                         @click="openShow(modelValue)"
                     >
-                        <span>Page Preview</span>
+                        <span>
+                            {{ i18n.page_preview }}
+                        </span>
                     </biz-button-icon>
                 </p>
             </div>
@@ -39,7 +41,7 @@
                 >
                     <biz-provide-inject-tab
                         tab-id="details-tab"
-                        title="Details"
+                        :title="i18n.details"
                     >
                         <form-detail
                             v-model:title="form.title"
@@ -56,7 +58,7 @@
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
                         tab-id="builder-tab"
-                        title="Builder"
+                        :title="i18n.builder"
                         :is-rendered="isPageBuilderRendered"
                     >
                         <form-builder
@@ -68,7 +70,7 @@
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab
                         tab-id="settings-tab"
-                        title="Settings"
+                        :title="i18n.settings"
                         :is-rendered="isPageSettingRendered"
                     >
                         <form-setting
@@ -93,7 +95,7 @@
                                 class="is-link"
                                 @click="openModal()"
                             >
-                                Duplicate
+                                {{ i18n.duplicate }}
                             </biz-button>
 
                             <biz-button
@@ -102,7 +104,7 @@
                                 class="is-danger"
                                 @click="$emit('on-delete-translation')"
                             >
-                                Remove
+                                {{ i18n.remove }}
                             </biz-button>
                         </div>
                     </div>
@@ -113,11 +115,11 @@
                                 class="is-link is-light"
                                 :href="route('admin.pages.index')"
                             >
-                                Cancel
+                                {{ i18n.cancel }}
                             </biz-button-link>
 
                             <biz-button class="is-link">
-                                {{ isNew ? 'Create' : 'Update' }}
+                                {{ isNew ? i18n.create : i18n.update }}
                             </biz-button>
                         </div>
                     </div>
@@ -131,7 +133,7 @@
         >
             <template #header>
                 <p class="modal-card-title has-text-weight-bold">
-                    Duplicate Translation
+                    {{ i18n.duplicate_translation }}
                 </p>
 
                 <button
@@ -147,7 +149,7 @@
                 :is-fullwidth="true"
             >
                 <option :value="null">
-                    - Select Translation -
+                    {{ i18n.select_translation }}
                 </option>
                 <option
                     v-for="locale in emptyPageLocaleOptions"
@@ -166,14 +168,14 @@
                     <div class="column px-0">
                         <div class="is-pulled-right">
                             <biz-button @click="closeModal()">
-                                Cancel
+                                {{ i18n.cancel }}
                             </biz-button>
                             <biz-button
                                 class="is-link"
                                 :disabled="!formDuplicate.to"
                                 @click="onDuplicateTranslation()"
                             >
-                                Duplicate
+                                {{ i18n.duplicate }}
                             </biz-button>
                         </div>
                     </div>
@@ -223,7 +225,24 @@
             MixinHasModal,
         ],
 
-        inject: ['can'],
+        inject: {
+            can: {},
+            i18n: {
+                default: () => ({
+                    details: 'Details',
+                    builder: 'Builder',
+                    settings: 'Settings',
+                    cancel: 'Cancel',
+                    create: 'Create',
+                    update: 'Update',
+                    duplicate: 'Duplicate',
+                    remove: 'Remove',
+                    duplicate_translation : 'Duplicate translation',
+                    select_translation : 'Select translation',
+                    page_preview: 'Page preview',
+                })
+            },
+        },
 
         provide() {
             return {

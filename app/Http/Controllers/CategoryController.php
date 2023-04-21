@@ -42,6 +42,7 @@ class CategoryController extends CrudController
                 ->categoryService
                 ->getRecords($request->term, $this->recordsPerPage),
             'title' => $this->getIndexTitle(),
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -68,6 +69,7 @@ class CategoryController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'title' => $this->getCreateTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -78,7 +80,9 @@ class CategoryController extends CrudController
 
         $category->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Category created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Category')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $category->id);
     }
@@ -107,6 +111,7 @@ class CategoryController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'title' => $this->getEditTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -116,7 +121,9 @@ class CategoryController extends CrudController
 
         $category->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Category updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Category')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $category->id);
     }
@@ -125,7 +132,9 @@ class CategoryController extends CrudController
     {
         $category->delete();
 
-        $this->generateFlashMessage('Category deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Category')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -139,5 +148,28 @@ class CategoryController extends CrudController
                 },
             ])
             ->paginate($this->recordsPerPage);
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'actions' => __('Actions'),
+            'create_new' => __('Create new'),
+            'are_you_sure' => __('Are you sure?'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            'name' => __('Name'),
+            'slug' => __('Slug'),
+            'meta_title' => __('Meta title'),
+            'meta_description' => __('Meta description'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+            'cancel' => __('Cancel'),
+        ];
     }
 }

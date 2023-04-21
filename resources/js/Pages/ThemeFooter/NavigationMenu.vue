@@ -40,7 +40,7 @@
                         aria-hidden="true"
                     />
                 </span>
-                Add new menu item
+                {{ sentenceCase(i18n.add_menu_item) }}
             </a>
         </template>
     </draggable>
@@ -52,6 +52,7 @@
     import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
+    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'NavigationMenu',
@@ -59,6 +60,12 @@
         components: {
             Draggable,
             ThemeMenuItem,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                add_menu_item : 'Add new menu item',
+            }) }
         },
 
         props: {
@@ -143,6 +150,8 @@
             updateLastDataMenuItems() {
                 this.$emit('update-last-data-menu-items');
             },
+
+            sentenceCase,
         },
     }
 </script>

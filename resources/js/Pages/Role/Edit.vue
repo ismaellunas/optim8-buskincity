@@ -25,12 +25,12 @@
                                     class="is-link is-light"
                                     :href="route(baseRouteName+'.index')"
                                 >
-                                    Cancel
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
@@ -68,6 +68,10 @@
             permissions: { type: Object, default: () => {} },
             record: { type: Object, required: true },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                cancel : 'Cancel',
+                update : 'Update',
+            }) },
         },
 
         setup(props) {

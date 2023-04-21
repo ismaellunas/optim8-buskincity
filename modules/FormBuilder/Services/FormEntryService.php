@@ -13,9 +13,9 @@ class FormEntryService
     public function readOptions(): array
     {
         return [
-            [ 'id' => null, 'value' => 'All' ],
-            [ 'id' => 1, 'value' => 'Read' ],
-            [ 'id' => 0, 'value' => 'Unread' ],
+            [ 'id' => null, 'value' => __('All') ],
+            [ 'id' => 1, 'value' => __('Read') ],
+            [ 'id' => 0, 'value' => __('Unread') ],
         ];
     }
 

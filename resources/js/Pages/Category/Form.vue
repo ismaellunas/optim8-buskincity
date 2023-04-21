@@ -17,7 +17,7 @@
         >
             <biz-form-input
                 v-model="form.name"
-                label="Name"
+                :label="i18n.name"
                 :message="error(selectedLocale+'.name')"
                 placeholder="e.g Good News"
                 :disabled="isInputDisabled"
@@ -27,7 +27,7 @@
 
             <biz-form-slug
                 v-model="form.slug"
-                label="Slug"
+                :label="i18n.slug"
                 placeholder="e.g good-news"
                 :message="error(selectedLocale+'.slug')"
                 :disabled="isInputDisabled"
@@ -35,8 +35,8 @@
 
             <biz-form-input
                 v-model="form.meta_title"
-                label="Meta title"
-                placeholder="Meta title"
+                :label="i18n.meta_title"
+                :placeholder="i18n.meta_title"
                 :disabled="isInputDisabled"
                 :maxlength="maxLength.meta_title"
                 :message="error(selectedLocale+'.meta_title')"
@@ -44,8 +44,8 @@
 
             <biz-form-textarea
                 v-model="form.meta_description"
-                label="Meta description"
-                placeholder="Meta description"
+                :label="i18n.meta_description"
+                :placeholder="i18n.meta_description"
                 rows="2"
                 :disabled="isInputDisabled"
                 :maxlength="maxLength.meta_description"
@@ -58,16 +58,16 @@
                         :href="route(baseRoute+'.index')"
                         class="is-link is-light"
                     >
-                        Cancel
+                        {{ i18n.cancel }}
                     </biz-button-link>
                 </div>
                 <div class="control">
                     <biz-button class="is-link">
                         <template v-if="isNew">
-                            Create
+                            {{ i18n.create }}
                         </template>
                         <template v-else>
-                            Update
+                            {{ i18n.update }}
                         </template>
                     </biz-button>
                 </div>
@@ -103,6 +103,20 @@
         mixins: [
             MixinHasPageErrors
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    name : 'Name',
+                    slug : 'Slug',
+                    meta_title : 'Meta title',
+                    meta_description : 'Meta description',
+                    create : 'Create',
+                    update : 'Update',
+                    cancel: 'Cancel',
+                })
+            },
+        },
 
         props: {
             baseRoute: { type: String, required: true },

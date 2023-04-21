@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Http\Controllers;
 
+use App\Services\SettingService;
 use App\Http\Controllers\CrudController;
 use App\Models\Setting;
 use Inertia\Inertia;
@@ -25,6 +26,16 @@ class SettingController extends CrudController
 
         return Inertia::render('Booking::Settings', $this->getData([
             'bookingSettings' => $settings,
+            'i18n' => [
+                'email' => __('Email'),
+                'check_in' => __('Check-In'),
+                'new_booking' => __('New booking'),
+                'booking_remainder' => __('Booking remainder'),
+                'booking_cancellation' => __('Booking cancellation'),
+                'available_check_in' => __('Available check-in before'),
+                'check_in_radius' => __('Check-in radius'),
+                'save' => __('Save'),
+            ],
         ]));
     }
 
@@ -63,7 +74,9 @@ class SettingController extends CrudController
             ['value' => $inputs['check_in_radius']]
         );
 
-        $this->generateFlashMessage('Setting has been updated');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Setting')
+        ]);
 
         return back();
     }

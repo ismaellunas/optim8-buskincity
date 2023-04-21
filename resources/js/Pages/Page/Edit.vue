@@ -55,6 +55,7 @@
         provide() {
             return {
                 can: this.can,
+                i18n: this.i18n,
                 media: this.media,
                 settingOptions: this.settingOptions,
             }
@@ -67,11 +68,12 @@
             affectedHeaderMenu: { type: Object, default:() => {} },
             can: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
-            page: { type: Object, required: true },
-            statusOptions: { type: Array, default:() => [] },
-            settingOptions: { type: Object, default:() => {} },
-            title: { type: String, required: true },
+            i18n: { type: Object, default: () => {} },
             media: { type: Object, default: () => {} },
+            page: { type: Object, required: true },
+            settingOptions: { type: Object, default:() => {} },
+            statusOptions: { type: Array, default:() => [] },
+            title: { type: String, required: true },
         },
 
         setup(props) {

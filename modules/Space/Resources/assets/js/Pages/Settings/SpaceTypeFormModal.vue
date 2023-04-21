@@ -17,7 +17,7 @@
         <form @submit.prevent="submit">
             <biz-form-input
                 v-model="form.name"
-                label="Name"
+                :label="i18n.name"
                 maxlength="32"
                 :required="true"
                 :message="error('name', null, formErrors)"
@@ -32,7 +32,7 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
 
                         <biz-button
@@ -40,7 +40,7 @@
                             type="button"
                             @click="submit"
                         >
-                            {{ !form.id ? 'Create' : 'Update' }}
+                            {{ !form.id ? i18n.create : i18n.update }}
                         </biz-button>
                     </div>
                 </div>
@@ -69,6 +69,10 @@
 
         mixins: [
             MixinHasPageErrors,
+        ],
+
+        inject: [
+            'i18n',
         ],
 
         props: {

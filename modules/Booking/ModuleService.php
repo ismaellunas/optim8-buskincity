@@ -14,19 +14,19 @@ class ModuleService
 
         $children = collect([
             [
-                'title' => 'Products',
+                'title' => __('Products'),
                 'link' => route('admin.booking.products.index'),
                 'isActive' => $request->routeIs('admin.booking.products.index'),
                 'isEnabled' => $user->can('viewAny', Product::class)
             ],
             [
-                'title' => 'Bookings',
+                'title' => __('Bookings'),
                 'link' => route('admin.booking.orders.index'),
                 'isActive' => $request->routeIs('admin.booking.orders.index'),
                 'isEnabled' => $user->can('viewAny', Order::class)
             ],
             [
-                'title' => 'Settings',
+                'title' => __('Settings'),
                 'link' => route('admin.booking.settings.edit'),
                 'isActive' => $request->routeIs('admin.booking.settings.edit'),
                 'isEnabled' => $user->hasRole(['Administrator', 'Super Administrator']),
@@ -34,7 +34,7 @@ class ModuleService
         ]);
 
         return [
-            'title' => 'Booking',
+            'title' => __('Booking'),
             'isActive' => $request->routeIs('admin.booking.*'),
             'isEnabled' => $children->contains('isEnabled', true),
             'children' => $children->all(),

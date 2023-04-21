@@ -53,20 +53,20 @@
             <div class="column">
                 <biz-card>
                     <template #headerTitle>
-                        Entry
+                        {{ i18n.entry }}
                     </template>
 
                     <biz-table is-fullwidth>
                         <tr>
-                            <th>Entry ID</th>
+                            <th>{{ i18n.entry_id }}</th>
                             <td>{{ entry.id }}</td>
                         </tr>
                         <tr>
-                            <th>User IP</th>
+                            <th>{{ i18n.user_ip }}</th>
                             <td>{{ entry?.meta_data?.ip_address ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <th>User</th>
+                            <th>{{ i18n.user }}</th>
                             <td v-if="isUserExists">
                                 <template
                                     v-if="can.user.redirectUser"
@@ -88,15 +88,15 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Submitted on</th>
+                            <th>{{ i18n.submitted_on }}</th>
                             <td>{{ moment(entry.created_at).format('YYYY-MM-DD [at] h:mm a') }}</td>
                         </tr>
                         <tr>
-                            <th>Timezone</th>
+                            <th>{{ i18n.timezone }}</th>
                             <td>{{ entry?.meta_data?.timezone ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <th>Page Url</th>
+                            <th>{{ i18n.page_url }}</th>
                             <td>
                                 <template v-if="entry?.meta_data?.page_url">
                                     <a :href="entry.meta_data.page_url">
@@ -110,11 +110,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Browser</th>
+                            <th>{{ i18n.browser }}</th>
                             <td>{{ entry?.meta_data?.browser ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <th>Device</th>
+                            <th>{{ i18n.device }}</th>
                             <td>{{ entry?.meta_data?.device ?? '-' }}</td>
                         </tr>
                     </biz-table>
@@ -125,7 +125,7 @@
                     class="mt-2 has-text-centered"
                 >
                     <template #headerTitle>
-                        Actions
+                        {{ i18n.actions }}
                     </template>
 
                     <div
@@ -137,7 +137,7 @@
                             type="button"
                             @click.prevent="actionRequest(baseRouteName+'.mark-as-read')"
                         >
-                            Mark as read
+                            {{ i18n.mark_as_read }}
                         </biz-button>
                     </div>
                     <div
@@ -149,7 +149,7 @@
                             type="button"
                             @click.prevent="actionRequest(baseRouteName+'.mark-as-unread')"
                         >
-                            Mark as unread
+                            {{ i18n.mark_as_unread }}
                         </biz-button>
                     </div>
                     <div
@@ -161,7 +161,7 @@
                             type="button"
                             @click.prevent="archive(baseRouteName+'.archive')"
                         >
-                            Archive
+                            {{ i18n.archive }}
                         </biz-button>
                     </div>
                     <div
@@ -173,7 +173,7 @@
                             type="button"
                             @click.prevent="restore(baseRouteName+'.restore')"
                         >
-                            Restore
+                            {{ i18n.restore }}
                         </biz-button>
                     </div>
                     <div
@@ -185,7 +185,7 @@
                             type="button"
                             @click.prevent="forceDelete(baseRouteName+'.force-delete')"
                         >
-                            Delete
+                            {{ i18n.delete }}
                         </biz-button>
                     </div>
                 </biz-card>
@@ -205,7 +205,7 @@
     import MediaGallery from './EntryDisplay/MediaGallery.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
         name: 'FormBuilderEntryDetail',
@@ -232,6 +232,28 @@
             entryDisplay: { type: Object, default: () => {} },
             fieldLabels: { type: Object, default: () => {} },
             formBuilder: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                entry: 'Entry',
+                entry_id: 'Entry ID',
+                user_ip: 'User IP',
+                user: 'User',
+                submitted_on: 'Submitted on',
+                timezone: 'Timezone',
+                page_url: 'Page URL',
+                browser: 'Browser',
+                device: 'Device',
+                actions: 'Actions',
+                mark_as_read: 'Mark as read',
+                mark_as_unread: 'Mark as unread',
+                archive: 'Archive',
+                restore: 'Restore',
+                delete: 'Delete',
+                confirm_archive: 'Confirm archive',
+                are_you_sure: 'Are you sure?',
+                confirm_restore: 'Confirm restore',
+                confirm_deletion: 'Confirm deletion',
+                confirm_deletion_message: 'Once the resources are deleted, they will be permanently deleted.',
+            }) }
         },
 
         data() {
@@ -295,7 +317,10 @@
             },
 
             archive(routeName) {
-                confirmDelete("Confirm Archive", "Are you sure?").then(result => {
+                confirmDelete(
+                    this.i18n.confirm_archive,
+                    this.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(routeName, this.entry);
                     }
@@ -303,7 +328,10 @@
             },
 
             restore(routeName) {
-                confirmDelete("Confirm Restore", "Are you sure?").then(result => {
+                confirmDelete(
+                    this.i18n.confirm_restore,
+                    this.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(routeName, this.entry);
                     }
@@ -312,9 +340,9 @@
 
             forceDelete(routeName) {
                 confirmDelete(
-                    'Are you sure?',
-                    'Once the resource is deleted, it will be permanently deleted.',
-                    'Confirm Deletion'
+                    this.i18n.are_you_sure,
+                    this.i18n.confirm_deletion_message,
+                    this.i18n.confirm_deletion
                 ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(routeName, this.entry);
