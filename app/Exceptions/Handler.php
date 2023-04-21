@@ -97,6 +97,14 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
+        if (
+            $response->status() === Response::HTTP_TOO_MANY_REQUESTS
+            && $request->inertia()
+            && $request->routeIs('verification.send')
+        ) {
+            return back()->with('message_expired', __('error 429'));
+        }
+
         if ($response->status() === 419) {
             if ($request->inertia()) {
                 if ($e instanceof AuthenticationException) {
