@@ -21,13 +21,13 @@ class ModuleService
             'isEnabled' => $canManageSpace,
             'children' => [
                 [
-                    'title' => 'Manage',
+                    'title' => __('Manage'),
                     'link' => route('admin.spaces.index'),
                     'isActive' => $request->routeIs('admin.spaces.index'),
                     'isEnabled' => $canManageSpace,
                 ],
                 [
-                    'title' => 'Settings',
+                    'title' => __('Settings'),
                     'link' => route('admin.spaces.settings.index'),
                     'isActive' => $request->routeIs('admin.spaces.settings.index'),
                     'isEnabled' => $user->can('viewAny', GlobalOption::class),
@@ -46,14 +46,6 @@ class ModuleService
             'space.add',
             'space.delete',
         ]);
-    }
-
-    public static function mediaTypes(): array
-    {
-        return [
-            'logo' => self::MEDIA_TYPE_LOGO,
-            'cover' => self::MEDIA_TYPE_COVER,
-        ];
     }
 
     public static function maxLengths(): array

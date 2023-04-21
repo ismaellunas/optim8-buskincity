@@ -29,6 +29,9 @@ class ThemeColorController extends CrudController
             $this->getData([
                 'defaultColors' => $defaultColors,
                 'colors' => $this->settingService->getColors(),
+                'i18n' => [
+                    'save' => __('Save'),
+                ],
             ])
         );
     }
@@ -45,7 +48,9 @@ class ThemeColorController extends CrudController
 
         CompileThemeCss::dispatch();
 
-        $this->generateFlashMessage('Colors updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Colors')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

@@ -30,10 +30,17 @@
             FormBuilder,
         },
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },
+            i18n: { type: Object, default: () => {} }
         },
 
         setup() {

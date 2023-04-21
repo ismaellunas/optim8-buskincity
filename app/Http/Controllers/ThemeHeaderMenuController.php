@@ -21,7 +21,9 @@ class ThemeHeaderMenuController extends CrudController
 
         $menu->syncMenuItems($inputs['menu_items']);
 
-        $this->generateFlashMessage('Menu navigation successfully Saved!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Menu Navigation')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

@@ -3,7 +3,7 @@
         <form>
             <biz-form-input
                 v-model="form.file_name"
-                label="File Name"
+                :label="i18n.file_name"
                 maxlength="250"
                 required
                 :message="error('file_name', 'default', formErrors)"
@@ -60,12 +60,12 @@
                     v-model="form.translations[activeTab].alt"
                     maxlength="255"
                     :disabled="isInputDisabled"
-                    :label="label.alternative_text"
+                    :label="i18n.alternative_text"
                     :message="error('translations.'+ activeTab +'.alt')"
                 />
                 <biz-form-textarea
                     v-model="form.translations[ activeTab ].description"
-                    :label="label.description"
+                    :label="i18n.description"
                     placeholder="..."
                     rows="3"
                     :message="error('translations.'+ activeTab +'.description')"
@@ -120,6 +120,16 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    file_name: 'File name',
+                    alternative_text: 'Alternative text',
+                    description: 'Description',
+                })
+            },
+        },
 
         props: {
             isAjax: { type: Boolean, default: false },

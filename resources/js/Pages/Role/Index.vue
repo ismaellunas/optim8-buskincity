@@ -5,6 +5,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -15,7 +16,7 @@
                         :href="route(baseRouteName+'.create')"
                     >
                         <biz-icon :icon="icon.add" />
-                        <span>Create New</span>
+                        <span>{{ i18n.create_new }}</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -27,10 +28,10 @@
                 <template #thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
+                        <th>{{ i18n.name }}</th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -98,6 +99,13 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                create_new : 'Create new',
+                name : 'Name',
+                actions : 'Actions',
+                are_you_sure : 'Are you sure?',
+            }) },
         },
 
         setup(props) {
@@ -122,7 +130,10 @@
         methods: {
             deleteRecord(record) {
                 const self = this;
-                confirmDelete().then(result => {
+
+                confirmDelete(
+                    self.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', record.id),

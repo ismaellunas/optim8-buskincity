@@ -34,12 +34,12 @@
                             :href="route(baseRouteName+'.edit')"
                             class="is-link is-light"
                         >
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button-link>
                     </div>
                     <div class="control">
                         <biz-button class="is-link">
-                            Create
+                            {{ i18n.create }}
                         </biz-button>
                     </div>
                 </div>
@@ -67,6 +67,12 @@
             TranslationManagerForm,
         },
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -74,6 +80,10 @@
             groupOptions: {type: Object, default: () => {}},
             referenceLocale: {type: String, required: true},
             title: {type: String, required: true},
+            i18n: {type: Object, default: () => ({
+                create : 'Create',
+                cancel : 'Cancel',
+            })}
         },
 
         setup() {

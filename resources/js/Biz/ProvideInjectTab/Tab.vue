@@ -10,7 +10,7 @@
     export default {
         name: 'TabProvideInjectTab',
         props: {
-            title: { type: String, required: true },
+            title: { type: String, default: "" },
             isRendered: {type: Boolean, default: true },
             tabId: { type: String, default: ''},
         },

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Services\{
     MediaService,
@@ -17,19 +16,16 @@ class ThemeAdvanceController extends CrudController
     protected $baseRouteName = 'admin.theme.advance';
     protected $title = 'Advanced';
 
-    private $mediaService;
     private $menuService;
     private $settingService;
     private $themeService;
 
     public function __construct(
         SettingService $settingService,
-        MediaService $mediaService,
         MenuService $menuService,
         ThemeService $themeService
     ) {
         $this->settingService = $settingService;
-        $this->mediaService = $mediaService;
         $this->menuService = $menuService;
         $this->themeService = $themeService;
     }
@@ -66,6 +62,7 @@ class ThemeAdvanceController extends CrudController
                 'instructions' => [
                     'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                 ],
+                'i18n' => $this->translations(),
             ])
         );
     }
@@ -94,8 +91,28 @@ class ThemeAdvanceController extends CrudController
 
         $this->themeService->clearStorageTheme();
 
-        $this->generateFlashMessage($this->title.' updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    private function translations(): array
+    {
+        return [
+            ...[
+                'save' => __('Save'),
+                'homepage' => __('Homepage'),
+                'favicon' => __('Favicon'),
+                'icon' => __('Icon'),
+                'qr_code' => __('QR code public page'),
+                'logo' => __('Logo'),
+                'additional_code' => __('Additional code'),
+                'open_media_library' => __('Open media library'),
+                'is_displayed' => __('Is displayed?'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }

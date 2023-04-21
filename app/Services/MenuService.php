@@ -8,7 +8,6 @@ use App\Models\{
     ErrorLog,
     Media,
     Menu,
-    MenuItem,
     Page,
     Post,
     Role,
@@ -19,7 +18,6 @@ use App\Services\{
     LanguageService,
     LoginService,
     ModuleService,
-    TranslationService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -27,7 +25,6 @@ use App\Entities\Caches\{
     SettingCache,
 };
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -276,25 +273,25 @@ class MenuService
 
         if ($request->routeIs('admin.*')) {
             $menuLogo = [
-                'title' => 'Dashboard',
+                'title' => __('Dashboard'),
                 'link' => route('admin.dashboard'),
             ];
 
             $menus = [
                 [
-                    'title' => 'Dashboard',
+                    'title' => __('Dashboard'),
                     'link' => route('admin.dashboard'),
                     'isActive' => $request->routeIs('admin.dashboard'),
                     'isEnabled' => true,
                 ],
                 [
-                    'title' => 'Pages',
+                    'title' => __('Pages'),
                     'link' => route('admin.pages.index'),
                     'isActive' => $request->routeIs('admin.pages.*'),
                     'isEnabled' => $user->can('viewAny', Page::class),
                 ],
                 [
-                    'title' => 'Blog',
+                    'title' => __('Blog'),
                     'isActive' => (
                         $request->routeIs('admin.posts.*')
                         || $request->routeIs('admin.categories.*')
@@ -305,13 +302,13 @@ class MenuService
                     ),
                     'children' => [
                         [
-                            'title' => 'Posts',
+                            'title' => __('Posts'),
                             'link' => route('admin.posts.index'),
                             'isActive' => $request->routeIs('admin.posts.*'),
                             'isEnabled' => $user->can('viewAny', Post::class),
                         ],
                         [
-                            'title' => 'Categories',
+                            'title' => __('Categories'),
                             'link' => route('admin.categories.index'),
                             'isActive' => $request->routeIs('admin.categories.*'),
                             'isEnabled' => $user->can('viewAny', Category::class),
@@ -319,48 +316,48 @@ class MenuService
                     ],
                 ],
                 [
-                    'title' => 'Media',
+                    'title' => __('Media'),
                     'link' => route('admin.media.index'),
                     'isActive' => $request->routeIs('admin.media.*'),
                     'isEnabled' => $user->can('viewAny', Media::class),
                 ],
                 [
-                    'title' => 'Theme',
+                    'title' => __('Theme'),
                     'isActive' => $request->routeIs('admin.theme.*'),
                     'isEnabled' => $user->can('system.theme'),
                     'children' => [
                         [
-                            'title' => 'Header',
+                            'title' => __('Header'),
                             'link' => route('admin.theme.header.edit'),
                             'isActive' => $request->routeIs('admin.theme.header.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Footer',
+                            'title' => __('Footer'),
                             'link' => route('admin.theme.footer.edit'),
                             'isActive' => $request->routeIs('admin.theme.footer.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Colors',
+                            'title' => __('Colors'),
                             'link' => route('admin.theme.color.edit'),
                             'isActive' => $request->routeIs('admin.theme.color.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Fonts',
+                            'title' => __('Fonts'),
                             'link' => route('admin.theme.fonts.edit'),
                             'isActive' => $request->routeIs('admin.theme.fonts.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Font Sizes',
+                            'title' => Str::title(__('Font sizes')),
                             'link' => route('admin.theme.font-size.edit'),
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Advanced',
+                            'title' => __('Advanced'),
                             'link' => route('admin.theme.advance.edit'),
                             'isActive' => $request->routeIs('admin.theme.advance.*'),
                             'isEnabled' => true,
@@ -368,7 +365,7 @@ class MenuService
                     ],
                 ],
                 [
-                    'title' => 'Settings',
+                    'title' => __('Settings'),
                     'isActive' => $request->routeIs('admin.setting.*'),
                     'isEnabled' => (
                         $user->can('system.language')
@@ -379,37 +376,37 @@ class MenuService
                     ),
                     'children' => [
                         [
-                            'title' => 'Languages',
+                            'title' => __('Languages'),
                             'link' => route('admin.settings.languages.edit'),
                             'isActive' => $request->routeIs('admin.settings.languages.edit'),
                             'isEnabled' => $user->can('system.language'),
                         ],
                         [
-                            'title' => 'Translation Manager',
+                            'title' => Str::title(__('Translation manager')),
                             'link' => route('admin.settings.translation-manager.edit'),
                             'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
                             'isEnabled' => $user->can('system.translation'),
                         ],
                         [
-                            'title' => 'Stripe',
+                            'title' => __('Stripe'),
                             'link' => route('admin.settings.stripe.edit'),
                             'isActive' => $request->routeIs('admin.settings.stripe.edit'),
                             'isEnabled' => Gate::check('manageStripeSetting', $user),
                         ],
                         [
-                            'title' => 'Keys',
+                            'title' => __('Keys'),
                             'link' => route('admin.settings.keys.edit'),
                             'isActive' => $request->routeIs('admin.settings.keys.edit'),
                             'isEnabled' => $user->can('manageKeys', Setting::class),
                         ],
                         [
-                            'title' => 'System Log',
+                            'title' => Str::title(__('System log')),
                             'link' => route('admin.system-log.index'),
                             'isActive' => $request->routeIs('admin.system-log.*'),
                             'isEnabled' => $user->can('system.log'),
                         ],
                         [
-                            'title' => 'Error Log',
+                            'title' => Str::title(__('Error log')),
                             'link' => route('admin.error-log.index'),
                             'isActive' => $request->routeIs('admin.error-log.*'),
                             'isEnabled' => $user->can('viewAny', ErrorLog::class),
@@ -417,18 +414,18 @@ class MenuService
                     ],
                 ],
                 [
-                    'title' => 'Users',
+                    'title' => __('Users'),
                     'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
                     'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
                     'children' => [
                         [
-                            'title' => 'All Users',
+                            'title' => Str::title(__('All users')),
                             'link' => route('admin.users.index'),
                             'isActive' => $request->routeIs('admin.users.*'),
                             'isEnabled' => $user->can('viewAny', User::class),
                         ],
                         [
-                            'title' => 'Roles',
+                            'title' => __('Roles'),
                             'link' => route('admin.roles.index'),
                             'isActive' => $request->routeIs('admin.roles.*'),
                             'isEnabled' => $user->can('viewAny', Role::class),
@@ -440,7 +437,7 @@ class MenuService
             $moduleMenus = $this->moduleMenus($request);
 
             $menuProfile = [
-                'title' => 'Profile',
+                'title' => __('Profile'),
                 'link' => route('admin.profile.show'),
             ];
 
@@ -448,7 +445,7 @@ class MenuService
 
             $menus = [
                 [
-                    'title' => 'Dashboard',
+                    'title' => __('Dashboard'),
                     'link' => route('dashboard'),
                     'isActive' => $request->routeIs('dashboard'),
                     'isEnabled' => true,
@@ -458,7 +455,7 @@ class MenuService
             $moduleMenus = [];
 
             $menuProfile = [
-                'title' => 'Profile',
+                'title' => __('Profile'),
                 'link' => route('user.profile.show'),
             ];
         }
@@ -493,7 +490,7 @@ class MenuService
                         'isEnabled' => true,
                     ],
                 ];
-            } else {
+            } else if ($user->hasVerifiedEmail()) {
                 $dropdownRightMenus = [
                     [
                         'title' => 'Dashboard',

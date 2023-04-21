@@ -31,11 +31,20 @@
 
     export default {
         name: 'PostEdit',
+
         components: {
             PostForm,
             BizErrorNotifications,
         },
+
+        provide() {
+            return {
+                i18n: this.i18n,
+            }
+        },
+
         layout: AppLayout,
+
         props: {
             can: { type: Object, required: true },
             categoryOptions: { type: Array, required: true, },
@@ -47,7 +56,9 @@
             title: { type: String, required: true },
             modules: { type: Object, default: () => {} },
             instructions: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => {} }
         },
+
         setup(props) {
             const defaultLocale = usePage().props.defaultLanguage;
             const primaryCategory = find(props.post.categories, function (category) {
@@ -78,6 +89,7 @@
                 localeOptions: props.languageOptions,
             };
         },
+
         data() {
             return {
                 baseRouteName: 'admin.posts',
@@ -85,9 +97,11 @@
                 loader: null,
             };
         },
+
         methods: {
             onSubmit() {
                 const self = this;
+
                 this.form.put(route(this.baseRouteName+'.update', this.post.id), {
                     preserveScroll: false,
                     onStart: () => {

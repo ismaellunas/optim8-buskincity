@@ -37,7 +37,7 @@
                     @click="openModal"
                 >
                     <span>
-                        Open Media Library
+                        {{ placeholder }}
                     </span>
                 </biz-button-icon>
             </div>
@@ -121,6 +121,7 @@
             medium: { type: Object, default: () => {} },
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
+            placeholder: { type: String, default: 'Open Media Library' },
             required: { type: Boolean, default: false },
             imagePreviewSize: {
                 type: [String, Number],
