@@ -48,6 +48,8 @@ class RouteServiceProvider extends ServiceProvider
 
             foreach ($domainRedirections as $destination) {
                 Route::domain($destination->from)->group(function () use ($destination) {
+                    Route::permanentRedirect('/', $destination->to);
+
                     Route::any('/{any}', function (Request $request, $any) use ($destination) {
                         return redirect((
                             $destination->to."/".$any
