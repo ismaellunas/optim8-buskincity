@@ -1,13 +1,13 @@
 <template>
     <form @submit.prevent="$emit('on-submit')">
         <h2 class="title is-4 mt-5">
-            Submit Button
+            {{ i18n.submit_button }}
         </h2>
 
         <div class="columns pl-2">
             <div class="column">
                 <h2>
-                    <b>Text</b>
+                    <b>{{ i18n.text }}</b>
                 </h2>
             </div>
 
@@ -22,7 +22,7 @@
         <div class="columns pl-2">
             <div class="column">
                 <h2>
-                    <b>Position</b>
+                    <b>{{ i18n.position }}</b>
                 </h2>
             </div>
 
@@ -44,8 +44,8 @@
 
         <div class="columns">
             <div class="column">
-                <biz-button class="is-primary is-pulled-right">
-                    Update
+                <biz-button class="is-link is-pulled-right">
+                    {{ i18n.update }}
                 </biz-button>
             </div>
         </div>
@@ -72,6 +72,15 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                submit_button: 'Submit button',
+                text: 'Text',
+                position: 'Position',
+                update: 'Update',
+            }) },
+        },
 
         props: {
             modelValue: { type: Object, required: true },

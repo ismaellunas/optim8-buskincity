@@ -39,7 +39,7 @@
 
         <biz-form-textarea
             v-model="message"
-            label="Message"
+            :label="i18n.message"
             placeholder="Please enter your reason or message here"
             rows="4"
             maxlength="500"
@@ -53,7 +53,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="close()">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
 
                         <slot name="actions" />
@@ -71,7 +71,6 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
     import bookingIcon from '@booking/Libs/booking-icon';
-    import { computed } from 'vue';
     import { durationDateTimeText } from '@booking/Libs/event';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -82,6 +81,13 @@
             BizIcon,
             BizModalCard,
             BizTable,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                message : 'Message',
+                cancel : 'Cancel',
+            }) },
         },
 
         props: {

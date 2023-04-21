@@ -23,7 +23,9 @@ class ThemeFooterMenuController extends CrudController
 
         app(SettingCache::class)->flush();
 
-        $this->generateFlashMessage('Menu navigation successfully Saved!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Menu Navigation')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

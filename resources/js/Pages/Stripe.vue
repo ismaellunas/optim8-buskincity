@@ -7,14 +7,14 @@
                 <div class="columns">
                     <div class="column">
                         <h3 class="title is-3">
-                            Settings
+                            {{ i18n.settings }}
                         </h3>
                     </div>
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Save
+                                    {{ i18n.save }}
                                 </biz-button>
                             </div>
                         </div>
@@ -23,7 +23,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Is Enabled ?</b>
+                        <b>{{ i18n.is_enabled }}</b>
                     </div>
 
                     <div class="column">
@@ -42,7 +42,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Default Country</b>
+                        <b>{{ i18n.default_country }}</b>
                     </div>
 
                     <div class="column">
@@ -70,7 +70,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Application Fee Percentage</b>
+                        <b>{{ i18n.application_fee_percentage }}</b>
                     </div>
 
                     <div class="column">
@@ -92,7 +92,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Payment Currencies</b>
+                        <b>{{ i18n.payment_currencies }}</b>
                     </div>
 
                     <div class="column">
@@ -122,10 +122,10 @@
                         >
                             <thead>
                                 <tr>
-                                    <th>Currency</th>
-                                    <th>Minimal Payment</th>
+                                    <th>{{ i18n.currency }}</th>
+                                    <th>{{ i18n.minimal_payment }}</th>
                                     <th colspan="2">
-                                        Amount Options
+                                        {{ i18n.amount_options }}
                                     </th>
                                 </tr>
                             </thead>
@@ -191,7 +191,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Primary Color</b>
+                        <b>{{ i18n.primary_color }}</b>
                     </div>
 
                     <div class="column">
@@ -204,7 +204,7 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Secondary Color</b>
+                        <b>{{ i18n.secondary_color }}</b>
                     </div>
 
                     <div class="column">
@@ -217,13 +217,14 @@
 
                 <div class="columns">
                     <div class="column">
-                        <b>Logo</b>
+                        <b>{{ i18n.logo }}</b>
                     </div>
 
                     <div class="column">
                         <biz-form-media-library
                             v-model="form.logo"
                             image-preview-size="6"
+                            :placeholder="i18n.open_media_library"
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="logoMedia"
@@ -344,6 +345,24 @@
             title: {
                 type: String,
                 default: "Stripe"
+            },
+            i18n: {
+                type: Object,
+                default: () => ({
+                    settings : 'Settings',
+                    is_enabled : 'Is enabled?',
+                    default_country : 'Default country',
+                    application_fee_percentage : 'Application fee percentage',
+                    payment_currencies : 'Payment currencies',
+                    primary_color : 'Primary color',
+                    secondary_color : 'Secondary color',
+                    logo : 'Logo',
+                    open_media_library : 'Open media library',
+                    save : 'Save',
+                    currency : 'Currency',
+                    minimal_payment : 'Minimal payment',
+                    amount_options : 'Amount options',
+                }),
             },
         },
 

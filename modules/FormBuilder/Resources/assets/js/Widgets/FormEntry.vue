@@ -4,7 +4,7 @@
             <template #heading>
                 <div class="columns">
                     <div class="column">
-                        {{ title }}
+                        {{ capitalCase(title) }}
                     </div>
                     <div
                         v-if="hasFormLists"
@@ -67,7 +67,7 @@
                                                 class="is-primary is-outlined is-small"
                                                 :href="route(data.baseRouteName + '.entries.show', {form_builder: selectedForm, form_entry: entry.id})"
                                             >
-                                                View Detail
+                                                {{ i18n.view_detail }}
                                             </biz-button-link>
                                         </td>
                                     </tr>
@@ -81,7 +81,7 @@
                                             class="has-text-centered"
                                             :colspan="fieldLabels.length + 1"
                                         >
-                                            Empty
+                                            {{ i18n.no_data }}
                                         </td>
                                     </tr>
                                 </template>
@@ -112,7 +112,7 @@
                                 class="is-primary is-outlined is-small"
                                 :href="route(data.baseRouteName + '.entries.index', selectedForm)"
                             >
-                                View All
+                                {{ i18n.view_all }}
                             </biz-button-link>
                         </div>
                     </div>
@@ -132,6 +132,7 @@
     import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { head, isEmpty } from 'lodash';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'FormBuilderEntryWidget',
@@ -148,6 +149,11 @@
 
         props: {
             data: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                view_detail : 'View detail',
+                view_all : 'View all',
+                no_data : 'No data',
+            }) },
             title: { type: String, default: "" },
         },
 
@@ -202,6 +208,8 @@
             onSelectedFormChange() {
                 this.getRecords();
             },
+
+            capitalCase,
         }
     }
 </script>

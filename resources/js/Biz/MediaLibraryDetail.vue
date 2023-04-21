@@ -18,7 +18,7 @@
                             type="button"
                             @click="openModal"
                         >
-                            Edit Image
+                            {{ i18n.edit_image }}
                         </biz-button>
                     </footer>
                 </div>
@@ -57,7 +57,7 @@
                         class="is-danger"
                         @click="$emit('on-delete-edit')"
                     >
-                        Delete
+                        {{ i18n.delete }}
                     </biz-button>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         :disabled="isProcessing"
                         @click="updateImage"
                     >
-                        Save
+                        {{ i18n.save }}
                     </biz-button>
                     <biz-button
                         type="button"
@@ -88,7 +88,7 @@
                         :disabled="isProcessing"
                         @click="saveAsImageConfirm"
                     >
-                        Save As New
+                        {{ i18n.save_as_new }}
                     </biz-button>
                     <biz-button
                         type="button"
@@ -96,7 +96,7 @@
                         :disabled="isProcessing"
                         @click="closeModal"
                     >
-                        Cancel
+                        {{ i18n.cancel }}
                     </biz-button>
                 </template>
 
@@ -107,7 +107,7 @@
                         :disabled="isProcessing"
                         @click="updateFile"
                     >
-                        Done
+                        {{ i18n.done }}
                     </biz-button>
                 </template>
             </template>
@@ -140,6 +140,19 @@
             MixinHasModal,
             MixinHasLoader,
         ],
+
+        inject: {
+            i18n: {
+                default: () => ({
+                    edit_image : 'Edit image',
+                    delete : 'Delete',
+                    save : 'Save',
+                    save_as_new : 'Save as new',
+                    cancel : 'Cancel',
+                    done : 'Done',
+                })
+            },
+        },
 
         props: {
             allowMultiple: { type: Boolean, default: false, },

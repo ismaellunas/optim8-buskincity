@@ -3,14 +3,14 @@
         <biz-form-password
             v-model="form.password"
             autocomplete="new-password"
-            label="Password"
+            :label="i18n.password"
             :message="error('password', errorBag)"
             :required="true"
         />
 
         <biz-form-password
             v-model="form.password_confirmation"
-            label="Password Confirmation"
+            :label="i18n.password_confirmation"
             :message="error('password_confirmation', errorBag)"
         />
     </div>
@@ -23,16 +23,27 @@
 
     export default {
         name: 'UserPasswordForm',
+
         components: {
             BizFormPassword,
         },
+
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                password : 'Password',
+                password_confirmation : 'Password confirmation',
+            }) },
+        },
+
         props: {
             errorBag: {type: String, default: 'default'},
             modelValue: {},
         },
+
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),

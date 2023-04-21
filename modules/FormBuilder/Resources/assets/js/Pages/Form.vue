@@ -5,7 +5,7 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Builder"
+                :title="i18n.builder"
             >
                 <form-builder
                     v-model="form"
@@ -14,11 +14,11 @@
             </biz-provide-inject-tab>
 
             <template v-if="isEditMode">
-                <biz-provide-inject-tab title="Notifications">
+                <biz-provide-inject-tab :title="i18n.notifications">
                     <notification-setting />
                 </biz-provide-inject-tab>
 
-                <biz-provide-inject-tab title="Settings">
+                <biz-provide-inject-tab :title="i18n.settings">
                     <general-setting />
                 </biz-provide-inject-tab>
             </template>
@@ -47,6 +47,11 @@
 
         inject: {
             isEditMode: { default: false },
+            i18n: { default: () => ({
+                builder: 'Builder',
+                notifications : 'Notifications',
+                settings : 'Settings',
+            }) },
         },
 
         provide() {

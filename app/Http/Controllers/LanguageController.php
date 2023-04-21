@@ -12,6 +12,7 @@ class LanguageController extends Controller
 {
     use FlashNotifiable;
 
+    private $languageService;
     private $baseRouteName = 'admin.settings.languages';
 
     public function __construct(LanguageService $languageService)
@@ -27,6 +28,11 @@ class LanguageController extends Controller
             'supportedLanguages' => $this->languageService->getSupportedLanguageIds(),
             'defaultLanguage' => $this->languageService->getDefaultId(),
             'languageOptions' => $this->languageService->getShownLanguageOptions(),
+            'i18n' => [
+                'default_language' => __('Default language'),
+                'supported_languages' => __('Supported languages'),
+                'update' => __('Update'),
+            ],
         ]);
     }
 
@@ -40,7 +46,9 @@ class LanguageController extends Controller
 
         app(SettingCache::class)->flush();
 
-        $this->generateFlashMessage('Language updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Language')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

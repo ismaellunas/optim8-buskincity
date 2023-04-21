@@ -2,7 +2,7 @@
     <div class="mb-3">
         <biz-form-input
             v-model="form.key"
-            label="Key"
+            :label="i18n.key"
             required
             :message="error('key')"
             :disabled="isInputDisabled"
@@ -11,14 +11,14 @@
         <biz-form-textarea
             v-if="referenceLocale != selectedLocale"
             v-model="form.value[referenceLocale]"
-            label="English Value"
+            :label="`English ${i18n.value}`"
             required
             disabled
         />
 
         <biz-form-textarea
             v-model="form.value[selectedLocale]"
-            label="Value"
+            :label="i18n.value"
             required
             :message="error('value.' + selectedLocale)"
             :disabled="isInputDisabled"
@@ -43,6 +43,13 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                key : 'Key',
+                value : 'Value',
+            }) },
+        },
 
         props: {
             baseRouteName: {type: String, required: true},

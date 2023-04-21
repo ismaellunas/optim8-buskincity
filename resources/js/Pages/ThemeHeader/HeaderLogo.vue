@@ -4,7 +4,8 @@
             <div class="column">
                 <biz-form-media-library
                     v-model="logo"
-                    label="Logo"
+                    :label="i18n.logo"
+                    :placeholder="i18n.open_media_library"
                     :is-download-enabled="can?.media?.read ?? false"
                     :is-upload-enabled="can?.media?.add ?? false"
                     :medium="logoMedia"
@@ -32,10 +33,14 @@
             MixinHasPageErrors
         ],
 
-        inject: [
-            'can',
-            'instructions',
-        ],
+        inject: {
+            can: {},
+            instructions: {},
+            i18n: { default: () => ({
+                logo : 'Logo',
+                open_media_library : 'Open media library',
+            }) },
+        },
 
         props: {
             logoMedia: { type: Object, default: () => {} },

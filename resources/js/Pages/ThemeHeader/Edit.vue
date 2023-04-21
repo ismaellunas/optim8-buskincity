@@ -22,7 +22,9 @@
                     class="is-primary ml-2"
                     @click="onSave(activeTab)"
                 >
-                    <span>Save</span>
+                    <span>
+                        {{ i18n.save }}
+                    </span>
                 </biz-button>
             </biz-tab>
 
@@ -75,6 +77,7 @@
             return {
                 instructions: this.instructions,
                 can: this.can,
+                i18n: this.i18n,
             };
         },
 
@@ -89,13 +92,18 @@
             menu: { type: Object, required: true },
             settings: { type: Object, required: true },
             title: { type: String, default: "-" },
+            i18n: { type: Object, default: () => ({
+                layout : 'Layout',
+                navigation : 'Navigation',
+                save : 'Save',
+            }) },
         },
 
-        setup() {
+        setup(props) {
             return {
                 tabs: {
-                    layout: {title: 'Layout', id: 'layout-tab-trigger' },
-                    navigation: {title: 'Navigation', id: 'navigation-tab-trigger' },
+                    layout: { title: props.i18n.layout, id: 'layout-tab-trigger' },
+                    navigation: { title: props.i18n.navigation, id: 'navigation-tab-trigger' },
                 },
             }
         },

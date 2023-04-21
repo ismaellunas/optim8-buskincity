@@ -49,7 +49,7 @@
                             :href="route(baseRouteName + '.reschedule', order.id)"
                         >
                             <biz-icon :icon="icon.recycle" />
-                            <span>Reschedule</span>
+                            <span>{{ i18n.reschedule }}</span>
                         </biz-button-link>
                     </div>
 
@@ -63,7 +63,7 @@
                             :icon="icon.remove"
                             @click="openModal"
                         >
-                            <span>Cancel</span>
+                            <span>{{ i18n.cancel }}</span>
                         </biz-button-icon>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
         <modal-cancel-event-confirmation
             v-if="isModalOpen"
             v-model="form.message"
-            title="Cancel Event"
+            :title="i18n.cancel_event"
             :event="order.event"
             :product-name="order.product.name"
             @close="closeModal()"
@@ -84,7 +84,7 @@
                     type="button"
                     @click="cancel()"
                 >
-                    Yes for sure
+                    {{ i18n.yes }}
                 </biz-button>
             </template>
         </modal-cancel-event-confirmation>
@@ -132,6 +132,12 @@
             order: { type: Object, required: true },
             checkInTime: { type: [String, null], required: true },
             googleApiKey: { type: String, default: null },
+            i18n: { type: Object, default: () => ({
+                reschedule : 'Reschedule',
+                cancel : 'Cancel',
+                cancel_event : 'Cancel event',
+                yes : 'Yes for sure',
+            }) },
         },
 
         setup(props) {
