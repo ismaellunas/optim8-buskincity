@@ -13,6 +13,8 @@
                     A new verification link has been sent to the email address you provided during registration.
                 </div>
 
+                <biz-flash-expired :flash="$page.props.flash" />
+
                 <div class="mt-4 is-flex items-center justify-between">
                     <form @submit.prevent="submit">
                         <biz-button
@@ -50,12 +52,14 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizFlashExpired from '@/Biz/FlashExpired.vue';
     import BizButton from '@/Biz/Button.vue';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
             BizButton,
+            BizFlashExpired,
         },
 
         mixins: [

@@ -84,7 +84,7 @@ class RoleController extends CrudController
 
         $role->syncPermissions($request->permissions);
 
-        $this->generateFlashMessage('The :updated was created!', [
+        $this->generateFlashMessage('The :resource was created!', [
             'resource' => __('Role')
         ]);
 
@@ -124,7 +124,7 @@ class RoleController extends CrudController
 
         $role->syncPermissions($request->permissions);
 
-        $this->generateFlashMessage('The :updated was deleted!', [
+        $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __('Role')
         ]);
 
