@@ -14,8 +14,8 @@ class TotalUsersWidget implements WidgetInterface
     private $vueComponent = 'TotalWidget';
     private $vueComponentModule = null;
     private $storedSetting;
-    private $formId;
-    private $roleId;
+    private $formId = null;
+    private $roleId = null;
 
     public function __construct(array $storedSetting)
     {
@@ -85,6 +85,7 @@ class TotalUsersWidget implements WidgetInterface
         if (
             ! app(ModuleService::class)->isModuleActive('formbuilder')
             || ! auth()->user()->can('viewAny', Form::class)
+            || ! $this->formId
         ) {
             return [];
         }
