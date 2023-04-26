@@ -5,6 +5,7 @@
                 <div class="column">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="search"
                     />
                 </div>
@@ -15,7 +16,7 @@
                     >
                         <template #trigger>
                             <span>
-                                {{ selectedParent ? selectedParent.value : 'Select Parent' }}
+                                {{ selectedParent ? selectedParent.value : i18n.select_parent }}
                             </span>
 
                             <biz-icon :icon="icon.angleDown" />
@@ -39,7 +40,7 @@
                         :close-on-click="false"
                     >
                         <template #trigger>
-                            <span>Type</span>
+                            <span>{{ i18n.type }}</span>
                             <span
                                 class="ml-1"
                             >
@@ -74,7 +75,7 @@
                         :href="route('admin.spaces.create')"
                     >
                         <biz-icon :icon="icon.add" />
-                        <span>Create New</span>
+                        <span>{{ i18n.create_new }}</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -85,12 +86,12 @@
             >
                 <template #thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Parents</th>
-                        <th>Type</th>
+                        <th>{{ i18n.name }}</th>
+                        <th>{{ i18n.parents }}</th>
+                        <th>{{ i18n.type }}</th>
                         <th>
                             <div class="level-right">
-                                Actions
+                                {{ i18n.actions }}
                             </div>
                         </th>
                     </tr>
@@ -110,7 +111,6 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
@@ -154,6 +154,17 @@
             records: { type: Object, required: true },
             title: { type: String, default: "" },
             typeOptions: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                search: 'Search',
+                select_parent: 'Select parent',
+                type: 'Type',
+                create_new: 'Create new',
+                name: 'Name',
+                parents: 'Parents',
+                type: 'Type',
+                actions: 'Actions',
+                are_you_sure: 'Are you sure?',
+            }) },
         },
 
         setup(props) {
@@ -190,7 +201,9 @@
             deleteSpace(space) {
                 const self = this;
 
-                confirmDelete().then(result => {
+                confirmDelete(
+                    self.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(this.baseRouteName+'.destroy', space.id),

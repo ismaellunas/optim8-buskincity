@@ -2,7 +2,7 @@
     <div>
         <biz-form-input
             v-model="space.name"
-            label="Name"
+            :label="i18n.name"
             placeholder="e.g My Location"
             required
             maxlength="128"
@@ -14,7 +14,7 @@
                 <biz-form-select
                     v-model="space.parent_id"
                     class="is-fullwidth"
-                    label="Parent"
+                    :label="i18n.parent"
                     :disabled="!canChangeParent"
                     :message="error('parent_id')"
                 >
@@ -31,7 +31,7 @@
                 <biz-form-select
                     v-model="space.type_id"
                     class="is-fullwidth"
-                    label="Type"
+                    :label="i18n.type"
                     :message="error('type_id')"
                 >
                     <option
@@ -47,7 +47,7 @@
 
         <biz-form-textarea
             v-model="space.address"
-            label="Address"
+            :label="i18n.address"
             placeholder="Address"
             rows="2"
             maxlength="500"
@@ -58,7 +58,7 @@
             <div class="column is-half">
                 <biz-form-input
                     v-model="space.latitude"
-                    label="Latitude"
+                    :label="i18n.latitude"
                     :message="error('latitude')"
                 />
             </div>
@@ -66,7 +66,7 @@
             <div class="column is-half">
                 <biz-form-input
                     v-model="space.longitude"
-                    label="Longitude"
+                    :label="i18n.longitude"
                     :message="error('longitude')"
                 />
             </div>
@@ -77,7 +77,7 @@
                 <div class="field">
                     <biz-form-media-library
                         v-model="space.logo"
-                        label="Logo"
+                        :label="i18n.logo"
                         image-preview-size="6"
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
@@ -91,7 +91,7 @@
                 <div class="field">
                     <biz-form-media-library
                         v-model="space.cover"
-                        label="Cover"
+                        :label="i18n.cover"
                         image-preview-size="6"
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
@@ -104,14 +104,14 @@
         </div>
 
         <div class="field">
-            <biz-label>Contacts</biz-label>
+            <biz-label>{{ i18n.contacts }}</biz-label>
 
             <biz-button-icon
                 :icon="icon.add"
                 type="button"
                 @click="openContactModal"
             >
-                <span>Add Contact</span>
+                <span>{{ i18n.add_contact }}</span>
             </biz-button-icon>
         </div>
 
@@ -134,10 +134,10 @@
                     </template>
 
                     <p>
-                        Email: {{ contact.email }}
+                        {{ i18n.email }}: {{ contact.email }}
                     </p>
                     <p>
-                        Phone: {{ getDial(contact.phone) }} {{ contact.phone.number }}
+                        {{ i18n.phone }}: {{ getDial(contact.phone) }} {{ contact.phone.number }}
                     </p>
                 </biz-card>
             </div>
@@ -163,12 +163,10 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
-    import BizFormFile from '@/Biz/Form/File.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizIcon from '@/Biz/Icon.vue';
-    import BizImage from '@/Biz/Image.vue';
     import BizLabel from '@/Biz/Label.vue';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import SpaceModalContact from './SpaceModalContact.vue';
@@ -180,12 +178,10 @@
         components: {
             BizButtonIcon,
             BizCard,
-            BizFormFile,
             BizFormInput,
             BizFormSelect,
             BizFormTextarea,
             BizIcon,
-            BizImage,
             BizLabel,
             BizFormMediaLibrary,
             SpaceModalContact,
@@ -194,6 +190,23 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                name: 'Name',
+                parent: 'Parent',
+                type: 'Type',
+                address: 'Address',
+                latitude: 'Latitude',
+                longitude: 'Longitude',
+                logo: 'Logo',
+                cover: 'Cover',
+                contacts: 'Contacts',
+                add_contact: 'Add contact',
+                email: 'Email',
+                phone: 'Phone',
+            }) },
+        },
 
         props: {
             modelValue: { type: Object, required: true },

@@ -29,11 +29,20 @@
 
     export default {
         name: 'PostCreate',
+
         components: {
             PostForm,
             BizErrorNotifications,
         },
+
+        provide() {
+            return {
+                i18n: this.i18n,
+            }
+        },
+
         layout: AppLayout,
+
         props: {
             can: { type: Object, required: true },
             categoryOptions: { type: Array, default:() => [] },
@@ -44,7 +53,9 @@
             title: { type: String, required: true },
             modules: { type: Object, default: () => {} },
             instructions: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => {} }
         },
+
         setup(props) {
             const defaultLocale = usePage().props.defaultLanguage;
 
@@ -70,15 +81,18 @@
                 localeOptions: props.languageOptions,
             };
         },
+
         data() {
             return {
                 baseRouteName: 'admin.posts',
                 isProcessing: false,
             };
         },
+
         methods: {
             onSubmit() {
                 const self = this;
+
                 this.form.post(route(this.baseRouteName+'.store'), {
                     onStart: () => {
                         self.loader = self.$loading.show();

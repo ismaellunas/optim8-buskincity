@@ -4,6 +4,7 @@
             <div class="column is-4-desktop">
                 <biz-filter-search
                     v-model="term"
+                    :placeholder="i18n.search"
                     @search="search"
                 />
             </div>
@@ -34,7 +35,7 @@
             <div class="column is-narrow is-3-widescreen">
                 <biz-select
                     v-model="location"
-                    placeholder="Any"
+                    :placeholder="i18n.any"
                     @change="onLocationChanged()"
                 >
                     <option
@@ -54,17 +55,17 @@
         >
             <template #thead>
                 <tr>
-                    <th>Status</th>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Timezone</th>
-                    <th>Time</th>
-                    <th>Check-In</th>
+                    <th>{{ i18n.status }}</th>
+                    <th>{{ i18n.name }}</th>
+                    <th>{{ i18n.location }}</th>
+                    <th>{{ i18n.user }}</th>
+                    <th>{{ i18n.date }}</th>
+                    <th>{{ i18n.timezone }}</th>
+                    <th>{{ i18n.time }}</th>
+                    <th>{{ i18n.check_in }}</th>
                     <th>
                         <div class="level-right">
-                            Actions
+                            {{ i18n.actions }}
                         </div>
                     </th>
                 </tr>
@@ -119,7 +120,7 @@
                                         class="is-small"
                                         :icon="icon.recycle"
                                     />
-                                    &nbsp;<span>Reschedule</span>
+                                    &nbsp;<span>{{ i18n.reschedule }}</span>
                                 </biz-link>
 
                                 <biz-dropdown-item
@@ -131,7 +132,7 @@
                                         class="is-small"
                                         :icon="icon.remove"
                                     />
-                                    &nbsp;<span>Cancel</span>
+                                    &nbsp;<span>{{ i18n.cancel }}</span>
                                 </biz-dropdown-item>
                             </biz-dropdown>
                         </div>
@@ -143,7 +144,7 @@
         <modal-cancel-event-confirmation
             v-if="isModalOpen && selectedOrder"
             v-model="form.message"
-            title="Cancel Event"
+            :title="i18n.cancel_event"
             :event="selectedOrder.event"
             :product-name="selectedOrder.product_name"
             @close="closeModal()"
@@ -154,7 +155,7 @@
                     type="button"
                     @click="cancel()"
                 >
-                    Yes for sure
+                    {{ i18n.yes }}
                 </biz-button>
             </template>
         </modal-cancel-event-confirmation>
@@ -202,6 +203,12 @@
             MixinHasModal,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -211,6 +218,23 @@
             records: { type: Object, required: true },
             statusOptions: { type: Object, required: true },
             locationOptions: { type: Object, required: true },
+            i18n: { type: Object, default: () => ({
+                search : 'Search',
+                any : 'Any',
+                status : 'Status',
+                name : 'Name',
+                location : 'Location',
+                user : 'User',
+                date : 'Date',
+                timezone : 'Timezone',
+                time : 'Time',
+                check_in : 'Check-In',
+                actions : 'actions',
+                reschedule : 'Reschedule',
+                cancel : 'Cancel',
+                yes : 'Yes for sure',
+                cancel_event :'Cancel event',
+            }) },
         },
 
         setup(props) {

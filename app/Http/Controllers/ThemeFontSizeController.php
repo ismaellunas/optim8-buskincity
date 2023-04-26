@@ -29,6 +29,9 @@ class ThemeFontSizeController extends CrudController
             $this->getData([
                 'defaultFontSizes' => $defaultFontSizes,
                 'fontSizes' => $this->settingService->getFontSizes(),
+                'i18n' => [
+                    'save' => __('Save'),
+                ],
             ])
         );
     }
@@ -45,7 +48,9 @@ class ThemeFontSizeController extends CrudController
 
         CompileThemeCss::dispatch();
 
-        $this->generateFlashMessage('Font Sizes updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Font Sizes')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

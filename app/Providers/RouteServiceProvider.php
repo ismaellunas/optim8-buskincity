@@ -46,13 +46,17 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             $domainRedirections = app(SettingService::class)->getDomainRedirections();
 
-            foreach ($domainRedirections as $domainRedirection) {
-                Route::domain($domainRedirection->from)
-                    ->group(function () use ($domainRedirection) {
-                        Route::redirect('/{any?}', $domainRedirection->to, 301);
-                        Route::redirect('/admin/{any?}', $domainRedirection->to, 301);
-                    }
-                );
+            foreach ($domainRedirections as $destination) {
+                Route::domain($destination->from)->group(function () use ($destination) {
+                    Route::permanentRedirect('/', $destination->to);
+
+                    Route::any('/{any}', function (Request $request, $any) use ($destination) {
+                        return redirect((
+                            $destination->to."/".$any
+                            .(!empty($request->query()) ? "?".$request->getQueryString() : "")
+                        ), 301);
+                    })->where('any', '.*');
+                });
             }
 
             Route::prefix('api')

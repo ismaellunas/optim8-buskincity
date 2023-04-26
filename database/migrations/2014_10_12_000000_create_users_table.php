@@ -33,8 +33,8 @@ class CreateUsersTable extends Migration
 
         /**
          * References
-         * https://halimsamy.com/sql-soft-deleting-and-unique-constraint
-         * https://www.youtube.com/watch?v=fqfoiiqPuMo
+         * @link https://halimsamy.com/sql-soft-deleting-and-unique-constraint
+         * @link https://www.youtube.com/watch?v=fqfoiiqPuMo
          */
         if (Str::startsWith(config('database.default'), 'pgsql')) {
             DB::statement('CREATE UNIQUE INDEX users_email_unique on users(email) WHERE deleted_at IS NULL');

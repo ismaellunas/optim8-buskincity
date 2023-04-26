@@ -13,14 +13,14 @@
                             :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
                             class="export-translation mr-2"
                         >
-                            Export
+                            {{ i18n.export }}
                         </biz-button-download>
 
                         <biz-button
                             class="import-translation mr-2"
                             @click="openModal"
                         >
-                            Import
+                            {{ i18n.import }}
                         </biz-button>
 
                         <biz-button-link
@@ -28,7 +28,7 @@
                             class="create-translation is-primary mr-2"
                         >
                             <biz-icon :icon="icon.add" />
-                            <span>Add New</span>
+                            <span>{{ i18n.add_new }}</span>
                         </biz-button-link>
 
                         <biz-button-icon
@@ -36,7 +36,7 @@
                             :icon="icon.edit"
                             @click="onSubmit"
                         >
-                            <span>Update</span>
+                            <span>{{ i18n.update }}</span>
                         </biz-button-icon>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                         :close-on-click="false"
                     >
                         <template #trigger>
-                            <span>Group</span>
+                            <span>{{ i18n.group }}</span>
 
                             <span
                                 v-if="groups.length > 0"
@@ -118,6 +118,7 @@
                 <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
+                        :placeholder="i18n.search"
                         @search="filterTerm"
                     />
                 </div>
@@ -136,15 +137,15 @@
                     <template #thead>
                         <tr>
                             <th>#</th>
-                            <th>Group</th>
-                            <th>Key</th>
+                            <th>{{ i18n.group }}</th>
+                            <th>{{ i18n.key }}</th>
                             <th v-if="!isReferenceLanguage">
-                                English Value
+                                English {{ i18n.value }}
                             </th>
-                            <th>Value</th>
+                            <th>{{ i18n.value }}</th>
                             <th>
                                 <div class="level-right">
-                                    Actions
+                                    {{ i18n.actions }}
                                 </div>
                             </th>
                         </tr>
@@ -220,7 +221,7 @@
         >
             <template #header>
                 <p class="modal-card-title">
-                    Import
+                    {{ i18n.import }}
                 </p>
 
                 <biz-button
@@ -237,17 +238,17 @@
                         v-model="importForm.file"
                         :accepted-types="acceptedTypes"
                         :message="error('file', bags.import)"
-                        label="File"
+                        :label="i18n.file"
                         required
                     >
                         <template
-                            v-if="i18n.fileInputNotes"
+                            v-if="instructions.fileInputNotes"
                             #note
                         >
                             <p class="help is-info">
                                 <ul>
                                     <li
-                                        v-for="note in i18n.fileInputNotes"
+                                        v-for="note in instructions.fileInputNotes"
                                         :key="note"
                                     >
                                         {{ note }}
@@ -266,7 +267,7 @@
                             class="is-link"
                             @click="submitImport"
                         >
-                            Submit
+                            {{ i18n.submit }}
                         </biz-button>
 
                         <biz-button
@@ -274,7 +275,7 @@
                             type="button"
                             @click="closeModal()"
                         >
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
                     </div>
                 </div>
@@ -376,13 +377,30 @@
                 type: String,
                 required: true,
             },
-            i18n: {
+            instructions: {
                 type: Object,
                 default: () => {},
             },
             bags: {
                 type: Object,
                 default: () => {},
+            },
+            i18n: {
+                type: Object,
+                default: () => ({
+                    export : 'Export',
+                    import : 'Import',
+                    add_new : 'Add new',
+                    update : 'Update',
+                    search : 'Search',
+                    group : 'Group',
+                    key : 'Key',
+                    value : 'Value',
+                    actions : 'Actions',
+                    file : 'File',
+                    submit : 'Submit',
+                    cancel : 'Cancel',
+                }),
             },
         },
 

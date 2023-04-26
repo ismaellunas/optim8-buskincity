@@ -70,7 +70,9 @@ class ProductEventController extends CrudController
 
         $this->productEventService->saveDateOverrides(collect($inputs['date_overrides']), $schedule);
 
-        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title
+        ]);
 
         return back();
     }

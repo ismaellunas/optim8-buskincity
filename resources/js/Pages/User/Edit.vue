@@ -16,7 +16,9 @@
                         class="box"
                         :disabled="isProcessing"
                     >
-                        <h3 class="title is-3">Profile</h3>
+                        <h3 class="title is-3">
+                            {{ i18n.profile }}
+                        </h3>
                         <hr>
 
                         <form-user-profile
@@ -33,13 +35,14 @@
                             <div class="control">
                                 <biz-button-link
                                     :href="route(baseRouteName+'.index')"
-                                    class="is-link is-light">
-                                    Cancel
+                                    class="is-link is-light"
+                                >
+                                    {{ i18n.cancel }}
                                 </biz-button-link>
                             </div>
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
@@ -58,7 +61,9 @@
                         class="box"
                         :disabled="isProcessing"
                     >
-                        <h3 class="title is-3">Password</h3>
+                        <h3 class="title is-3">
+                            {{ i18n.password }}
+                        </h3>
                         <hr>
 
                         <form-user-password
@@ -69,7 +74,7 @@
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
-                                    Update
+                                    {{ i18n.update }}
                                 </biz-button>
                             </div>
                         </div>
@@ -87,7 +92,7 @@
                         :disabled="isProcessing"
                     >
                         <h3 class="title is-3">
-                            Profile
+                            {{ capitalCase(i18n.profile_information) }}
                         </h3>
                         <hr>
 
@@ -103,7 +108,7 @@
                                 <div class="field is-grouped is-grouped-right">
                                     <div class="control">
                                         <biz-button class="is-link">
-                                            Update
+                                            {{ i18n.update }}
                                         </biz-button>
                                     </div>
                                 </div>
@@ -126,6 +131,7 @@
     import FormUserProfile from '@/Pages/User/FormProfile.vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'UserEdit',
@@ -148,6 +154,13 @@
             roleOptions: { type: Array, default: () => [] },
             supportedLanguageOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
+            i18n: { type: Object, default: () => ({
+                cancel : 'Cancel',
+                update : 'Update',
+                profile : 'Profile',
+                profile_information : 'Profile information',
+                password : 'Password',
+            }) },
         },
 
         setup(props) {
@@ -234,6 +247,8 @@
                     }
                 });
             },
+
+            capitalCase,
         },
     };
 </script>

@@ -27,12 +27,16 @@ abstract class CrudController extends Controller
 
     protected function getCreateTitle(): string
     {
-        return 'Add New '.$this->title();
+        $prefix = __('Add new');
+
+        return Str::title("{$prefix} {$this->title}");
     }
 
     protected function getEditTitle(): string
     {
-        return 'Edit '.$this->title();
+        $prefix = __('Edit');
+
+        return Str::title("{$prefix} {$this->title}");
     }
 
     protected function getIndexTitle(): string

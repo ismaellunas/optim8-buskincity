@@ -30,6 +30,9 @@ class SettingKeyController extends Controller
             'baseRouteName' => $this->baseRouteName,
             'keys' => $keys,
             'groups' => array_keys($keys),
+            'i18n' => [
+                'save' => 'Save',
+            ],
         ]);
     }
 
@@ -52,7 +55,9 @@ class SettingKeyController extends Controller
 
         app(SettingCache::class)->flush();
 
-        $this->generateFlashMessage('Keys updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Keys')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit');
     }

@@ -78,7 +78,18 @@ class SpaceController extends CrudController
             'parentOptions' => $spaceOptions,
             'records' => $records,
             'pageQueryParams' => (object) array_filter($request->only('term', 'parent', 'types')),
-            'typeOptions' => $this->spaceService->typeOptions()
+            'typeOptions' => $this->spaceService->typeOptions(),
+            'i18n' => [
+                'search' => __('Search'),
+                'select_parent' => __('Select parent'),
+                'type' => __('Type'),
+                'create_new' => __('Create new'),
+                'name' => __('Name'),
+                'parents' => __('Parents'),
+                'type' => __('Type'),
+                'actions' => __('Actions'),
+                'are_you_sure' => __('Are you sure?'),
+            ],
         ]));
     }
 
@@ -127,6 +138,7 @@ class SpaceController extends CrudController
                     'title' => $this->getCreateTitle(),
                 ],
             ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -146,7 +158,9 @@ class SpaceController extends CrudController
             $this->spaceService->replaceCover($space, $request->cover);
         }
 
-        $this->generateFlashMessage('Successfully creating '.$this->title.'!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __($this->title)
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
     }
@@ -252,9 +266,7 @@ class SpaceController extends CrudController
                     'title' => $this->getEditTitle(),
                 ],
             ],
-            'i18n' => [
-                'space' => __("Space"),
-            ],
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -272,7 +284,9 @@ class SpaceController extends CrudController
 
         $space->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __($this->title)
+        ]);
 
         return back();
     }
@@ -281,7 +295,9 @@ class SpaceController extends CrudController
     {
         $space->delete();
 
-        $this->generateFlashMessage($this->title.' deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __($this->title)
+        ]);
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -300,7 +316,9 @@ class SpaceController extends CrudController
 
         $space->managers()->sync($request->managers);
 
-        $this->generateFlashMessage('Manager updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Manager')
+        ]);
 
         return back();
     }
@@ -313,5 +331,59 @@ class SpaceController extends CrudController
     private function transformMedia(Media $media): void
     {
         $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            ...[
+                'space' => __('Space'),
+                'event' => __('Event'),
+                'manager' => __('Manager'),
+                'page' => __('Page'),
+                'name' => __('Name'),
+                'parent' => __('Parent'),
+                'type' => __('Type'),
+                'address' => __('Address'),
+                'latitude' => __('Latitude'),
+                'longitude' => __('Longitude'),
+                'logo' => __('Logo'),
+                'cover' => __('Cover'),
+                'contacts' => __('Contacts'),
+                'add_contact' => __('Add contact'),
+                'contact' => __('Contact'),
+                'email' => __('Email'),
+                'phone' => __('Phone'),
+                'cancel' => __('Cancel'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'save' => __('Save'),
+                'is_page_enabled' => __('Is page enabled?'),
+                'description' => __('Description'),
+                'condition' => __('Condition'),
+                'surface' => __('Surface'),
+                'add_new' => __('Add new'),
+                'title' => __('Title'),
+                'started_at' => __('Started at'),
+                'ended_at' => __('Ended at'),
+                'actions' => __('Actions'),
+                'add_new_event' => __('Add :resource', ['resource' => __('New event')]),
+                'edit_event' => __('Edit :resource', ['resource' => __('Event')]),
+                'started_and_ended_at' => __('Started at and ended at'),
+                'description' => __('Description'),
+                'are_you_sure' => __('Are you sure?'),
+                'choose_manager' => __('Choose manager'),
+                'details' => __('Details'),
+                'slug' => __('Slug'),
+                'status' => __('Status'),
+                'excerpt' => __('Excerpt'),
+                'meta_title' => __('Meta title'),
+                'meta_description' => __('Meta description'),
+                'page_preview' => __('Page preview'),
+                'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
+                'yes' => __('Yes'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }

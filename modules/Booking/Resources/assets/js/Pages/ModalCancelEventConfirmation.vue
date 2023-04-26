@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ title }}
+                {{ capitalCase(title) }}
             </p>
 
             <button
@@ -34,12 +34,12 @@
         </biz-table>
 
         <h4 class="title is-4">
-            Are you sure you want to cancel this event?
+            {{ i18n.are_you_sure_cancel_event }}
         </h4>
 
         <biz-form-textarea
             v-model="message"
-            label="Message"
+            :label="i18n.message"
             placeholder="Please enter your reason or message here"
             rows="4"
             maxlength="500"
@@ -53,7 +53,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="close()">
-                            No
+                            {{ i18n.no }}
                         </biz-button>
 
                         <slot name="actions" />
@@ -71,8 +71,8 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
     import bookingIcon from '@booking/Libs/booking-icon';
-    import { computed } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
+    import { capitalCase } from 'change-case';
 
     export default {
         components: {
@@ -81,6 +81,14 @@
             BizIcon,
             BizModalCard,
             BizTable,
+        },
+
+        inject: {
+            i18n: { default: () => ({
+                are_you_sure_cancel_event :'Are you sure you want to cancel this event?',
+                message :'Message',
+                no :'No',
+            }) },
         },
 
         props: {
@@ -106,6 +114,8 @@
             close() {
                 this.$emit('close');
             },
+
+            capitalCase,
         },
     };
 </script>
