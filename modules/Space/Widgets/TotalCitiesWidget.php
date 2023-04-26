@@ -17,11 +17,13 @@ class TotalCitiesWidget implements WidgetInterface
     private $vueComponentModule = null;
     private array $storedSetting;
     private $formId;
+    private $cityType;
 
     public function __construct(array $storedSetting)
     {
         $this->storedSetting = $storedSetting;
         $this->formId = Arr::get($storedSetting, 'setting.form_id');
+        $this->cityType = app(SpaceService::class)->typeOptions()->firstWhere('value', 'City')['id'];
     }
 
     private function url(): string
@@ -53,25 +55,20 @@ class TotalCitiesWidget implements WidgetInterface
     {
         return (
             app(ModuleService::class)->isModuleActive('space')
-            && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, 19])
+            && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, $this->cityType])
         );
     }
 
     public function response()
     {
-        $spaceTypeId = GlobalOption::type(config('space.type_option'))
-            ->name('City')
-            ->select('id')
-            ->first()->id;
-
         $totals = collect([
                 [ ...$this->moduleResponseForm() ],
                 [
                     'text' => app(SpaceService::class)->totalSpaceByType(
                         auth()->user(),
-                        $spaceTypeId
+                        $this->cityType
                     ),
-                    'url' => $this->viewUrl(['types' => [$spaceTypeId]]),
+                    'url' => $this->viewUrl(['types' => [$this->cityType]]),
                 ]
             ])
             ->filter()
