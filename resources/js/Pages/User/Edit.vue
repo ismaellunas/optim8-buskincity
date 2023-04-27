@@ -54,7 +54,7 @@
             </form>
 
             <form
-                v-if="can.update_password"
+                v-if="showPasswordForm"
                 class="columns"
                 method="post"
                 @submit.prevent="onPasswordSubmit"
@@ -202,6 +202,11 @@
             isFormDisabled() {
                 return this.isProcessing
                     || this.record.isTrashed
+            },
+
+            showPasswordForm() {
+                return this.can.update_password
+                    && ! this.isFormDisabled;
             },
         },
 
