@@ -142,6 +142,12 @@
             FormUserProfile,
         },
 
+        provide() {
+            return {
+                isFormDisabled: this.isFormDisabled,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
