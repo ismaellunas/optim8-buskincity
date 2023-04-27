@@ -28,7 +28,7 @@ class ProdPreparationUserPerformer extends Command
 
     public function isEnabled()
     {
-        return env('PRODUCTION_PREPARATION', true);
+        return env('PRODUCTION_PREPARATION', false);
     }
 
     /**

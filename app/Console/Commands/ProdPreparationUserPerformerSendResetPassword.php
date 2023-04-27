@@ -23,6 +23,11 @@ class ProdPreparationUserPerformerSendResetPassword extends Command
      */
     protected $description = 'Production preparation, send reset password link to every performer has been imported.';
 
+    public function isEnabled()
+    {
+        return env('PRODUCTION_PREPARATION', false);
+    }
+
     /**
      * Execute the console command.
      *
