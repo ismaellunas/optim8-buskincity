@@ -72,6 +72,7 @@
                 status: 0,
                 title: '',
                 scheduled_at: null,
+                is_cover_displayed: true,
             };
 
             return {

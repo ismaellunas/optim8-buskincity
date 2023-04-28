@@ -14,7 +14,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">
                             {{ i18n.profile }}
@@ -31,7 +31,10 @@
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
                         />
 
-                        <div class="field is-grouped is-grouped-right">
+                        <div
+                            v-if="! record.isTrashed"
+                            class="field is-grouped is-grouped-right"
+                        >
                             <div class="control">
                                 <biz-button-link
                                     :href="route(baseRouteName+'.index')"
@@ -51,7 +54,7 @@
             </form>
 
             <form
-                v-if="can.update_password"
+                v-if="showPasswordForm"
                 class="columns"
                 method="post"
                 @submit.prevent="onPasswordSubmit"
@@ -59,7 +62,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">
                             {{ i18n.password }}
@@ -71,7 +74,10 @@
                             :error-bag="errorBag"
                         />
 
-                        <div class="field is-grouped is-grouped-right">
+                        <div
+                            v-if="! record.isTrashed"
+                            class="field is-grouped is-grouped-right"
+                        >
                             <div class="control">
                                 <biz-button class="is-link">
                                     {{ i18n.update }}
@@ -89,7 +95,7 @@
                 <div class="column">
                     <fieldset
                         class="box"
-                        :disabled="isProcessing"
+                        :disabled="isFormDisabled"
                     >
                         <h3 class="title is-3">
                             {{ capitalCase(i18n.profile_information) }}
@@ -101,19 +107,10 @@
                             route-name="admin.users.edit"
                             :entity-id="record.id"
                             :locale="$page.props.user.origin_language_code"
+                            :hide-buttons="isFormDisabled"
                             @loaded-empty-field="isFormBuilderShown = false"
                             @loaded-successfully="isFormBuilderShown = true"
-                        >
-                            <template #buttons>
-                                <div class="field is-grouped is-grouped-right">
-                                    <div class="control">
-                                        <biz-button class="is-link">
-                                            {{ i18n.update }}
-                                        </biz-button>
-                                    </div>
-                                </div>
-                            </template>
-                        </form-builder>
+                        />
                     </fieldset>
                 </div>
             </div>
@@ -143,6 +140,12 @@
             FormBuilder,
             FormUserPassword,
             FormUserProfile,
+        },
+
+        provide() {
+            return {
+                isFormDisabled: this.isFormDisabled,
+            };
         },
 
         layout: AppLayout,
@@ -199,6 +202,18 @@
                 isProcessing: false,
                 loader: null,
             };
+        },
+
+        computed: {
+            isFormDisabled() {
+                return this.isProcessing
+                    || this.record.isTrashed
+            },
+
+            showPasswordForm() {
+                return this.can.update_password
+                    && ! this.isFormDisabled;
+            },
         },
 
         methods: {

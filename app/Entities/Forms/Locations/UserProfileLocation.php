@@ -130,4 +130,9 @@ class UserProfileLocation
 
         return $user->getMetas($keys->all());
     }
+
+    public function isEntityTrashed(): bool
+    {
+        return $this->entity->isTrashed;
+    }
 }

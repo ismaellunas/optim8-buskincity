@@ -13,7 +13,10 @@
             :selected-locale="selectedLocale"
         />
 
-        <slot name="buttons">
+        <slot
+            v-if="!hideButtons"
+            name="buttons"
+        >
             <div class="field">
                 <biz-button class="is-medium is-primary">
                     <span class="has-text-weight-bold">
@@ -52,6 +55,7 @@
             routeName: { type: String, required: true },
             routeSave: { type: String, default: 'forms.save' },
             selectedLocale: { type: String, required: true },
+            hideButtons: { type: Boolean, default: false },
         },
 
         emits: [
