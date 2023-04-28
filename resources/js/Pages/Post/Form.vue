@@ -122,7 +122,7 @@
                                 v-else
                                 class="columns is-mobile"
                             >
-                                <div class="column is-half is-offset-one-quarter">
+                                <div class="column is-half-desktop">
                                     <div class="card">
                                         <div class="card-image">
                                             <biz-image :src="coverSrc" />
@@ -152,6 +152,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <biz-form-checkbox-toggle
+                            v-model="form.is_cover_displayed"
+                            text="Is thumbnail displayed?"
+                            :value="form.is_cover_displayed"
+                        >
+                            <template #note>
+                                <p class="help has-text-info">
+                                    If checked, the thumbnail will be displayed in the post content.
+                                </p>
+                            </template>
+                        </biz-form-checkbox-toggle>
 
                         <biz-form-textarea
                             v-model="form.excerpt"
@@ -285,6 +297,7 @@
     import BizFormSlug from '@/Biz/Form/Slug.vue';
     import BizFormTextEditorFull from '@/Biz/Form/TextEditorFull.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import BizImage from '@/Biz/Image.vue';
     import BizLabel from '@/Biz/Label.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
@@ -318,6 +331,7 @@
             BizModalMediaBrowser,
             BizTab,
             BizTabList,
+            BizFormCheckboxToggle,
         },
 
         mixins: [

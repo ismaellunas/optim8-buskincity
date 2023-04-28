@@ -60,7 +60,11 @@ class PostRequest extends BaseFormRequest
             ],
             'primary_category' => [
                 'required_with:categories'
-            ]
+            ],
+            'is_cover_displayed' => [
+                'required',
+                'boolean',
+            ],
         ];
     }
 

@@ -114,6 +114,7 @@ class PostController extends CrudController
             'slug',
             'status',
             'title',
+            'is_cover_displayed',
         ]));
 
         if ($request->has('categories')) {
@@ -192,6 +193,7 @@ class PostController extends CrudController
             'status',
             'title',
             'scheduled_at',
+            'is_cover_displayed',
         ]);
 
         $post->saveFromInputs($inputs);
