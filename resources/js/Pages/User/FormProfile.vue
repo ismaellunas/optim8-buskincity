@@ -28,7 +28,7 @@
             </div>
 
             <div
-                v-if="profilePageUrl"
+                v-if="profilePageUrl && ! isFormDisabled"
                 class="column"
             >
                 <div class="buttons is-right">
@@ -83,27 +83,37 @@
             </option>
         </biz-form-select>
 
-        <biz-form-dropdown-search
-            :label="i18n.language"
-            required
-            :close-on-click="true"
-            :message="error('language_id', errorBag)"
-            @search="searchLanguage($event)"
-        >
-            <template #trigger>
-                <span :style="{'min-width': '4rem'}">
-                    {{ selectedLanguage }}
-                </span>
-            </template>
-
-            <biz-dropdown-item
-                v-for="option in filteredLanguages"
-                :key="option.id"
-                @click="selectedLanguage = option"
+        <template v-if="! isFormDisabled">
+            <biz-form-dropdown-search
+                :label="i18n.language"
+                required
+                :close-on-click="true"
+                :message="error('language_id', errorBag)"
+                @search="searchLanguage($event)"
             >
-                {{ option.value }}
-            </biz-dropdown-item>
-        </biz-form-dropdown-search>
+                <template #trigger>
+                    <span :style="{'min-width': '4rem'}">
+                        {{ selectedLanguage }}
+                    </span>
+                </template>
+
+                <biz-dropdown-item
+                    v-for="option in filteredLanguages"
+                    :key="option.id"
+                    @click="selectedLanguage = option"
+                >
+                    {{ option.value }}
+                </biz-dropdown-item>
+            </biz-form-dropdown-search>
+        </template>
+
+        <template v-else>
+            <biz-form-input
+                v-model="selectedLanguage"
+                :label="i18n.language"
+                required
+            />
+        </template>
     </div>
 </template>
 
@@ -149,6 +159,7 @@
                 language : 'Language',
                 open_public_profile: 'Open public profile',
             }) },
+            isFormDisabled: { default: false, },
         },
 
         props: {

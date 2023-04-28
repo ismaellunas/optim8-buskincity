@@ -26,6 +26,7 @@
             :selected-locale="selectedLocale"
             :route-name="routeName"
             :route-save="routeSave"
+            :hide-buttons="hideButtons"
             @on-success-submit="getSchemas()"
         />
     </div>
@@ -61,6 +62,7 @@
             routeGetSchemas: { type: String, default: 'forms.schemas' },
             routeName: { type: String, required: true },
             routeSave: { type: String, default: 'forms.save' },
+            hideButtons: { type: Boolean, default: false },
         },
 
         emits: [
