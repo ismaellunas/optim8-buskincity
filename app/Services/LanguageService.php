@@ -122,11 +122,12 @@ class LanguageService
 
         if (!$originLanguage) {
             $originLanguage = $this->getOriginFromIP()->code;
-            $supportedLanguageCodes = $this->getSupportedLanguages()->pluck('code')->all();
+        }
 
-            if (!in_array($originLanguage, $supportedLanguageCodes)) {
-                $originLanguage = app(TranslationService::class)->getDefaultLocale();
-            }
+        if (
+            ! app(TranslationService::class)->isSupportedLocale($originLanguage)
+        ) {
+            $originLanguage = defaultLocale();
 
             app(LifetimeCookie::class)->set('origin_language', $originLanguage);
         }
