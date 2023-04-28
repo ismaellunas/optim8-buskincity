@@ -121,7 +121,10 @@ class FormService
 
         $formLocation = $this->getFormLocation($routeName, $entityId);
 
-        if (!$formLocation->canBeAccessedBy($actor)) {
+        if (
+            ! $formLocation->canBeAccessedBy($actor)
+            || $formLocation->isEntityTrashed()
+        ) {
             $this->abortAction();
         }
 

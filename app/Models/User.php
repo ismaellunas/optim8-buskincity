@@ -384,4 +384,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return !$this->is_suspended;
     }
+
+    public function getIsTrashedAttribute(): bool
+    {
+        return $this->trashed();
+    }
 }
