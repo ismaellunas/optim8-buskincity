@@ -2,13 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Mail\ResetPasswordPerformer;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class SendResetPasswordLink implements ShouldQueue
 {
@@ -26,9 +30,21 @@ class SendResetPasswordLink implements ShouldQueue
     public function handle()
     {
         foreach ($this->emails as $email) {
-            $credentials = ['email' => $email];
+            $token = Str::random(64);
 
-            Password::sendResetLink($credentials);
+            DB::table('password_resets')->insert([
+                'email' => $email,
+                'token' => bcrypt($token),
+                'created_at' => Carbon::now(),
+            ]);
+
+            $url = route('password.reset', [
+                'token' => $token,
+                'email' => $email,
+            ]);
+
+            Mail::to($email)
+                ->send(new ResetPasswordPerformer($url));
         }
     }
 }
