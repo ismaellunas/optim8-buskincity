@@ -61,4 +61,9 @@ export const fullConfig = {
         'bullist numlist outdent indent hr | ' +
         'link table charmap'
     ),
+    formats: {
+        bold: { inline: 'b' }
+    },
+    extended_valid_elements:'b',
+    invalid_elements:'strong',
 };

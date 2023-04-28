@@ -22,12 +22,6 @@ class ChangeLanguageController extends Controller
         $defaultLocale = defaultLocale();
         $newLocale = $newLocale != '' ? $newLocale : $defaultLocale;
 
-        if (
-            !app(TranslationService::class)->isSupportedLocale($newLocale)
-        ) {
-            return redirect('/' . currentLocale());
-        }
-
         app(LifetimeCookie::class)->set(
             'origin_language',
             $newLocale

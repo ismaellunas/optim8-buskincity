@@ -1,29 +1,27 @@
 <?php
 
-namespace Modules\Space\Widgets;
+namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\GlobalOption;
+use App\Models\User;
 use App\Services\ModuleService;
 use Illuminate\Support\Arr;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
-use Modules\Space\Entities\Space;
-use Modules\Space\Services\SpaceService;
 
-class TotalCitiesWidget implements WidgetInterface
+class TotalUsersWidget implements WidgetInterface
 {
     private $vueComponent = 'TotalWidget';
     private $vueComponentModule = null;
-    private array $storedSetting;
-    private $formId;
-    private $cityType;
+    private $storedSetting;
+    private $formId = null;
+    private $roleId = null;
 
     public function __construct(array $storedSetting)
     {
         $this->storedSetting = $storedSetting;
         $this->formId = Arr::get($storedSetting, 'setting.form_id');
-        $this->cityType = app(SpaceService::class)->typeOptions()->firstWhere('value', 'City')['id'];
+        $this->roleId = Arr::get($storedSetting, 'setting.role_id');
     }
 
     private function url(): string
@@ -33,15 +31,18 @@ class TotalCitiesWidget implements WidgetInterface
         ]);
     }
 
-    private function viewUrl($queryParams = []): string
+    private function viewUrl($queryParams = [])
     {
-        return route('admin.spaces.index', $queryParams);
+        return route('admin.users.index', array_merge(
+            ['roles' => [ $this->roleId ]] ,
+            $queryParams,
+        ));
     }
 
     public function data(): array
     {
         return [
-            'title' => $this->storedSetting['title'] ?? 'Cities',
+            'title' => $this->storedSetting['title'] ?? 'Entries',
             'url' => $this->url(),
             'module' => null,
             'vueComponent' => $this->vueComponent,
@@ -53,22 +54,22 @@ class TotalCitiesWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return (
-            app(ModuleService::class)->isModuleActive('space')
-            && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, $this->cityType])
-        );
+        return auth()->user()->can('viewAny', User::class);
     }
 
     public function response()
     {
+        $total = User::role(
+                $this->roleId ?? null
+            )
+            ->available()
+            ->count();
+
         $totals = collect([
                 [ ...$this->moduleResponseForm() ],
                 [
-                    'text' => app(SpaceService::class)->totalSpaceByType(
-                        auth()->user(),
-                        $this->cityType
-                    ),
-                    'url' => $this->viewUrl(['types' => [$this->cityType]]),
+                    'text' => $total,
+                    'url' => $this->viewUrl(),
                 ]
             ])
             ->filter()
@@ -84,6 +85,7 @@ class TotalCitiesWidget implements WidgetInterface
         if (
             ! app(ModuleService::class)->isModuleActive('formbuilder')
             || ! auth()->user()->can('viewAny', Form::class)
+            || ! $this->formId
         ) {
             return [];
         }
