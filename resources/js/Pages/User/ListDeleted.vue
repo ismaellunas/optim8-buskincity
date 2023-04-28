@@ -77,7 +77,7 @@
                             :href="route(baseRouteName + '.edit', record.id)"
                         >
                             <span class="icon is-small">
-                                <i :class="icon.edit" />
+                                <i :class="icon.eye" />
                             </span>
                         </biz-button-link>
                     </div>
