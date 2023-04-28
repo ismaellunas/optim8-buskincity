@@ -265,6 +265,8 @@ class PostController extends CrudController
                 'create' => __('Create'),
                 'update' => __('Update'),
                 'cancel' => __('Cancel'),
+                'is_thumbnail_displayed' => __('Is thumbnail displayed?'),
+                'is_thumbnail_displayed_note' => __('If checked, the thumbnail will be displayed in the post content.'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

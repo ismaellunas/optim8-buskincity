@@ -155,12 +155,12 @@
 
                         <biz-form-checkbox-toggle
                             v-model="form.is_cover_displayed"
-                            text="Is thumbnail displayed?"
+                            :text="i18n.is_thumbnail_displayed"
                             :value="form.is_cover_displayed"
                         >
                             <template #note>
                                 <p class="help has-text-info">
-                                    If checked, the thumbnail will be displayed in the post content.
+                                    {{ i18n.is_thumbnail_displayed_note }}
                                 </p>
                             </template>
                         </biz-form-checkbox-toggle>
@@ -363,6 +363,8 @@
                     create : 'Create',
                     update : 'Update',
                     cancel: 'Cancel',
+                    is_thumbnail_displayed: 'Is thumbnail displayed?',
+                    is_thumbnail_displayed_note: 'If checked, the thumbnail will be displayed in the post content.',
                 })
             },
         },

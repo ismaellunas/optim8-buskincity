@@ -984,5 +984,7 @@
     "Archive": "Archive",
     "Confirm archive": "Confirm archive",
     "Confirm restore": "Confirm restore",
-    "Once the resources are deleted, they will be permanently deleted.": "Once the resources are deleted, they will be permanently deleted."
+    "Once the resources are deleted, they will be permanently deleted.": "Once the resources are deleted, they will be permanently deleted.",
+    "Is thumbnail displayed?": "Is thumbnail displayed?",
+    "If checked, the thumbnail will be displayed in the post content.": "If checked, the thumbnail will be displayed in the post content."
 }
