@@ -428,11 +428,19 @@ class MediaService
     {
         return [
             'search' => __('Search'),
+            'filter' => __('Filter'),
             'file_name' => __('File name'),
+            'alternative_text' => __('Alternative text'),
+            'description' => __('Description'),
             'date_modified' => __('Date modified'),
             'type' => __('Type'),
             'size' => __('Size'),
             'actions' => __('Actions'),
+            'save' => __('Save'),
+            'cancel' => __('Cancel'),
+            'done' => __('Done'),
+            'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
+            'are_you_sure' => __('Are you sure?'),
         ];
     }
 }

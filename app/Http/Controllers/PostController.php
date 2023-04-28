@@ -114,6 +114,7 @@ class PostController extends CrudController
             'slug',
             'status',
             'title',
+            'is_cover_displayed',
         ]));
 
         if ($request->has('categories')) {
@@ -192,6 +193,7 @@ class PostController extends CrudController
             'status',
             'title',
             'scheduled_at',
+            'is_cover_displayed',
         ]);
 
         $post->saveFromInputs($inputs);
@@ -263,6 +265,8 @@ class PostController extends CrudController
                 'create' => __('Create'),
                 'update' => __('Update'),
                 'cancel' => __('Cancel'),
+                'is_thumbnail_displayed' => __('Is thumbnail displayed?'),
+                'is_thumbnail_displayed_note' => __('If checked, the thumbnail will be displayed in the post content.'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
