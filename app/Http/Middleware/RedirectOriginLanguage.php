@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Entities\LifetimeCookie;
 use App\Services\{
     LanguageService,
     LoginService,
@@ -11,7 +12,7 @@ use App\Services\{
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class RedirectLanguage
+class RedirectOriginLanguage
 {
     /**
      * Handle an incoming request.
@@ -57,11 +58,6 @@ class RedirectLanguage
     {
         $originLanguage = app(LanguageService::class)->getOriginLanguageFromCookie();
         $defaultLanguage = defaultLocale();
-        $locales = app(TranslationService::class)->getLocales();
-
-        if (!in_array($originLanguage, $locales)) {
-            $originLanguage = $defaultLanguage;
-        }
 
         if ($originLanguage == $defaultLanguage) {
             $originLanguage = "";

@@ -76,6 +76,7 @@
                 slug: props.post.slug,
                 status: props.post.status,
                 title: props.post.title,
+                is_cover_displayed: props.post.is_cover_displayed,
                 scheduled_at: (
                     (props.post.scheduled_at)
                         ? new Date(props.post.scheduled_at)
