@@ -16,13 +16,14 @@ class TotalCitiesWidget implements WidgetInterface
     private $vueComponent = 'TotalWidget';
     private $vueComponentModule = null;
     private array $storedSetting;
-    private $formId;
+    private $formId = null;
     private $cityType;
 
     public function __construct(array $storedSetting)
     {
         $this->storedSetting = $storedSetting;
         $this->formId = Arr::get($storedSetting, 'setting.form_id');
+
         $this->cityType = app(SpaceService::class)->typeOptions()->firstWhere('value', 'City')['id'];
     }
 
@@ -84,6 +85,7 @@ class TotalCitiesWidget implements WidgetInterface
         if (
             ! app(ModuleService::class)->isModuleActive('formbuilder')
             || ! auth()->user()->can('viewAny', Form::class)
+            || ! $this->formId
         ) {
             return [];
         }
