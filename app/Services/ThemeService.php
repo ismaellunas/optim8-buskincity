@@ -18,6 +18,7 @@ class ThemeService
 
     private $cssFilenameFrontend = 'app';
     private $cssFilenameBackend  = 'app_backend';
+    private $cssFilenameEmail  = 'app_email';
 
     public function __construct(
         SettingService $settingService,
@@ -102,6 +103,11 @@ class ThemeService
     public function uploadCssBackend(): MediaAsset
     {
         return $this->uploadCssToCloudStorage($this->cssFilenameBackend);
+    }
+
+    public function uploadCssEmail(): MediaAsset
+    {
+        return $this->uploadCssToCloudStorage($this->cssFilenameEmail);
     }
 
     public function clearStorageTheme(): bool
