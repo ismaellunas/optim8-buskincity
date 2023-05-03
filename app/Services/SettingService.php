@@ -52,6 +52,24 @@ class SettingService
             : $urlCss;
     }
 
+    public function getEmailCssUrl(): string
+    {
+        $urlCss = $this->getKey('url_css_email');
+
+        return $urlCss;
+    }
+
+    public function getEmailCssStyle(): ?string
+    {
+        $url = $this->getEmailCssUrl();
+
+        if (! $url) {
+            return null;
+        }
+
+        return file_get_contents($url);
+    }
+
     public static function getAdditionalCss(): string
     {
         return app(SettingCache::class)->remember('additional_css', function () {
@@ -434,6 +452,11 @@ class SettingService
     public function saveCssUrlBackend(string $url): Setting
     {
         return $this->saveKey('url_css_backend', $url);
+    }
+
+    public function saveCssUrlEmail(string $url): Setting
+    {
+        return $this->saveKey('url_css_email', $url);
     }
 
     public function getSocialiteDrivers(): ?array
