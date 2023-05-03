@@ -137,6 +137,7 @@
                 }
             },
             selectFile(file) {
+                console.log(file);
                 this.tinyMceImage.file = file;
 
                 if (this.tinyMceImage.element) {
@@ -158,7 +159,7 @@
 
                 self.tinyMceImage.element.onclick = function () {
                     callback(
-                        self.tinyMceImage.file.file_url,
+                        self.tinyMceImage.file?.optimize_file_url ?? self.tinyMceImage.file?.file_url,
                         { alt: self.tinyMceImage.file?.alt ?? '' }
                     );
 
