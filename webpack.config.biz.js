@@ -10,6 +10,7 @@ module.exports = (env) => {
     entry: {
         "app": './themes/'+theme+'/sass/theme_app.sass',
         "app_backend": './resources/sass/theme_app.sass',
+        "app_email": './resources/sass/email_app.sass',
     },
     output: {
       path: path.resolve(__dirname, 'storage/theme/css'),
