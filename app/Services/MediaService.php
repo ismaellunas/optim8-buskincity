@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
+use App\Entities\CloudinaryAsset;
 use App\Entities\MediaAsset;
 use App\Helpers\HumanReadable;
 use App\Models\{
@@ -383,6 +384,52 @@ class MediaService
         $media->type = Media::TYPE_USER_META;
         $media->save();
         $media->saveUserId(auth()->user()->id);
+
+        return $media;
+    }
+
+    public function uploadUserMetaFromMedia(
+        Media $sourceMedia,
+        User $user,
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $sourceMedia->extension;
+
+        $fileName = Str::afterLast($sourceMedia->file_name, '/');
+
+        if (! in_array($sourceMedia->type, ['image', 'video'])) {
+            $extension = $clientExtension;
+        }
+
+        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
+
+        $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
+
+        $result = cloudinary()->upload(
+            $sourceMedia->file_url,
+            [
+                'public_id' => $folder.'/'.$fileName,
+                'resource_type' => $sourceMedia->assets->get('resource_type'),
+                'invalidate' => false,
+            ]
+        );
+
+        $response = CloudinaryAsset::createAssetFromApiResponse(
+            $result->getResponse(),
+            $extension
+        );
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $response,
+        );
+
+        $media->type = Media::TYPE_USER_META;
+        $media->save();
+        $media->saveUserId(auth()->user()->id ?? $user->id);
 
         return $media;
     }

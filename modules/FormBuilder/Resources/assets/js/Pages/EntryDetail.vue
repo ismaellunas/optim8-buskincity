@@ -188,6 +188,18 @@
                             {{ i18n.delete }}
                         </biz-button>
                     </div>
+                    <div
+                        v-if="can.automate_user_creation"
+                        class="m-2"
+                    >
+                        <biz-button
+                            class="is-fullwidth is-primary"
+                            type="button"
+                            @click.prevent="createOrUpdateUser()"
+                        >
+                            {{ i18n.create_or_update_user }}
+                        </biz-button>
+                    </div>
                 </biz-card>
             </div>
         </div>
@@ -206,6 +218,7 @@
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { router } from '@inertiajs/vue3';
 
     export default {
         name: 'FormBuilderEntryDetail',
@@ -253,6 +266,7 @@
                 confirm_restore: 'Confirm restore',
                 confirm_deletion: 'Confirm deletion',
                 confirm_deletion_message: 'Once the resources are deleted, they will be permanently deleted.',
+                create_or_update_user: 'Create or update user',
             }) }
         },
 
@@ -347,6 +361,23 @@
                     if (result.isConfirmed) {
                         this.actionRequest(routeName, this.entry);
                     }
+                });
+            },
+
+            createOrUpdateUser() {
+                const url = route(
+                    'admin.form-builders.entries.automate-user-creation.create-or-update',
+                    [
+                        this.formBuilder.id,
+                        this.entry.id
+                    ]
+                );
+
+                router.post(url, {}, {
+                    onStart: () => this.onStartLoadingOverlay(),
+                    onSuccess: (page) => successAlert(page.props.flash?.message ?? ''),
+                    onError: errors => oopsAlert(),
+                    onFinish: () => this.onEndLoadingOverlay(),
                 });
             },
         },
