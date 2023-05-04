@@ -249,8 +249,6 @@ class AutomateUserCreationService
         }
 
         $user->saveMetas();
-
-        //\Log::debug( $mappedRules->map(fn ($rule) => $rule->to['name'])->all());
     }
 
     public function sendUserCreationEmail(User $user, Form $form)
