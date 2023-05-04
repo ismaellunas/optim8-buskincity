@@ -3,14 +3,16 @@
 namespace Modules\FormBuilder\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
-use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
+use Modules\FormBuilder\Services\AutomateUserCreationService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderController extends CrudController
@@ -20,13 +22,12 @@ class FormBuilderController extends CrudController
     protected $recordsPerPage = 10;
     protected $title = 'Form Builder';
 
-    private $formBuilderService;
-
-    public function __construct(FormBuilderService $formBuilderService)
-    {
+    public function __construct(
+        private FormBuilderService $formBuilderService,
+        private AutomateUserCreationService $automateUserCreationService,
+        private UserService $userService
+    ) {
         $this->authorizeResource(Form::class, 'form_builder');
-
-        $this->formBuilderService = $formBuilderService;
     }
 
     public function index(Request $request)
@@ -96,11 +97,11 @@ class FormBuilderController extends CrudController
     public function edit(Form $formBuilder)
     {
         $formBuilder->load('fieldGroups');
-        $formBuilder = $formBuilder->toArray();
+        $formBuilderArray = $formBuilder->toArray();
 
-        $formBuilder['form_id'] = $formBuilder['key'];
+        $formBuilderArray['form_id'] = $formBuilderArray['key'];
 
-        unset($formBuilder['key']);
+        unset($formBuilderArray['key']);
 
         return Inertia::render('FormBuilder::Edit', $this->getData([
             'breadcrumbs' => [
@@ -113,11 +114,18 @@ class FormBuilderController extends CrudController
                 ],
             ],
             'baseRouteNameSetting' => $this->baseRouteNameSetting,
-            'formBuilder' => $formBuilder,
+            'formBuilder' => $formBuilderArray,
             'title' => __('Editing :name Form', [
-                'name' => $formBuilder['name']
+                'name' => $formBuilderArray['name']
             ]),
+            'fields' => $this->automateUserCreationService->getFields($formBuilder),
+            'roleOptions' => $this->automateUserCreationService->getRoleOptions(),
             'i18n' => $this->translationCreateEditPage(),
+            'userFields' => $this->automateUserCreationService->getUserFields(),
+            'mappingRules' => $this->automateUserCreationService->getMappingRules($formBuilder),
+            'matchedTypes' => $this->automateUserCreationService->matchedTypes(),
+            'mandatoryMatchedTypes' => $this->automateUserCreationService->mandatoryMatchedTypes(),
+            'emailTags' => array_keys($this->automateUserCreationService->emailTags()),
         ]));
     }
 
@@ -201,6 +209,26 @@ class FormBuilderController extends CrudController
             'text' => __('Text'),
             'position' => __('Position'),
             'update' => __('Update'),
+            'automate_user_creation' => __('Automate user creation'),
+            'add' => __('Add'),
+            'email' => __('Email'),
+            'email_templates' => __('Email templates'),
+            'first_name' => __('First name'),
+            'form_field' => __('Form field'),
+            'last_name' => __('Last name'),
+            'mandatory_fields' => __('Mandatory fields'),
+            'mapping_rules' => __('Mapping rules'),
+            'role_that_will_be_assigned' => __('Role that will be assigned'),
+            'none' => __('None'),
+            'role' => __('Role'),
+            'user_creation' => __('User creation'),
+            'field' => __('Field'),
+            'user_field' => __('User field'),
+            'user_update' => __('User update'),
+            'continue' => __('Continue'),
+            'change_role_confirmation_title' => __('Side effect of changing this role'),
+            'change_role_confirmation_text' => __('All mapping rules will be removed. Are you sure you want to change the role?'),
+            'map_form_field_to_user_field' => __('Map Form Field to User field'),
         ];
     }
 }
