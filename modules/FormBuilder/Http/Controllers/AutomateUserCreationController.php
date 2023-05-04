@@ -7,12 +7,15 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
 use Modules\FormBuilder\Http\Requests\AutomateUserCreationRequest;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
+use Symfony\Component\HttpFoundation\Response;
 
 class AutomateUserCreationController extends Controller
 {
@@ -172,7 +175,29 @@ class AutomateUserCreationController extends Controller
 
     public function createOrUpdateUser(Form $formBuilder, FormEntry $formEntry)
     {
-        DB::transaction(function () use ($formBuilder, $formEntry) {
+        $validator = Validator::make(
+            $this->automateUserCreationService->getUserProperties(
+                $formEntry,
+                $formBuilder->mappingUserRules,
+            ),
+            [
+                'email' => ['required', 'email', ],
+                'first_name' => [ 'required', ],
+                'last_name' => [ 'required', ],
+            ],
+            [],
+            $this->automateUserCreationService->getMandatoryLabels($formBuilder)
+        );
+
+        if ($validator->fails()) {
+            $this->generateFlashMessage('Mandatory fields are required to create/update the user.');
+
+            return back()->withErrors($validator);
+        }
+
+        DB::beginTransaction();
+
+        try {
             $user = $this->automateUserCreationService->createOrUpdate(
                 $formBuilder,
                 $formEntry
@@ -193,6 +218,24 @@ class AutomateUserCreationController extends Controller
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
 
             $this->generateFlashMessage("The action ran successfully!");
-        });
+
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+
+            if ($e->getCode() == '23502') {
+                $errorMessage = __('Mandatory fields are required to create/update the user.');
+
+                $this->generateFlashMessage($errorMessage);
+
+                return back()->withErrors([$errorMessage]);
+            }
+
+            throw $e;
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

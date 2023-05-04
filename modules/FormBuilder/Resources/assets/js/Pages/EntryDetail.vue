@@ -1,5 +1,9 @@
 <template>
     <div class="box">
+        <biz-error-notifications
+            :errors="$page.props.errors"
+        />
+
         <div class="columns">
             <div class="column is-two-thirds">
                 <biz-table
@@ -212,13 +216,14 @@
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizCard from '@/Biz/Card.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizLink from '@/Biz/Link.vue';
     import BizTable from '@/Biz/Table.vue';
     import MediaGallery from './EntryDisplay/MediaGallery.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
-    import { router } from '@inertiajs/vue3';
+    import { router, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'FormBuilderEntryDetail',
@@ -229,6 +234,7 @@
             BizButtonLink,
             BizTable,
             BizCard,
+            BizErrorNotifications,
             MediaGallery,
         },
 
@@ -376,7 +382,11 @@
                 router.post(url, {}, {
                     onStart: () => this.onStartLoadingOverlay(),
                     onSuccess: (page) => successAlert(page.props.flash?.message ?? ''),
-                    onError: errors => oopsAlert(),
+                    onError: () => {
+                        oopsAlert({
+                            text: usePage().props.flash?.message ?? ''
+                        });
+                    },
                     onFinish: () => this.onEndLoadingOverlay(),
                 });
             },
