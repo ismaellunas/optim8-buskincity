@@ -10,6 +10,7 @@ return [
         'form_builder.edit',
         'form_builder.add',
         'form_builder.delete',
+        'form_builder.automate_user_creation',
     ],
 
     // Email
