@@ -1001,5 +1001,7 @@
     "Continue": "Continue",
     "Side effect of changing this role": "Side effect of changing this role",
     "All mapping rules will be removed. Are you sure you want to change the role?": "All mapping rules will be removed. Are you sure you want to change the role?",
-    "Map Form Field to User field": "Map Form Field to User field"
+    "Map Form Field to User field": "Map Form Field to User field",
+    "Your new :appName account is ready": "Your new :appName account is ready",
+    "Your :appName profile has been updated": "Your :appName profile has been updated"
 }
