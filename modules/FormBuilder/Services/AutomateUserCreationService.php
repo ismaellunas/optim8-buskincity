@@ -414,10 +414,12 @@ class AutomateUserCreationService
                 continue;
             }
 
-            $fieldIds = collect($fieldGroup->fields)->map(function ($field) {
+            $fieldIds->push(collect($fieldGroup->fields)->map(function ($field) {
                 return $field['id'];
-            });
+            }));
         }
+
+        $fieldIds = $fieldIds->flatten();
 
         $untrackedRules = $form
             ->userCreationMappingRules
