@@ -33,7 +33,7 @@
         </div>
 
         <logout-other-browser-sessions-form
-            v-if="$page.props.socialstream.hasPassword"
+            v-if="false && $page.props.socialstream.hasPassword"
             class="box mt-10 mb-5"
             :sessions="sessions"
         />
