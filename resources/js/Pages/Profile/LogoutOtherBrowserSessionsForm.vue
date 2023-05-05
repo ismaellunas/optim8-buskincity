@@ -173,7 +173,7 @@
             logoutOtherBrowserSessions() {
                 this.onStartLoadingOverlay();
 
-                this.form.delete(route('other-browser-sessions.destroy'), {
+                this.form.delete(route('admin.other-browser-sessions.destroy'), {
                     preserveScroll: true,
                     onSuccess: () => {
                         this.closeModal();

@@ -9,7 +9,7 @@ use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Tag\ImageTag;
 use Cloudinary\Tag\VideoTag;
 use Cloudinary\Transformation\Delivery;
-use Cloudinary\Transformation\Quality;
+use Cloudinary\Transformation\Format;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -200,7 +200,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
             $imageTag->resize(Resize::$resizeMode($width, $height));
         }
 
-        return $imageTag->delivery(Delivery::quality(Quality::auto()));
+        return $imageTag->delivery(Delivery::format(Format::auto()));
     }
 
     public function getOptimizedImageUrl(
