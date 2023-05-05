@@ -19,7 +19,7 @@
             <biz-form-select
                 v-model="mappingRule.from"
                 required
-                :label="i18n.field"
+                :label="i18n.form_field"
                 @change="resetUserField"
             >
                 <option

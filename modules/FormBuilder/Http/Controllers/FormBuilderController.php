@@ -224,7 +224,6 @@ class FormBuilderController extends CrudController
             'none' => __('None'),
             'role' => __('Role'),
             'user_creation' => __('User creation'),
-            'field' => __('Field'),
             'user_field' => __('User field'),
             'user_update' => __('User update'),
             'continue' => __('Continue'),
