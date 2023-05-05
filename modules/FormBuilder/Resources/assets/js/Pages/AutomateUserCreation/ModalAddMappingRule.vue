@@ -19,7 +19,7 @@
             <biz-form-select
                 v-model="mappingRule.from"
                 required
-                :label="i18n.field"
+                :label="i18n.form_field"
                 @change="resetUserField"
             >
                 <option
@@ -90,6 +90,7 @@
 
         props: {
             formFields: { type: Array, required: true },
+            mappingRules: { type: Array, default: () => [] },
             matchedTypes: { type: Object, required: true },
             userFields: { type: Array, required: true },
         },
@@ -122,7 +123,10 @@
                     const possibleTypes = this.matchedTypes[type];
 
                     return this.userFields.filter((field) => {
-                        return possibleTypes.includes(field.type);
+                        return (
+                            possibleTypes.includes(field.type)
+                            && ! _.find(this.mappingRules, ['to.name', field.name])
+                        );
                     });
                 }
 

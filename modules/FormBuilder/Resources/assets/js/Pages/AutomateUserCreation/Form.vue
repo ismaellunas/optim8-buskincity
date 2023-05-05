@@ -130,6 +130,7 @@
             :form-fields="formFields"
             :user-fields="userFieldOptions"
             :matched-types="matchedTypes"
+            :mapping-rules="form.mapping_rules"
             @add-mapped-field="addMappingRule"
             @close="closeModal"
         />
@@ -201,12 +202,12 @@
                             emailTags.value.forEach(function (option) {
                                 items.push({
                                     type: 'menuitem',
-                                    text: option,
+                                    text: _.capitalize(_.replace(option, '_', ' ')),
                                     onAction: () => editor.insertContent('{'+ option + '}'),
                                 })
                             });
 
-                            callback(items);
+                            callback(_.sortBy(items, ['text']));
                         }
                     });
                 },
@@ -240,10 +241,6 @@
         },
 
         computed: {
-            canOpenAddMappingRule() {
-                return this.formFields.length && this.userFields.length;
-            },
-
             userFieldOptions() {
                 const role = this.form.role;
 
@@ -258,6 +255,22 @@
                         return isValid;
                     });
             },
+
+            canOpenAddMappingRule() {
+                const unmappedUserFields = _.filter(this.userFieldOptions, (field) => {
+                    return (! _.find(
+                        this.form.mapping_rules,
+                        ['to.name', field.name])
+                    );
+                });
+
+                return (
+                    this.formFields.length
+                    && this.userFields.length
+                    && ! _.isEmpty(unmappedUserFields)
+                );
+            },
+
         },
 
         methods: {

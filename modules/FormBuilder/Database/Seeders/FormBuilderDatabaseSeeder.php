@@ -16,7 +16,8 @@ class FormBuilderDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call("Modules\FormBuilder\Database\Seeders\PermissionSeeder");
-        $this->call("Modules\FormBuilder\Database\Seeders\FormSeeder");
+        $this->call(PermissionSeeder::class);
+        $this->call(AutomateUserCreationSettingSeeder::class);
+        $this->call(FormSeeder::class);
     }
 }
