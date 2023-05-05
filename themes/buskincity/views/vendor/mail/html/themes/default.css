@@ -86,7 +86,7 @@ img {
     width: 100%;
 }
 
-.wrapper-footer {
+.wrapper-footer, .mail-footer {
     background: #fc8e00;
 }
 
