@@ -30,7 +30,11 @@ class FormObserver
             ->keyBy('key');
 
         foreach ($settingKeys as $key => $settingKey) {
-            Arr::set($emailSetting, $key, $formBuilderSetting->get($settingKey)->value);
+            Arr::set(
+                $emailSetting,
+                $key,
+                $formBuilderSetting->get($settingKey)->value ?? null
+            );
         }
 
         $setting['email'] = $emailSetting;
