@@ -274,6 +274,72 @@ class AutomateUserCreationService
         ]);
     }
 
+    public function getUserProperties(
+        FormEntry $entry,
+        EloquentCollection $userRules
+    ): array {
+        $userProps = [];
+
+        foreach ($this->mandatoryFields() as $column) {
+            $rule = $userRules->reverse()->firstWhere('to.column', $column) ?? [];
+
+            $userProps[$column] = $entry->{Arr::get($rule, 'from.name')} ?? null;
+        }
+
+        return $userProps;
+    }
+
+    public function getMandatoryLabels(Form $form): array
+    {
+        $labels = [];
+
+        $userRules = $form->mappingUserRules;
+
+        $fields = $form
+            ->fieldGroups
+            ->map(fn ($fieldGroup) => $fieldGroup->fields)
+            ->flatten(1);
+
+        foreach ($this->mandatoryFields() as $column) {
+            $field = null;
+
+            $rule = $userRules->reverse()->firstWhere('to.column', $column) ?? [];
+
+            if ($rule && Arr::has($rule, 'from.id')) {
+                $field = $fields
+                    ->reverse()
+                    ->firstWhere('id', Arr::get($rule, 'from.id'));
+            }
+
+            $labels[$column] = $field ? $field['label'] : Str::title($column);
+        }
+
+        return $labels;
+    }
+
+    private function createOrUpdateUser(
+        FormEntry $entry,
+        EloquentCollection $userRules
+    ): User {
+        $userProps = $this->getUserProperties($entry, $userRules);
+
+        $user = User::firstWhere('email', $userProps['email']);
+
+        if (! $user) {
+            $user = User::factory()->make([
+                'email' => $userProps['email'],
+                'password' => UserService::hashPassword(uniqid().uniqid()),
+                'language_id' => app(LanguageService::class)->getDefaultId(),
+            ]);
+        }
+
+        $user->first_name = $userProps['first_name'];
+        $user->last_name = $userProps['last_name'];
+        $user->save();
+
+        return $user;
+    }
+
     public function createOrUpdate(Form $form, FormEntry $entry): User
     {
         $mappedRules = $form->userCreationMappingRules;
@@ -281,6 +347,8 @@ class AutomateUserCreationService
         $userRules = $mappedRules->where('group', 'user');
 
         // Create/Update User
+        $user = $this->createOrUpdateUser($entry, $userRules);
+
         $mandatoryProps = $this
             ->mandatoryFields()
             ->mapWithKeys(fn ($fieldName) => [$fieldName => null])

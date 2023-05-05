@@ -4,6 +4,7 @@ namespace Modules\FormBuilder\Entities;
 
 use App\Models\Form as ModelForm;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class Form extends ModelForm
 {
@@ -65,5 +66,10 @@ class Form extends ModelForm
     public function activeNotificationSettings()
     {
         return $this->notificationSettings()->where('is_active', true);
+    }
+
+    public function getMappingUserRulesAttribute(): Collection
+    {
+        return $this->userCreationMappingRules->where('group', 'user');
     }
 }
