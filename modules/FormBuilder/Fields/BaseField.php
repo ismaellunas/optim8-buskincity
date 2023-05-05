@@ -7,7 +7,8 @@ use Mews\Purifier\Facades\Purifier;
 class BaseField
 {
     protected $field;
-    protected $value;
+
+    public $value;
 
     public function __construct(array $field = [], mixed $value = null)
     {

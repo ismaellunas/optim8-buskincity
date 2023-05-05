@@ -18,9 +18,10 @@
                 <biz-select
                     v-model="selected"
                     v-bind="$attrs"
+                    :class="{'is-fullwidth': isFullwidth, 'is-small': isSmall}"
                     :disabled="disabled"
                     :placeholder="placeholder"
-                    :class="{'is-fullwidth': isFullwidth, 'is-small': isSmall}"
+                    @change="$emit('change', $event)"
                 >
                     <slot />
                 </biz-select>
@@ -96,6 +97,11 @@
                 default: false
             },
         },
+
+        emits: [
+            'change',
+            'update:modelValue'
+        ],
 
         setup(props, { emit }) {
             return {
