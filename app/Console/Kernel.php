@@ -2,8 +2,8 @@
 
 namespace App\Console;
 
-//use App\Models\Cron;
 use App\Events\ErrorReport;
+use App\Jobs\RemoveNotVerifiedUser;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\App;
@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         if (config('telescope.enabled')) {
             if (App::environment('local')) {
                 $schedule->command('telescope:prune --hours=48')->daily();
@@ -41,6 +40,8 @@ class Kernel extends ConsoleKernel
                 ErrorReport::dispatch();
             })->dailyAt('23:59');
         }
+
+        $schedule->job(new RemoveNotVerifiedUser())->daily();
     }
 
     /**
