@@ -175,7 +175,8 @@ class FormEntryController extends CrudController
                 'user' => [
                     'edit' => $user->can('user.edit'),
                     'redirectUser' => $canRedirectUser,
-                ]
+                ],
+                'automate_user_creation' => $user->can('automateUserCreation', $formEntry),
             ],
             'i18n' => [
                 'entry' => __('Entry'),
@@ -198,6 +199,7 @@ class FormEntryController extends CrudController
                 'confirm_restore' => __('Confirm restore'),
                 'confirm_deletion' => __('Confirm deletion'),
                 'confirm_deletion_message' => __('Once the resources are deleted, they will be permanently deleted.'),
+                'create_or_update_user' => __('Create or update :resource', ['resource' => __('User')]),
             ],
         ]));
     }

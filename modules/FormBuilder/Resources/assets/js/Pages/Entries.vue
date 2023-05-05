@@ -277,7 +277,7 @@
     import BizTabList from '@/Biz/TabList.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
-    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
     import { isEmpty } from 'lodash';
     import { ref, computed } from 'vue';
 

@@ -116,6 +116,7 @@
 
                             <field-group
                                 :field-group="element"
+                                :mapped-field-ids="mappedFieldIds"
                                 @on-setting-input="onSettingInput"
                             />
                         </div>
@@ -168,6 +169,7 @@
     import BizFormKey from '@/Biz/Form/Key.vue';
     import FieldGroup from './FieldGroup.vue';
     import InputConfig from './../Fields/InputConfig.vue';
+    import { computed } from "vue";
     import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
@@ -228,6 +230,7 @@
                 baseRouteName: usePage().props.baseRouteName,
                 iconMove,
                 iconRemove,
+                mappingRules: computed(() => usePage().props.mappingRules ?? {}),
             };
         },
 
@@ -277,6 +280,20 @@
 
             hasFields() {
                 return isBlank(this.form.field_groups) ? false : this.form.field_groups.length > 0;
+            },
+
+            mappedFieldIds() {
+                let usedFields = [];
+
+                _.each(this.mappingRules.mandatoryFields, (mandatoryField) => {
+                    usedFields.push(mandatoryField.id);
+                })
+
+                _.each(this.mappingRules.optionalFields, (optionalField) => {
+                    usedFields.push(_.get(optionalField, 'from.id'));
+                })
+
+                return usedFields;
             },
         },
 
@@ -350,7 +367,7 @@
             onEndedHandler(event) {
                 event.item.classList.remove('is-full');
                 event.item.classList.add('is-half');
-            }
+            },
         },
     }
 </script>

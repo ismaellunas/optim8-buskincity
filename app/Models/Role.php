@@ -15,6 +15,14 @@ class Role extends SpatieRole
         return $query->whereNotIn('name', [config('permission.super_admin_role')]);
     }
 
+    public function scopeWithoutAdmin($query)
+    {
+        return $query->whereNotIn('name', [
+            config('permission.super_admin_role'),
+            config('permission.role_names.admin')
+        ]);
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
