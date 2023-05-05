@@ -137,7 +137,6 @@
                 }
             },
             selectFile(file) {
-                console.log(file);
                 this.tinyMceImage.file = file;
 
                 if (this.tinyMceImage.element) {

@@ -10,7 +10,6 @@ use Cloudinary\Tag\ImageTag;
 use Cloudinary\Tag\VideoTag;
 use Cloudinary\Transformation\Delivery;
 use Cloudinary\Transformation\Format;
-use Cloudinary\Transformation\Quality;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
