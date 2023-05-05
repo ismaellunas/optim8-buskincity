@@ -21,6 +21,10 @@
                 <biz-provide-inject-tab :title="i18n.settings">
                     <general-setting />
                 </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab :title="i18n.automate_user_creation">
+                    <automate-user-creation-setting />
+                </biz-provide-inject-tab>
             </template>
         </biz-provide-inject-tabs>
     </div>
@@ -31,11 +35,12 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import FormBuilder from './FormBuilder.vue';
     import NotificationSetting from './Settings/Notification/Index.vue';
+    import AutomateUserCreationSetting from './AutomateUserCreation/Form.vue';
     import GeneralSetting from './Settings/General/Index.vue';
     import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
-        name: 'Form',
+        name: 'FormBuilderForm',
 
         components: {
             BizProvideInjectTab,
@@ -43,6 +48,7 @@
             FormBuilder,
             GeneralSetting,
             NotificationSetting,
+            AutomateUserCreationSetting,
         },
 
         inject: {

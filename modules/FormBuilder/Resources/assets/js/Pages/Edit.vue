@@ -6,7 +6,7 @@
 
         <biz-flash-notifications :flash="$page.props.flash" />
 
-        <div class="box">
+        <div class="box mb-6">
             <form-builder
                 v-model="form"
                 v-model:input-config-id="inputConfigId"

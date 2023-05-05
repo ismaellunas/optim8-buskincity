@@ -1,7 +1,7 @@
 <template>
     <div>
         <biz-toolbar-content
-            @delete-content="deleteContent"
+            @delete-content="$emit('delete-content', id)"
             @duplicate-content="duplicateContent"
         />
         <form-input
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-    import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import FormInput from '@/Biz/Form/Input.vue';
@@ -41,14 +40,16 @@
         },
 
         mixins: [
-            MixinDeletableContent,
             MixinDuplicableContent,
         ],
+
 
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
         },
+
+        emits: ['delete-content'],
 
         data() {
             return {

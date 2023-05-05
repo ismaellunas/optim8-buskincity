@@ -52,6 +52,16 @@ class Form extends ModelForm
         return $this->hasMany(FormNotificationSetting::class, 'form_id');
     }
 
+    public function mappingRules()
+    {
+        return $this->hasMany(FormMappingRule::class, 'form_id');
+    }
+
+    public function userCreationMappingRules()
+    {
+        return $this->mappingRules()->where('type', 'automate_user_creation');
+    }
+
     public function activeNotificationSettings()
     {
         return $this->notificationSettings()->where('is_active', true);

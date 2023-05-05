@@ -986,5 +986,21 @@
     "Confirm restore": "Confirm restore",
     "Once the resources are deleted, they will be permanently deleted.": "Once the resources are deleted, they will be permanently deleted.",
     "Is thumbnail displayed?": "Is thumbnail displayed?",
-    "If checked, the thumbnail will be displayed in the post content.": "If checked, the thumbnail will be displayed in the post content."
+    "If checked, the thumbnail will be displayed in the post content.": "If checked, the thumbnail will be displayed in the post content.",
+    "Automate user creation": "Automate user creation",
+    "Create or update :resource": "Create or update :resource",
+    "Email templates": "Email templates",
+    "Form field": "Form field",
+    "Mandatory fields": "Mandatory fields",
+    "Mapping rules": "Mapping rules",
+    "Role that will be assigned": "Role that will be assigned",
+    "User creation": "User creation",
+    "User field": "User field",
+    "User update": "User update",
+    "Continue": "Continue",
+    "Side effect of changing this role": "Side effect of changing this role",
+    "All mapping rules will be removed. Are you sure you want to change the role?": "All mapping rules will be removed. Are you sure you want to change the role?",
+    "Map Form Field to User field": "Map Form Field to User field",
+    "Your new :appName account is ready": "Your new :appName account is ready",
+    "Your :appName profile has been updated": "Your :appName profile has been updated"
 }
