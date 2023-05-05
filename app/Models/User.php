@@ -250,6 +250,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->getRoleNames()->first();
     }
 
+    public function getRoleIdAttribute(): ?int
+    {
+        return $this->roles->pluck('id')->first();
+    }
+
     public function getLanguageCodeAttribute(): string
     {
         $defaultLocale = app(TranslationService::class)->getDefaultLocale();

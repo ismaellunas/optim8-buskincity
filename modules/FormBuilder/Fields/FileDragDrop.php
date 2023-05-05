@@ -12,6 +12,8 @@ use Mews\Purifier\Facades\Purifier;
 
 class FileDragDrop extends BaseField
 {
+    public $mappedValueFormatter;
+
     public function getSavedData(mixed $value): mixed
     {
         $mediaId = [];
@@ -103,5 +105,23 @@ class FileDragDrop extends BaseField
             ])
             ->whereIn('id', $mediaIds)
             ->get();
+    }
+
+    public static function mappingFieldTypes(): array
+    {
+        return ['FileDragDrop'];
+    }
+
+    public function getMappedValue(string $type): mixed
+    {
+        if (! in_array($type, self::mappingFieldTypes())) {
+            return null;
+        }
+
+        if ($this->mappedValueFormatter) {
+            return ($this->mappedValueFormatter)($this->value);
+        }
+
+        return $this->value;
     }
 }

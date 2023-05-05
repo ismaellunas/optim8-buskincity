@@ -1,7 +1,7 @@
 <template>
     <div>
         <biz-toolbar-content
-            @delete-content="deleteContent"
+            @delete-content="$emit('delete-content', id)"
             @duplicate-content="duplicateContent"
         />
         <biz-form-phone
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-    import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import BizFormPhone from '@/Biz/Form/Phone.vue';
@@ -44,7 +43,6 @@
         },
 
         mixins: [
-            MixinDeletableContent,
             MixinDuplicableContent,
         ],
 
@@ -56,6 +54,8 @@
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
         },
+
+        emits: ['delete-content'],
 
         data() {
             return {

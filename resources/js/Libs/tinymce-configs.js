@@ -20,8 +20,8 @@ export const textComponent = {
 };
 
 export const emailConfig = {
-    plugins: 'link lists',
-    toolbar: 'formatselect | bold italic forecolor backcolor link ' +
+    plugins: 'table link lists',
+    toolbar: 'formatselect | bold italic forecolor backcolor link table' +
         '| align bullist numlist | removeformat',
     menubar: false,
     target_list: false,
