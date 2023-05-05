@@ -201,12 +201,12 @@
                             emailTags.value.forEach(function (option) {
                                 items.push({
                                     type: 'menuitem',
-                                    text: option,
+                                    text: _.capitalize(_.replace(option, '_', ' ')),
                                     onAction: () => editor.insertContent('{'+ option + '}'),
                                 })
                             });
 
-                            callback(items);
+                            callback(_.sortBy(items, ['text']));
                         }
                     });
                 },
