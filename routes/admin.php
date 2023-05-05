@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     ErrorLogController,
     LanguageController,
     MediaController,
+    OtherBrowserSessionsController,
     PageController,
     PasswordResetLinkController,
     PostController,
@@ -90,6 +91,8 @@ Route::middleware(array_filter([
 
     Route::get('/profile', [UserProfileController::class, 'show'])
         ->name('profile.show');
+    Route::delete('/user/other-browser-sessions', [OtherBrowserSessionsController::class, 'destroy'])
+        ->name('other-browser-sessions.destroy');
 
     Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
         Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
