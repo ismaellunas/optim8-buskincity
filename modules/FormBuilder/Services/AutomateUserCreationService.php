@@ -349,31 +349,6 @@ class AutomateUserCreationService
         // Create/Update User
         $user = $this->createOrUpdateUser($entry, $userRules);
 
-        $mandatoryProps = $this
-            ->mandatoryFields()
-            ->mapWithKeys(fn ($fieldName) => [$fieldName => null])
-            ->all();
-
-        foreach (array_keys($mandatoryProps) as $column) {
-            $rule = $userRules->firstWhere('to.column', $column);
-
-            $mandatoryProps[$column] = $entry->{$rule->from['name']};
-        }
-
-        $user = User::firstWhere('email', $mandatoryProps['email']);
-
-        if (! $user) {
-            $user = User::factory()->make([
-                'email' => $mandatoryProps['email'],
-                'password' => UserService::hashPassword(uniqid().uniqid()),
-                'language_id' => app(LanguageService::class)->getDefaultId(),
-            ]);
-        }
-
-        $user->first_name = $mandatoryProps['first_name'];
-        $user->last_name = $mandatoryProps['last_name'];
-        $user->save();
-
         // Assign Role
         $roleId = null;
         $roleRule = $mappedRules->firstWhere('group', 'role');
