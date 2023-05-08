@@ -23,7 +23,9 @@ width: 100% !important;
 }
 }
 </style>
-<link rel="stylesheet" href="{{ $setting->getEmailCssUrl() }}">
+<style>
+    {!! $setting->getEmailCustomizedStyle() !!}
+</style>
 </head>
 <body>
 
