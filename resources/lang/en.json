@@ -1003,5 +1003,7 @@
     "Map Form Field to User field": "Map Form Field to User field",
     "Your new :appName account is ready": "Your new :appName account is ready",
     "Your :appName profile has been updated": "Your :appName profile has been updated",
-    "Mandatory fields are required to create/update the user.": "Mandatory fields are required to create/update the user."
+    "Mandatory fields are required to create/update the user.": "Mandatory fields are required to create/update the user.",
+    "User with email :email already exists. Proceeding will update their details.": "User with email :email already exists. Proceeding will update their details.",
+    "A new user named ':name' with the email address ':email' will be created.": "A new user named ':name' with the email address ':email' will be created."
 }
