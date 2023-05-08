@@ -80,14 +80,11 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background: #fff;
+    background: rgb(58,93,191);
+    background: linear-gradient(90deg, rgba(58,93,191,1) 0%, rgba(38,120,191,1) 35%, rgba(53,171,190,1) 100%);
     margin: 0;
     padding: 0;
     width: 100%;
-}
-
-.wrapper-footer, .mail-footer {
-    background: #fc8e00;
 }
 
 .content {
@@ -102,7 +99,7 @@ img {
 /* Header */
 
 .header {
-    padding: 25px 0;
+    padding: 20px 0;
     text-align: center;
 }
 
@@ -116,7 +113,6 @@ img {
 /* Logo */
 
 .logo {
-    height: 62px;
     max-height: 100px;
     max-width: 400px;
 }
@@ -138,7 +134,7 @@ img {
 .inner-body {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
-    -premailer-width: 650px;
+    -premailer-width: 570px;
     background-color: #ffffff;
     border-color: #e8e5ef;
     border-radius: 2px;
@@ -146,7 +142,7 @@ img {
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
     margin: 0 auto;
     padding: 0;
-    width: 650px;
+    width: 570px;
 }
 
 .inner-body table {
@@ -209,7 +205,8 @@ img {
     font-size: 15px;
     line-height: 18px;
     margin: 0;
-    padding: 10px 0;
+    padding: 10px 5px;
+    word-break: break-all;
 }
 
 .content-cell {
@@ -240,31 +237,29 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #fc8e00;
-    border-bottom: 8px solid #fc8e00;
-    border-left: 18px solid #fc8e00;
-    border-right: 18px solid #fc8e00;
-    border-top: 8px solid #fc8e00;
-    color: #fff;
-    font-weight: bold;
+    background-color: #FCD42F;
+    border-bottom: 8px solid #FCD42F;
+    border-left: 18px solid #FCD42F;
+    border-right: 18px solid #FCD42F;
+    border-top: 8px solid #FCD42F;
 }
 
 .button-green,
 .button-success {
-    background-color: #48c78e;
-    border-bottom: 8px solid #48c78e;
-    border-left: 18px solid #48c78e;
-    border-right: 18px solid #48c78e;
-    border-top: 8px solid #48c78e;
+    background-color: #48bb78;
+    border-bottom: 8px solid #48bb78;
+    border-left: 18px solid #48bb78;
+    border-right: 18px solid #48bb78;
+    border-top: 8px solid #48bb78;
 }
 
 .button-red,
 .button-error {
-    background-color: #f14668;
-    border-bottom: 8px solid #f14668;
-    border-left: 18px solid #f14668;
-    border-right: 18px solid #f14668;
-    border-top: 8px solid #f14668;
+    background-color: #e53e3e;
+    border-bottom: 8px solid #e53e3e;
+    border-left: 18px solid #e53e3e;
+    border-right: 18px solid #e53e3e;
+    border-top: 8px solid #e53e3e;
 }
 
 /* Panels */
