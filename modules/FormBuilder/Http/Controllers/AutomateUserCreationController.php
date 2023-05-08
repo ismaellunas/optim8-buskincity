@@ -218,7 +218,9 @@ class AutomateUserCreationController extends Controller
 
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
 
-            $this->formEntryService->markAsRead([$formEntry->id]);
+            if (! $formEntry->read_at) {
+                $this->formEntryService->markAsRead([$formEntry->id]);
+            }
 
             $this->generateFlashMessage("The action ran successfully!");
 
