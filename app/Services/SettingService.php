@@ -52,22 +52,11 @@ class SettingService
             : $urlCss;
     }
 
-    public function getEmailCssUrl(): string
+    public function getEmailCustomizedStyle(): string
     {
-        $urlCss = $this->getKey('url_css_email');
+        $style = $this->getKey('customized_style_email');
 
-        return $urlCss;
-    }
-
-    public function getEmailCssStyle(): ?string
-    {
-        $url = $this->getEmailCssUrl();
-
-        if (! $url) {
-            return null;
-        }
-
-        return file_get_contents($url);
+        return $style;
     }
 
     public static function getAdditionalCss(): string
@@ -454,9 +443,9 @@ class SettingService
         return $this->saveKey('url_css_backend', $url);
     }
 
-    public function saveCssUrlEmail(string $url): Setting
+    public function saveCustomizedStyleEmail(string $style): Setting
     {
-        return $this->saveKey('url_css_email', $url);
+        return $this->saveKey('customized_style_email', $style);
     }
 
     public function getSocialiteDrivers(): ?array

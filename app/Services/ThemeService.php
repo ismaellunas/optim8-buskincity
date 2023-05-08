@@ -105,9 +105,13 @@ class ThemeService
         return $this->uploadCssToCloudStorage($this->cssFilenameBackend);
     }
 
-    public function uploadCssEmail(): MediaAsset
+    public function getCustomizedStyleEmail(): string
     {
-        return $this->uploadCssToCloudStorage($this->cssFilenameEmail);
+        $fileName = "theme/css/$this->cssFilenameEmail.css";
+        $filePath = storage_path($fileName);
+        $fileContent = file_get_contents($filePath);
+
+        return $fileContent;
     }
 
     public function clearStorageTheme(): bool
