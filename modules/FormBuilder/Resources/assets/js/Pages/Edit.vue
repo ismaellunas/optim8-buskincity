@@ -4,8 +4,6 @@
             :errors="$page.props.errors"
         />
 
-        <biz-flash-notifications :flash="$page.props.flash" />
-
         <div class="box mb-6">
             <form-builder
                 v-model="form"
@@ -18,7 +16,6 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import FormBuilder from './Form.vue';
     import { onFormEditorClicked } from './../Libs/form-builder';
     import { useForm } from '@inertiajs/vue3';
@@ -29,7 +26,6 @@
 
         components: {
             BizErrorNotifications,
-            BizFlashNotifications,
             FormBuilder,
         },
 
