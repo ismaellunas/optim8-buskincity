@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Services;
 
 use App\Entities\Forms\Form;
+use App\Helpers\HtmlToText;
 use App\Services\IPService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -317,7 +318,7 @@ class FormBuilderService
         $entryValues = $this->getDisplayValues($allFields, $entry);
 
         foreach ($entryValues as $key => $entryValue) {
-            $swapLists['{'.$key.'}'] = $entryValue;
+            $swapLists['{'.$key.'}'] = HtmlToText::convert($entryValue);
         }
 
         $value = Str::swap($swapLists, $value);
