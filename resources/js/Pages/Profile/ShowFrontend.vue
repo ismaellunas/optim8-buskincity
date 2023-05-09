@@ -39,7 +39,7 @@
             />
 
             <logout-other-browser-sessions-form
-                v-if="false && $page.props.socialstream.hasPassword"
+                v-if="$page.props.socialstream.hasPassword"
                 :sessions="sessions"
                 class="column is-12"
             />
