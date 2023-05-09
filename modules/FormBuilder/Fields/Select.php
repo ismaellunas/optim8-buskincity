@@ -20,7 +20,7 @@ class Select extends BaseField implements MappableFieldInterface
             ->first();
 
         if ($option) {
-            return Purifier::clean($option['value']);
+            return Purifier::clean($option['value'], 'form_builder');
         }
 
         return '-';

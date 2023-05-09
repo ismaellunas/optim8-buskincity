@@ -23,7 +23,7 @@ class BaseField
 
     public function value(): mixed
     {
-        return Purifier::clean($this->value);
+        return Purifier::clean($this->value, 'form_builder');
     }
 
     public function componentValue(): array
