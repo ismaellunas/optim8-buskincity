@@ -3,11 +3,11 @@
 namespace Modules\FormBuilder\Http\Controllers;
 
 use App\Traits\FlashNotifiable;
+use Illuminate\Database\QueryException;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\Form;
@@ -15,14 +15,15 @@ use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
 use Modules\FormBuilder\Http\Requests\AutomateUserCreationRequest;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\FormBuilder\Services\FormEntryService;
 
 class AutomateUserCreationController extends Controller
 {
     use FlashNotifiable;
 
     public function __construct(
-        private AutomateUserCreationService $automateUserCreationService
+        private AutomateUserCreationService $automateUserCreationService,
+        private FormEntryService $formEntryService
     ) {}
 
     private function getStoredMappingRule(int $formId, string $group)
@@ -217,10 +218,14 @@ class AutomateUserCreationController extends Controller
 
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
 
+            if (! $formEntry->read_at) {
+                $this->formEntryService->markAsRead([$formEntry->id]);
+            }
+
             $this->generateFlashMessage("The action ran successfully!");
 
             DB::commit();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
 
             if ($e->getCode() == '23502') {
