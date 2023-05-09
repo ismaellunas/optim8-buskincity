@@ -121,6 +121,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
             Route::get('widget/form-builder/{formBuilder}/entries', [ApiWidgetController::class, 'getEntries'])
                 ->name('widget.form-builder.entries');
+
+            Route::get('automate-user-creation/{formEntry}/confirmation', [AutomateUserCreationController::class, 'confirmation'])
+                ->name('automate-user-creation.confirmation');
         });
 });
 
