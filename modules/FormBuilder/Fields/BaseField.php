@@ -2,8 +2,6 @@
 
 namespace Modules\FormBuilder\Fields;
 
-use Mews\Purifier\Facades\Purifier;
-
 class BaseField
 {
     protected $field;
@@ -23,7 +21,7 @@ class BaseField
 
     public function value(): mixed
     {
-        return Purifier::clean($this->value, 'form_builder');
+        return htmlspecialchars($this->value);
     }
 
     public function componentValue(): array
