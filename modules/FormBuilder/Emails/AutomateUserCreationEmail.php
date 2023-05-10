@@ -18,10 +18,16 @@ class AutomateUserCreationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected AutomateUserCreationService $automateUserCreationService;
+    protected string $viewName = 'formbuilder::emails.automated_create_user.created';
+    protected string $templateKey = 'email.automate_user_creation';
+
     public function __construct(
         protected User $user,
         protected Form $form
-    ) {}
+    ) {
+        $this->automateUserCreationService = app(AutomateUserCreationService::class);
+    }
 
     public function envelope()
     {
@@ -32,17 +38,23 @@ class AutomateUserCreationEmail extends Mailable
         );
     }
 
+    protected function composeBody(): string
+    {
+        $template = Arr::get($this->form->setting, $this->templateKey);
+
+        return !empty($template)
+            ? $this->automateUserCreationService->swapTagWithValue(
+                $this->user,
+                $template
+            )
+            : '';
+    }
+
     public function content()
     {
-        $body = app(AutomateUserCreationService::class)
-            ->swapTagWithValue(
-                $this->user,
-                Arr::get($this->form->setting, 'email.automate_user_creation')
-            );
-
         return new Content(
-            markdown: 'formbuilder::emails.automated_create_user.created',
-            with: ['body' => Purifier::clean($body, 'email')]
+            markdown: $this->viewName,
+            with: ['body' => Purifier::clean($this->composeBody(), 'email')]
         );
     }
 }
