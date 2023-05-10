@@ -2,9 +2,7 @@
 
 namespace App\View\Components\Builder\Content;
 
-use App\Models\User;
-use App\Services\CountryService;
-use App\Services\GlobalOptionService;
+use App\Entities\Caches\RecordCache;
 use App\Services\PageBuilderService;
 use Illuminate\Support\Facades\Crypt;
 
@@ -25,6 +23,8 @@ class UserList extends BaseContent
         $this->defaultOrderBy = $this->getConfig()['list']['orderBy'] ?? null;
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
         $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
+
+        app(RecordCache::class)->flush();
     }
 
     public function url(): string
