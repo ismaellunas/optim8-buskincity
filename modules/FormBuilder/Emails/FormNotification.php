@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder\Emails;
 
+use App\Helpers\HtmlToText;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -53,11 +54,12 @@ class FormNotification extends Mailable
                     )
             );
 
-        $fromName = $this->formBuilderService
+        $fromName = HtmlToText::convert($this->formBuilderService
             ->swapTagWithEntryValue(
                 $entry,
                 $setting->from_name
-            );
+            )
+        );
 
         $replyToEmail = $this->formBuilderService
             ->swapTagWithEntryValue(
