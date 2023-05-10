@@ -25,13 +25,15 @@ class Country extends BaseField implements MappableFieldInterface
         ];
     }
 
-    public function getMappedValue(string $toType): mixed
+    public function getMappedValue(array $toField): mixed
     {
-        if (! in_array($toType, self::mappingFieldTypes())) {
+        $type = $toField['type'];
+
+        if (! in_array($type, self::mappingFieldTypes())) {
             return null;
         }
 
-        if ($toType == 'Country') {
+        if ($type == 'Country') {
             return $this->value;
         }
 
