@@ -45,7 +45,10 @@
                     </header>
 
                     <div class="content mt-5">
-                        @if ($post->coverImageUrl)
+                        @if (
+                            $post->coverImageUrl
+                            && $post->is_cover_displayed
+                        )
                             <img
                                 src="{{ $post->coverImageUrl }}"
                                 alt="{{ $post->meta_description }}"

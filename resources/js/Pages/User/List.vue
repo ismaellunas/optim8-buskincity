@@ -4,6 +4,7 @@
             <div class="column">
                 <biz-filter-search
                     v-model="term"
+                    :placeholder="i18n.search"
                     @search="search"
                 />
             </div>
@@ -13,7 +14,7 @@
                     :close-on-click="false"
                 >
                     <template #trigger>
-                        <span>Filter</span>
+                        <span>{{ i18n.filter }}</span>
                         <span
                             v-if="roles.length > 0"
                             class="ml-1"
@@ -24,7 +25,7 @@
                     </template>
 
                     <biz-dropdown-item>
-                        Filter by Role
+                        {{ i18n.filter_by_role }}
                     </biz-dropdown-item>
 
                     <biz-dropdown-item
@@ -49,7 +50,7 @@
                     :href="route(baseRouteName+'.create')"
                 >
                     <biz-icon :icon="icon.add" />
-                    <span>Create New</span>
+                    <span>{{ i18n.create_new }}</span>
                 </biz-button-link>
             </div>
         </div>
@@ -61,12 +62,12 @@
             <template #thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th>{{ i18n.name }}</th>
+                    <th>{{ i18n.email }}</th>
+                    <th>{{ i18n.role }}</th>
                     <th>
                         <div class="level-right">
-                            Actions
+                            {{ i18n.actions }}
                         </div>
                     </th>
                 </tr>
@@ -182,11 +183,26 @@
             MixinHasModal,
         ],
 
-        inject: [
-            'baseRouteName',
-            'can',
-            'roleOptions',
-        ],
+        inject: {
+            baseRouteName: {},
+            can: {},
+            roleOptions: {},
+            i18n: { default: () => ({
+                search : 'Search',
+                filter : 'Filter',
+                filter_by_role : 'Filter by role',
+                create_new : 'Create new',
+                name : 'Name',
+                email : 'Email',
+                role : 'Role',
+                actions : 'Actions',
+                are_you_sure : 'Are you sure?',
+                delete_confirmation : 'Once you hit "Confirm Deletion", the user will be permanently removed.',
+                confirm_deletion : 'Confirm deletion',
+                suspend_user_confirmation : 'The user will be suspended.',
+                unsuspend_user_confirmation : 'The user will be unsuspended.',
+            }) },
+        },
 
         props: {
             pageQueryParams: { type: Object, required: true },
@@ -237,12 +253,12 @@
                 const self = this;
 
                 confirmDelete(
-                    'Are you sure?',
-                    'Once you hit "Confirm Deletion", the user will be permanently removed.',
-                    'Confirm Deletion'
+                    self.i18n.are_you_sure,
+                    self.i18n.delete_confirmation,
+                    self.i18n.confirm_deletion,
                 ).then(result => {
                     if (result.isConfirmed) {
-                        const userId = this.selectedUser.id;
+                        const userId = self.selectedUser.id;
 
                         form.delete(
                             route(self.baseRouteName+'.destroy', userId),
@@ -263,8 +279,8 @@
                 const self = this;
 
                 confirmDelete(
-                    'Are you sure?',
-                    'The user will be suspended.'
+                    self.i18n.are_you_sure,
+                    self.i18n.suspend_user_confirmation,
                 ).then(result => {
                     if (result.isConfirmed) {
 
@@ -286,8 +302,8 @@
                 const self = this;
 
                 confirmDelete(
-                    'Are you sure?',
-                    'The user will be unsuspended.'
+                    self.i18n.are_you_sure,
+                    self.i18n.unsuspend_user_confirmation,
                 ).then(result => {
                     if (result.isConfirmed) {
 

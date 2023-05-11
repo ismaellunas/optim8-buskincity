@@ -24,6 +24,7 @@
             <div class="column is-4">
                 <biz-filter-search
                     v-model="term"
+                    :placeholder="i18n.search"
                     @search="search"
                 />
             </div>
@@ -34,7 +35,7 @@
             >
                 <biz-dropdown :close-on-click="true">
                     <template #trigger>
-                        <span>Filter</span>
+                        <span>{{ i18n.filter }}</span>
                         <biz-icon :icon="icon.angleDown" />
                     </template>
 
@@ -61,7 +62,7 @@
             :close-on-click="true"
         >
             <template #trigger>
-                <span>Actions</span>
+                <span>{{ i18n.actions }}</span>
                 <biz-icon :icon="icon.angleDown" />
             </template>
 
@@ -76,7 +77,7 @@
                         :disabled="!canBulkMarkAsRead"
                         @click="bulkMarkAsRead()"
                     >
-                        Mark as read
+                        {{ i18n.mark_as_read }}
                     </biz-button>
                 </biz-dropdown-item>
 
@@ -90,7 +91,7 @@
                         :disabled="!canBulkMarkAsUnread"
                         @click="bulkMarkAsUnread()"
                     >
-                        Mark as unread
+                        {{ i18n.mark_as_unread }}
                     </biz-button>
                 </biz-dropdown-item>
 
@@ -104,7 +105,7 @@
                         :disabled="!canBulkArchive"
                         @click="bulkArchive()"
                     >
-                        Archive
+                        {{ i18n.archive }}
                     </biz-button>
                 </biz-dropdown-item>
             </template>
@@ -120,7 +121,7 @@
                         :disabled="!canBulkRestore"
                         @click="bulkRestore()"
                     >
-                        Restore
+                        {{ i18n.restore }}
                     </biz-button>
                 </biz-dropdown-item>
                 <biz-dropdown-item
@@ -133,7 +134,7 @@
                         :disabled="!canBulkForceDelete"
                         @click="bulkForceDelete()"
                     >
-                        Delete
+                        {{ i18n.delete }}
                     </biz-button>
                 </biz-dropdown-item>
             </template>
@@ -157,7 +158,7 @@
                     >
                         {{ label }}
                     </th>
-                    <th>Action</th>
+                    <th>{{ i18n.actions }}</th>
                 </tr>
             </template>
 
@@ -205,7 +206,7 @@
                                 tag="a"
                                 @click.prevent="markAsRead(entry)"
                             >
-                                Mark as read
+                                {{ i18n.mark_as_read }}
                             </biz-dropdown-item>
 
                             <biz-dropdown-item
@@ -213,7 +214,7 @@
                                 tag="a"
                                 @click.prevent="markAsUnread(entry)"
                             >
-                                Mark as unread
+                                {{ i18n.mark_as_unread }}
                             </biz-dropdown-item>
 
                             <biz-dropdown-item
@@ -221,7 +222,7 @@
                                 tag="a"
                                 @click.prevent="archive(entry)"
                             >
-                                Archive
+                                {{ i18n.archive }}
                             </biz-dropdown-item>
 
                             <biz-dropdown-item
@@ -229,7 +230,7 @@
                                 tag="a"
                                 @click.prevent="restore(entry)"
                             >
-                                Restore
+                                {{ i18n.restore }}
                             </biz-dropdown-item>
 
                             <biz-dropdown-item
@@ -237,7 +238,7 @@
                                 tag="a"
                                 @click.prevent="forceDelete(entry)"
                             >
-                                Delete
+                                {{ i18n.delete }}
                             </biz-dropdown-item>
                         </biz-dropdown>
                     </div>
@@ -250,7 +251,7 @@
                         colspan="99"
                         class="has-text-centered"
                     >
-                        Data is empty
+                        {{ i18n.data_is_empty }}
                     </td>
                 </tr>
             </template>
@@ -276,7 +277,7 @@
     import BizTabList from '@/Biz/TabList.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
-    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
     import { isEmpty } from 'lodash';
     import { ref, computed } from 'vue';
 
@@ -315,16 +316,34 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, default: () => {} },
             readOptions: { type: Array, default: () => [] },
+            i18n: { type: Object, default: () => ({
+                entries: 'Entries',
+                archived: 'Archived',
+                search: 'Search',
+                filter: 'Filter',
+                actions: 'actions',
+                mark_as_read: 'Mark as read',
+                mark_as_unread: 'Mark as unread',
+                archive: 'Archive',
+                restore: 'Restore',
+                delete: 'Delete',
+                data_is_empty: 'Data is empty',
+                confirm_archive: 'Confirm archive',
+                are_you_sure: 'Are you sure?',
+                confirm_restore: 'Confirm restore',
+                confirm_deletion: 'Confirm deletion',
+                confirm_deletion_message: 'Once the resources are deleted, they will be permanently deleted.',
+            }) },
         },
 
         setup(props) {
             const tabs = {
                 entries: {
-                    title: 'Entries',
+                    title: props.i18n.entries,
                     available: true,
                 },
                 archived: {
-                    title: 'Archived',
+                    title: props.i18n.archived,
                     available: props.can.restore,
                 },
             };
@@ -493,7 +512,10 @@
             bulkArchive() {
                 const self = this;
 
-                confirmDelete("Confirm Archive", "Are you sure?").then(result => {
+                confirmDelete(
+                    self.i18n.confirm_archive,
+                    self.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.bulkActionRequest(
                             this.baseRouteName + '.bulk-archive',
@@ -508,7 +530,10 @@
             bulkRestore() {
                 const self = this;
 
-                confirmDelete("Confirm Restore", "Are you sure?").then(result => {
+                confirmDelete(
+                    self.i18n.confirm_restore,
+                    self.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.bulkActionRequest(
                             this.baseRouteName + '.bulk-restore',
@@ -524,9 +549,9 @@
                 const self = this;
 
                 confirmDelete(
-                    'Are you sure?',
-                    'Once the resources are deleted, they will be permanently deleted.',
-                    'Confirm Deletion'
+                    self.i18n.are_you_sure,
+                    self.i18n.confirm_deletion_message,
+                    self.i18n.confirm_deletion
                 ).then(result => {
                     if (result.isConfirmed) {
                         this.bulkActionRequest(
@@ -548,7 +573,10 @@
             },
 
             archive(entry) {
-                confirmDelete("Confirm Archive", "Are you sure?").then(result => {
+                confirmDelete(
+                    this.i18n.confirm_archive,
+                    this.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(this.baseRouteName + '.bulk-archive', entry);
                     }
@@ -556,7 +584,10 @@
             },
 
             restore(entry) {
-                confirmDelete("Confirm Restore", "Are you sure?").then(result => {
+                confirmDelete(
+                    this.i18n.confirm_restore,
+                    this.i18n.are_you_sure
+                ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(this.baseRouteName + '.bulk-restore', entry);
                     }
@@ -565,9 +596,9 @@
 
             forceDelete(entry) {
                 confirmDelete(
-                    'Are you sure?',
-                    'Once the resource is deleted, it will be permanently deleted.',
-                    'Confirm Deletion'
+                    this.i18n.are_you_sure,
+                    this.i18n.confirm_deletion_message,
+                    this.i18n.confirm_deletion
                 ).then(result => {
                     if (result.isConfirmed) {
                         this.actionRequest(this.baseRouteName + '.bulk-force-delete', entry);

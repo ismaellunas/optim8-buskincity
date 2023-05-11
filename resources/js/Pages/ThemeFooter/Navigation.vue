@@ -3,7 +3,9 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <b>Menu Items</b><br>
+                    <b>
+                        {{ i18n.menu_items }}
+                    </b>
                 </div>
             </div>
             <div class="column">
@@ -34,8 +36,10 @@
                     <span class="icon">
                         <i :class="icon.add" />
                     </span>
-                    &nbsp;
-                    Add new segment
+
+                    <span class="ml-2">
+                        {{ sentenceCase(i18n.add_new_segment) }}
+                    </span>
                 </biz-button>
             </div>
         </div>
@@ -61,6 +65,7 @@
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/vue3';
+    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'ThemeFooterNavigation',
@@ -75,6 +80,13 @@
         mixins: [
             MixinHasModal,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                menu_items : 'Menu items',
+                add_new_segment : 'Add new segment',
+            }) }
+        },
 
         props: {
             menu: {
@@ -262,6 +274,8 @@
                     },
                 });
             },
+
+            sentenceCase,
         }
     };
 </script>

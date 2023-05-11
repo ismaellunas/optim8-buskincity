@@ -177,6 +177,7 @@
     import JetLabel from '@/Jetstream/Label.vue';
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -203,16 +204,16 @@
 
         data() {
             return {
-                createApiTokenForm: this.$inertia.form({
+                createApiTokenForm: useForm({
                     name: '',
                     permissions: this.defaultPermissions,
                 }),
 
-                updateApiTokenForm: this.$inertia.form({
+                updateApiTokenForm: useForm({
                     permissions: []
                 }),
 
-                deleteApiTokenForm: this.$inertia.form(),
+                deleteApiTokenForm: useForm({}),
 
                 displayingToken: false,
                 managingPermissionsFor: null,

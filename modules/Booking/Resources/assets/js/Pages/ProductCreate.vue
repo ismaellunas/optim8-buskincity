@@ -25,12 +25,12 @@
                                 :href="route(baseRouteName+'.index')"
                                 class="is-link is-light"
                             >
-                                Cancel
+                                {{ i18n.cancel }}
                             </biz-button-link>
                         </div>
                         <div class="control">
                             <biz-button class="is-link">
-                                Create
+                                {{ i18n.create }}
                             </biz-button>
                         </div>
                     </div>
@@ -64,6 +64,12 @@
             MixinHasPageErrors,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
@@ -73,9 +79,13 @@
             roleOptions: { type: Array, required: true },
             rules: { type: Object, required: true },
             statusOptions: { type: Array, required: true },
+            i18n: { type: Object, default: () => ({
+                cancel : 'Cancel',
+                create : 'Create',
+            }) },
         },
 
-        setup(props, { emit }) {
+        setup() {
             const form = {
                 name: null,
                 status: 'draft',

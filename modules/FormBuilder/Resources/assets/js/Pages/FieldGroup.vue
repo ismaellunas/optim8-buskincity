@@ -30,7 +30,7 @@
                         :class="element.column"
                         :data-id="element.id"
                         @click="onSettingInput"
-                        @delete-content="onDeleteInput"
+                        @delete-content="deleteContent"
                         @duplicate-content="onDuplicateInput"
                     />
                 </template>
@@ -45,6 +45,7 @@
     import BizButton from '@/Biz/Button.vue';
     import Draggable from "vuedraggable";
     import { cloneDeep } from 'lodash';
+    import { confirmDelete } from '@/Libs/alert';
     import {
         isBlank,
         useModelWrapper,
@@ -86,6 +87,7 @@
         props: {
             fieldGroup: { type: Object, required: true },
             isDebugMode: { type: Boolean, default: false },
+            mappedFieldIds: { type: Array, default: () => [] },
         },
 
         emits: [
@@ -121,6 +123,20 @@
                 if (this.isDebugMode) {
                     console.log(evt);
                 }
+            },
+
+            deleteContent(id) {
+                let message = null;
+
+                if (this.mappedFieldIds.includes(id)) {
+                    message = 'If you remove this field, it will impact the settings of the "Automate user creation" feature.';
+                }
+
+                confirmDelete('Are you sure?', message).then((result) => {
+                    if (result.isConfirmed) {
+                        this.onDeleteInput(id);
+                    }
+                })
             },
 
             onDeleteInput(id) {

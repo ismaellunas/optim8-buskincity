@@ -250,6 +250,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->getRoleNames()->first();
     }
 
+    public function getRoleIdAttribute(): ?int
+    {
+        return $this->roles->pluck('id')->first();
+    }
+
     public function getLanguageCodeAttribute(): string
     {
         $defaultLocale = app(TranslationService::class)->getDefaultLocale();
@@ -383,5 +388,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsAvailableAttribute(): bool
     {
         return !$this->is_suspended;
+    }
+
+    public function getIsTrashedAttribute(): bool
+    {
+        return $this->trashed();
     }
 }

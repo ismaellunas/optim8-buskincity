@@ -4,14 +4,16 @@ namespace Modules\FormBuilder\Fields;
 
 use App\Entities\CloudinaryStorage;
 use App\Entities\Forms\Fields\FileDragDrop as AppFileDragDrop;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
+use Modules\FormBuilder\Contracts\MappableFieldInterface;
 use Modules\FormBuilder\Entities\Media;
 use Modules\FormBuilder\Services\MediaService;
-use Mews\Purifier\Facades\Purifier;
 
-class FileDragDrop extends BaseField
+class FileDragDrop extends BaseField implements MappableFieldInterface
 {
+    public $mappedValueFormatter;
+
     public function getSavedData(mixed $value): mixed
     {
         $mediaId = [];
@@ -103,5 +105,40 @@ class FileDragDrop extends BaseField
             ])
             ->whereIn('id', $mediaIds)
             ->get();
+    }
+
+    public static function mappingFieldTypes(): array
+    {
+        return ['FileDragDrop'];
+    }
+
+    public function getMappedValue(array $toField): mixed
+    {
+        $type = $toField['type'];
+
+        if (! in_array($type, self::mappingFieldTypes())) {
+            return null;
+        }
+
+        $allowedExtensions = collect(Arr::get($toField, 'validation.rules.mimes'))
+            ->map(function ($mimeGroup) {
+                return config('constants.extensions.'.$mimeGroup);
+            })
+            ->flatten();
+
+        $mediaIds = Arr::get($this->value, 'mediaId');
+
+        $media = Media::whereIn('id', $mediaIds)->get();
+
+        $filteredMedia = $media
+            ->filter(function ($medium) use ($allowedExtensions) {
+                return $allowedExtensions->contains($medium->extension);
+            });
+
+        $maxFileNumber = Arr::get($toField, 'max_file_number', 1);
+
+        $filteredMedia = $filteredMedia->take($maxFileNumber);
+
+        return $filteredMedia->pluck('id')->all();
     }
 }

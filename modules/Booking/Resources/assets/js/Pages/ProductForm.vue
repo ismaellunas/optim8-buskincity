@@ -1,26 +1,26 @@
 <template>
     <div>
         <h5 class="title is-5 mb-2">
-            Details
+            {{ i18n.details }}
         </h5>
 
         <biz-form-input
             v-model="form.name"
-            label="Name"
+            :label="i18n.name"
             required
             :message="error('name')"
         />
 
         <biz-form-input
             v-model="form.short_description"
-            label="Short Description"
+            :label="i18n.short_description"
             required
             :message="error('short_description')"
         />
 
         <biz-form-textarea
             v-model="form.description"
-            label="Description"
+            :label="i18n.description"
             required
             rows="3"
             :message="error('description')"
@@ -28,7 +28,7 @@
 
         <biz-form-select
             v-model="form.status"
-            label="Status"
+            :label="i18n.status"
             :message="error('status')"
         >
             <option
@@ -42,17 +42,17 @@
 
         <biz-form-checkbox-toggle
             v-model="form.is_check_in_required"
-            text="Is a check-in required?"
+            :text="i18n.check_in_required"
             :value="form.is_check_in_required"
         />
 
         <h5 class="title is-5 mt-5 mb-3">
-            Visibility
+            {{ i18n.visibility }}
         </h5>
 
         <biz-form-select
             v-model="form.roles"
-            label="Roles"
+            :label="i18n.roles"
             :message="error('roles')"
         >
             <option
@@ -65,12 +65,12 @@
         </biz-form-select>
 
         <h5 class="title is-5 mt-5 mb-3">
-            Gallery
+            {{ i18n.gallery }}
         </h5>
 
         <biz-form-multiple-media-library
             v-model="form.gallery"
-            label="Upload"
+            :label="i18n.upload"
             :is-download-enabled="true"
             :is-upload-enabled="true"
             :mediums="gallery"
@@ -103,6 +103,22 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                details : 'Details',
+                name : 'Name',
+                short_description : 'Short description',
+                description : 'Description',
+                status : 'Status',
+                check_in_required : 'Is a check-in required?',
+                visibility : 'Visibility',
+                roles : 'Roles',
+                select : 'Select',
+                Gallery : 'Gallery',
+                upload : 'Upload',
+            }) },
+        },
 
         props: {
             modelValue: { type: Object, required: true },

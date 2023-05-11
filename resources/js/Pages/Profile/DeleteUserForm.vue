@@ -81,6 +81,7 @@
     import BizButton from '@/Biz/Button.vue';
     import BizFormPassword from '@/Biz/Form/Password.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -95,9 +96,9 @@
             MixinHasPageErrors,
         ],
 
-        data() {
+        setup() {
             return {
-                form: this.$inertia.form({
+                form: useForm({
                     password: '',
                 })
             }

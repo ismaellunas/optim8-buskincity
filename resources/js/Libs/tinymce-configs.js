@@ -20,8 +20,8 @@ export const textComponent = {
 };
 
 export const emailConfig = {
-    plugins: 'link lists',
-    toolbar: 'formatselect | bold italic forecolor backcolor link ' +
+    plugins: 'table link lists',
+    toolbar: 'formatselect | bold italic forecolor backcolor link table' +
         '| align bullist numlist | removeformat',
     menubar: false,
     target_list: false,
@@ -61,4 +61,9 @@ export const fullConfig = {
         'bullist numlist outdent indent hr | ' +
         'link table charmap'
     ),
+    formats: {
+        bold: { inline: 'b' }
+    },
+    extended_valid_elements:'b',
+    invalid_elements:'strong',
 };

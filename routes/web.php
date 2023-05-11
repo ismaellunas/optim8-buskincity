@@ -198,11 +198,12 @@ Route::prefix(Localization::setLocale())
     ->group(function () {
         Route::get('language/{new_locale}', ChangeLanguageController::class)
             ->where('new_locale', '[a-zA-Z]{2}')
-            ->name('language.change');
+            ->name('language.change')
+            ->middleware('changeLanguage');
 
         Route::get('/', [PageController::class, 'homePage'])
             ->name('homepage')
-            ->middleware('redirectLanguage');
+            ->middleware('redirectOriginLanguage');
 
         Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
             ->name('sitemap');

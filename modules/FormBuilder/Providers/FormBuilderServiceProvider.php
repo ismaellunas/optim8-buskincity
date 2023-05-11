@@ -2,15 +2,18 @@
 
 namespace Modules\FormBuilder\Providers;
 
+//use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use Modules\FormBuilder\Services\AutomateUserCreationService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderServiceProvider extends ServiceProvider
 {
     public $singletons = [
+        AutomateUserCreationService::class => AutomateUserCreationService::class,
         FormBuilderService::class => FormBuilderService::class,
     ];
+
     /**
      * @var string $moduleName
      */

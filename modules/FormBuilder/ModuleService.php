@@ -18,12 +18,12 @@ class ModuleService
         $canManageFormBuilder = $user->can('form_builder.browse');
 
         return [
-            'title' => 'Form Builder',
+            'title' => __('Form Builder'),
             'isActive' => $request->routeIs('admin.form-builders.*'),
             'isEnabled' => $canManageFormBuilder,
             'children' => [
                 [
-                    'title' => 'Manage',
+                    'title' => __('Manage'),
                     'link' => route('admin.form-builders.index'),
                     'isActive' => $request->routeIs('admin.form-builders.index'),
                     'isEnabled' => $canManageFormBuilder,

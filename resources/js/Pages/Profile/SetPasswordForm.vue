@@ -54,6 +54,7 @@
     import BizFormPassword from '@/Biz/Form/Password.vue';
     import BizFormSection from '@/Biz/FormSection.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -67,13 +68,13 @@
             MixinHasLoader,
         ],
 
-        data() {
+        setup() {
             return {
-                form: this.$inertia.form({
+                form: useForm({
                     password: '',
                     password_confirmation: '',
                 }),
-            }
+            };
         },
 
         methods: {

@@ -3,14 +3,16 @@
 namespace Modules\FormBuilder\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
-use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
+use Modules\FormBuilder\Services\AutomateUserCreationService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderController extends CrudController
@@ -20,13 +22,12 @@ class FormBuilderController extends CrudController
     protected $recordsPerPage = 10;
     protected $title = 'Form Builder';
 
-    private $formBuilderService;
-
-    public function __construct(FormBuilderService $formBuilderService)
-    {
+    public function __construct(
+        private FormBuilderService $formBuilderService,
+        private AutomateUserCreationService $automateUserCreationService,
+        private UserService $userService
+    ) {
         $this->authorizeResource(Form::class, 'form_builder');
-
-        $this->formBuilderService = $formBuilderService;
     }
 
     public function index(Request $request)
@@ -44,6 +45,15 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
+            'i18n' => [
+                'search' => __('search'),
+                'create_new' => __('Create new'),
+                'name' => __('Name'),
+                'form_id' => __('Form ID'),
+                'entries' => __('Entries'),
+                'actions' => __('Actions'),
+                'are_you_sure' => __('Are you sure?'),
+            ],
         ]));
     }
 
@@ -60,6 +70,7 @@ class FormBuilderController extends CrudController
                 ],
             ],
             'title' => $this->getCreateTitle(),
+            'i18n' => $this->translationCreateEditPage(),
         ]));
     }
 
@@ -76,7 +87,9 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $form->id);
         }
 
-        $this->generateFlashMessage('Form created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $form->id);
     }
@@ -84,11 +97,11 @@ class FormBuilderController extends CrudController
     public function edit(Form $formBuilder)
     {
         $formBuilder->load('fieldGroups');
-        $formBuilder = $formBuilder->toArray();
+        $formBuilderArray = $formBuilder->toArray();
 
-        $formBuilder['form_id'] = $formBuilder['key'];
+        $formBuilderArray['form_id'] = $formBuilderArray['key'];
 
-        unset($formBuilder['key']);
+        unset($formBuilderArray['key']);
 
         return Inertia::render('FormBuilder::Edit', $this->getData([
             'breadcrumbs' => [
@@ -101,10 +114,18 @@ class FormBuilderController extends CrudController
                 ],
             ],
             'baseRouteNameSetting' => $this->baseRouteNameSetting,
-            'formBuilder' => $formBuilder,
+            'formBuilder' => $formBuilderArray,
             'title' => __('Editing :name Form', [
-                'name' => $formBuilder['name']
+                'name' => $formBuilderArray['name']
             ]),
+            'fields' => $this->automateUserCreationService->getFields($formBuilder),
+            'roleOptions' => $this->automateUserCreationService->getRoleOptions(),
+            'i18n' => $this->translationCreateEditPage(),
+            'userFields' => $this->automateUserCreationService->getUserFields(),
+            'mappingRules' => $this->automateUserCreationService->getMappingRules($formBuilder),
+            'matchedTypes' => $this->automateUserCreationService->matchedTypes(),
+            'mandatoryMatchedTypes' => $this->automateUserCreationService->mandatoryMatchedTypes(),
+            'emailTags' => array_keys($this->automateUserCreationService->emailTags()),
         ]));
     }
 
@@ -120,7 +141,11 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $formBuilder->id);
         }
 
-        $this->generateFlashMessage('Form updated successfully!');
+        $this->automateUserCreationService->removeUntrackedRules($formBuilder);
+
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
@@ -129,7 +154,9 @@ class FormBuilderController extends CrudController
     {
         $formBuilder->delete();
 
-        $this->generateFlashMessage('Form deleted successfully!');
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Form')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -158,6 +185,52 @@ class FormBuilderController extends CrudController
         return [
             'success' => true,
             'message' => __('Thank you for filling out the form.'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            'builder' => __('Builder'),
+            'notifications' => __('Notifications'),
+            'settings' => __('Settings'),
+            'name' => __('Name'),
+            'form_id' => __('Form ID'),
+            'general' => __('General'),
+            'add_field_group' => __('Add :resource', ['resource' => __('Field group')]),
+            'cancel' => __('Cancel'),
+            'create' => __('Create'),
+            'update' => __('Update'),
+            'search' => __('Search'),
+            'create_new' => __('Create new'),
+            'subject' => __('Subject'),
+            'status' => __('Status'),
+            'actions' => __('Actions'),
+            'are_you_sure' => __('Are you sure?'),
+            'submit_button' => __('Submit button'),
+            'text' => __('Text'),
+            'position' => __('Position'),
+            'update' => __('Update'),
+            'automate_user_creation' => __('Automate user creation'),
+            'add' => __('Add'),
+            'email' => __('Email'),
+            'email_templates' => __('Email templates'),
+            'first_name' => __('First name'),
+            'form_field' => __('Form field'),
+            'last_name' => __('Last name'),
+            'mandatory_fields' => __('Mandatory fields'),
+            'mapping_rules' => __('Mapping rules'),
+            'role_that_will_be_assigned' => __('Role that will be assigned'),
+            'none' => __('None'),
+            'role' => __('Role'),
+            'user_creation' => __('User creation'),
+            'user_field' => __('User field'),
+            'user_update' => __('User update'),
+            'continue' => __('Continue'),
+            'change_role_confirmation_title' => __('Side effect of changing this role'),
+            'change_role_confirmation_text' => __('All mapping rules will be removed. Are you sure you want to change the role?'),
+            'map_form_field_to_user_field' => __('Map Form Field to User field'),
+            'yes' => __('Yes'),
         ];
     }
 }

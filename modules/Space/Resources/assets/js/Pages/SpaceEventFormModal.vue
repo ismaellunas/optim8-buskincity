@@ -5,7 +5,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isNew ? 'Add New Event' : 'Edit Event' }}
+                {{ capitalCase(isNew ? i18n.add_new_event : i18n.edit_event) }}
             </p>
 
             <button
@@ -21,7 +21,7 @@
         >
             <biz-form-input
                 v-model="form.title"
-                label="Title"
+                :label="i18n.title"
                 maxlength="255"
                 required
                 :message="error('title', null, formErrors)"
@@ -31,7 +31,7 @@
                 <div class="column is-half">
                     <biz-form-date-time
                         v-model="startedEndedAt"
-                        label="Started at and Ended at"
+                        :label="i18n.started_and_ended_at"
                         required
                         multi-calendars
                         multi-calendars-solo
@@ -45,8 +45,8 @@
 
             <biz-form-textarea
                 v-model="form.address"
-                label="Address"
-                placeholder="Address"
+                :label="i18n.address"
+                :placeholder="i18n.address"
                 rows="2"
                 maxlength="500"
                 :message="error('address', null, formErrors)"
@@ -67,8 +67,8 @@
                 <template v-if="form.translations[selectedLocale]">
                     <biz-form-textarea
                         v-model="form.translations[ selectedLocale ].excerpt"
-                        label="Excerpt"
-                        placeholder="Excerpt"
+                        :label="i18n.excerpt"
+                        :placeholder="i18n.excerpt"
                         rows="2"
                         maxlength="800"
                         :message="error('translations.'+selectedLocale+'.excerpt', null, formErrors)"
@@ -76,8 +76,8 @@
 
                     <biz-form-textarea
                         v-model="form.translations[ selectedLocale ].description"
-                        label="Description"
-                        placeholder="Description"
+                        :label="i18n.description"
+                        :placeholder="i18n.description"
                         rows="5"
                         maxlength="65000"
                         :message="error('translations.'+selectedLocale+'.description', null, formErrors)"
@@ -94,15 +94,15 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button @click="$emit('close')">
-                            Cancel
+                            {{ i18n.cancel }}
                         </biz-button>
 
                         <biz-button
-                            class="is-primary ml-1"
+                            class="is-link ml-1"
                             type="button"
                             @click="submit"
                         >
-                            {{ isNew ? 'Create' : 'Update' }}
+                            {{ isNew ? i18n.create : i18n.update }}
                         </biz-button>
                     </div>
                 </div>
@@ -122,8 +122,9 @@
     import { cloneDeep, find, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';
-    import { confirmLeaveProgress, confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { confirmLeaveProgress, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/vue3';
+    import { capitalCase } from 'change-case';
 
     export default {
         name: 'SpaceEventFormModal',
@@ -140,6 +141,20 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                title: 'Title',
+                add_new_event: 'Add new event',
+                edit_event: 'Edit event',
+                started_and_ended_at: 'Started at and ended at',
+                excerpt: 'Excerpt',
+                description: 'Description',
+                cancel: 'Cancel',
+                create: 'Create',
+                update: 'Update',
+            }) },
+        },
 
         props: {
             selectedEvent: { type: Object, default: () => {} },
@@ -350,6 +365,8 @@
                         self.formErrors = error.response.data.errors;
                     });
             },
+
+            capitalCase,
         },
     };
 </script>

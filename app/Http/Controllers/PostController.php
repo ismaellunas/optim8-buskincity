@@ -8,7 +8,6 @@ use App\Models\Post;
 use App\Services\MediaService;
 use App\Services\PostService;
 use App\Traits\HasModuleViewData;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends CrudController
@@ -53,6 +52,7 @@ class PostController extends CrudController
                 ])
             ),
             'title' => $this->getIndexTitle(),
+            'i18n' => $this->translationIndexPage(),
         ]));
     }
 
@@ -93,6 +93,7 @@ class PostController extends CrudController
                     'instructions' => [
                         'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                     ],
+                    'i18n' => $this->translationCreateEditPage(),
                 ],
                 $this->getModulesViewData()
             )
@@ -113,6 +114,7 @@ class PostController extends CrudController
             'slug',
             'status',
             'title',
+            'is_cover_displayed',
         ]));
 
         if ($request->has('categories')) {
@@ -126,7 +128,9 @@ class PostController extends CrudController
             $request->input('cover_image_id')
         ]);
 
-        $this->generateFlashMessage('Post created successfully!');
+        $this->generateFlashMessage('The :resource was created!', [
+            'resource' => __('Post')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $post->id);
     }
@@ -169,6 +173,7 @@ class PostController extends CrudController
                     'instructions' => [
                         'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                     ],
+                    'i18n' => $this->translationCreateEditPage(),
                 ],
                 $this->getModulesViewData()
             )
@@ -188,6 +193,7 @@ class PostController extends CrudController
             'status',
             'title',
             'scheduled_at',
+            'is_cover_displayed',
         ]);
 
         $post->saveFromInputs($inputs);
@@ -203,7 +209,9 @@ class PostController extends CrudController
             $request->input('cover_image_id')
         ]);
 
-        $this->generateFlashMessage('Post updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Post')
+        ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $post->id);
     }
@@ -211,7 +219,56 @@ class PostController extends CrudController
     public function destroy(Post $post)
     {
         $post->delete();
-        $this->generateFlashMessage('Post deleted successfully!');
+
+        $this->generateFlashMessage('The :resource was deleted!', [
+            'resource' => __('Post')
+        ]);
+
         return redirect()->back();
+    }
+
+    private function translationIndexPage(): array
+    {
+        return [
+            'search' => __('Search'),
+            'create_new' => __('Create new'),
+            'published' => __('Published'),
+            'scheduled' => __('Scheduled'),
+            'draft' => __('Draft'),
+            'filter' => __('Filter'),
+            'category' => __('Category'),
+            'language' => __('Language'),
+            'are_you_sure' => __('Are you sure?'),
+        ];
+    }
+
+    private function translationCreateEditPage(): array
+    {
+        return [
+            ...[
+                'content' => __('Content'),
+                'seo' => __('SEO'),
+                'title' => __('Title'),
+                'slug' => __('Slug'),
+                'language' => __('Language'),
+                'category' => __('Category'),
+                'select_primary_category' => __('Select the primary category'),
+                'thumbnail' => __('Thumbnail'),
+                'excerpt' => __('Excerpt'),
+                'status' => __('Status'),
+                'publish_options' => __('Publish options'),
+                'scheduled_at' => __('Scheduled at'),
+                'open_media' => __('Open media'),
+                'remove' => __('Remove'),
+                'meta_title' => __('Meta title'),
+                'meta_description' => __('Meta description'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'cancel' => __('Cancel'),
+                'is_thumbnail_displayed' => __('Is thumbnail displayed?'),
+                'is_thumbnail_displayed_note' => __('If checked, the thumbnail will be displayed in the post content.'),
+            ],
+            ...MediaService::defaultMediaLibraryTranslations(),
+        ];
     }
 }

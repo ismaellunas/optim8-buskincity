@@ -4,7 +4,7 @@
             <div class="column">
                 <biz-form-input
                     v-model="form.name"
-                    label="Name"
+                    :label="i18n.name"
                     placeholder="Contact Form"
                     :required="true"
                     :message="error('name')"
@@ -14,7 +14,7 @@
             <div class="column">
                 <biz-form-key
                     v-model="form.form_id"
-                    label="Form ID"
+                    :label="i18n.form_id"
                     placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('form_id')"
@@ -37,7 +37,7 @@
                             :is-expanding-on-load="true"
                         >
                             <template #headerTitle>
-                                General
+                                {{ i18n.general }}
                             </template>
 
                             <draggable
@@ -116,6 +116,7 @@
 
                             <field-group
                                 :field-group="element"
+                                :mapped-field-ids="mappedFieldIds"
                                 @on-setting-input="onSettingInput"
                             />
                         </div>
@@ -128,7 +129,7 @@
                             class="is-primary"
                             @click="addFieldGroup()"
                         >
-                            Add Field Group
+                            {{ i18n.add_field_group }}
                         </biz-button>
                     </div>
                 </div>
@@ -141,7 +142,7 @@
                     class="is-link is-light"
                     :href="route(baseRouteName + '.index')"
                 >
-                    Cancel
+                    {{ i18n.cancel }}
                 </biz-button-link>
             </div>
             <div class="control">
@@ -149,7 +150,7 @@
                     class="is-link"
                     @click="onSubmit"
                 >
-                    {{ !isEditMode ? 'Create' : 'Update' }}
+                    {{ !isEditMode ? i18n.create : i18n.update }}
                 </biz-button>
             </div>
         </div>
@@ -168,6 +169,8 @@
     import BizFormKey from '@/Biz/Form/Key.vue';
     import FieldGroup from './FieldGroup.vue';
     import InputConfig from './../Fields/InputConfig.vue';
+    import { computed } from "vue";
+    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
@@ -178,7 +181,6 @@
         convertToKey,
     } from '@/Libs/utils';
     import { getEmptyFieldGroup } from './../Libs/form';
-    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         name: 'FormBuilder',
@@ -201,6 +203,14 @@
 
         inject: {
             isEditMode: { default: false },
+            i18n: { default: () => ({
+                name : 'Name',
+                form_id : 'Form ID',
+                general : 'General',
+                add_field_group : 'Add field group',
+                cancel : 'Cancel',
+                create : 'Create',
+            }) },
         },
 
         props: {
@@ -220,6 +230,7 @@
                 baseRouteName: usePage().props.baseRouteName,
                 iconMove,
                 iconRemove,
+                mappingRules: computed(() => usePage().props.mappingRules ?? {}),
             };
         },
 
@@ -270,6 +281,20 @@
             hasFields() {
                 return isBlank(this.form.field_groups) ? false : this.form.field_groups.length > 0;
             },
+
+            mappedFieldIds() {
+                let usedFields = [];
+
+                _.each(this.mappingRules.mandatoryFields, (mandatoryField) => {
+                    usedFields.push(mandatoryField.id);
+                })
+
+                _.each(this.mappingRules.optionalFields, (optionalField) => {
+                    usedFields.push(_.get(optionalField, 'from.id'));
+                })
+
+                return usedFields;
+            },
         },
 
         methods: {
@@ -306,24 +331,25 @@
                 })
             },
 
-            onSubmit() {
-                const self = this;
+            submitOptions() {
+                return {
+                    onStart: () => this.onStartLoadingOverlay(),
+                    onSuccess: (page) => successAlert(page.props.flash.message),
+                    onError: () => oopsAlert(),
+                    onFinish: () => this.onEndLoadingOverlay(),
+                };
+            },
 
-                if (!this.isEditMode) {
-                    self.form.post(
-                        route(self.baseRouteName + '.store'),
-                        {
-                            onStart: () => self.onStartLoadingOverlay(),
-                            onFinish: () => self.onEndLoadingOverlay(),
-                        }
-                    )
+            onSubmit() {
+                if (! this.isEditMode) {
+                    this.form.post(
+                        route(this.baseRouteName + '.store'),
+                        this.submitOptions()
+                    );
                 } else {
-                    self.form.put(
-                        route(self.baseRouteName + '.update', self.form.id),
-                        {
-                            onStart: () => self.onStartLoadingOverlay(),
-                            onFinish: () => self.onEndLoadingOverlay(),
-                        }
+                    this.form.put(
+                        route(this.baseRouteName + '.update', this.form.id),
+                        this.submitOptions()
                     )
                 }
             },
@@ -342,7 +368,7 @@
             onEndedHandler(event) {
                 event.item.classList.remove('is-full');
                 event.item.classList.add('is-half');
-            }
+            },
         },
     }
 </script>

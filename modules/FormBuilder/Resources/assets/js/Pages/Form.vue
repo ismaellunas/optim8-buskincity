@@ -5,7 +5,7 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Builder"
+                :title="i18n.builder"
             >
                 <form-builder
                     v-model="form"
@@ -14,12 +14,16 @@
             </biz-provide-inject-tab>
 
             <template v-if="isEditMode">
-                <biz-provide-inject-tab title="Notifications">
+                <biz-provide-inject-tab :title="i18n.notifications">
                     <notification-setting />
                 </biz-provide-inject-tab>
 
-                <biz-provide-inject-tab title="Settings">
+                <biz-provide-inject-tab :title="i18n.settings">
                     <general-setting />
+                </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab :title="i18n.automate_user_creation">
+                    <automate-user-creation-setting />
                 </biz-provide-inject-tab>
             </template>
         </biz-provide-inject-tabs>
@@ -31,11 +35,12 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import FormBuilder from './FormBuilder.vue';
     import NotificationSetting from './Settings/Notification/Index.vue';
+    import AutomateUserCreationSetting from './AutomateUserCreation/Form.vue';
     import GeneralSetting from './Settings/General/Index.vue';
     import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
-        name: 'Form',
+        name: 'FormBuilderForm',
 
         components: {
             BizProvideInjectTab,
@@ -43,10 +48,16 @@
             FormBuilder,
             GeneralSetting,
             NotificationSetting,
+            AutomateUserCreationSetting,
         },
 
         inject: {
             isEditMode: { default: false },
+            i18n: { default: () => ({
+                builder: 'Builder',
+                notifications : 'Notifications',
+                settings : 'Settings',
+            }) },
         },
 
         provide() {

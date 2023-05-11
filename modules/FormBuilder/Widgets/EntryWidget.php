@@ -9,7 +9,7 @@ class EntryWidget implements WidgetInterface
 {
     private $user;
     private $componentName = "FormEntry";
-    private $title = "Form Entries";
+    private $title = "Form entries";
 
     private $baseRouteName = "admin.form-builders";
 
@@ -21,7 +21,7 @@ class EntryWidget implements WidgetInterface
     public function data(): array
     {
         return [
-            'title' => $this->title,
+            'title' => __($this->title),
             'componentName' => $this->componentName,
             'moduleName' => config('formbuilder.name'),
             'data' => [
@@ -29,6 +29,11 @@ class EntryWidget implements WidgetInterface
                 'baseRouteName' => $this->baseRouteName,
             ],
             'order' => 3,
+            'i18n' => [
+                'view_detail' => __('View detail'),
+                'view_all' => __('View all'),
+                'no_data' => __('No data'),
+            ]
         ];
     }
 

@@ -4,9 +4,7 @@
             :errors="$page.props.errors"
         />
 
-        <biz-flash-notifications :flash="$page.props.flash" />
-
-        <div class="box">
+        <div class="box mb-6">
             <form-builder
                 v-model="form"
                 v-model:input-config-id="inputConfigId"
@@ -18,7 +16,6 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import FormBuilder from './Form.vue';
     import { onFormEditorClicked } from './../Libs/form-builder';
     import { useForm } from '@inertiajs/vue3';
@@ -29,12 +26,14 @@
 
         components: {
             BizErrorNotifications,
-            BizFlashNotifications,
             FormBuilder,
         },
 
-        provide: {
-            isEditMode: true,
+        provide() {
+            return {
+                isEditMode: true,
+                i18n: this.i18n,
+            };
         },
 
         layout: AppLayout,
@@ -42,6 +41,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             formBuilder: { type: Object, required: true },
+            i18n: { type: Object, default: () => {} }
         },
 
         setup(props) {

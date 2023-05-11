@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
+use App\Entities\CloudinaryAsset;
 use App\Entities\MediaAsset;
 use App\Helpers\HumanReadable;
 use App\Models\{
@@ -122,6 +123,9 @@ class MediaService
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
         $record->display_file_name = $record->displayFileName;
         $record->canDeleted = $record->canDeleted;
+        $record->optimize_file_url = $record->optimizedImageUrl != ''
+            ? $record->optimizedImageUrl
+            : $record->file_url;
 
         return $record;
     }
@@ -387,6 +391,52 @@ class MediaService
         return $media;
     }
 
+    public function uploadUserMetaFromMedia(
+        Media $sourceMedia,
+        User $user,
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $sourceMedia->extension;
+
+        $fileName = Str::afterLast($sourceMedia->file_name, '/');
+
+        if (! in_array($sourceMedia->type, ['image', 'video'])) {
+            $extension = $clientExtension;
+        }
+
+        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
+
+        $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
+
+        $result = cloudinary()->upload(
+            $sourceMedia->file_url,
+            [
+                'public_id' => $folder.'/'.$fileName,
+                'resource_type' => $sourceMedia->assets->get('resource_type'),
+                'invalidate' => false,
+            ]
+        );
+
+        $response = CloudinaryAsset::createAssetFromApiResponse(
+            $result->getResponse(),
+            $extension
+        );
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $response,
+        );
+
+        $media->type = Media::TYPE_USER_META;
+        $media->save();
+        $media->saveUserId(auth()->user()->id ?? $user->id);
+
+        return $media;
+    }
+
     public function setMedially(Model $relatedModel, array $mediaIds = [])
     {
         $media = Media::whereIn('id', $mediaIds)
@@ -421,6 +471,26 @@ class MediaService
                     (50 * config('constants.one_megabyte')) * 1024
                 )
             ]),
+        ];
+    }
+
+    public static function defaultMediaLibraryTranslations(): array
+    {
+        return [
+            'search' => __('Search'),
+            'filter' => __('Filter'),
+            'file_name' => __('File name'),
+            'alternative_text' => __('Alternative text'),
+            'description' => __('Description'),
+            'date_modified' => __('Date modified'),
+            'type' => __('Type'),
+            'size' => __('Size'),
+            'actions' => __('Actions'),
+            'save' => __('Save'),
+            'cancel' => __('Cancel'),
+            'done' => __('Done'),
+            'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
+            'are_you_sure' => __('Are you sure?'),
         ];
     }
 }

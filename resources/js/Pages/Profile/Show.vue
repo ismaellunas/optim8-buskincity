@@ -14,14 +14,6 @@
             class="box mt-10 mb-5"
         />
 
-        <div
-            v-else
-            v-show="false"
-            class="mb-5"
-        >
-            <set-password-form class="mt-10 sm:mt-0" />
-        </div>
-
         <biodata-form
             :key="biodataFormKey"
             class="box mt-10 mb-5"
@@ -60,7 +52,6 @@
     import ConnectedAccountsForm from './ConnectedAccountsForm.vue';
     import DeleteUserForm from './DeleteUserForm.vue';
     import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm.vue';
-    import SetPasswordForm from './SetPasswordForm.vue';
     import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm.vue';
     import UpdatePasswordForm from './UpdatePasswordForm.vue';
     import UpdateProfileInformationForm from './UpdateProfileInformationForm.vue';
@@ -72,7 +63,6 @@
             ConnectedAccountsForm,
             DeleteUserForm,
             LogoutOtherBrowserSessionsForm,
-            SetPasswordForm,
             TwoFactorAuthenticationForm,
             UpdatePasswordForm,
             UpdateProfileInformationForm,

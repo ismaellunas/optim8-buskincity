@@ -23,7 +23,10 @@ class UserUpdateRequest extends UserStoreRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user')->id)
+                Rule::unique('users')->where(function ($query) {
+                    $query->whereNull('deleted_at')
+                        ->where('id', '<>', $this->route('user')->id);
+                })
             ],
             'photo' => [
                 'nullable',

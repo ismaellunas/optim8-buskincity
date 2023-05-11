@@ -14,6 +14,7 @@
                         :data="widget.data"
                         :order="order"
                         :title="widget.title"
+                        :i18n="widget.i18n"
                     />
                 </template>
 
@@ -26,6 +27,7 @@
                         :data="widget.data"
                         :order="order"
                         :title="widget.title"
+                        :i18n="widget.i18n"
                     />
                 </template>
             </template>

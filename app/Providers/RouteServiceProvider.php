@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\SettingService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -43,6 +44,21 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            $domainRedirections = app(SettingService::class)->getDomainRedirections();
+
+            foreach ($domainRedirections as $destination) {
+                Route::domain($destination->from)->group(function () use ($destination) {
+                    Route::permanentRedirect('/', $destination->to);
+
+                    Route::any('/{any}', function (Request $request, $any) use ($destination) {
+                        return redirect((
+                            $destination->to."/".$any
+                            .(!empty($request->query()) ? "?".$request->getQueryString() : "")
+                        ), 301);
+                    })->where('any', '.*');
+                });
+            }
+
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)

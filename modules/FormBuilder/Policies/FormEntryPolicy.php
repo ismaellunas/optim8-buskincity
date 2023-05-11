@@ -6,14 +6,11 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
 use Modules\FormBuilder\Entities\FormEntry;
+use Modules\FormBuilder\Services\AutomateUserCreationService;
 
 class FormEntryPolicy extends FormBuilderPolicy
 {
     use HandlesAuthorization;
-
-    public function __construct()
-    {
-    }
 
     public function markAsRead(User $user, FormEntry $model)
     {
@@ -55,5 +52,19 @@ class FormEntryPolicy extends FormBuilderPolicy
             $model->trashed()
             && $user->can($this->basePermission.'.delete')
         );
+    }
+
+    public function automateUserCreation(User $user, FormEntry $model)
+    {
+        $isPermitted = (
+            !$model->deleted_at
+            && $user->can('form_builder.automate_user_creation')
+            && empty($model->automate_user_creation_at)
+        );
+
+        $haveAllMandatoryRules = app(AutomateUserCreationService::class)
+            ->haveAllMandatoryFieldsBeenProvided($model->form);
+
+        return ($isPermitted && $haveAllMandatoryRules);
     }
 }

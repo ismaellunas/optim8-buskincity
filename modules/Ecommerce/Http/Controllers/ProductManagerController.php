@@ -31,7 +31,9 @@ class ProductManagerController extends Controller
     {
         $product->managers()->sync($request->managers);
 
-        $this->generateFlashMessage('Product Manager updated successfully!');
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Product Manager')
+        ]);
 
         return back();
     }

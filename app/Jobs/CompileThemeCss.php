@@ -35,6 +35,9 @@ class CompileThemeCss implements ShouldQueue
             $settingService->saveCssUrlFrontend($uploadedCssFrontend->fileUrl);
             $settingService->saveCssUrlBackend($uploadedCssBackend->fileUrl);
 
+            $customizedStyleEmail = $themeService->getCustomizedStyleEmail();
+            $settingService->saveCustomizedStyleEmail($customizedStyleEmail);
+
         } catch (Exception $e) {
 
             throw $e;

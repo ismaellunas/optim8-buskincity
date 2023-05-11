@@ -26,6 +26,7 @@ class CreatePostsTable extends Migration
             $table->tinyInteger('status')->default(0);
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('published_at')->nullable();
+            $table->boolean('is_cover_displayed')->default(true);
             $table
                 ->foreignId('author_id')
                 ->nullable()

@@ -2,9 +2,9 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
-use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Http\Controllers\{
     ApiWidgetController,
+    AutomateUserCreationController,
     FormBuilderController,
     FormEntryController,
     SettingController,
@@ -41,6 +41,19 @@ Route::name('admin.')->prefix('admin/')->middleware([
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 
+    Route::post(
+        'form-builders/{form_builder}/automate-user-creation/mapped-fields',
+        [AutomateUserCreationController::class, 'save']
+    )
+        ->name('form-builders.automate-user-creation.mapped-fields.save');
+
+    Route::post(
+        'form-builders/{form_builder}/entries/{form_entry}/create-or-update-user',
+        [AutomateUserCreationController::class, 'createOrUpdateUser']
+    )
+        ->name('form-builders.entries.automate-user-creation.create-or-update')
+        ->can('automateUserCreation', 'form_entry');
+
     Route::name('form-builders.entries.')->prefix('form-builders/{form_builder}/entries/')->group(function () {
         Route::post('bulk-mark-as-read', [FormEntryController::class, 'bulkMarkAsRead'])
             ->name('bulk-mark-as-read');
@@ -58,10 +71,12 @@ Route::name('admin.')->prefix('admin/')->middleware([
             ->name('bulk-force-delete');
 
         Route::post('mark-as-read/{form_entry}', [FormEntryController::class, 'markAsRead'])
-            ->name('mark-as-read');
+            ->name('mark-as-read')
+            ->can('markAsRead', 'form_entry');
 
         Route::post('mark-as-unread/{form_entry}', [FormEntryController::class, 'markAsUnread'])
-            ->name('mark-as-unread');
+            ->name('mark-as-unread')
+            ->can('markAsUnread', 'form_entry');
 
         Route::post('archive/{form_entry}', [FormEntryController::class, 'archive'])
             ->name('archive')
@@ -106,6 +121,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
             Route::get('widget/form-builder/{formBuilder}/entries', [ApiWidgetController::class, 'getEntries'])
                 ->name('widget.form-builder.entries');
+
+            Route::get('automate-user-creation/{formEntry}/confirmation', [AutomateUserCreationController::class, 'confirmation'])
+                ->name('automate-user-creation.confirmation');
         });
 });
 

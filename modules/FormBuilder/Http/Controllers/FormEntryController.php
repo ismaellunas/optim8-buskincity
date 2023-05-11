@@ -111,6 +111,24 @@ class FormEntryController extends CrudController
                 'restore' => $user->can('delete', $formBuilder),
                 'forceDelete' => $user->can('delete', $formBuilder),
             ],
+            'i18n' => [
+                'entries' => __('Entries'),
+                'archived' => __('Archived'),
+                'search' => __('Search'),
+                'filter' => __('Filter'),
+                'actions' => __('Actions'),
+                'mark_as_read' => __('Mark as read'),
+                'mark_as_unread' => __('Mark as unread'),
+                'archive' => __('Archive'),
+                'restore' => __('Restore'),
+                'delete' => __('Delete'),
+                'data_is_empty' => __('Data is empty'),
+                'confirm_archive' => __('Confirm archive'),
+                'are_you_sure' => __('Are you sure?'),
+                'confirm_restore' => __('Confirm restore'),
+                'confirm_deletion' => __('Confirm deletion'),
+                'confirm_deletion_message' => __('Once the resources are deleted, they will be permanently deleted.'),
+            ],
         ]));
     }
 
@@ -157,8 +175,32 @@ class FormEntryController extends CrudController
                 'user' => [
                     'edit' => $user->can('user.edit'),
                     'redirectUser' => $canRedirectUser,
-                ]
-            ]
+                ],
+                'automate_user_creation' => $user->can('automateUserCreation', $formEntry),
+            ],
+            'i18n' => [
+                'entry' => __('Entry'),
+                'entry_id' => __('Entry ID'),
+                'user_ip' => __('User IP'),
+                'user' => __('User'),
+                'submitted_on' => __('Submitted on'),
+                'timezone' => __('Timezone'),
+                'page_url' => __('Page URL'),
+                'browser' => __('Browser'),
+                'device' => __('Device'),
+                'actions' => __('Actions'),
+                'mark_as_read' => __('Mark as read'),
+                'mark_as_unread' => __('Mark as unread'),
+                'archive' => __('Archive'),
+                'restore' => __('Restore'),
+                'delete' => __('Delete'),
+                'confirm_archive' => __('Confirm archive'),
+                'are_you_sure' => __('Are you sure?'),
+                'confirm_restore' => __('Confirm restore'),
+                'confirm_deletion' => __('Confirm deletion'),
+                'confirm_deletion_message' => __('Once the resources are deleted, they will be permanently deleted.'),
+                'create_or_update_user' => __('Create or update :resource', ['resource' => __('User')]),
+            ],
         ]));
     }
 
@@ -189,14 +231,14 @@ class FormEntryController extends CrudController
 
     public function bulkMarkAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
-        $this->formEntryService->markAsRead($formBuilder->id, $request->entries);
+        $this->formEntryService->markAsRead($request->entries, $formBuilder->id);
 
         return $this->afterBulkAction($request);
     }
 
     public function bulkMarkAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
-        $this->formEntryService->markAsUnread($formBuilder->id, $request->entries);
+        $this->formEntryService->markAsUnread($request->entries, $formBuilder->id);
 
         return $this->afterBulkAction($request);
     }
@@ -224,14 +266,14 @@ class FormEntryController extends CrudController
 
     public function markAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
     {
-        $this->formEntryService->markAsRead($formBuilder->id, [$formEntry->id]);
+        $this->formEntryService->markAsRead([$formEntry->id], $formBuilder->id);
 
         return $this->afterAction();
     }
 
     public function markAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
     {
-        $this->formEntryService->markAsUnread($formBuilder->id, [$formEntry->id]);
+        $this->formEntryService->markAsUnread([$formEntry->id], $formBuilder->id);
 
         return $this->afterAction();
     }
