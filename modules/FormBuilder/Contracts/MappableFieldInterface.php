@@ -6,5 +6,5 @@ interface MappableFieldInterface
 {
     public static function mappingFieldTypes(): array;
 
-    public function getMappedValue(string $toFieldType): mixed;
+    public function getMappedValue(array $toField): mixed;
 }
