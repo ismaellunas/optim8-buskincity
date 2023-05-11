@@ -12,7 +12,6 @@ use App\Entities\Caches\{
     CountryCache,
     GlobalOptionCache,
     MenuCache,
-    RecordCache,
     SettingCache,
     TranslationCache
 };
@@ -52,7 +51,6 @@ class AppServiceProvider extends ServiceProvider
         CountryCache::class => CountryCache::class,
         GlobalOptionCache::class => GlobalOptionCache::class,
         MenuCache::class => MenuCache::class,
-        RecordCache::class => RecordCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
 
