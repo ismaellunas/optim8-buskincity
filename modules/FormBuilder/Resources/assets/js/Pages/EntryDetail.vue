@@ -222,7 +222,7 @@
     import MediaGallery from './EntryDisplay/MediaGallery.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmDelete, confirm as confirmAlert } from '@/Libs/alert';
     import { router, usePage } from '@inertiajs/vue3';
 
     export default {
@@ -370,24 +370,54 @@
                 });
             },
 
-            createOrUpdateUser() {
-                const url = route(
-                    'admin.form-builders.entries.automate-user-creation.create-or-update',
-                    [
-                        this.formBuilder.id,
-                        this.entry.id
-                    ]
-                );
+            async createOrUpdateUser() {
+                this.onStartLoadingOverlay();
 
-                router.post(url, {}, {
-                    onStart: () => this.onStartLoadingOverlay(),
-                    onSuccess: (page) => successAlert(page.props.flash?.message ?? ''),
-                    onError: () => {
-                        oopsAlert({
-                            text: usePage().props.flash?.message ?? ''
+                let response = null;
+
+                try {
+                    response = await axios.get(route(
+                        'admin.api.automate-user-creation.confirmation',
+                        this.entry.id
+                    ));
+                } catch (error) {
+                    let messages = _.map(error.response.data, (message) => message);
+
+                    messages = _.join(messages, '</li><li>');
+
+                    oopsAlert({ html: '<ul><li>'+messages+'</li></ul>' });
+
+                    return;
+                } finally {
+                    this.onEndLoadingOverlay();
+                }
+
+                confirmAlert(
+                    this.i18n.are_you_sure,
+                    response.data?.message ?? null,
+                    this.i18n.yes,
+                    { icon: response.data.isExists ? 'warning': '' },
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        const url = route(
+                            'admin.form-builders.entries.automate-user-creation.create-or-update',
+                            [
+                                this.formBuilder.id,
+                                this.entry.id
+                            ]
+                        );
+
+                        router.post(url, {}, {
+                            onStart: () => this.onStartLoadingOverlay(),
+                            onSuccess: (page) => successAlert(page.props.flash?.message ?? ''),
+                            onError: () => {
+                                oopsAlert({
+                                    text: usePage().props.flash?.message ?? ''
+                                });
+                            },
+                            onFinish: () => this.onEndLoadingOverlay(),
                         });
-                    },
-                    onFinish: () => this.onEndLoadingOverlay(),
+                    }
                 });
             },
         },
