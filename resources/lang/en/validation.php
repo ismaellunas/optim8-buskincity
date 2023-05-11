@@ -130,6 +130,7 @@ return [
     'current_password' => 'The provided password does not match your current password.',
     'postal_code' => 'The :attribute is invalid.',
     'menu_itemable' => 'The menu is invalid.',
+    'email_belongs_to_protected_user' => 'This email address is already associated with a protected user.',
 
     /*
     |--------------------------------------------------------------------------

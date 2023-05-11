@@ -373,12 +373,24 @@
             async createOrUpdateUser() {
                 this.onStartLoadingOverlay();
 
-                const response = await axios.get(route(
-                    'admin.api.automate-user-creation.confirmation',
-                    this.entry.id
-                ));
+                let response = null;
 
-                this.onEndLoadingOverlay();
+                try {
+                    response = await axios.get(route(
+                        'admin.api.automate-user-creation.confirmation',
+                        this.entry.id
+                    ));
+                } catch (error) {
+                    let messages = _.map(error.response.data, (message) => message);
+
+                    messages = _.join(messages, '</li><li>');
+
+                    oopsAlert({ html: '<ul><li>'+messages+'</li></ul>' });
+
+                    return;
+                } finally {
+                    this.onEndLoadingOverlay();
+                }
 
                 confirmAlert(
                     this.i18n.are_you_sure,

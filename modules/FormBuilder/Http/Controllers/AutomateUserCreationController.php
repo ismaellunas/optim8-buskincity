@@ -18,6 +18,7 @@ use Modules\FormBuilder\Entities\FormMappingRule;
 use Modules\FormBuilder\Http\Requests\AutomateUserCreationRequest;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
 use Modules\FormBuilder\Services\FormEntryService;
+use Symfony\Component\HttpFoundation\Response;
 
 class AutomateUserCreationController extends Controller
 {
@@ -184,7 +185,19 @@ class AutomateUserCreationController extends Controller
                 $formBuilder->mappingUserRules,
             ),
             [
-                'email' => ['required', 'email', ],
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) {
+                        $roles = explode('|', config('permission.admin_or_super_admin'));
+
+                        $user = User::email($value)->inRoleNames($roles)->first();
+
+                        if ($user) {
+                            $fail(__('validation.email_belongs_to_protected_user'));
+                        }
+                    },
+                ],
                 'first_name' => [ 'required', ],
                 'last_name' => [ 'required', ],
             ],
@@ -197,7 +210,7 @@ class AutomateUserCreationController extends Controller
     {
         $errorMessage = __('Mandatory fields are required to create/update the user.');
 
-        $this->generateFlashMessage(message: $errorMessage);
+        $this->generateFlashMessage($errorMessage);
 
         return back()->withErrors($validator ?? [$errorMessage]);
     }
@@ -257,7 +270,10 @@ class AutomateUserCreationController extends Controller
         $validator = $this->validateFomEntry($formEntry->form, $formEntry);
 
         if ($validator->fails()) {
-            return $this->mandatoryFieldErrorResponse($validator);
+            return response()->json(
+                $validator->errors(),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         $userRules = $formEntry
@@ -290,9 +306,9 @@ class AutomateUserCreationController extends Controller
             ]);
         }
 
-        return [
+        return response()->json([
             'message' => $message,
             'isExists' => $isExists,
-        ];
+        ]);
     }
 }
