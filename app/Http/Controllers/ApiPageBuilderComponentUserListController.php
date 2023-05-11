@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Caches\RecordCache;
 use App\Http\Requests\PageBuilderComponentUserListRequest;
 use App\Models\User;
 use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -28,63 +26,33 @@ class ApiPageBuilderComponentUserListController extends Controller
 
     public function __invoke(PageBuilderComponentUserListRequest $request)
     {
-        $country = $request->get('country');
-        $orderBy = $request->get('order_by');
-        $type = $request->get('type');
-        $term = $request->get('term');
-
-        if ($orderBy == 'random' && ! $term) {
-
-            $users = app(RecordCache::class)->remember('user_lists', function () use ($request) {
-                return $this->getUserRecords($request);
-            });
-
-        } else {
-            app(RecordCache::class)->flush();
-
-            $users = $this->getUserRecords($request);
-        }
-
-        $this->mapRecords($users, $this->metaKeys);
-
-        return [
-            'options' => [
-                'countries' => $this->countryOptions($users, [
-                    'type' => $type
-                ]),
-                'types' => $this->typeOptions($users, [
-                    'country' => $country
-                ]),
-            ],
-            'users' => $users
-                ->when($country, function ($collection) use ($country) {
-                    return $collection->where('country', $country);
-                })
-                ->when($type, function ($collection) use ($type) {
-                    return $collection->where('discipline', $type);
-                })
-                ->values()
-                ->paginate($this->perPage),
-        ];
-    }
-
-    private function getUserRecords(Request $request): Collection
-    {
         $metaKeys = $this->metaKeys;
 
-        $roles = $request->get('roles');
-        $excludedId = $request->get('excluded_user');
+        $country = $request->get('country');
         $defaultCountries = $request->get('default_countries');
         $defaultTypes = $request->get('default_types');
+        $excludedId = $request->get('excluded_user');
         $orderBy = $request->get('order_by');
+        $roles = $request->get('roles');
         $term = $request->get('term');
+        $type = $request->get('type');
 
-        return User::select([
+        if (
+            ($orderBy === 'random' && $term)
+            || $orderBy !== 'random'
+            || $country
+            || $type
+        ) {
+            putSession('randomMod', rand(1,10));
+        }
+
+        $users = User::select([
                 'id',
                 'unique_key',
                 'first_name',
                 'last_name',
                 'profile_photo_media_id',
+                'created_at'
             ])
             ->available()
             ->when($roles, function ($q, $roles) {
@@ -129,6 +97,28 @@ class ApiPageBuilderComponentUserListController extends Controller
                 },
             ])
             ->get();
+
+        $this->mapRecords($users, $metaKeys);
+
+        return [
+            'options' => [
+                'countries' => $this->countryOptions($users, [
+                    'type' => $type
+                ]),
+                'types' => $this->typeOptions($users, [
+                    'country' => $country
+                ]),
+            ],
+            'users' => $users
+                ->when($country, function ($collection) use ($country) {
+                    return $collection->where('country', $country);
+                })
+                ->when($type, function ($collection) use ($type) {
+                    return $collection->where('discipline', $type);
+                })
+                ->values()
+                ->paginate($this->perPage),
+        ];
     }
 
     private function mapRecords(EloquentCollection &$users): void
@@ -182,7 +172,9 @@ class ApiPageBuilderComponentUserListController extends Controller
     private function orderBy($q, string $orderBy)
     {
         if ($orderBy == 'random') {
-            $q->inRandomOrder();
+            $randomMod = getSession('randomMod', rand(1,10));
+
+            $q->orderByRaw('CAST(extract(epoch from created_at) as integer) % ' . $randomMod);
         } elseif ($orderBy == 'first_name-asc') {
             $q->orderBy('first_name', 'ASC');
         } elseif ($orderBy == 'first_name-desc') {

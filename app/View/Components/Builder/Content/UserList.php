@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Builder\Content;
 
-use App\Entities\Caches\RecordCache;
 use App\Services\PageBuilderService;
 use Illuminate\Support\Facades\Crypt;
 
@@ -24,7 +23,7 @@ class UserList extends BaseContent
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
         $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
 
-        app(RecordCache::class)->flush();
+        forgetSession('randomMod');
     }
 
     public function url(): string
