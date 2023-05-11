@@ -107,7 +107,6 @@ return [
             'HTML.Allowed'             => 'a[href|title|target|id],b,blockquote,br,code[class],em,h1,h2,h3,h4,h5,h6,hr,i,img[width|height|alt|src],li,ol[start],p[style],pre,s,span[style|class],strong,sub,sup,table[class],tbody,td[class],th,thead,tr,u,ul,iframe[src|width|height|allowfullscreen],video[poster|controls|width|height],source[src|type]',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'Attr.AllowedClasses'      => 'alert,alert-danger,alert-info,alert-success,alert-warning,blockquote,blockquote-footer,img-responsive,table,table-bordered,table-condensed,table-hover,table-responsive,table-striped,mce-preview-object,mce-object-video',
-            'HTML.ForbiddenElements' => ['source'],
             'HTML.SafeIframe' => true,
             'HTML.Trusted' => true,
             'HTML.SafeObject' => true,
@@ -116,7 +115,7 @@ return [
                 'https' => true,
             ],
             'AutoFormat.AutoParagraph' => true,
-            'AutoFormat.RemoveEmpty'   => true,
+            'AutoFormat.RemoveEmpty'   => false,
             'URI.SafeIframeRegexp' => '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%',
         ],
 

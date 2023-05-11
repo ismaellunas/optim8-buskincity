@@ -242,7 +242,7 @@ class FormBuilderService
         abort(Response::HTTP_FORBIDDEN);
     }
 
-    protected function getFieldClassName(string $type): string
+    public function getFieldClassName(string $type): string
     {
         return $this->fieldPath.'\\'.Str::studly($type);
     }
