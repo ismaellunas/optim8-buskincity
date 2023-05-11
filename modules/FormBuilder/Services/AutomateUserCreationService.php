@@ -206,21 +206,15 @@ class AutomateUserCreationService
                 continue;
             }
 
-            $className = "Modules\\FormBuilder\\Fields\\".Str::studly($fromType);
-            $fieldClass = new $className();
-            $fieldClass->value = $value;
+            $className = app(FormBuilderService::class)->getFieldClassName($fromType);
+
+            $fieldClass = new $className(value: $value);
 
             if ($isTranslated) {
                 $fieldClass->translateTo = [$defaultLocale];
             }
 
-            if ($fromType == 'FileDragDrop') {
-                $fieldClass->mappedValueFormatter = function ($value) {
-                    return Arr::get($value, 'mediaId');
-                };
-            }
-
-            $value = $fieldClass->getMappedValue($userField['type']);
+            $value = $fieldClass->getMappedValue($userField);
 
             if ($fromType == 'FileDragDrop' && $value) {
                 $media = Media::whereIn('id', $value)->get();
@@ -340,23 +334,8 @@ class AutomateUserCreationService
         return $user;
     }
 
-    public function createOrUpdate(Form $form, FormEntry $entry): User
+    private function assignRole(User $user, ?int $roleId)
     {
-        $mappedRules = $form->userCreationMappingRules;
-
-        $userRules = $mappedRules->where('group', 'user');
-
-        // Create/Update User
-        $user = $this->createOrUpdateUser($entry, $userRules);
-
-        // Assign Role
-        $roleId = null;
-        $roleRule = $mappedRules->firstWhere('group', 'role');
-
-        if ($roleRule) {
-            $roleId = $roleRule->to['role'] ? (int) $roleRule->to['role'] : null;
-        }
-
         if (! $roleId) {
 
             $user->roles()->detach();
@@ -366,8 +345,20 @@ class AutomateUserCreationService
             $user->roles()->detach();
             $user->assignRole($roleId);
         }
+    }
 
-        $user->forgetCachedPermissions();
+    public function createOrUpdate(Form $form, FormEntry $entry): User
+    {
+        $mappedRules = $form->userCreationMappingRules;
+
+        $userRules = $mappedRules->where('group', 'user');
+
+        $user = $this->createOrUpdateUser($entry, $userRules);
+
+        $roleId = Arr::get($mappedRules->firstWhere('group', 'role'), 'to.role');
+        $roleId = !is_null($roleId) ? (int) $roleId : null;
+
+        $this->assignRole($user, $roleId);
 
         $this->syncUserMetas($user, $entry, $mappedRules->where('group', 'form'));
 

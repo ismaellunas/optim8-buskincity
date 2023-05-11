@@ -34,8 +34,10 @@ class Select extends BaseField implements MappableFieldInterface
         ];
     }
 
-    public function getMappedValue(string $type): mixed
+    public function getMappedValue(array $toField): mixed
     {
+        $type = $toField['type'];
+
         if (! in_array($type, self::mappingFieldTypes())) {
             return null;
         }
