@@ -11,7 +11,7 @@
                             {{ i18n.mandatory_fields }}
                         </h4>
 
-                        <form-mandatory-rule
+                        <form-user-property-mapping-rule
                             v-model="form"
                             class="columns is-multiline"
                             :form-fields="formFields"
@@ -147,9 +147,9 @@
     import MixinHasLoader from '@/Mixins/HasLoader.js';
     import MixinHasModal from '@/Mixins/HasModal.js';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors.js';
+    import FormUserPropertyMappingRule from './FormUserPropertyMappingRule.vue';
     import ModalAddMappingRule from './ModalAddMappingRule.vue';
     import RowMappingRule from './RowMappingRule.vue';
-    import FormMandatoryRule from './FormMandatoryRule.vue';
     import { add as iconAdd } from '@/Libs/icon-class';
     import { computed, ref } from "vue";
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
@@ -165,9 +165,9 @@
             BizFormSelect,
             BizFormTextEditor,
             BizTable,
+            FormUserPropertyMappingRule,
             ModalAddMappingRule,
             RowMappingRule,
-            FormMandatoryRule,
         },
 
         mixins: [
