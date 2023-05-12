@@ -440,6 +440,43 @@ class MediaService
         return $media;
     }
 
+    public function uploadProfileFromMedia(
+        Media $sourceMedia,
+        User $user,
+    ): Media {
+        $fileName = $user->generateProfilePhotoFileName();
+
+        $folder = $this->getFolderPrefix() . self::$profilePictureFolder;
+
+        $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
+
+        $result = cloudinary()->upload(
+            $sourceMedia->file_url,
+            [
+                'public_id' => $folder.'/'.$fileName,
+                'resource_type' => $sourceMedia->assets->get('resource_type'),
+                'invalidate' => false,
+            ]
+        );
+
+        $response = CloudinaryAsset::createAssetFromApiResponse(
+            $result->getResponse()
+        );
+
+        $media = new Media();
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $response,
+        );
+
+        $media->type = Media::TYPE_PROFILE;
+        $media->save();
+        $media->saveUserId(auth()->user()->id ?? $user->id);
+
+        return $media;
+    }
+
     public function setMedially(Model $relatedModel, array $mediaIds = [])
     {
         $media = Media::whereIn('id', $mediaIds)
