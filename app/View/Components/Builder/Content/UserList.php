@@ -23,7 +23,7 @@ class UserList extends BaseContent
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
         $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
 
-        forgetSession('randomMod');
+        session()->forget('randomMod');
     }
 
     public function url(): string

@@ -43,7 +43,7 @@ class ApiPageBuilderComponentUserListController extends Controller
             || $country
             || $type
         ) {
-            putSession('randomMod', rand(1,10));
+            session()->put('randomMod', $this->getRandomPrimeNumber());
         }
 
         $users = User::select([
@@ -172,7 +172,9 @@ class ApiPageBuilderComponentUserListController extends Controller
     private function orderBy($q, string $orderBy)
     {
         if ($orderBy == 'random') {
-            $randomMod = getSession('randomMod', rand(1,10));
+            $randomMod = session()->get('randomMod', function () {
+                return $this->getRandomPrimeNumber();
+            });
 
             $q->orderByRaw('CAST(extract(epoch from created_at) as integer) % ' . $randomMod);
         } elseif ($orderBy == 'first_name-asc') {
@@ -249,5 +251,28 @@ class ApiPageBuilderComponentUserListController extends Controller
         return $types
             ->whereIn('id', $availableTypes)
             ->all();
+    }
+
+    private function getRandomPrimeNumber(int $min = 2, int $max = 11) {
+        $primeNumber = [];
+
+        while ($min <= $max) {
+            $divCount=0;
+
+            for ($i=1; $i <= $min; $i++)
+            {
+                if (($min % $i) == 0) {
+                    $divCount++;
+                }
+            }
+
+            if ($divCount < 3) {
+                $primeNumber[] = $min;
+            }
+
+            $min = $min + 1;
+        }
+
+        return $primeNumber[array_rand($primeNumber)];
     }
 }
