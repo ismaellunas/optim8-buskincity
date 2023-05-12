@@ -295,9 +295,26 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
+    public function generateProfilePhotoFileName()
+    {
+        return htmlspecialchars(
+            $this->first_name.'-'.$this->last_name.'-'.Str::random(10)
+        );
+    }
+
+    public function replaceProfilePhoto(int $mediaId)
+    {
+        if ($this->profile_photo_media_id) {
+            $this->deleteProfilePhoto();
+        }
+
+        $this->profile_photo_media_id = $mediaId;
+        $this->save();
+    }
+
     public function updateProfilePhoto(UploadedFile $photo): void
     {
-        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
+        $fileName = $this->generateProfilePhotoFileName();
 
         $media = app(MediaService::class)->uploadProfile(
             $photo,
@@ -305,16 +322,11 @@ class User extends Authenticatable implements MustVerifyEmail
             new CloudinaryStorage()
         );
 
+        $this->replaceProfilePhoto($media->id);
+
         app(MediaService::class)->setMedially($this, [
             $media->id
         ]);
-
-        if ($this->profile_photo_media_id) {
-            $this->deleteProfilePhoto();
-        }
-
-        $this->profile_photo_media_id = $media->id;
-        $this->save();
     }
 
     public function deleteProfilePhoto(): void
