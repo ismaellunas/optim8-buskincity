@@ -302,8 +302,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $media = app(MediaService::class)->uploadProfile(
             $photo,
             $fileName,
-            new CloudinaryStorage(),
-            "profiles",
+            new CloudinaryStorage()
         );
 
         app(MediaService::class)->setMedially($this, [

@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
 
 class MediaService
 {
+    public static $profilePictureFolder = 'profiles';
+
     public static function isFileNameExists(
         string $fileName,
         array $excludedIds = []
@@ -203,8 +205,9 @@ class MediaService
         UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage,
-        string $folder = null,
     ): Media {
+        $folder = self::$profilePictureFolder;
+
         $media = new Media();
 
         $extension = null;
