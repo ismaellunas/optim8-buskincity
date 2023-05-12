@@ -171,9 +171,13 @@ class ApiPageBuilderComponentUserListController extends Controller
     private function orderBy($q, string $orderBy)
     {
         if ($orderBy == 'random') {
-            $randomMod = session()->get('randomMod', function () {
-                return $this->getRandomPrimeNumber();
-            });
+            $randomMod = session()->get('randomMod');
+
+            if (! $randomMod) {
+                $randomMod = $this->getRandomPrimeNumber();
+
+                session()->put('randomMod', $randomMod);
+            }
 
             $q->orderByRaw('CAST(unique_key as integer) % ' . $randomMod);
         } elseif ($orderBy == 'first_name-asc') {
@@ -252,7 +256,8 @@ class ApiPageBuilderComponentUserListController extends Controller
             ->all();
     }
 
-    private function getRandomPrimeNumber(int $min = 2, int $max = 11) {
+    private function getRandomPrimeNumber(int $min = 2, int $max = 11): int
+    {
         $primeNumber = [];
 
         while ($min <= $max) {
