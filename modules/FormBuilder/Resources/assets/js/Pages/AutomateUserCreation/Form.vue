@@ -8,7 +8,7 @@
                 <div class="columns">
                     <div class="column is-8">
                         <h4 class="title is-size-4">
-                            {{ i18n.mandatory_fields }}
+                            {{ i18n.user_properties }}
                         </h4>
 
                         <form-user-property-mapping-rule
@@ -217,6 +217,7 @@
                 email: mappingRules.value.mandatoryFields.email ?? null,
                 first_name: mappingRules.value.mandatoryFields.first_name ?? null,
                 last_name: mappingRules.value.mandatoryFields.last_name ?? null,
+                profile_picture: mappingRules.value.profile_picture ?? null,
                 mapping_rules: _.clone(mappingRules.value.optionalFields) ?? [],
                 role: mappingRules.value.role ?? null,
                 create_user_email: formBuilder.value.setting?.email?.automate_user_creation ?? null,
