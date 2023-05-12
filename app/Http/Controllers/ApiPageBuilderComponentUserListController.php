@@ -52,7 +52,6 @@ class ApiPageBuilderComponentUserListController extends Controller
                 'first_name',
                 'last_name',
                 'profile_photo_media_id',
-                'created_at'
             ])
             ->available()
             ->when($roles, function ($q, $roles) {
@@ -176,7 +175,7 @@ class ApiPageBuilderComponentUserListController extends Controller
                 return $this->getRandomPrimeNumber();
             });
 
-            $q->orderByRaw('CAST(extract(epoch from created_at) as integer) % ' . $randomMod);
+            $q->orderByRaw('CAST(unique_key as integer) % ' . $randomMod);
         } elseif ($orderBy == 'first_name-asc') {
             $q->orderBy('first_name', 'ASC');
         } elseif ($orderBy == 'first_name-desc') {
