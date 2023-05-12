@@ -57,7 +57,8 @@ class FormEntryPolicy extends FormBuilderPolicy
     public function automateUserCreation(User $user, FormEntry $model)
     {
         $isPermitted = (
-            $user->can('form_builder.automate_user_creation')
+            !$model->deleted_at
+            && $user->can('form_builder.automate_user_creation')
             && empty($model->automate_user_creation_at)
         );
 

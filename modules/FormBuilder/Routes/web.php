@@ -71,10 +71,12 @@ Route::name('admin.')->prefix('admin/')->middleware([
             ->name('bulk-force-delete');
 
         Route::post('mark-as-read/{form_entry}', [FormEntryController::class, 'markAsRead'])
-            ->name('mark-as-read');
+            ->name('mark-as-read')
+            ->can('markAsRead', 'form_entry');
 
         Route::post('mark-as-unread/{form_entry}', [FormEntryController::class, 'markAsUnread'])
-            ->name('mark-as-unread');
+            ->name('mark-as-unread')
+            ->can('markAsUnread', 'form_entry');
 
         Route::post('archive/{form_entry}', [FormEntryController::class, 'archive'])
             ->name('archive')
@@ -119,6 +121,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
             Route::get('widget/form-builder/{formBuilder}/entries', [ApiWidgetController::class, 'getEntries'])
                 ->name('widget.form-builder.entries');
+
+            Route::get('automate-user-creation/{formEntry}/confirmation', [AutomateUserCreationController::class, 'confirmation'])
+                ->name('automate-user-creation.confirmation');
         });
 });
 

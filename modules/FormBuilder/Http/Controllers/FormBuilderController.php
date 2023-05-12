@@ -230,6 +230,7 @@ class FormBuilderController extends CrudController
             'change_role_confirmation_title' => __('Side effect of changing this role'),
             'change_role_confirmation_text' => __('All mapping rules will be removed. Are you sure you want to change the role?'),
             'map_form_field_to_user_field' => __('Map Form Field to User field'),
+            'yes' => __('Yes'),
         ];
     }
 }

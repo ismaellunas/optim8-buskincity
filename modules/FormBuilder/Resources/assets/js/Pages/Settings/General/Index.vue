@@ -11,8 +11,9 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import GeneralForm from './Form.vue';
-    import { usePage, useForm } from '@inertiajs/vue3';
     import { cloneDeep } from 'lodash';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'GeneralSetting',
@@ -60,13 +61,13 @@
             },
 
             onSubmit() {
-                const self = this;
-
-                self.form.put(
-                    route(self.baseRouteName + '.update', self.formBuilder.id),
+                this.form.put(
+                    route(this.baseRouteName + '.update', this.formBuilder.id),
                     {
-                        onStart: () => self.onStartLoadingOverlay(),
-                        onFinish: () => self.onEndLoadingOverlay(),
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onSuccess: (page) => successAlert(page.props.flash.message),
+                        onError: () => oopsAlert(),
+                        onFinish: () => this.onEndLoadingOverlay(),
                     }
                 )
             },

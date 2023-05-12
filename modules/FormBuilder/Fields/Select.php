@@ -2,7 +2,6 @@
 
 namespace Modules\FormBuilder\Fields;
 
-use Mews\Purifier\Facades\Purifier;
 use Modules\FormBuilder\Contracts\MappableFieldInterface;
 
 class Select extends BaseField implements MappableFieldInterface
@@ -20,7 +19,7 @@ class Select extends BaseField implements MappableFieldInterface
             ->first();
 
         if ($option) {
-            return Purifier::clean($option['value']);
+            return htmlspecialchars($option['value']);
         }
 
         return '-';
@@ -35,8 +34,10 @@ class Select extends BaseField implements MappableFieldInterface
         ];
     }
 
-    public function getMappedValue(string $type): mixed
+    public function getMappedValue(array $toField): mixed
     {
+        $type = $toField['type'];
+
         if (! in_array($type, self::mappingFieldTypes())) {
             return null;
         }

@@ -2,19 +2,22 @@
 
 namespace Modules\FormBuilder\Http\Controllers;
 
+use App\Models\User;
 use App\Traits\FlashNotifiable;
+use Illuminate\Database\QueryException;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Validator as IlluminateValidator;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
 use Modules\FormBuilder\Http\Requests\AutomateUserCreationRequest;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
+use Modules\FormBuilder\Services\FormEntryService;
 use Symfony\Component\HttpFoundation\Response;
 
 class AutomateUserCreationController extends Controller
@@ -22,7 +25,8 @@ class AutomateUserCreationController extends Controller
     use FlashNotifiable;
 
     public function __construct(
-        private AutomateUserCreationService $automateUserCreationService
+        private AutomateUserCreationService $automateUserCreationService,
+        private FormEntryService $formEntryService
     ) {}
 
     private function getStoredMappingRule(int $formId, string $group)
@@ -173,26 +177,50 @@ class AutomateUserCreationController extends Controller
         $this->generateFlashMessage('Saved');
     }
 
-    public function createOrUpdateUser(Form $formBuilder, FormEntry $formEntry)
+    private function validateFomEntry(Form $formBuilder, FormEntry $formEntry)
     {
-        $validator = Validator::make(
+        return Validator::make(
             $this->automateUserCreationService->getUserProperties(
                 $formEntry,
                 $formBuilder->mappingUserRules,
             ),
             [
-                'email' => ['required', 'email', ],
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) {
+                        $roles = explode('|', config('permission.admin_or_super_admin'));
+
+                        $user = User::email($value)->inRoleNames($roles)->first();
+
+                        if ($user) {
+                            $fail(__('validation.email_belongs_to_protected_user'));
+                        }
+                    },
+                ],
                 'first_name' => [ 'required', ],
                 'last_name' => [ 'required', ],
             ],
             [],
             $this->automateUserCreationService->getMandatoryLabels($formBuilder)
         );
+    }
+
+    private function mandatoryFieldErrorResponse(?IlluminateValidator $validator = null)
+    {
+        $errorMessage = __('Mandatory fields are required to create/update the user.');
+
+        $this->generateFlashMessage($errorMessage);
+
+        return back()->withErrors($validator ?? [$errorMessage]);
+    }
+
+    public function createOrUpdateUser(Form $formBuilder, FormEntry $formEntry)
+    {
+        $validator = $this->validateFomEntry($formBuilder, $formEntry);
 
         if ($validator->fails()) {
-            $this->generateFlashMessage('Mandatory fields are required to create/update the user.');
-
-            return back()->withErrors($validator);
+            return $this->mandatoryFieldErrorResponse($validator);
         }
 
         DB::beginTransaction();
@@ -217,25 +245,70 @@ class AutomateUserCreationController extends Controller
 
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
 
+            if (! $formEntry->read_at) {
+                $this->formEntryService->markAsRead([$formEntry->id]);
+            }
+
             $this->generateFlashMessage("The action ran successfully!");
 
             DB::commit();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
 
             if ($e->getCode() == '23502') {
-                $errorMessage = __('Mandatory fields are required to create/update the user.');
-
-                $this->generateFlashMessage($errorMessage);
-
-                return back()->withErrors([$errorMessage]);
+                return $this->mandatoryFieldErrorResponse();
             }
-
-            throw $e;
 
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function confirmation(FormEntry $formEntry)
+    {
+        $validator = $this->validateFomEntry($formEntry->form, $formEntry);
+
+        if ($validator->fails()) {
+            return response()->json(
+                $validator->errors(),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $userRules = $formEntry
+            ->form
+            ->userCreationMappingRules
+            ->where('group', 'user');
+
+        $userProps = $this
+            ->automateUserCreationService
+            ->getUserProperties($formEntry, $userRules);
+
+        $user = User::firstWhere('email', $userProps['email']);
+
+        $message = null;
+        $isExists = false;
+
+        if ($user) {
+
+            $message = __("User with email :email already exists. Proceeding will update their details.", [
+                'email' => $user->email,
+            ]);
+
+            $isExists = true;
+
+        } else {
+
+            $message = __("A new user named ':name' with the email address ':email' will be created.", [
+                'email' => $userProps['email'],
+                'name' => $userProps['first_name'] . ' ' . $userProps['last_name'],
+            ]);
+        }
+
+        return response()->json([
+            'message' => $message,
+            'isExists' => $isExists,
+        ]);
     }
 }
