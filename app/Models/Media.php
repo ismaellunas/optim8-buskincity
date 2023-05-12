@@ -110,9 +110,14 @@ class Media extends CloudinaryMedia implements TranslatableContract
     }
 
     // Accessors:
+    public function getSlicedFileNameAttribute()
+    {
+        return Str::afterLast($this->file_name, '/');
+    }
+
     public function getFileNameWithoutExtensionAttribute(): string
     {
-        $slice = Str::afterLast($this->file_name, '/');
+        $slice = $this->slicedFileName;
 
         if (!in_array($this->file_type, ['image', 'video'])) {
             return Str::replaceLast('.'.$this->extension, '', $slice);
@@ -234,7 +239,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public function getDisplayFileNameAttribute(): string
     {
-        $slice = Str::afterLast($this->file_name, '/');
+        $slice = $this->slicedFileName;
 
         if (in_array($this->file_type, ['image', 'video'])) {
             return $slice.'.'.$this->extension;

@@ -401,7 +401,7 @@ class MediaService
 
         $clientExtension = $sourceMedia->extension;
 
-        $fileName = Str::afterLast($sourceMedia->file_name, '/');
+        $fileName = $sourceMedia->slicedFileName;
 
         if (! in_array($sourceMedia->type, ['image', 'video'])) {
             $extension = $clientExtension;
