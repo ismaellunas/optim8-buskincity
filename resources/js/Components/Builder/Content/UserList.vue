@@ -75,11 +75,19 @@
             </div>
 
             <template
-                v-for="user in users"
+                v-for="user in users.data"
                 :key="user.unique_key"
             >
                 <slot :user="user" />
             </template>
+
+            <div class="column is-12">
+                <biz-pagination
+                    :is-ajax="true"
+                    :links="users.links"
+                    @on-clicked-pagination="onClickedPagination"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -88,6 +96,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizSelect from '@/Biz/Select.vue';
     import BizInput from '@/Biz/Input.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
     import { union, isEmpty, forEach, debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
 
@@ -95,6 +104,7 @@
         components: {
             BizSelect,
             BizInput,
+            BizPagination,
         },
 
         mixins: [
@@ -121,16 +131,22 @@
         data() {
             return {
                 users: [],
-                country: null,
-                orderBy: this.defaultOrderBy,
                 filter: {
-                    order_by: null,
+                    order_by: this.defaultOrderBy !== ''?  this.defaultOrderBy : null,
                     country: null,
                     type: null,
                     term: null,
                 },
-                type: null,
-                term: null,
+                queryParams: {
+                    country: null,
+                    default_countries: this.defaultCountries,
+                    default_types: this.defaultTypes,
+                    excluded_user: this.excludedId,
+                    order_by: this.defaultOrderBy !== ''?  this.defaultOrderBy : null,
+                    roles: this.roles,
+                    type: null,
+                    term: null,
+                },
                 options: {
                     countries: [],
                 },
@@ -214,23 +230,16 @@
         },
 
         methods: {
-            load() {
+            load(url = null) {
                 const self = this;
+
+                url = url ?? this.url;
 
                 self.onStartLoadingOverlay();
 
                 return axios
-                    .get(this.url, {
-                        params: {
-                            country: self.country,
-                            default_countries: self.defaultCountries,
-                            default_types: self.defaultTypes,
-                            excluded_user: self.excludedId,
-                            order_by: self.orderBy,
-                            roles: self.roles,
-                            type: self.type,
-                            term: self.term,
-                        }
+                    .get(url, {
+                        params: self.queryParams,
                     })
                     .then(function(response) {
                         self.users = response.data.users;
@@ -248,26 +257,31 @@
             },
 
             selectOrderBy() {
-                this.orderBy = this.filter.order_by;
+                this.queryParams.order_by = this.filter.order_by;
                 this.load();
             },
 
             selectCountry() {
-                this.country = this.filter.country;
+                this.queryParams.country = this.filter.country;
                 this.load();
             },
 
             selectType() {
-                this.type = this.filter.type;
+                this.queryParams.type = this.filter.type;
                 this.load();
             },
 
             search: debounce(function(term = '') {
                 if (term.length > 2 || term.length == 0) {
-                    this.term = this.filter.term;
+                    this.queryParams.term = this.filter.term;
+
                     this.load();
                 }
             }, debounceTime),
+
+            onClickedPagination(url) {
+                this.load(url);
+            },
         },
     }
 

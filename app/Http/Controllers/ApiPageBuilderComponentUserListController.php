@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class ApiPageBuilderComponentUserListController extends Controller
 {
     private $metaKeys = ['country'];
+    private $perPage = 12;
 
     public function __construct()
     {
@@ -27,14 +28,23 @@ class ApiPageBuilderComponentUserListController extends Controller
     {
         $metaKeys = $this->metaKeys;
 
-        $roles = $request->get('roles');
-        $excludedId = $request->get('excluded_user');
+        $country = $request->get('country');
         $defaultCountries = $request->get('default_countries');
         $defaultTypes = $request->get('default_types');
-        $country = $request->get('country');
+        $excludedId = $request->get('excluded_user');
         $orderBy = $request->get('order_by');
-        $type = $request->get('type');
+        $roles = $request->get('roles');
         $term = $request->get('term');
+        $type = $request->get('type');
+
+        if (
+            ($orderBy === 'random' && $term)
+            || $orderBy !== 'random'
+            || $country
+            || $type
+        ) {
+            session()->put('randomMod', $this->getRandomPrimeNumber());
+        }
 
         $users = User::select([
                 'id',
@@ -105,7 +115,8 @@ class ApiPageBuilderComponentUserListController extends Controller
                 ->when($type, function ($collection) use ($type) {
                     return $collection->where('discipline', $type);
                 })
-                ->values(),
+                ->values()
+                ->paginate($this->perPage),
         ];
     }
 
@@ -160,7 +171,15 @@ class ApiPageBuilderComponentUserListController extends Controller
     private function orderBy($q, string $orderBy)
     {
         if ($orderBy == 'random') {
-            $q->inRandomOrder();
+            $randomMod = session()->get('randomMod');
+
+            if (! $randomMod) {
+                $randomMod = $this->getRandomPrimeNumber();
+
+                session()->put('randomMod', $randomMod);
+            }
+
+            $q->orderByRaw('CAST(unique_key as integer) % ' . $randomMod);
         } elseif ($orderBy == 'first_name-asc') {
             $q->orderBy('first_name', 'ASC');
         } elseif ($orderBy == 'first_name-desc') {
@@ -235,5 +254,29 @@ class ApiPageBuilderComponentUserListController extends Controller
         return $types
             ->whereIn('id', $availableTypes)
             ->all();
+    }
+
+    private function getRandomPrimeNumber(int $min = 2, int $max = 11): int
+    {
+        $primeNumber = [];
+
+        while ($min <= $max) {
+            $divCount=0;
+
+            for ($i=1; $i <= $min; $i++)
+            {
+                if (($min % $i) == 0) {
+                    $divCount++;
+                }
+            }
+
+            if ($divCount < 3) {
+                $primeNumber[] = $min;
+            }
+
+            $min = $min + 1;
+        }
+
+        return $primeNumber[array_rand($primeNumber)];
     }
 }
