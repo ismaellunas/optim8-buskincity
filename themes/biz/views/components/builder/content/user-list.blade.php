@@ -22,7 +22,10 @@
                         :src="user.profile_photo_url"
                         :alt="user.full_name"
                     >
-                    <span class="flag">
+                    <span
+                        v-if="user.country"
+                        class="flag"
+                    >
                         <img
                             :src="`/images/flags/` + user.country.toLowerCase() + `.svg`"
                             alt="country"

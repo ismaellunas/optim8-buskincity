@@ -170,6 +170,7 @@
     import FieldGroup from './FieldGroup.vue';
     import InputConfig from './../Fields/InputConfig.vue';
     import { computed } from "vue";
+    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
@@ -180,7 +181,6 @@
         convertToKey,
     } from '@/Libs/utils';
     import { getEmptyFieldGroup } from './../Libs/form';
-    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         name: 'FormBuilder',
@@ -331,24 +331,25 @@
                 })
             },
 
-            onSubmit() {
-                const self = this;
+            submitOptions() {
+                return {
+                    onStart: () => this.onStartLoadingOverlay(),
+                    onSuccess: (page) => successAlert(page.props.flash.message),
+                    onError: () => oopsAlert(),
+                    onFinish: () => this.onEndLoadingOverlay(),
+                };
+            },
 
-                if (!this.isEditMode) {
-                    self.form.post(
-                        route(self.baseRouteName + '.store'),
-                        {
-                            onStart: () => self.onStartLoadingOverlay(),
-                            onFinish: () => self.onEndLoadingOverlay(),
-                        }
-                    )
+            onSubmit() {
+                if (! this.isEditMode) {
+                    this.form.post(
+                        route(this.baseRouteName + '.store'),
+                        this.submitOptions()
+                    );
                 } else {
-                    self.form.put(
-                        route(self.baseRouteName + '.update', self.form.id),
-                        {
-                            onStart: () => self.onStartLoadingOverlay(),
-                            onFinish: () => self.onEndLoadingOverlay(),
-                        }
+                    this.form.put(
+                        route(this.baseRouteName + '.update', this.form.id),
+                        this.submitOptions()
                     )
                 }
             },

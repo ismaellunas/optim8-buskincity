@@ -231,14 +231,14 @@ class FormEntryController extends CrudController
 
     public function bulkMarkAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
-        $this->formEntryService->markAsRead($formBuilder->id, $request->entries);
+        $this->formEntryService->markAsRead($request->entries, $formBuilder->id);
 
         return $this->afterBulkAction($request);
     }
 
     public function bulkMarkAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
-        $this->formEntryService->markAsUnread($formBuilder->id, $request->entries);
+        $this->formEntryService->markAsUnread($request->entries, $formBuilder->id);
 
         return $this->afterBulkAction($request);
     }
@@ -266,14 +266,14 @@ class FormEntryController extends CrudController
 
     public function markAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
     {
-        $this->formEntryService->markAsRead($formBuilder->id, [$formEntry->id]);
+        $this->formEntryService->markAsRead([$formEntry->id], $formBuilder->id);
 
         return $this->afterAction();
     }
 
     public function markAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
     {
-        $this->formEntryService->markAsUnread($formBuilder->id, [$formEntry->id]);
+        $this->formEntryService->markAsUnread([$formEntry->id], $formBuilder->id);
 
         return $this->afterAction();
     }

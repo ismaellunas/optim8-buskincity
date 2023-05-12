@@ -2,9 +2,6 @@
 
 namespace App\View\Components\Builder\Content;
 
-use App\Models\User;
-use App\Services\CountryService;
-use App\Services\GlobalOptionService;
 use App\Services\PageBuilderService;
 use Illuminate\Support\Facades\Crypt;
 
@@ -25,6 +22,8 @@ class UserList extends BaseContent
         $this->defaultOrderBy = $this->getConfig()['list']['orderBy'] ?? null;
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
         $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
+
+        session()->forget('randomMod');
     }
 
     public function url(): string
