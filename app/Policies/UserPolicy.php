@@ -86,8 +86,9 @@ class UserPolicy extends BasePermissionPolicy
     public function setPassword(User $user, Model $selectedUser)
     {
         return (
-            !$selectedUser->isConnectedAccount
+            $selectedUser->isConnectedAccount
             && ($selectedUser->id == $user->id || $this->update($user, $selectedUser))
+            && ! $selectedUser->hasPassword
         );
     }
 
