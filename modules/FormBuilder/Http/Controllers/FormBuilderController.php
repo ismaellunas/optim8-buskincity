@@ -118,7 +118,10 @@ class FormBuilderController extends CrudController
             'title' => __('Editing :name Form', [
                 'name' => $formBuilderArray['name']
             ]),
-            'fields' => $this->automateUserCreationService->getFields($formBuilder),
+            'fields' => $this->automateUserCreationService->fieldOptionFormatter(
+                $formBuilder->getFields(),
+                $formBuilder->id
+            ),
             'roleOptions' => $this->automateUserCreationService->getRoleOptions(),
             'i18n' => $this->translationCreateEditPage(),
             'userFields' => $this->automateUserCreationService->getUserFields(),
