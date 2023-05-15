@@ -29,4 +29,9 @@ class Role extends SpatieRole
         $this->guard_name = 'web';
         $this->save();
     }
+
+    public function getIsAdminRoleAttribute()
+    {
+        return $this->name == config('permission.role_names.admin');
+    }
 }
