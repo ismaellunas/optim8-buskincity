@@ -124,6 +124,7 @@ class PostPermissionTest extends BaseRolePermissionTestCase
             'slug' => $this->faker->slug,
             'status' => PublishableInterface::STATUS_DRAFT,
             'content' => '',
+            'is_cover_displayed' => true,
         ]);
 
         // Assert
@@ -151,6 +152,7 @@ class PostPermissionTest extends BaseRolePermissionTestCase
             'title' => $this->faker->title,
             'slug' => $this->faker->slug,
             'status' => PublishableInterface::STATUS_DRAFT,
+            'is_cover_displayed' => true,
         ]);
 
         // Assert
@@ -214,6 +216,7 @@ class PostPermissionTest extends BaseRolePermissionTestCase
             'slug' => $this->faker->slug,
             'status' => PublishableInterface::STATUS_DRAFT,
             'content' => '',
+            'is_cover_displayed' => true,
         ]);
 
         // Assert
@@ -239,6 +242,7 @@ class PostPermissionTest extends BaseRolePermissionTestCase
             'title' => $this->faker->title,
             'slug' => $this->faker->slug,
             'status' => PublishableInterface::STATUS_DRAFT,
+            'is_cover_displayed' => true,
         ]);
 
         // Assert
