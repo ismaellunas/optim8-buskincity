@@ -134,23 +134,29 @@ class AutomateUserCreationService
         return $fields->filter();
     }
 
-    public function getMappingRules(BaseForm $form)
+    private function userFieldOptionFormatter(Form $form, FormMappingRule $rule): array
     {
-        $mappingRules = FormMappingRule::where('form_id', $form->id)
-            ->where('type', 'automate_user_creation')
-            ->get();
+        return [
+            'form_id' => $form->id,
+            'name' => Arr::get($rule, 'from.name'),
+            'id' => Arr::get($rule, 'from.id'),
+        ];
+    }
+
+    public function getMappingRules(Form $form)
+    {
+        $mappingRules = $form->userCreationMappingRules;
 
         return [
             'mandatoryFields' => $mappingRules
                 ->where('group', 'user')
-                ->mapWithKeys(function ($field) use ($form) {
-                    $key = Arr::get($field, 'to.column');
+                ->whereIn('to.column', $this->mandatoryFields())
+                ->mapWithKeys(function ($rule) use ($form) {
+                    $key = Arr::get($rule, 'to.column');
 
-                    return [$key => [
-                        'form_id' => $form->id,
-                        'name' => Arr::get($field, 'from.name'),
-                        'id' => Arr::get($field, 'from.id'),
-                    ]];
+                    return [
+                        $key => $this->userFieldOptionFormatter($form, $rule)
+                    ];
                 }),
 
             'optionalFields' => $mappingRules
@@ -167,7 +173,21 @@ class AutomateUserCreationService
             'role' => function () use ($mappingRules) {
                 $role = $mappingRules->firstWhere('group', 'role');
 
-                return $role ? (int) $role->to['role'] : null;
+                $roleId = Arr::get($role, 'to.role');
+
+                return is_null($roleId) ? null : (int) $roleId;
+            },
+
+            'profile_picture' => function () use ($mappingRules, $form) {
+                $rule = $mappingRules
+                    ->where('group', 'user')
+                    ->firstWhere('to.column', 'profile_photo_media_id');
+
+                if ($rule->from) {
+                    return $this->userFieldOptionFormatter($form, $rule);
+                }
+
+                return null;
             },
         ];
     }
@@ -347,6 +367,38 @@ class AutomateUserCreationService
         }
     }
 
+    private function updateProfilePhoto(
+        User $user,
+        FormEntry $entry,
+        FormMappingRule $rule
+    ): ?Media {
+        $mediaService = app(MediaService::class);
+
+        $entryMeta = $entry->getMeta($rule->from['name'], []);
+
+        $mediaIds = $entryMeta['mediaId'] ?? [];
+
+        $allowedExtensions = config('constants.extensions.image');
+
+        $firstMedia = Media::whereIn('id', $mediaIds)
+            ->get()
+            ->first(function ($medium) use ($allowedExtensions) {
+                return in_array($medium->extension, $allowedExtensions);
+            });
+
+        if ($firstMedia) {
+            $media = $mediaService->uploadProfileFromMedia($firstMedia, $user);
+
+            $user->replaceProfilePhoto($media->id);
+
+            $mediaService->setMedially($user, [$media->id]);
+
+            return $media;
+        }
+
+        return null;
+    }
+
     public function createOrUpdate(Form $form, FormEntry $entry): User
     {
         $mappedRules = $form->userCreationMappingRules;
@@ -359,6 +411,13 @@ class AutomateUserCreationService
         $roleId = !is_null($roleId) ? (int) $roleId : null;
 
         $this->assignRole($user, $roleId);
+
+        $profilePictureRule = $userRules
+            ->firstWhere('to.column', 'profile_photo_media_id');
+
+        if ($profilePictureRule) {
+            $this->updateProfilePhoto($user, $entry, $profilePictureRule);
+        }
 
         $this->syncUserMetas($user, $entry, $mappedRules->where('group', 'form'));
 
@@ -381,16 +440,15 @@ class AutomateUserCreationService
     public function matchedTypes(): array
     {
         return [
-            'Country' => ['Country', 'Text', 'Textarea'],
-            'Email' => ['Email', 'Text', 'Textarea'],
-            'FileDragDrop' => ['FileDragDrop'],
-            'Number' => ['Number', 'Text', 'Textarea'],
-            'Phone' => ['Phone', 'Text', 'Textarea'],
-            'Postcode' => ['Postcode', 'Text', 'Textarea'],
-            'Select' => ['Select', 'Text', 'Textarea'],
-            'Text' => ['Text', 'Textarea', 'Video'],
-            'Textarea' => ['Textarea'],
-            'Video' => ['Video', 'Text', 'Textarea'],
+            'Country' => \Modules\FormBuilder\Fields\Country::mappingFieldTypes(),
+            'Email' => \Modules\FormBuilder\Fields\Email::mappingFieldTypes(),
+            'FileDragDrop' => \Modules\FormBuilder\Fields\FileDragDrop::mappingFieldTypes(),
+            'Number' => \Modules\FormBuilder\Fields\Number::mappingFieldTypes(),
+            'Phone' => \Modules\FormBuilder\Fields\Phone::mappingFieldTypes(),
+            'Postcode' => \Modules\FormBuilder\Fields\Postcode::mappingFieldTypes(),
+            'Select' => \Modules\FormBuilder\Fields\Select::mappingFieldTypes(),
+            'Text' => \Modules\FormBuilder\Fields\Text::mappingFieldTypes(),
+            'Textarea' => \Modules\FormBuilder\Fields\Textarea::mappingFieldTypes(),
         ];
     }
 
