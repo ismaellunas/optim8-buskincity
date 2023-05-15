@@ -1,11 +1,7 @@
 <template>
-    <biz-form-section @submitted="setPassword">
+    <form-section @submitted="setPassword">
         <template #title>
             Set Password
-        </template>
-
-        <template #description>
-            Ensure your account is using a long, random password to stay secure.
         </template>
 
         <template #form>
@@ -29,39 +25,31 @@
         </template>
 
         <template #actions>
-            <biz-action-message
-                :is-active="form.recentlySuccessful"
-                class="mr-3"
-            >
-                Saved.
-            </biz-action-message>
-
-            <biz-button
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                class="is-primary"
-            >
-                Save
-            </biz-button>
+            <div class="field mb-5">
+                <biz-button
+                    class="is-medium is-primary"
+                    :disabled="form.processing"
+                >
+                    <span class="has-text-weight-bold">Set Password</span>
+                </biz-button>
+            </div>
         </template>
-    </biz-form-section>
+    </form-section>
 </template>
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizActionMessage from '@/Biz/ActionMessage.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizFormPassword from '@/Biz/Form/Password.vue';
-    import BizFormSection from '@/Biz/FormSection.vue';
+    import FormSection from '@/Frontend/FormSection.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
-            BizActionMessage,
             BizButton,
             BizFormPassword,
-            BizFormSection,
+            FormSection,
         },
 
         mixins: [

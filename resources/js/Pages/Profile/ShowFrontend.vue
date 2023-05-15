@@ -14,13 +14,10 @@
                 class="column is-12"
             />
 
-            <div
-                v-else
-                v-show="can.set_password"
-                class="mb-5"
-            >
-                <set-password-form class="mt-10 sm:mt-0" />
-            </div>
+            <set-password-form
+                v-else-if="can.set_password && ! $page.props.socialstream.hasPassword"
+                class="column is-12"
+            />
 
             <biodata-form
                 :key="biodataFormKey"

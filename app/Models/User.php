@@ -405,4 +405,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->trashed();
     }
+
+    public function getHasPasswordAttribute(): bool
+    {
+        return !! $this->password;
+    }
 }
