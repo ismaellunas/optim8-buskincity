@@ -76,7 +76,9 @@ Route::middleware(array_filter([
         ->except(['show']);
 
     Route::resource('/users', UserController::class)
-        ->except(['show']);
+        ->except(['show', 'edit']);
+    Route::get('/users/{user}/edit', [UserController::class, 'editRecord'])
+        ->name('users.edit');
     Route::get('/users/trashed-records', [UserController::class, 'getTrashedRecords'])
         ->middleware('can:manageUserTrashed,App\Models\User')
         ->name('users.trashed-records');
