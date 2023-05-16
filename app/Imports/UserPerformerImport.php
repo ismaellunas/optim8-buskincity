@@ -128,10 +128,10 @@ class UserPerformerImport implements ToCollection, WithHeadingRow
     {
         try {
 
-            return PhoneNumber::make(
+            return (new PhoneNumber(
                     $phone['number'],
                     $phone['country']
-                )
+                ))
                 ->formatInternational();
 
         } catch (\Throwable $th) {
