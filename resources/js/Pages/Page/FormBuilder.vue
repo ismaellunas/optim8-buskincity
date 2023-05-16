@@ -162,7 +162,7 @@
     import ComponentStructures from '@/ComponentStructures';
     import blockColumns from '@/ComponentStructures/columns';
     import Draggable from "vuedraggable";
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, isEmpty } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
     import { isModuleActive } from '@/Libs/module';
     import { pascalCase } from 'change-case';
@@ -194,6 +194,7 @@
             contentConfigId: { type: String, default: "" },
             modelValue: { type: Object, required: true },
             selectedLocale: { type: String, required: true },
+            isNew: { type: Boolean, required: true },
         },
 
         emits: [
@@ -277,11 +278,25 @@
 
                 return this.data.structures[index] ?? {};
             },
+            isFreshData() {
+                return isEmpty(this.data.entities)
+                    && isEmpty(this.data.structures);
+            },
         },
         created() {
             // NOTE fix page.data
             if (!this.data?.media) {
                 this.data.media = [];
+            }
+        },
+        mounted() {
+            if (
+                this.isFreshData
+                && this.isNew
+            ) {
+                this.data.structures.push(
+                    this.cloneBlock(this.availableBlocks[0])
+                );
             }
         },
         methods: {

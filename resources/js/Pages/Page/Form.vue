@@ -66,6 +66,7 @@
                             v-model="form.data"
                             v-model:content-config-id="computedContentConfigId"
                             :selected-locale="selectedLocale"
+                            :is-new="isNew"
                         />
                     </biz-provide-inject-tab>
                     <biz-provide-inject-tab

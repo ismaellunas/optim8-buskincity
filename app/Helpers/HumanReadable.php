@@ -35,7 +35,6 @@ class HumanReadable
 
     public static function phoneNumberFormat(string $number, string $country)
     {
-        return PhoneNumber::make($number, $country)
-            ->formatInternational();
+        return (new PhoneNumber($number, $country))->formatInternational();
     }
 }
