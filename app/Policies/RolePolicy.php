@@ -65,7 +65,10 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        return $user->hasRole(config('permission.super_admin_role'));
+        return (
+            ! $role->isAdminRole
+            && $user->hasRole(config('permission.super_admin_role'))
+        );
     }
 
     /**
@@ -90,5 +93,10 @@ class RolePolicy
     public function forceDelete(User $user, Role $role)
     {
         return $user->hasRole(config('permission.super_admin_role'));
+    }
+
+    public function editName(User $user, Role $role)
+    {
+        return !$role->isAdminRole;
     }
 }

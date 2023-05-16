@@ -52,6 +52,7 @@
                                 <biz-icon :icon="icon.edit" />
                             </biz-button-link>
                             <biz-button-icon
+                                v-if="record.can.delete"
                                 class="is-ghost has-text-black ml-1"
                                 :icon="icon.remove"
                                 @click.prevent="deleteRecord(record)"

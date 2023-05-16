@@ -9,9 +9,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator as IlluminateValidator;
+use Modules\FormBuilder\Emails\AutomateUserCreationEmail;
+use Modules\FormBuilder\Emails\AutomateUserUpdateEmail;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
@@ -260,15 +263,24 @@ class AutomateUserCreationController extends Controller
             );
 
             if ($user->wasRecentlyCreated) {
-                $this->automateUserCreationService->sendUserCreationEmail(
-                    $user,
-                    $formBuilder
+
+                Mail::to($user)->queue(
+                    new AutomateUserCreationEmail($user, $formBuilder)
                 );
+
+                $this->generateFlashMessage("The :resource was created!", [
+                    'resource' => __('User'),
+                ]);
+
             } else {
-                $this->automateUserCreationService->sendUserUpdateEmail(
-                    $user,
-                    $formBuilder
+
+                Mail::to($user)->queue(
+                    new AutomateUserUpdateEmail($user, $formBuilder)
                 );
+
+                $this->generateFlashMessage("The :resource was updated!", [
+                    'resource' => __('User'),
+                ]);
             }
 
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
@@ -276,8 +288,6 @@ class AutomateUserCreationController extends Controller
             if (! $formEntry->read_at) {
                 $this->formEntryService->markAsRead([$formEntry->id]);
             }
-
-            $this->generateFlashMessage("The action ran successfully!");
 
             DB::commit();
         } catch (QueryException $e) {

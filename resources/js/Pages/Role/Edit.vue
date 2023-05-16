@@ -60,10 +60,17 @@
             FormRole,
         },
 
+        provide() {
+            return {
+                can: this.can,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
             errors: { type: Object, default: () => {} },
             permissions: { type: Object, default: () => {} },
             record: { type: Object, required: true },
