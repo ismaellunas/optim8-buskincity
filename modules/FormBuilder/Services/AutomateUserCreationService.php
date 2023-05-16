@@ -12,35 +12,25 @@ use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Modules\FormBuilder\Emails\AutomateUserCreationEmail;
-use Modules\FormBuilder\Emails\AutomateUserUpdateEmail;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
 
 class AutomateUserCreationService
 {
-    public function getFields(BaseForm $formBuilder, bool $isOption = true): Collection
+    private $noAdminRoles;
+
+    public function fieldOptionFormatter(Collection $fields, int $formId): Collection
     {
-        $fields = collect();
+        $properties = ['form_id', 'id', 'label', 'name', 'type'];
 
-        foreach ($formBuilder->fieldGroups as $fieldGroup) {
-            foreach ($fieldGroup->fields as $field) {
-                if ($isOption) {
-                    $field['form_id'] = $formBuilder->id;
-                    $field = collect($field);
-                    $fields->push($field->only(
-                        'form_id', 'id', 'label', 'name', 'type'
-                    ));
-                } else {
-                    $fields->push($field);
-                }
-            }
-        }
+        return $fields->map(function ($field) use ($formId, $properties) {
+            $field['form_id'] = $formId;
+            $field = collect($field);
 
-        return $fields;
+            return $field->only($properties)->all();
+        });
     }
 
     private function userForms(mixed $role): EloquentCollection
@@ -71,7 +61,7 @@ class AutomateUserCreationService
         $fields = collect();
         $roleOptions = $this->getRoleOptions();
 
-        $forms = BaseForm::whereNull('type')->with(['fieldGroups'])->get();
+        $forms = BaseForm::with(['fieldGroups'])->get();
 
         foreach ($forms as $form) {
             $location = collect(Arr::get($form->setting, 'locations', []))
@@ -123,12 +113,12 @@ class AutomateUserCreationService
         return $fields;
     }
 
-    private function getUserFieldsByRole(bool $isOption = true, mixed $role = null): Collection
+    private function getUserFieldsByRole(mixed $role = null): Collection
     {
         $fields = collect();
 
         foreach ($this->userForms($role) as $form) {
-            $fields = $fields->merge($this->getFields($form, $isOption));
+            $fields = $fields->merge($form->getFields());
         }
 
         return $fields->filter();
@@ -196,7 +186,10 @@ class AutomateUserCreationService
     {
         $defaultLocale = defaultLocale();
 
-        $formFields = $this->getFields($entry->form);
+        $formFields = $this->fieldOptionFormatter(
+            $entry->form->getFields($entry->form),
+            $entry->form->id
+        );
 
         $entryMetaKeys = $mappedRules
             ->map(fn ($rule) => $rule->from['name'])
@@ -205,7 +198,7 @@ class AutomateUserCreationService
 
         $entryMetas = $entry->getMeta($entryMetaKeys);
 
-        $userFields = $this->getUserFieldsByRole(false, $user->roleName);
+        $userFields = $this->getUserFieldsByRole($user->roleName);
 
         foreach ($mappedRules as $rule) {
             $value = $entryMetas[$rule->from['name']];
@@ -263,20 +256,6 @@ class AutomateUserCreationService
         }
 
         $user->saveMetas();
-    }
-
-    public function sendUserCreationEmail(User $user, Form $form)
-    {
-        Mail::to($user)->queue(
-            (new AutomateUserCreationEmail($user, $form))->afterCommit()
-        );
-    }
-
-    public function sendUserUpdateEmail(User $user, Form $form)
-    {
-        Mail::to($user)->queue(
-            (new AutomateUserUpdateEmail($user, $form))->afterCommit()
-        );
     }
 
     public function mandatoryFields(): Collection
@@ -432,9 +411,11 @@ class AutomateUserCreationService
 
     public function getRoleOptions(): Collection
     {
-        return Role::withoutAdmin()
-            ->get(['id', 'name'])
-            ->asOptions('id', 'name');
+        if (is_null($this->noAdminRoles)) {
+            $this->noAdminRoles = Role::withoutAdmin()->get(['id', 'name']);
+        }
+
+        return $this->noAdminRoles->asOptions('id', 'name');
     }
 
     public function matchedTypes(): array
@@ -502,7 +483,7 @@ class AutomateUserCreationService
         $fieldIds = collect();
 
         foreach ($form->fieldGroups as $fieldGroup) {
-            if (! is_array( $fieldGroup->fields)) {
+            if (! is_array($fieldGroup->fields)) {
                 continue;
             }
 
