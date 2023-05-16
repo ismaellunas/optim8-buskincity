@@ -145,8 +145,9 @@ class UserController extends CrudController
 
         $user->append(
             'isSuperAdministrator',
-            'profilePageUrl',
             'isTrashed',
+            'optimizedProfilePhotoUrl',
+            'profilePageUrl',
         );
 
         $user->roles->makeHidden('pivot');
