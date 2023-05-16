@@ -134,11 +134,8 @@ class UserController extends CrudController
         return redirect()->route($this->baseRouteName.'.index');
     }
 
-    public function editRecord($userId)
+    public function edit(User $user)
     {
-        $user = User::withTrashed()->findOrFail($userId);
-        $this->authorize('update', $user);
-
         $canPublicPage = $user->hasPublicPage;
 
         $user->load(['roles' => function ($query) {
