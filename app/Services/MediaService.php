@@ -529,6 +529,7 @@ class MediaService
             'save' => __('Save'),
             'cancel' => __('Cancel'),
             'done' => __('Done'),
+            'delete' => __('Delete'),
             'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
             'are_you_sure' => __('Are you sure?'),
         ];
