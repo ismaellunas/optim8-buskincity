@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
 
 class MediaService
 {
+    public static $profilePictureFolder = 'profiles';
+
     public static function isFileNameExists(
         string $fileName,
         array $excludedIds = []
@@ -203,8 +205,9 @@ class MediaService
         UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage,
-        string $folder = null,
     ): Media {
+        $folder = self::$profilePictureFolder;
+
         $media = new Media();
 
         $extension = null;
@@ -401,7 +404,7 @@ class MediaService
 
         $clientExtension = $sourceMedia->extension;
 
-        $fileName = Str::afterLast($sourceMedia->file_name, '/');
+        $fileName = $sourceMedia->slicedFileName;
 
         if (! in_array($sourceMedia->type, ['image', 'video'])) {
             $extension = $clientExtension;
@@ -431,6 +434,43 @@ class MediaService
         );
 
         $media->type = Media::TYPE_USER_META;
+        $media->save();
+        $media->saveUserId(auth()->user()->id ?? $user->id);
+
+        return $media;
+    }
+
+    public function uploadProfileFromMedia(
+        Media $sourceMedia,
+        User $user,
+    ): Media {
+        $fileName = $user->generateProfilePhotoFileName();
+
+        $folder = $this->getFolderPrefix() . self::$profilePictureFolder;
+
+        $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
+
+        $result = cloudinary()->upload(
+            $sourceMedia->file_url,
+            [
+                'public_id' => $folder.'/'.$fileName,
+                'resource_type' => $sourceMedia->assets->get('resource_type'),
+                'invalidate' => false,
+            ]
+        );
+
+        $response = CloudinaryAsset::createAssetFromApiResponse(
+            $result->getResponse()
+        );
+
+        $media = new Media();
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $response,
+        );
+
+        $media->type = Media::TYPE_PROFILE;
         $media->save();
         $media->saveUserId(auth()->user()->id ?? $user->id);
 
@@ -489,6 +529,7 @@ class MediaService
             'save' => __('Save'),
             'cancel' => __('Cancel'),
             'done' => __('Done'),
+            'delete' => __('Delete'),
             'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
             'are_you_sure' => __('Are you sure?'),
         ];

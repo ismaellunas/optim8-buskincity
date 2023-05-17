@@ -9,9 +9,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator as IlluminateValidator;
+use Modules\FormBuilder\Emails\AutomateUserCreationEmail;
+use Modules\FormBuilder\Emails\AutomateUserUpdateEmail;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Entities\FormMappingRule;
@@ -29,12 +32,9 @@ class AutomateUserCreationController extends Controller
         private FormEntryService $formEntryService
     ) {}
 
-    private function getStoredMappingRule(int $formId, string $group)
+    private function getStoredMappingRule(Form $form, string $group)
     {
-        return FormMappingRule::where('form_id', $formId)
-            ->where('type', 'automate_user_creation')
-            ->where('group', $group)
-            ->get();
+        return $form->userCreationMappingRules->where('group', $group);
     }
 
     private function createFormMappingRule(int $formId, string $group): FormMappingRule
@@ -47,9 +47,30 @@ class AutomateUserCreationController extends Controller
         return $formMappingRule;
     }
 
-    private function saveMandatoryFields(int $formId, array $inputs)
+    private function saveUserRule(FormMappingRule $formMappingRule, string $column, ?array $input)
     {
-        $formMappingRules = $this->getStoredMappingRule($formId, 'user');
+        if (empty($input)) {
+            $formMappingRule->from = null;
+        } else {
+            $formMappingRule->from = [
+                'id' => Arr::get($input, 'id'),
+                'name' => Arr::get($input, 'name'),
+            ];
+        }
+
+        $formMappingRule->to = [
+            'column' => $column,
+            'table' => 'user',
+        ];
+
+        return $formMappingRule->save();
+    }
+
+    private function saveMandatoryFields(Form $form, array $inputs)
+    {
+        $formId = $form->id;
+
+        $formMappingRules = $this->getStoredMappingRule($form, 'user');
 
         foreach ($inputs as $column => $mappingRule) {
 
@@ -59,18 +80,21 @@ class AutomateUserCreationController extends Controller
                 $formMappingRule = $this->createFormMappingRule($formId, 'user');
             }
 
-            $formMappingRule->from = [
-                'id' => Arr::get($mappingRule, 'id'),
-                'name' => Arr::get($mappingRule, 'name'),
-            ];
-
-            $formMappingRule->to = [
-                'column' => $column,
-                'table' => 'user',
-            ];
-
-            $formMappingRule->save();
+            $this->saveUserRule($formMappingRule, $column, $mappingRule);
         }
+    }
+
+    private function saveProfilePictureField(Form $form, ?array $input)
+    {
+        $formMappingRule = $this
+            ->getStoredMappingRule($form, 'user')
+            ->firstWhere('to.column', 'profile_photo_media_id');
+
+        if (! $formMappingRule) {
+            $formMappingRule = $this->createFormMappingRule($form->id, 'user');
+        }
+
+        $this->saveUserRule($formMappingRule, 'profile_photo_media_id', $input);
     }
 
     private function removeOptionalFields(
@@ -120,9 +144,11 @@ class AutomateUserCreationController extends Controller
         }
     }
 
-    private function saveRole(int $formId, ?int $role)
+    private function saveRole(Form $form, ?int $role)
     {
-        $formMappingRule = $this->getStoredMappingRule($formId, 'role')->first();
+        $formId = $form->id;
+
+        $formMappingRule = $this->getStoredMappingRule($form, 'role')->first();
 
         if (! $formMappingRule) {
             $formMappingRule = $this->createFormMappingRule($formId, 'role');
@@ -154,13 +180,18 @@ class AutomateUserCreationController extends Controller
     public function save(AutomateUserCreationRequest $request, Form $formBuilder)
     {
         $this->saveMandatoryFields(
-            $formBuilder->id,
+            $formBuilder,
             $request->only('email', 'first_name', 'last_name')
         );
 
-        $this->saveRole($formBuilder->id, $request->get('role'));
+        $this->saveProfilePictureField(
+            $formBuilder,
+            $request->get('profile_picture')
+        );
 
-        $storedMappingRules = $this->getStoredMappingRule($formBuilder->id, 'form');
+        $this->saveRole($formBuilder, $request->get('role'));
+
+        $storedMappingRules = $this->getStoredMappingRule($formBuilder, 'form');
 
         $mappingRule = $request->get('mapping_rules', []);
 
@@ -232,15 +263,24 @@ class AutomateUserCreationController extends Controller
             );
 
             if ($user->wasRecentlyCreated) {
-                $this->automateUserCreationService->sendUserCreationEmail(
-                    $user,
-                    $formBuilder
+
+                Mail::to($user)->queue(
+                    new AutomateUserCreationEmail($user, $formBuilder)
                 );
+
+                $this->generateFlashMessage("The :resource was created!", [
+                    'resource' => __('User'),
+                ]);
+
             } else {
-                $this->automateUserCreationService->sendUserUpdateEmail(
-                    $user,
-                    $formBuilder
+
+                Mail::to($user)->queue(
+                    new AutomateUserUpdateEmail($user, $formBuilder)
                 );
+
+                $this->generateFlashMessage("The :resource was updated!", [
+                    'resource' => __('User'),
+                ]);
             }
 
             $this->automateUserCreationService->markAutomateActionIsDone($formEntry);
@@ -248,8 +288,6 @@ class AutomateUserCreationController extends Controller
             if (! $formEntry->read_at) {
                 $this->formEntryService->markAsRead([$formEntry->id]);
             }
-
-            $this->generateFlashMessage("The action ran successfully!");
 
             DB::commit();
         } catch (QueryException $e) {

@@ -22,10 +22,10 @@ class Phone extends BaseField
 
     private function getPhoneNumberFormat(array $phoneNumber): string
     {
-        return PhoneNumber::make(
+        return (new PhoneNumber(
                 $phoneNumber['number'],
                 $phoneNumber['country']
-            )
+            ))
             ->formatInternational();
     }
 }
