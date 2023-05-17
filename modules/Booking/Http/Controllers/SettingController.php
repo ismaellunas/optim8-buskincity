@@ -28,7 +28,7 @@ class SettingController extends CrudController
             'bookingSettings' => $settings,
             'i18n' => [
                 'email' => __('Email'),
-                'check_in' => __('Check-In'),
+                'check_in' => __('Check-in'),
                 'new_booking' => __('New booking'),
                 'booking_remainder' => __('Booking remainder'),
                 'booking_cancellation' => __('Booking cancellation'),

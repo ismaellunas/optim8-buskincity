@@ -22,10 +22,10 @@ class ThemeFooter extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Footer');
-        $browser->assertSee('Footer Layout');
-        $browser->assertSee('Social Media');
-        $browser->assertButtonEnabled("Save");
+        $browser->assertTitleContains(__('Footer'));
+        $browser->assertSee(__('Footer layout'));
+        $browser->assertSee(__('Social media'));
+        $browser->assertButtonEnabled(__('Save'));
     }
 
     public function clickLayoutTab(Browser $browser)
@@ -37,7 +37,6 @@ class ThemeFooter extends Page
     {
         $browser->click('@navigationTabTrigger');
     }
-
 
     /**
      * Get the element shortcuts for the page.

@@ -22,9 +22,9 @@ class BlogCategoryIndex extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Categories');
-        $browser->assertSee('Categories');
-        $browser->assertSeeLink("Create New");
+        $browser->assertTitleContains(__('Categories'));
+        $browser->assertSee(__('Categories'));
+        $browser->assertSeeLink(__("Create new"));
     }
 
     /**
