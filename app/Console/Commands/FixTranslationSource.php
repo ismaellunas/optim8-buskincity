@@ -48,13 +48,27 @@ class FixTranslationSource extends Command
         return Str::replace(base_path().'/', '', $filename);
     }
 
-    private function fixTranslation($locale, $key, $source, $group = null): void
-    {
-        $translation = Translation::firstOrNew([
-            'locale' => $locale,
-            'group'  => $group,
-            'key'    => $key,
-        ]);
+    private function fixTranslation(
+        $locale,
+        $key,
+        $source,
+        $group = null,
+        $value = null
+    ): void {
+        $translation = Translation::firstOrNew(
+            [
+                'locale' => $locale,
+                'group'  => $group,
+                'key'    => $key,
+            ],
+            [
+                'value' => $value,
+            ]
+        );
+
+        if (! $translation->value) {
+            $translation->value = $value;
+        }
 
         $translation->source = $source;
 
@@ -92,7 +106,8 @@ class FixTranslationSource extends Command
                             $locale,
                             $key,
                             $source,
-                            $group
+                            $group,
+                            $value,
                         );
                     }
                 }

@@ -13,12 +13,21 @@ class RoleService
         string $term = null,
         int $perPage = 15
     ): LengthAwarePaginator {
-        return Role::withoutSuperAdmin()
+        $records = Role::withoutSuperAdmin()
             ->orderBy('id', 'DESC')
             ->when($term, function ($query) use ($term) {
                 $query->where('name', 'ILIKE', '%'.$term.'%');
             })
             ->paginate($perPage);
+
+        $records->getCollection()->transform(function ($record) {
+            $record->can = [
+                'delete' => auth()->user()->can('delete', $record)
+            ];
+            return $record;
+        });
+
+        return $records;
     }
 
     public function getPermissionOptions(): array

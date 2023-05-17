@@ -64,6 +64,9 @@ class RoleController extends CrudController
                     'title' => $this->getCreateTitle(),
                 ],
             ],
+            'can' => [
+                'edit_name' => true,
+            ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'title' => $this->getCreateTitle(),
             'i18n' => $this->translationCreateEditPage(),
@@ -110,6 +113,9 @@ class RoleController extends CrudController
                     'title' => $this->getEditTitle(),
                 ],
             ],
+            'can' => [
+                'edit_name' => auth()->user()->can('editName', $role),
+            ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'record' => $role,
             'title' => $this->getEditTitle(),
@@ -119,16 +125,16 @@ class RoleController extends CrudController
 
     public function update(RoleRequest $request, Role $role)
     {
-        $role->name = $request->name;
-        $role->save();
+        if (auth()->user()->can('editName', $role)) {
+            $role->name = $request->name;
+            $role->save();
+        }
 
         $role->syncPermissions($request->permissions);
 
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __('Role')
         ]);
-
-        return redirect()->back();
     }
 
     public function destroy(Request $request, Role $role)

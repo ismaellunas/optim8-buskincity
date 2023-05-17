@@ -45,6 +45,8 @@
                         <template v-if="menu.children && menu.isEnabled">
                             <div
                                 class="navbar-item has-dropdown is-hoverable navbar-item-dropdown"
+                                @mouseover="toggleDropdown(true, index)"
+                                @mouseleave="toggleDropdown(false, index)"
                             >
                                 <a
                                     class="navbar-link"
@@ -52,7 +54,10 @@
                                 >
                                     {{ menu.title }}
                                 </a>
-                                <div class="navbar-dropdown">
+                                <div
+                                    class="navbar-dropdown"
+                                    :style="[isMenuDisplay ? '' : {display: activeDropdownIndex == index ? 'block' : 'none'}]"
+                                >
                                     <template
                                         v-for="(childMenu, childIndex) in menu.children"
                                         :key="childIndex"
@@ -131,7 +136,7 @@
     import BizLink from '@/Biz/Link.vue';
     import BizNavbarItem from '@/Biz/NavbarItem.vue';
     import { computed, onMounted, onUnmounted, ref } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
+    import { router, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'BizNavbarMenu',
@@ -146,6 +151,8 @@
             const appLogoImageUrl = computed(() => usePage().props.appLogoUrl);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
+            const activeDropdownIndex = ref(null);
+            const isMenuDisplay = ref(false);
 
             function setActiveMenu(e) {
                 if (e.target.classList.contains('navbar-link')) {
@@ -178,18 +185,32 @@
                 }
             });
 
+            const toggleDropdown = (payload, index) => {
+                if (payload && !isMenuDisplay.value) {
+                    activeDropdownIndex.value = index;
+                } else {
+                    activeDropdownIndex.value = null;
+                }
+            };
+
+            router.on('before', (event) => {
+                toggleDropdown(false, null);
+            });
+
             return {
                 appLogoImageUrl,
                 csrfToken: usePage().props.csrfToken,
-                isMenuDisplay: ref(false),
+                isMenuDisplay,
                 navLogo,
                 navMenus,
                 navProfile,
+                activeDropdownIndex,
+                toggleDropdown,
             };
         },
         methods: {
             switchToTeam(team) {
-                this.$inertia.put(route('current-team.update'), {
+                router.put(route('current-team.update'), {
                     'team_id': team.id
                 }, {
                     preserveState: false
@@ -197,7 +218,7 @@
             },
 
             logout() {
-                this.$inertia.post(route('logout'));
+                router.post(route('logout'));
             },
 
             showMenu() {
@@ -207,6 +228,7 @@
             closeMenu() {
                 this.isMenuDisplay = false;
             },
+
         }
-    }
+    };
 </script>

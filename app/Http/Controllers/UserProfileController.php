@@ -40,7 +40,7 @@ class UserProfileController extends JetUserProfileController
                 'sessions' => $this->sessions($request)->all(),
                 'socialiteDrivers' => $socialiteDrivers,
                 'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
-                'description' => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+                'optimizedProfilePhotoUrl' => $user->optimizedProfilePhotoUrl,
             ]
         );
     }

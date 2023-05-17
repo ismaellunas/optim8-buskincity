@@ -59,6 +59,25 @@
                 </option>
             </biz-form-select>
         </div>
+
+        <div class="column is-full">
+            <biz-form-select
+                v-model="selectedProfilePicture"
+                :label="i18n.profile_picture"
+                :message="error('profile_picture')"
+            >
+                <option :value="null">
+                    {{ i18n.none }}
+                </option>
+                <option
+                    v-for="formField in profilePictureFieldOptions"
+                    :key="formField.id"
+                    :value="composeFieldOption(formField)"
+                >
+                    {{ formField.label }}
+                </option>
+            </biz-form-select>
+        </div>
     </div>
 </template>
 
@@ -69,7 +88,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'FormMandatoryRule',
+        name: 'FormUserPropertyMappingRule',
 
         components: {
             BizFormSelect,
@@ -118,6 +137,13 @@
                 set: (newValue) => setSelectedMandatoryField('last_name', newValue),
             });
 
+            const selectedProfilePicture = computed({
+                get: () => getSelectedMandatoryField('profile_picture'),
+                set: (newValue) => {
+                    setSelectedMandatoryField('profile_picture', newValue)
+                }
+            });
+
             const getPossibleMandatoryFields = (userFieldName) => {
                 const possibleTypes = props.mandatoryMatchedTypes[userFieldName];
 
@@ -126,14 +152,22 @@
                 });
             };
 
+            const profilePictureFieldOptions = computed(() => {
+                return props.formFields.filter((field) => {
+                    return _.get(field, 'type') == 'FileDragDrop';
+                });
+            });
+
             return {
                 emailFieldOptions: computed(() => getPossibleMandatoryFields('email')),
                 firstNameFieldOptions: computed(() => getPossibleMandatoryFields('first_name')),
                 lastNameFieldOptions: computed(() => getPossibleMandatoryFields('last_name')),
+                profilePictureFieldOptions,
                 form,
                 selectedEmail,
                 selectedFirstName,
                 selectedLastName,
+                selectedProfilePicture,
             };
         },
     };

@@ -2,10 +2,11 @@
     <div>
         <biz-form-input
             v-model="form.name"
-            :label="i18n.name"
             name="name"
             required
             maxlength="255"
+            :disabled="! can?.edit_name"
+            :label="i18n.name"
             :message="error('name')"
         />
 
@@ -67,7 +68,8 @@
         inject: {
             i18n: { default: () => ({
                 name: 'Name',
-            }) }
+            }) },
+            can: { type: Object, default: () => {} },
         },
 
         props: {

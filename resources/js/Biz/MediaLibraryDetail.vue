@@ -125,6 +125,8 @@
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { useForm } from '@inertiajs/vue3';
+    import { startsWith } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizMediaLibraryDetail',
@@ -178,6 +180,7 @@
                 cropper: null,
                 croppedImageType: "image/png",
                 isUploading: false,
+                icon,
             };
         },
 
@@ -200,20 +203,23 @@
             mediaIconThumbnail(media) {
                 if (!media) return;
 
-                if (media.file_type === "video") {
-                    return "far fa-file-video";
-                } else if (media.extension) {
-                    if (media.extension === "pdf") {
-                        return "far fa-file-pdf";
-                    } else if (media.extension.startsWith('doc')) {
-                        return "far fa-file-word";
-                    } else if (media.extension.startsWith('ppt')) {
-                        return "far fa-file-powerpoint";
-                    } else if (media.extension.startsWith('xls')) {
-                        return "far fa-file-excel";
-                    }
+                const type = media.file?.type ?? media.file_type;
+                const extension = media.file?.name.split('.').pop()
+                    ?? media.extension;
+
+                if (startsWith(type, 'video')) {
+                    return this.icon.fileVideo;
+                } else if (startsWith(extension, 'pdf')) {
+                    return this.icon.filePdf;
+                } else if (startsWith(extension, 'doc')) {
+                    return this.icon.fileWord;
+                } else if (startsWith(extension, 'ppt')) {
+                    return this.icon.filePowerpoint;
+                } else if (startsWith(extension, 'xls')) {
+                    return this.icon.fileExcel;
                 }
-                return "far fa-file-alt";
+
+                return this.icon.file;
             },
 
             updateImage() {
