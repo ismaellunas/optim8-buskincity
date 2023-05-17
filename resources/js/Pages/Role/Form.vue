@@ -5,7 +5,7 @@
             name="name"
             required
             maxlength="255"
-            :disabled="!can.edit_name"
+            :disabled="! can?.edit_name"
             :label="i18n.name"
             :message="error('name')"
         />
@@ -69,7 +69,7 @@
             i18n: { default: () => ({
                 name: 'Name',
             }) },
-            can: { type: Object },
+            can: { type: Object, default: () => {} },
         },
 
         props: {
