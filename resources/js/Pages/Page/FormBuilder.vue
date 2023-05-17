@@ -113,6 +113,7 @@
                 <template v-else>
                     <biz-component-config
                         v-model="data.entities[contentConfigId]"
+                        v-model:content-config-id="computedContentConfigId"
                         :structure="dataStructure"
                         class="page-builder-content-config"
                     />

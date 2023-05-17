@@ -109,6 +109,7 @@
     import BizImage from '@/Biz/Image.vue';
     import FormSection from '@/Frontend/FormSection.vue';
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
+    import { computed } from 'vue';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/vue3';
@@ -143,6 +144,12 @@
             'after-update-profile'
         ],
 
+        setup() {
+            return {
+                photoUrl: computed(() => usePage().props.optimizedProfilePhotoUrl),
+            };
+        },
+
         data() {
             const language = find(
                 this.languageOptions,
@@ -161,7 +168,6 @@
                     is_photo_deleted: false,
                     language_id: language.id ?? null
                 }),
-                photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 userImage: userImage,
