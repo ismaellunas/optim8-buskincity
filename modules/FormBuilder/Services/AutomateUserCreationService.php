@@ -173,7 +173,7 @@ class AutomateUserCreationService
                     ->where('group', 'user')
                     ->firstWhere('to.column', 'profile_photo_media_id');
 
-                if ($rule->from) {
+                if ($rule && $rule->from) {
                     return $this->userFieldOptionFormatter($form, $rule);
                 }
 
