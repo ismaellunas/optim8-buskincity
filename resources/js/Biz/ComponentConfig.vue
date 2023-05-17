@@ -1,5 +1,20 @@
 <template>
-    <div>
+    <biz-card class-card-content="px-1 py-2">
+        <template #headerTitle>
+            <h4 class="title is-4">
+                {{ entity.componentName }}
+            </h4>
+        </template>
+
+        <template #headerButton>
+            <biz-button-icon
+                class="is-small"
+                type="button"
+                :icon="iconClose"
+                @click.stop="closeConfig"
+            />
+        </template>
+
         <template
             v-for="(group, groupName, indexConfig) in configOptions"
             :key="groupName"
@@ -9,6 +24,7 @@
                 v-if="group.component && !isBlank(entity.config[ groupName ])"
                 :ref="`config-${indexConfig}`"
                 v-model="entity.config[ groupName ]"
+                class-card-content="p-3"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-expanding-on-load="indexConfig == 0"
                 :structure="computedStructure"
@@ -18,6 +34,7 @@
             <biz-card
                 v-else-if="!isBlank(entity.config[ groupName ])"
                 :ref="`config-${indexConfig}`"
+                class-card-content="p-3"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-collapsed="true"
                 :is-expanding-on-load="indexConfig == 0"
@@ -44,10 +61,11 @@
                 </template>
             </biz-card>
         </template>
-    </div>
+    </biz-card>
 </template>
 
 <script>
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
@@ -67,10 +85,12 @@
     import { camelCase, merge, forEach } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils';
+    import { close as iconClose } from '@/Libs/icon-class';
 
     export default {
 
         components: {
+            BizButtonIcon,
             BizCard,
             BizIcon,
             ConfigCheckbox,
@@ -89,6 +109,7 @@
 
         props: {
             modelValue: { type: Object, required: true },
+            contentConfigId: { type: String, default: "" },
             structure: { type: Object, default: () => {} },
         },
 
@@ -109,6 +130,8 @@
             return {
                 entity,
                 computedStructure: useModelWrapper(props, emit, 'structure'),
+                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                iconClose,
             };
         },
 
@@ -144,6 +167,10 @@
                         i++;
                     });
                 }
+            },
+
+            closeConfig() {
+                this.computedContentConfigId = '';
             },
         }
     };
