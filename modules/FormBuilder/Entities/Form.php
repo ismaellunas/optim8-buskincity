@@ -24,20 +24,6 @@ class Form extends ModelForm
         return \Modules\FormBuilder\Database\factories\FormFactory::new();
     }
 
-    public function saveFromInputs(array $inputs): void
-    {
-        $this->name = $inputs['name'];
-        $this->setting = $inputs['setting'];
-        $this->key = $inputs['form_id'];
-        $this->save();
-    }
-
-    public function saveSettingFromInputs(array $inputs): void
-    {
-        $this->setting = $inputs;
-        $this->save();
-    }
-
     public function fieldGroups()
     {
         return $this->hasMany(FieldGroup::class, 'form_id');
@@ -72,4 +58,19 @@ class Form extends ModelForm
     {
         return $this->userCreationMappingRules->where('group', 'user');
     }
+
+    public function saveFromInputs(array $inputs): void
+    {
+        $this->name = $inputs['name'];
+        $this->setting = $inputs['setting'];
+        $this->key = $inputs['form_id'];
+        $this->save();
+    }
+
+    public function saveSettingFromInputs(array $inputs): void
+    {
+        $this->setting = $inputs;
+        $this->save();
+    }
+
 }

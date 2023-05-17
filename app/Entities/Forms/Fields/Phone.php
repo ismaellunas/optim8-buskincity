@@ -70,10 +70,10 @@ class Phone extends BaseField
             !empty($data)
             && !empty($data[$this->name]['number'])
         ) {
-            $data[$this->name.'_e164'] = PhoneNumber::make(
+            $data[$this->name.'_e164'] = (new PhoneNumber(
                 $data[$this->name]['number'],
                 $data[$this->name]['country']
-            )->formatE164();
+            ))->formatE164();
         }
 
         return $data;

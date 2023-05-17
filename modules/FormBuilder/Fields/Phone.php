@@ -9,19 +9,20 @@ class Phone extends BaseField implements MappableFieldInterface
 {
     private function phoneE164()
     {
-        return PhoneNumber::make(
-            $this->value['number'],
-            $this->value['country']
-        )->formatE164();
+        return (new PhoneNumber(
+                $this->value['number'],
+                $this->value['country']
+            ))
+            ->formatE164();
     }
 
     public function value(): mixed
     {
         if (isset($this->value['country']) && isset($this->value['number'])) {
-            $phoneNumber = PhoneNumber::make(
+            $phoneNumber = (new PhoneNumber(
                     $this->value['number'],
                     $this->value['country']
-                )
+                ))
                 ->formatInternational();
 
             return $phoneNumber;

@@ -295,27 +295,38 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-    public function updateProfilePhoto(UploadedFile $photo): void
+    public function generateProfilePhotoFileName()
     {
-        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
-
-        $media = app(MediaService::class)->uploadProfile(
-            $photo,
-            $fileName,
-            new CloudinaryStorage(),
-            "profiles",
+        return htmlspecialchars(
+            $this->first_name.'-'.$this->last_name.'-'.Str::random(10)
         );
+    }
 
-        app(MediaService::class)->setMedially($this, [
-            $media->id
-        ]);
-
+    public function replaceProfilePhoto(int $mediaId)
+    {
         if ($this->profile_photo_media_id) {
             $this->deleteProfilePhoto();
         }
 
-        $this->profile_photo_media_id = $media->id;
+        $this->profile_photo_media_id = $mediaId;
         $this->save();
+    }
+
+    public function updateProfilePhoto(UploadedFile $photo): void
+    {
+        $fileName = $this->generateProfilePhotoFileName();
+
+        $media = app(MediaService::class)->uploadProfile(
+            $photo,
+            $fileName,
+            new CloudinaryStorage()
+        );
+
+        $this->replaceProfilePhoto($media->id);
+
+        app(MediaService::class)->setMedially($this, [
+            $media->id
+        ]);
     }
 
     public function deleteProfilePhoto(): void
@@ -393,5 +404,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsTrashedAttribute(): bool
     {
         return $this->trashed();
+    }
+
+    public function getHasPasswordAttribute(): bool
+    {
+        return !! $this->password;
     }
 }
