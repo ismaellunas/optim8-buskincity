@@ -63,16 +63,18 @@
         provide() {
             return {
                 i18n: this.i18n,
+                can: this.can,
             };
         },
 
         layout: AppLayout,
 
         props: {
-            baseRouteName: String,
-            errors: Object,
-            permissions: {},
-            title: String,
+            baseRouteName: { type: String, required: true },
+            errors: { type: Object, default: () => {} },
+            permissions: { type: Object, default: () => {} },
+            title: { type: String, required: true },
+            can: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
                 cancel : 'Cancel',
                 create : 'Create',
