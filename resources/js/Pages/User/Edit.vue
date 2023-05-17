@@ -197,7 +197,7 @@
                 baseRouteName: 'admin.users',
                 biodataFormKey: 0,
                 errorBag: 'userUpdate',
-                photoUrl: this.record.profile_photo_url,
+                photoUrl: this.record.optimizedProfilePhotoUrl,
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,

@@ -1,4 +1,12 @@
+import icon from '@/Libs/icon-class';
+
 export default {
+    data() {
+        return {
+            icon,
+        };
+    },
+
     computed: {
         isImage() {
             return (
@@ -9,19 +17,20 @@ export default {
 
         thumbnailIcon() {
             if (this.medium.file_type === "video") {
-                return "far fa-file-video";
+                return this.icon.fileVideo;
             } else if (this.medium.extension) {
                 if (this.medium.extension === "pdf") {
-                    return "far fa-file-pdf";
+                    return this.icon.filePdf;
                 } else if (this.medium.extension.startsWith('doc')) {
-                    return "far fa-file-word";
+                    return this.icon.fileWord;
                 } else if (this.medium.extension.startsWith('ppt')) {
-                    return "far fa-file-powerpoint";
+                    return this.icon.filePowerpoint;
                 } else if (this.medium.extension.startsWith('xls')) {
-                    return "far fa-file-excel";
+                    return this.icon.fileExcel;
                 }
             }
-            return "far fa-file-alt";
+
+            return this.icon.file;
         }
     },
 };
