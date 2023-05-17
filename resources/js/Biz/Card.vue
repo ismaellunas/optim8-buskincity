@@ -36,6 +36,7 @@
         <div
             v-if="isContentShown"
             class="card-content"
+            :class="classCardContent"
         >
             <slot />
         </div>
@@ -66,6 +67,7 @@
             iconCollapse: { type: String, default: null },
             isCollapsed: { type: Boolean, default: false },
             isExpandingOnLoad: { type: Boolean, default: false },
+            classCardContent: { type: [String, Object, Array], default: ''},
         },
 
         emits: [
