@@ -64,6 +64,9 @@ class RoleController extends CrudController
                     'title' => $this->getCreateTitle(),
                 ],
             ],
+            'can' => [
+                'edit_name' => true,
+            ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'title' => $this->getCreateTitle(),
             'i18n' => $this->translationCreateEditPage(),
