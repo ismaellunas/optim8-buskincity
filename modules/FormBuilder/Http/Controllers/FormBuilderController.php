@@ -46,7 +46,7 @@ class FormBuilderController extends CrudController
                 $this->recordsPerPage,
             ),
             'i18n' => [
-                'search' => __('search'),
+                'search' => __('Search'),
                 'create_new' => __('Create new'),
                 'name' => __('Name'),
                 'form_id' => __('Form ID'),
