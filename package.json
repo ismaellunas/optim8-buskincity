@@ -52,7 +52,6 @@
         "vue-cropperjs": "^5.0.0",
         "vue-filepond": "^7.0.3",
         "vue-loading-overlay": "^5.0",
-        "vue-recaptcha": "^2.0.1",
         "vue-slider-component": "^4.1.0-beta.6",
         "vue-social-sharing": "^4.0.0-alpha4",
         "vue-sweetalert2": "^5.0.2",
