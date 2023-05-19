@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\RecaptchaService;
 use App\Services\SettingService;
 use Closure;
+use Illuminate\Http\Request;
 use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 
 class Recaptcha
@@ -16,7 +16,7 @@ class Recaptcha
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $settingService = app(SettingService::class);
 
@@ -27,20 +27,13 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
-            if (!$response->isSuccess()) {
-                if (
-                    in_array(
-                        GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
-                        $response->getErrorCodes()
-                    )
-                    || in_array(
-                        'invalid-input-secret',
-                        $response->getErrorCodes()
-                    )
-                ) {
-                    return $next($request);
-                }
-
+            if (
+                ! $response->isSuccess()
+                || (
+                    $response->isSuccess()
+                    && $response->getScore() < config('constants.settings.recaptcha.minimal_score')
+                )
+            ) {
                 if (!$request->expectsJson()) {
                     return redirect()
                         ->back()
