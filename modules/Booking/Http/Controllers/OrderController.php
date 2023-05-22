@@ -225,7 +225,7 @@ class OrderController extends CrudController
             'date' => __('Date'),
             'timezone' => __('Timezone'),
             'time' => __('Time'),
-            'check_in' => __('Check-In'),
+            'check_in' => __('Check-in'),
             'actions' => __('Actions'),
             'reschedule' => __('Reschedule'),
             'cancel' => __('Cancel'),

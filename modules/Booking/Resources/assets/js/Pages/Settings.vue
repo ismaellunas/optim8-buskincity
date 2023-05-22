@@ -160,7 +160,7 @@
             title: { type: String, default: "Settings" },
             i18n: { type: Object, default: () => ({
                 email : 'Email',
-                check_in : 'Check-In',
+                check_in : 'Check-in',
                 new_booking : 'New booking',
                 booking_remainder : 'Booking remainder',
                 booking_cancellation : 'Booking cancellation',

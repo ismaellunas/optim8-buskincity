@@ -24,7 +24,7 @@ class ThemeHeaderTest extends BaseVisitTestCase
                 ->loginAs($this->user)
                 ->visit(new ThemeHeader())
                 ->clickNavigationTab()
-                ->assertSee('Menu Items');
+                ->assertSee(__('Menu items'));
         });
     }
 }
