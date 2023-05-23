@@ -36,6 +36,7 @@
         data() {
             return {
                 isRecaptchaError: false,
+                recaptchaScript: null,
             }
         },
 
@@ -48,13 +49,19 @@
 
         mounted() {
             if (this.isRecaptchaAvailable) {
-                let recaptchaScript = document.createElement('script')
+                this.recaptchaScript = document.createElement('script')
 
-                recaptchaScript.setAttribute(
+                this.recaptchaScript.setAttribute(
                     'src',
                     'https://www.google.com/recaptcha/api.js?render=' + this.siteKey
                 );
-                document.head.appendChild(recaptchaScript)
+                document.head.appendChild(this.recaptchaScript);
+            }
+        },
+
+        unmounted() {
+            if (this.isRecaptchaAvailable && this.recaptchaScript) {
+                document.head.removeChild(this.recaptchaScript);
             }
         },
 
