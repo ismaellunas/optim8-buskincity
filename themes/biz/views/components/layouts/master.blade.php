@@ -43,7 +43,7 @@
 
         @env ('production')
             <!-- Styles -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css">
+            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
             <!-- Scripts -->
             <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
         @endenv
