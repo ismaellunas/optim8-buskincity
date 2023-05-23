@@ -15,13 +15,13 @@ class Recaptcha extends Component
      *
      * @return void
      */
-    public function __construct(string $tag = null)
+    public function __construct(string $tag = 'submit')
     {
         $this->recaptchaSiteKey = app(SettingService::class)->getRecaptchaKeys()
             ['recaptcha_site_key']
             ?? null;
 
-        $this->tag = $tag ?? 'submit';
+        $this->tag = $tag;
     }
 
     /**
