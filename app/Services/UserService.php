@@ -83,7 +83,6 @@ class UserService
     }
 
     public function getLatestRegistrations(
-        User $user,
         string $term = null,
         ?array $scopes = null,
         int $limit = 10,
@@ -108,13 +107,34 @@ class UserService
                     }
                 }
             })
+            ->with(['profilePhoto' => function ($query) {
+                $query->select([
+                    'id',
+                    'extension',
+                    'file_name',
+                    'file_url',
+                    'version',
+                ]);
+            }])
             ->limit($limit)
             ->whereDoesntHave('roles', function ($query) {
                 $query->where('name', config('permission.super_admin_role'));
             })
             ->get()
-            ->append('registered_at')
-            ->toArray();
+            ->map(function ($user) {
+                $props = [
+                    'id',
+                    'optimized_profile_photo_url',
+                    'full_name',
+                    'email',
+                    'registered_at',
+                ];
+
+                $record = $user->only($props);
+
+                return $record;
+            })
+            ->all();
     }
 
     private function transformRecords(AbstractPaginator $records, User $actor)

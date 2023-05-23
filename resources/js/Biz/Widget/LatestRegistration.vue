@@ -87,7 +87,7 @@
                                 class="media-left"
                                 ratio="is-64x64"
                                 rounded="is-rounded"
-                                :src="record.profile_photo_url ?? userImage"
+                                :src="record.optimized_profile_photo_url ?? userImage"
                             />
 
                             <div class="media-content">
