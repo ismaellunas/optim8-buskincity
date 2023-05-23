@@ -37,6 +37,9 @@ class FormObserver
             );
         }
 
+        Arr::set($emailSetting, 'is_sending_user_creation_email', true);
+        Arr::set($emailSetting, 'is_sending_user_update_email', true);
+
         $setting['email'] = $emailSetting;
 
         $form->setting = $setting;
