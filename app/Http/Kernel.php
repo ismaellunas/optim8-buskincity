@@ -75,7 +75,6 @@ class Kernel extends HttpKernel
         'ensureLoginFromLoginRoute' => \App\Http\Middleware\EnsureLoginFromLoginRoute::class,
         'publicPage' => \App\Http\Middleware\PublicPageIsAvailable::class,
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
-        'recaptchaAdminLogin' => \App\Http\Middleware\RecaptchaAdminLogin::class,
         'redirectOriginLanguage' => \App\Http\Middleware\RedirectOriginLanguage::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,

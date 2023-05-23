@@ -200,15 +200,4 @@ class UserService
             $post->delete();
         }
     }
-
-    public function getSuperAdminEmailLists(): array
-    {
-        return $this->getBuilderRecords()
-            ->whereHas('roles', function ($query) {
-                $query->where('name', config('permission.super_admin_role'));
-            })
-            ->get()
-            ->pluck('email')
-            ->toArray();
-    }
 }
