@@ -58,6 +58,8 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
+
+        @vite(['themes/'.config('theme.active').'/js/app.js'])
     </head>
 
     <body>
@@ -71,8 +73,6 @@
                 </div>
             </section>
         </div>
-
-        @vite(['themes/'.config('theme.active').'/js/app.js'])
 
         <script>
             function showForm() {
