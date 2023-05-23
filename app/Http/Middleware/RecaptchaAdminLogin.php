@@ -2,11 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LoginService;
 use App\Services\UserService;
 use Closure;
 use Illuminate\Http\Request;
 
-class RecaptchaLogin extends Recaptcha
+class RecaptchaAdminLogin extends Recaptcha
 {
     /**
      * Handle an incoming request.
@@ -17,15 +18,18 @@ class RecaptchaLogin extends Recaptcha
      */
     public function handle(Request $request, Closure $next)
     {
-        $redirectResponse = parent::handle($request, $next);
-
-        $emailWhiteLists = (new UserService())->getSuperAdminEmailLists();
+        $emailWhiteLists = app(UserService::class)->getSuperAdminEmailLists();
         $email = $request->get('email');
 
-        if (in_array($email, $emailWhiteLists)) {
-            return $next($request);
+        if (
+            ! in_array($email, $emailWhiteLists)
+            || ! LoginService::isAdminLoginAttemptRoute($request->route())
+        ) {
+
+            return parent::handle($request, $next);
+
         }
 
-        return $redirectResponse;
+        return $next($request);
     }
 }
