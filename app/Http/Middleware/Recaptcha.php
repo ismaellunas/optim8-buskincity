@@ -27,26 +27,45 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
-            if (
-                ! $response->isSuccess()
-                || (
-                    $response->isSuccess()
-                    && $response->getScore() < config('constants.settings.recaptcha.minimal_score')
-                )
-            ) {
-                if (!$request->expectsJson()) {
-                    return redirect()
-                        ->back()
-                        ->with('failed', __('Recaptcha failed. Please try again.'));
+            if (! $response->isSuccess()) {
+                if (
+                    in_array(
+                        GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
+                        $response->getErrorCodes()
+                    )
+                    || in_array(
+                        'invalid-input-secret',
+                        $response->getErrorCodes()
+                    )
+                ) {
+                    return $next($request);
                 }
 
-                return response([
-                    'success' => false,
-                    'message' => __('Recaptcha failed. Please try again.'),
-                ]);
+                return $this->failRequestAction($request);
+            }
+
+            if (
+                $response->isSuccess()
+                && $response->getScore() < config('constants.settings.recaptcha.minimal_score')
+            ) {
+                return $this->failRequestAction($request);
             }
         }
 
         return $next($request);
+    }
+
+    private function failRequestAction(Request $request)
+    {
+        if (!$request->expectsJson()) {
+            return redirect()
+                ->back()
+                ->with('failed', __('Recaptcha verification failed. Please try again.'));
+        }
+
+        return response([
+            'success' => false,
+            'message' => __('Recaptcha verification failed. Please try again.'),
+        ]);
     }
 }
