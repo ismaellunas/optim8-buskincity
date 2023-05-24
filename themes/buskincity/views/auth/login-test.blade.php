@@ -1,4 +1,4 @@
-<x-layouts.auth>
+<x-layouts.auth-test>
     <x-slot name="title">
         Login | {{ config('app.name') }}
     </x-slot>
@@ -100,7 +100,9 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
+                    <fieldset id="fieldset">
+
+                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="disableForm()">
                         @csrf
                         <div class="field mb-5">
                             <label class="label">Email</label>
@@ -153,12 +155,14 @@
                             </div>
                         </div>
 
-                        <x-recaptcha />
+                        <x-recaptcha></x-recaptcha>
 
                         <button class="button is-medium is-primary is-fullwidth">
                             <span class="has-text-weight-bold">Log In</span>
                         </button>
                     </form>
+
+                    </fieldset>
                 </div>
             </div>
         </div>
@@ -175,4 +179,4 @@
             function removeErrorMessage(element) { element.parentElement.remove(); }
         </script>
     @endpush
-</x-layouts.auth>
+</x-layouts.auth-test>

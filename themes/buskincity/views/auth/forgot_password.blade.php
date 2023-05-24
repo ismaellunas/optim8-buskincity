@@ -1,4 +1,4 @@
-<x-layouts.auth>
+<x-layouts.auth-test>
     <x-slot name="title">
         {{ __('Forgot Password') }} | {{ config('app.name') }}
     </x-slot>
@@ -51,8 +51,9 @@
                                 {{ session()->get('status') }}
                             </div>
                         @endif
+                        <fieldset id="fieldset">
 
-                        <form action="{{ route('password.email') }}" onsubmit="setLoader()" method="post" class="mt-6">
+                        <form action="{{ route('password.email') }}" onsubmit="disableForm()" method="post" class="mt-6">
                             @csrf
                             <div class="field mb-5">
                                 <label class="label">Email</label>
@@ -70,9 +71,11 @@
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>
                             </button>
                         </form>
+
+                        </fieldset>
                     </div>
                 @endif
             </div>
         </div>
     </div>
-</x-layouts.auth>
+</x-layouts.auth-test>
