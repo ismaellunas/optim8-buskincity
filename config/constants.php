@@ -256,6 +256,10 @@ return [
                 'group' => 'key.tinymce'
             ],
         ],
+
+        'recaptcha' => [
+            'minimal_score' => env('RECAPTCHA_MINIMAL_SCORE', 0.6),
+        ]
     ],
 
     'reading_time_per_minute' => 200,

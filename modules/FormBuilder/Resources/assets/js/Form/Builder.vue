@@ -228,8 +228,6 @@
                         oopsAlert();
 
                         self.formErrors = error.response.data.errors;
-
-                        self.$refs.recaptcha.onExpired()
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();

@@ -156,7 +156,6 @@
                     }))
                     .post(this.route('admin.two-factor.login.attempt'), {
                         onStart: () => this.onStartLoadingOverlay(),
-                        onError: () => this.$refs.recaptcha.onExpired(),
                         onFinish: () => this.onEndLoadingOverlay(),
                     });
             },

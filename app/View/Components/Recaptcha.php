@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 
 class Recaptcha extends Component
 {
+    public $tag;
     public $recaptchaSiteKey = null;
 
     /**
@@ -14,11 +15,13 @@ class Recaptcha extends Component
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $tag = 'submit')
     {
         $this->recaptchaSiteKey = app(SettingService::class)->getRecaptchaKeys()
             ['recaptcha_site_key']
             ?? null;
+
+        $this->tag = $tag;
     }
 
     /**
