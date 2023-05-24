@@ -1,8 +1,6 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth-test>
     <x-slot name="title">
-        Signup | {{ config('app.name') }}
+        Login | {{ config('app.name') }}
     </x-slot>
 
     <div class="columns">
@@ -13,7 +11,7 @@
             <nav class="level is-mobile">
                 <!-- Left side -->
                 <div class="level-left">
-                    <a onclick="backOrOpenSocialMediaForm()" class="button is-white">
+                    <a class="button is-white" onclick="backOrOpenSocialMediaForm()">
                         <span class="icon is-small">
                             <i class="fa-regular fa-arrow-left"></i>
                         </span>
@@ -23,83 +21,89 @@
 
                 <!-- Right side -->
                 <div class="level-right">
-                    <span>Already have an account?</span>
-                    <a href="{{ route('login') }}" class="button is-primary is-outlined is-responsive ml-4">
-                        <span class="has-text-weight-bold">Log In</span>
+                    <span>Don’t have an account?</span>
+                    <a href="{{ route('register') }}" class="button is-primary is-outlined is-responsive ml-4">
+                        <span class="has-text-weight-bold">Sign Up</span>
                     </a>
                 </div>
             </nav>
 
+            @if (session('message'))
+                <div class="columns is-vcentered is-flex-grow-1">
+                    <div class="column is-8 is-offset-2">
+                        <div class="notification is-info">
+                            {{ session('message') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if (session('failed'))
+                <div class="columns is-vcentered is-flex-grow-1">
+                    <div class="column is-8 is-offset-2">
+                        <div class="notification is-danger">
+                            {{ session('failed') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="columns is-vcentered is-flex-grow-1">
                 <div id="socialMediaForm" class="column is-8 is-offset-2">
-                    @if (session('failed'))
-                        <div class="columns">
-                            <div class="column">
-                                <div class="notification is-danger">
-                                    {{ session('failed') }}
-                                </div>
-                            </div>
-                        </div>
+                    <h1 class="title is-2 mb-4">Log In</h1>
+                    <p>Please log in to continue.</p>
+
+                    @if (!empty($availableSocialiteDrivers))
+                        @foreach ($availableSocialiteDrivers as $driver)
+                            <a href="{{ route('oauth.redirect', $driver) }}" @class([
+                                "button is-medium is-light is-fullwidth",
+                                "mt-6" => $loop->first,
+                                "mt-4" => !$loop->first
+                            ])>
+                                <span class="icon is-small">
+                                    <i class="fa-brands fa-{{ $driver }}"></i>
+                                </span>
+                                <span>Continue with <b>{{ Str::title($driver) }}</b></span>
+                            </a>
+                        @endforeach
+
+                        <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
                     @endif
-
-                    <h1 class="title is-2 mb-4">Sign Up</h1>
-                    <p>Please choose a method to continue.</p>
-
-                    @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
-                        <a href="{{ route('oauth.redirect', $driver) }}" @class([
-                            "button is-medium is-light is-fullwidth",
-                            "mt-6" => $loop->first,
-                            "mt-4" => !$loop->first,
-                        ])>
-                            <span class="icon is-small">
-                                <i class="fa-brands fa-{{ $driver }}"></i>
-                            </span>
-                            <span>Sign up with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span></span>
-                        </a>
-                    @endforeach
-
-                    <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
 
                     <a class="button is-medium is-light is-fullwidth mt-4" onclick="showForm()">
                         <span class="icon is-small">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <span>Sign up with <span class="has-text-weight-bold">Email</span></span>
+
+                        <span>Continue with <b>Email</b></span>
                     </a>
                 </div>
 
                 <div id="formFields" class="column is-8 is-offset-2 is-hidden">
-                    <h1 class="title is-2 mb-4">Create Account</h1>
+                    <h1 class="title is-2 mb-4">Welcome Back</h1>
+
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <p>Fill in your email and password to login.</p>
 
                     <fieldset id="fieldset">
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="disableForm()">
+                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="disableForm()">
                         @csrf
-                        <div class="field is-horizontal mb-5">
-                            <div class="field-body">
-                                <div class="field">
-                                    <label class="label">First name</label>
-                                    <div class="control">
-                                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="input" placeholder="First name" required>
-                                    </div>
-                                    @error('first_name')
-                                        <p class="help is-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="field">
-                                    <label class="label">Last name</label>
-                                    <div class="control">
-                                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="input" placeholder="Last name" required>
-                                    </div>
-                                    @error('last_name')
-                                        <p class="help is-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="field mb-5">
                             <label class="label">Email</label>
                             <div class="control">
@@ -134,23 +138,28 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
-
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
                                 <div class="field">
-                                    <div class="pr-6">
-                                        <p class="is-size-7">By clicking on Create Account you agree with our <a href="#">Terms and Conditions</a></p>
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="mr-3" name="remember">
+                                            Remember me
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div class="field">
-                                    <button class="button is-medium is-primary is-fullwidth">
-                                        <span class="has-text-weight-bold">Create Account</span>
-                                    </button>
+                                <div class="field has-text-right">
+                                    <a href="{{ route('password.request') }}" class="has-text-primary">Forgot password?</a>
                                 </div>
                             </div>
                         </div>
+
+                        <x-recaptcha></x-recaptcha>
+
+                        <button class="button is-medium is-primary is-fullwidth">
+                            <span class="has-text-weight-bold">Log In</span>
+                        </button>
                     </form>
 
                     </fieldset>
@@ -159,11 +168,15 @@
         </div>
     </div>
 
-    @if ($errors->any())
     @push('bottom_scripts')
+        @if ($errors->any())
+            <script>
+                showForm();
+            </script>
+        @endif
+
         <script>
-            showForm();
+            function removeErrorMessage(element) { element.parentElement.remove(); }
         </script>
     @endpush
-    @endif
 </x-layouts.auth-test>
