@@ -31,7 +31,7 @@ class SettingKeyController extends Controller
             'keys' => $keys,
             'groups' => array_keys($keys),
             'i18n' => [
-                'save' => 'Save',
+                'save' => __('Save'),
             ],
         ]);
     }

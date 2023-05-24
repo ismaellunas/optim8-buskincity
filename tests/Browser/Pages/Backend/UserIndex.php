@@ -22,9 +22,9 @@ class UserIndex extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Users');
-        $browser->assertSee('Users');
-        $browser->assertSeeLink("Create New");
+        $browser->assertTitleContains(__('Users'));
+        $browser->assertSee(__('Users'));
+        $browser->assertSeeLink(__('Create new'));
     }
 
     /**

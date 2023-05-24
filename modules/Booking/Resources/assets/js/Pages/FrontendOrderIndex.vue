@@ -95,7 +95,7 @@
                         :is-sorted="column == 'checkin'"
                         @click="orderColumn('checkin')"
                     >
-                        Check-In
+                        Check-in
                     </biz-table-column-sort>
                     <th>
                         <div class="level-right">

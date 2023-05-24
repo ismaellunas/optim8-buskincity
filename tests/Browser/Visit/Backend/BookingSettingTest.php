@@ -32,11 +32,11 @@ class BookingSettingTest extends BaseVisitTestCase
                 ->loginAs($this->user)
                 ->visit(new BookingSetting())
                 ->click('@checkInTabTrigger')
-                ->waitForTextIn('@checkInForm', 'Available check in before')
-                ->assertSee('Available check in before')
+                ->waitForTextIn('@checkInForm', __('Available check-in before'))
+                ->assertSee(__('Available check-in before'))
                 ->click('@emailTabTrigger')
-                ->waitForTextIn('@emailForm', 'New booking')
-                ->assertSee('New booking')
+                ->waitForTextIn('@emailForm', __('New booking'))
+                ->assertSee(__('New booking'))
             ;
         });
     }

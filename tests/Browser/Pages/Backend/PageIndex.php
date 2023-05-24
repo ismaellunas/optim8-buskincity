@@ -22,8 +22,8 @@ class PageIndex extends DuskPage
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertSee('Pages');
-        $browser->assertSeeLink("Create New");
+        $browser->assertSee(__('Pages'));
+        $browser->assertSeeLink(__('Create new'));
     }
 
     /**
