@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="columns">
-        <div class="column is-5 is-hidden-mobile">
+        <div class="column is-5">
             <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
         <div class="is-flex is-flex-direction-column column is-7">
