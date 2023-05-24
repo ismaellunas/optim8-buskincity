@@ -1,12 +1,10 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth>
     <x-slot name="title">
         Login | {{ config('app.name') }}
     </x-slot>
 
     <div class="columns">
-        <div class="column is-5">
+        <div class="column is-5 is-hidden-mobile">
             <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
         <div class="is-flex is-flex-direction-column column is-7">
@@ -55,10 +53,6 @@
                     <h1 class="title is-2 mb-4">Log In</h1>
                     <p>Please log in to continue.</p>
 
-                    @php
-                        $availableSocialiteDrivers = $loginService->getAvailableSocialiteDrivers();
-                    @endphp
-
                     @if (!empty($availableSocialiteDrivers))
                         @foreach ($availableSocialiteDrivers as $driver)
                             <a href="{{ route('oauth.redirect', $driver) }}" @class([
@@ -105,7 +99,9 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
+                    <fieldset id="fieldset">
+
+                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="disableFieldset()">
                         @csrf
                         <div class="field mb-5">
                             <label class="label">Email</label>
@@ -164,6 +160,8 @@
                             <span class="has-text-weight-bold">Log In</span>
                         </button>
                     </form>
+
+                    </fieldset>
                 </div>
             </div>
         </div>

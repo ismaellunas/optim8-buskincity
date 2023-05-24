@@ -45,7 +45,7 @@
 
                     <fieldset id="fieldset">
 
-                    <form action="{{ route('two-factor.login') }}" onsubmit="disableForm()" method="post" class="mt-6">
+                    <form action="{{ route('two-factor.login') }}" onsubmit="disableFieldset()" method="post" class="mt-6">
                         @csrf
                         <div id="code" class="field mb-5 recovery">
                             <label class="label">Code</label>
