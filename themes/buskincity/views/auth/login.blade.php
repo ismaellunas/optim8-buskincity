@@ -1,12 +1,10 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth>
     <x-slot name="title">
         Login | {{ config('app.name') }}
     </x-slot>
 
     <div class="columns">
-        <div class="column is-5">
+        <div class="column is-5 is-hidden-mobile">
             <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
         <div class="is-flex is-flex-direction-column column is-7">
@@ -54,10 +52,6 @@
                 <div id="socialMediaForm" class="column is-8 is-offset-2">
                     <h1 class="title is-2 mb-4">Log In</h1>
                     <p>Please log in to continue.</p>
-
-                    @php
-                        $availableSocialiteDrivers = $loginService->getAvailableSocialiteDrivers();
-                    @endphp
 
                     @if (!empty($availableSocialiteDrivers))
                         @foreach ($availableSocialiteDrivers as $driver)

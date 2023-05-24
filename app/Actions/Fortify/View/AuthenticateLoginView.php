@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify\View;
 
+use App\Services\LoginService;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,7 +23,8 @@ class AuthenticateLoginView
             ]);
         }
 
-        return view('auth.login');
-
+        return view('auth.login', [
+            'availableSocialiteDrivers' => app(LoginService::class)->getAvailableSocialiteDrivers()
+        ]);
     }
 }
