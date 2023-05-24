@@ -65,7 +65,7 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
+                        <x-recaptcha tag="tfa" />
 
                         <div class="buttons">
                             <button type="button" class="button is-medium recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
