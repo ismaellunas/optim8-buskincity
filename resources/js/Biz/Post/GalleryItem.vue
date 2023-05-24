@@ -86,6 +86,7 @@
     import BizImage from '@/Biz/Image.vue';
     import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
+    import { truncate } from 'lodash';
 
     export default {
         name: 'PostGalleryItem',
@@ -122,13 +123,10 @@
 
         computed: {
             recordTitle() {
-                let title = this.record.title;
-
-                if (title.length > 40) {
-                    return title.slice(0, 40) + '...';
-                } else {
-                    return title;
-                }
+                return truncate(this.record.title, {
+                    'length': 40,
+                    'separator': ' '
+                })
             },
         },
     }
