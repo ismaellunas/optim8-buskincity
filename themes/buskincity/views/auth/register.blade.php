@@ -72,9 +72,9 @@
                     <h1 class="title is-2 mb-4">Create Account</h1>
                     <p>Fill in your email and password to login.</p>
 
-                    <fieldset id="fieldset">
+                    <form action="{{ route('register') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="disableFieldset()">
                         @csrf
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -151,9 +151,9 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
 
-                    </fieldset>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
         </div>

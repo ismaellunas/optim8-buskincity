@@ -43,9 +43,9 @@
                         </div>
                     @endif
 
-                    <fieldset id="fieldset">
+                    <form action="{{ route('two-factor.login') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
 
-                    <form action="{{ route('two-factor.login') }}" onsubmit="disableFieldset()" method="post" class="mt-6">
                         @csrf
                         <div id="code" class="field mb-5 recovery">
                             <label class="label">Code</label>
@@ -88,9 +88,9 @@
                                 </span>
                             </button>
                         </div>
-                    </form>
 
-                    </fieldset>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
         </div>
