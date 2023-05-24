@@ -51,9 +51,9 @@
                                 {{ session()->get('status') }}
                             </div>
                         @endif
-                        <fieldset id="fieldset">
+                        <form action="{{ route('password.email') }}" method="post" class="mt-6">
+                            <fieldset id="fieldset">
 
-                        <form action="{{ route('password.email') }}" onsubmit="disableFieldset()" method="post" class="mt-6">
                             @csrf
                             <div class="field mb-5">
                                 <label class="label">Email</label>
@@ -70,9 +70,10 @@
                             <button type="submit" class="button is-medium is-primary is-fullwidth">
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>
                             </button>
+
+                            </fieldset>
                         </form>
 
-                        </fieldset>
                     </div>
                 @endif
             </div>

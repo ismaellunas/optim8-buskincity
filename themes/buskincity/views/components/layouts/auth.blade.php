@@ -112,6 +112,8 @@
                 if (fieldset) {
                     fieldset.setAttribute('disabled','disabled');
                 }
+
+                return true;
             };
         </script>
 

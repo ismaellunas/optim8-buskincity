@@ -99,9 +99,9 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <fieldset id="fieldset">
+                    <form action="{{ route('login') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
 
-                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="disableFieldset()">
                         @csrf
                         <div class="field mb-5">
                             <label class="label">Email</label>
@@ -159,9 +159,9 @@
                         <button class="button is-medium is-primary is-fullwidth">
                             <span class="has-text-weight-bold">Log In</span>
                         </button>
-                    </form>
 
-                    </fieldset>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
         </div>
