@@ -57,15 +57,12 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
-
-        @vite('themes/'.config('theme.active').'/js/auth.js')
     </head>
 
     <body>
         {!! $trackingCodeAfterBody !!}
 
         <div id="app">
-            <loading-overlay id="loader" class="is-hidden"></loading-overlay>
             <section class="section">
                 <div class="container">
                     {{ $slot }}
@@ -109,13 +106,16 @@
                 });
             }
 
-            function setLoader() {
-                document.getElementById('loader').classList.remove('is-hidden');
-            }
+            function disableFieldset() {
+                const fieldset = document.getElementById('fieldset');
+
+                if (fieldset) {
+                    fieldset.setAttribute('disabled','disabled');
+                }
+            };
         </script>
 
         @stack('bottom_scripts')
-
 
         @if ($additionalJavascript)
             <script>

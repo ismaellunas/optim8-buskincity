@@ -1,6 +1,6 @@
 @inject('loginService', 'App\Services\LoginService')
 
-<x-layouts.auth-test>
+<x-layouts.auth>
     <x-slot name="title">
         Signup | {{ config('app.name') }}
     </x-slot>
@@ -74,7 +74,7 @@
 
                     <fieldset id="fieldset">
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="disableForm()">
+                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="disableFieldset()">
                         @csrf
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -166,4 +166,4 @@
         </script>
     @endpush
     @endif
-</x-layouts.auth-test>
+</x-layouts.auth>
