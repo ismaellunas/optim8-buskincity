@@ -16,6 +16,7 @@ export default defineConfig((command, mode) => {
     const env = loadEnv(mode, process.cwd(), '');
     const hostUrl = new URL(`${env.APP_URL}`);
 
+    input.push(`themes/${env.THEME_ACTIVE}/js/auth.js`);
     input.push(`themes/${env.THEME_ACTIVE}/js/app.js`);
     input.push(`themes/${env.THEME_ACTIVE}/sass/app.sass`);
 

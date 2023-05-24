@@ -6,15 +6,14 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="description" content="{{ $metaDescription ?? config('app.name') }}">
-        <meta name="keywords" content="{{ $metaKeywords ?? config('app.name') }}">
 
         @stack('metas')
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        @include('favicon')
+
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
@@ -59,7 +58,7 @@
 
         {!! $trackingCodeInsideHead !!}
 
-        @vite(['themes/'.config('theme.active').'/js/app.js'])
+        @vite('themes/'.config('theme.active').'/js/auth.js')
     </head>
 
     <body>
@@ -126,5 +125,4 @@
 
         {!! $trackingCodeBeforeBody !!}
     </body>
-
 </html>
