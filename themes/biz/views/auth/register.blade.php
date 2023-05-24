@@ -125,7 +125,7 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha></x-recaptcha>
+                            <x-recaptcha tag="register" />
 
                             <div class="flex mt-4">
                                 <div class="columns is-gapless">
