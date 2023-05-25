@@ -228,6 +228,7 @@
                         oopsAlert();
 
                         self.formErrors = error.response.data.errors;
+                        self.errorMessage = error.response.data.message;
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
