@@ -43,7 +43,9 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('two-factor.login') }}" onsubmit="setLoader()" method="post" class="mt-6">
+                    <form action="{{ route('two-factor.login') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
+
                         @csrf
                         <div id="code" class="field mb-5 recovery">
                             <label class="label">Code</label>
@@ -86,6 +88,8 @@
                                 </span>
                             </button>
                         </div>
+
+                        </fieldset>
                     </form>
                 </div>
             </div>

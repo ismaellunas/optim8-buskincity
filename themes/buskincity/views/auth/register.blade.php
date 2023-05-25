@@ -72,7 +72,9 @@
                     <h1 class="title is-2 mb-4">Create Account</h1>
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="setLoader()">
+                    <form action="{{ route('register') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
+
                         @csrf
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -149,17 +151,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        </fieldset>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    @if ($errors->any())
     @push('bottom_scripts')
-        @if ($errors->any())
-            <script>
-                showForm();
-            </script>
-        @endif
+        <script>
+            showForm();
+        </script>
     @endpush
+    @endif
 </x-layouts.auth>
