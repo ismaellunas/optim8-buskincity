@@ -82,3 +82,5 @@ export const pageStatus = {
     draft: 0,
     published: 1,
 };
+
+export const maxFileSize = import.meta.env.VITE_MAX_FILE_SIZE ?? oneMegabyte * 10;

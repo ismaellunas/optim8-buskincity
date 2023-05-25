@@ -291,6 +291,8 @@ return [
         'admin.login',
     ],
 
+    'max_file_size' => env('MAX_FILE_SIZE', 10 * 1024),
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
