@@ -27,6 +27,7 @@ class MediaStoreRequest extends BaseFormRequest
     public function rules()
     {
         $mimes = MediaService::getExtensions();
+        $max = MediaService::maxFileSize();
 
         return [
             ...[
@@ -38,7 +39,7 @@ class MediaStoreRequest extends BaseFormRequest
                 '*.file' => [
                     'sometimes',
                     'file',
-                    'max:'.config('constants.one_megabyte') * 50,
+                    'max:'.$max,
                     'mimes:'.implode(',', $mimes),
                 ],
             ],

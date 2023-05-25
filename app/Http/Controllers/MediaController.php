@@ -66,7 +66,7 @@ class MediaController extends CrudController
                     ]),
                     __('Max file size: :filesize.', [
                         'filesize' => HumanReadable::bytesToHuman(
-                            (50 * config('constants.one_megabyte')) * 1024
+                            MediaService::maxFileSize() * 1024
                         )
                     ]),
                 ],

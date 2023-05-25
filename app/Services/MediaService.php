@@ -508,7 +508,7 @@ class MediaService
             ]),
             __('Max file size: :filesize.', [
                 'filesize' => HumanReadable::bytesToHuman(
-                    (50 * config('constants.one_megabyte')) * 1024
+                    self::maxFileSize() * 1024
                 )
             ]),
         ];
@@ -533,5 +533,10 @@ class MediaService
             'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
             'are_you_sure' => __('Are you sure?'),
         ];
+    }
+
+    public static function maxFileSize()
+    {
+        return config('constants.max_file_size');
     }
 }
