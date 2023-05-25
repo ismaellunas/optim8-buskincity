@@ -192,6 +192,14 @@ if (App::environment('production')) {
     );
 }
 
+Route::get('/post-646f59ff0b909', function () {
+    $settingService = app(\App\Services\SettingService::class);
+
+    return view('post-test', [
+        'appCssUrl' => $settingService->getFrontendCssUrl(),
+    ]);
+});
+
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
