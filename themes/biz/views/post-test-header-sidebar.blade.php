@@ -56,9 +56,6 @@
                                 </div>
                             </header>
 
-                            <div class="content mt-5">
-                            </div>
-
                             <div class="tags mt-6">
                                 <span class="tag">Published on 05 May 2023</span>
 

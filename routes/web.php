@@ -224,6 +224,14 @@ Route::get('/post-646f5c66c5613', function () {
     ]);
 });
 
+Route::get('/post-646f5c66c5614', function () {
+    $settingService = app(\App\Services\SettingService::class);
+
+    return view('post-test-content-only', [
+        'appCssUrl' => $settingService->getFrontendCssUrl(),
+    ]);
+});
+
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
