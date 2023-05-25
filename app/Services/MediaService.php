@@ -518,6 +518,7 @@ class MediaService
     {
         return [
             'search' => __('Search'),
+            'media_detail' => __('Media detail'),
             'filter' => __('Filter'),
             'file_name' => __('File name'),
             'alternative_text' => __('Alternative text'),
