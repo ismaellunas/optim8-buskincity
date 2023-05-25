@@ -200,6 +200,30 @@ Route::get('/post-646f59ff0b909', function () {
     ]);
 });
 
+Route::get('/post-646f5c66c5611', function () {
+    $settingService = app(\App\Services\SettingService::class);
+
+    return view('post-test1', [
+        'appCssUrl' => $settingService->getFrontendCssUrl(),
+    ]);
+});
+
+Route::get('/post-646f5c66c5612', function () {
+    $settingService = app(\App\Services\SettingService::class);
+
+    return view('post-test-no-content', [
+        'appCssUrl' => $settingService->getFrontendCssUrl(),
+    ]);
+});
+
+Route::get('/post-646f5c66c5613', function () {
+    $settingService = app(\App\Services\SettingService::class);
+
+    return view('post-test-header-sidebar', [
+        'appCssUrl' => $settingService->getFrontendCssUrl(),
+    ]);
+});
+
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
