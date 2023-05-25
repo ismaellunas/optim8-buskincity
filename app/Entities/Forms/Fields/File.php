@@ -10,7 +10,6 @@ use App\Rules\FieldMinFile;
 use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class File extends BaseField
 {
@@ -34,6 +33,8 @@ class File extends BaseField
         $this->maxFileNumber = $data['max_file_number'] ?? null;
         $this->minFileNumber = $data['min_file_number'] ?? 0;
         $this->fileLabel = $data['file_label'] ?? 'Choose a file';
+
+        $this->checkValidationMaxFileSize();
     }
 
     public function schema(): array
@@ -238,25 +239,23 @@ class File extends BaseField
     {
         $instructions = collect();
 
-        $rules = collect($this->validation['rules'] ?? []);
-
         $mimes = $this->getFileExtensions();
 
         if (! empty($mimes)) {
             $instructions->push('Accepted file extensions: '.implode(', ', $mimes));
         }
 
-        $additionalInstructions = $rules->map(function($rule) {
-            if (is_string($rule)) {
-                if (Str::startsWith($rule, 'max:')) {
-                    $bytes = preg_replace('/\s+/', '', Str::after($rule, 'max:'));
+        $rules = $this->validation['rules'] ?? [];
+        $additionalInstructions = [];
 
-                    return 'Max file size: '. HumanReadable::bytesToHuman($bytes*1024);
-                }
-            }
+        if (
+            array_key_exists('max', $rules)
+            && ! empty($rules['max'])
+        ) {
+            $bytes = $rules['max'];
 
-            return null;
-        });
+            $additionalInstructions[] = 'Max file size: '. HumanReadable::bytesToHuman($bytes * 1024);
+        }
 
         return $instructions
             ->merge($additionalInstructions)
@@ -282,6 +281,18 @@ class File extends BaseField
         foreach ($media as $medium) {
             $medium->medially()->associate($relatedEntity);
             $medium->save();
+        }
+    }
+
+    private function checkValidationMaxFileSize(): void
+    {
+        $maxFileSize = MediaService::maxFileSize();
+
+        if (
+            array_key_exists('max', $this->validation['rules'])
+            && (int)$this->validation['rules']['max'] > $maxFileSize
+        ) {
+            $this->validation['rules']['max'] = $maxFileSize;
         }
     }
 }
