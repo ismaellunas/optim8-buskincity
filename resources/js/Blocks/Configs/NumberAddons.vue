@@ -4,6 +4,8 @@
             v-model="value"
             :label="label"
             :is-small="true"
+            :class="{ 'is-danger': isInvalid }"
+            :message="errorMessage"
         >
             <template #afterInput>
                 <p class="control">
@@ -52,6 +54,28 @@
             return {
                 value: useModelWrapper(props, emit),
             };
+        },
+
+        data() {
+            return {
+                errorMessage: null,
+            };
+        },
+
+        computed: {
+            isInvalid() {
+                return this.value > this.settings.max;
+            },
+        },
+
+        watch: {
+            isInvalid(newValue) {
+                if (newValue) {
+                    this.errorMessage = `The ${this.label} must not be greater than ${this.settings.max}.`
+                } else {
+                    this.errorMessage = null;
+                }
+            }
         },
     }
 </script>
