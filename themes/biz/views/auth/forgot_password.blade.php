@@ -29,6 +29,22 @@
                         </div>
                     @endif
 
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form method="post" action="{{ route('password.email') }}" onsubmit="setLoader()">
                         <div class="mb-4">
                             @csrf
@@ -56,4 +72,10 @@
             </div>
         </section>
     </div>
+
+    @push('bottom_scripts')
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove() };
+        </script>
+    @endpush
 </x-layouts.auth>

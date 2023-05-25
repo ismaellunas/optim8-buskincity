@@ -64,6 +64,23 @@
                     <h2 class="subtitle">
                         <span>Lorem ipsum dolor sit amet.</span>
                     </h2>
+
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="has-text-left">
 
                         <form action="{{ route('register') }}" method="post" onsubmit="setLoader()">
@@ -155,5 +172,9 @@
                 showForm();
             </script>
         @endif
+
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove() };
+        </script>
     @endpush
 </x-layouts.auth>
