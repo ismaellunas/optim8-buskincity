@@ -13,7 +13,7 @@
         <script>
             grecaptcha.ready(function() {
                 try {
-                    grecaptcha.execute('{{ $recaptchaSiteKey }}', { action: '{{ $tag }}' })
+                    grecaptcha.execute('{{ $recaptchaSiteKey }}', { action: '{{ $action }}' })
                         .then((response) => {
                             document.getElementById('g-recaptcha-response').value = response;
                         });

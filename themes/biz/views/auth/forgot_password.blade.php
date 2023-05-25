@@ -60,7 +60,7 @@
                             </div>
                         </div>
 
-                        <x-recaptcha tag="forgot_password" />
+                        <x-recaptcha action="forgot_password" />
 
                         <div class="mt-4">
                             <button type="submit" class="button is-info">
