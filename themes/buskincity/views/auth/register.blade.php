@@ -72,6 +72,21 @@
                     <h1 class="title is-2 mb-4">Create Account</h1>
                     <p>Fill in your email and password to login.</p>
 
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('register') }}" method="post" class="mt-6">
                         <fieldset id="fieldset">
 
@@ -134,7 +149,7 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha tag="register" />
+                        <x-recaptcha action="register" />
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -160,10 +175,12 @@
     </div>
 
     @if ($errors->any())
-    @push('bottom_scripts')
-        <script>
-            showForm();
-        </script>
-    @endpush
+        @push('bottom_scripts')
+            <script>
+                showForm();
+
+                function removeErrorMessage(element) { element.parentElement.remove() };
+            </script>
+        @endpush
     @endif
 </x-layouts.auth>
