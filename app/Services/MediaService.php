@@ -538,6 +538,6 @@ class MediaService
 
     public static function maxFileSize()
     {
-        return config('constants.max_file_size');
+        return app(SettingService::class)->getMaxFileSize();
     }
 }
