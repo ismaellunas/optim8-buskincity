@@ -150,7 +150,7 @@
                                 </div>
                             </div>
 
-                            <x-recaptcha tag="login" />
+                            <x-recaptcha action="login" />
 
                             <button type="submit" class="button is-block is-info is-fullwidth">
                                 Log In <i class="fas fa-sign-in-alt"></i>

@@ -62,6 +62,7 @@
 
                     <biz-recaptcha
                         ref="recaptcha"
+                        action="admin_login"
                         :site-key="recaptchaSiteKey"
                         @on-verify="recaptchaVerify"
                     />

@@ -57,10 +57,12 @@ class Recaptcha
 
     private function failRequestAction(Request $request)
     {
-        if (!$request->expectsJson()) {
+        if (! $request->expectsJson()) {
             return redirect()
                 ->back()
-                ->with('failed', __('Recaptcha verification failed. Please try again.'));
+                ->withErrors([
+                    'recaptcha' => __('Recaptcha verification failed. Please try again.'),
+                ]);
         }
 
         return response([

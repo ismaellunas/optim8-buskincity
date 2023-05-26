@@ -717,7 +717,7 @@ class PageSeeder extends Seeder
                         "IDL9GHPP6VYD" => [
                             "title" => "Button",
                             "componentName" => "Button",
-                            "content" => ["button" => ["text" => "Apply Now", "icon" => null]],
+                            "content" => ["button" => ["text" => "Apply Now"]],
                             "config" => [
                                 "button" => [
                                     "link" => "#",
@@ -728,8 +728,11 @@ class PageSeeder extends Seeder
                                     "width" => null,
                                     "style" => "is-rounded",
                                     "position" => null,
-                                    "iconPosition" => "left",
                                     "textWeight" => null,
+                                ],
+                                "icon" => [
+                                    "class" => null,
+                                    "iconPosition" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -818,7 +821,7 @@ class PageSeeder extends Seeder
                         "IDL9GHZWOFPM" => [
                             "title" => "Button",
                             "componentName" => "Button",
-                            "content" => ["button" => ["text" => "Sign Up", "icon" => null]],
+                            "content" => ["button" => ["text" => "Sign Up"]],
                             "config" => [
                                 "button" => [
                                     "link" => route('register'),
@@ -829,8 +832,11 @@ class PageSeeder extends Seeder
                                     "width" => null,
                                     "style" => "is-rounded",
                                     "position" => null,
-                                    "iconPosition" => "left",
                                     "textWeight" => null,
+                                ],
+                                "icon" => [
+                                    "class" => null,
+                                    "iconPosition" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -896,7 +902,7 @@ class PageSeeder extends Seeder
                             "title" => "Button",
                             "componentName" => "Button",
                             "content" => [
-                                "button" => ["text" => "View All Articles", "icon" => null],
+                                "button" => ["text" => "View All Articles"],
                             ],
                             "config" => [
                                 "button" => [
@@ -908,8 +914,11 @@ class PageSeeder extends Seeder
                                     "width" => null,
                                     "style" => "is-rounded is-outlined",
                                     "position" => "is-pulled-right",
-                                    "iconPosition" => "left",
                                     "textWeight" => null,
+                                ],
+                                "icon" => [
+                                    "class" => null,
+                                    "iconPosition" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -936,7 +945,7 @@ class PageSeeder extends Seeder
                         "IDL9HWUW6SXA" => [
                             "title" => "Button",
                             "componentName" => "Button",
-                            "content" => ["button" => ["text" => "Learn More", "icon" => null]],
+                            "content" => ["button" => ["text" => "Learn More"]],
                             "config" => [
                                 "button" => [
                                     "link" => null,
@@ -947,8 +956,11 @@ class PageSeeder extends Seeder
                                     "width" => null,
                                     "style" => "is-rounded",
                                     "position" => null,
-                                    "iconPosition" => "left",
                                     "textWeight" => null,
+                                ],
+                                "icon" => [
+                                    "class" => null,
+                                    "iconPosition" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -1422,7 +1434,7 @@ class PageSeeder extends Seeder
                         "IDL9HWUW6SXA" => [
                             "title" => "Button",
                             "componentName" => "Button",
-                            "content" => ["button" => ["text" => "Learn More", "icon" => null]],
+                            "content" => ["button" => ["text" => "Learn More"]],
                             "config" => [
                                 "button" => [
                                     "link" => null,
@@ -1433,8 +1445,11 @@ class PageSeeder extends Seeder
                                     "width" => null,
                                     "style" => "is-rounded",
                                     "position" => null,
-                                    "iconPosition" => "left",
                                     "textWeight" => null,
+                                ],
+                                "icon" => [
+                                    "class" => null,
+                                    "iconPosition" => "left",
                                 ],
                                 "visibility" => ["device" => null],
                                 "dimension" => [
