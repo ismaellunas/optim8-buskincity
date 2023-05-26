@@ -218,6 +218,10 @@ Route::prefix('post-test/')->group(function () {
     Route::get('646f5c66c5615', function () use ($appCssUrl) {
         return view('post-test-image-close-tag', ['appCssUrl' => $appCssUrl]);
     });
+
+    Route::get('646f5c66c5616', function () use ($appCssUrl) {
+        return view('post-test-no-sidebar', ['appCssUrl' => $appCssUrl]);
+    });
 });
 
 Route::prefix(Localization::setLocale())
