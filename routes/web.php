@@ -192,44 +192,32 @@ if (App::environment('production')) {
     );
 }
 
-Route::get('/post-646f59ff0b909', function () {
-    $settingService = app(\App\Services\SettingService::class);
+Route::prefix('post-test/')->group(function () {
+    $appCssUrl = app(\App\Services\SettingService::class)->getFrontendCssUrl();
 
-    return view('post-test', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
+    Route::get('646f59ff0b909', function () use ($appCssUrl) {
+        return view('post-test', ['appCssUrl' => $appCssUrl]);
+    });
 
-Route::get('/post-646f5c66c5611', function () {
-    $settingService = app(\App\Services\SettingService::class);
+    Route::get('646f5c66c5611', function () use ($appCssUrl) {
+        return view('post-test1', ['appCssUrl' => $appCssUrl]);
+    });
 
-    return view('post-test1', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
+    Route::get('646f5c66c5612', function () use ($appCssUrl) {
+        return view('post-test-no-content', ['appCssUrl' => $appCssUrl]);
+    });
 
-Route::get('/post-646f5c66c5612', function () {
-    $settingService = app(\App\Services\SettingService::class);
+    Route::get('646f5c66c5613', function () use ($appCssUrl) {
+        return view('post-test-header-sidebar', ['appCssUrl' => $appCssUrl]);
+    });
 
-    return view('post-test-no-content', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
+    Route::get('646f5c66c5614', function () use ($appCssUrl) {
+        return view('post-test-content-only', ['appCssUrl' => $appCssUrl]);
+    });
 
-Route::get('/post-646f5c66c5613', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test-header-sidebar', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
-Route::get('/post-646f5c66c5614', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test-content-only', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
+    Route::get('646f5c66c5615', function () use ($appCssUrl) {
+        return view('post-test-image-close-tag', ['appCssUrl' => $appCssUrl]);
+    });
 });
 
 Route::prefix(Localization::setLocale())
