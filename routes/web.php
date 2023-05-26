@@ -192,38 +192,6 @@ if (App::environment('production')) {
     );
 }
 
-Route::prefix('post-test/')->group(function () {
-    $appCssUrl = app(\App\Services\SettingService::class)->getFrontendCssUrl();
-
-    Route::get('646f59ff0b909', function () use ($appCssUrl) {
-        return view('post-test', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5611', function () use ($appCssUrl) {
-        return view('post-test1', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5612', function () use ($appCssUrl) {
-        return view('post-test-no-content', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5613', function () use ($appCssUrl) {
-        return view('post-test-header-sidebar', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5614', function () use ($appCssUrl) {
-        return view('post-test-content-only', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5615', function () use ($appCssUrl) {
-        return view('post-test-image-close-tag', ['appCssUrl' => $appCssUrl]);
-    });
-
-    Route::get('646f5c66c5616', function () use ($appCssUrl) {
-        return view('post-test-no-sidebar', ['appCssUrl' => $appCssUrl]);
-    });
-});
-
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
