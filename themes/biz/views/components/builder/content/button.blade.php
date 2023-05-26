@@ -6,11 +6,11 @@
         @class(array_merge(['button'], $buttonClasses))
     >
         @if (
-            ($iconPosition === null || $iconPosition === 'left')
-            && $buttonContent['icon']
+            ($icon['position'] === null || $icon['position'] === 'left')
+            && $icon['class']
         )
             <span class="icon">
-                <i @class($buttonContent['icon'])></i>
+                <i @class($icon['class'])></i>
             </span>
         @endif
 
@@ -18,9 +18,9 @@
             {{ $buttonContent['text'] }}
         </span>
 
-        @if ($iconPosition === 'right' && $buttonContent['icon'])
+        @if ($icon['position'] === 'right' && $icon['class'])
             <span class="icon">
-                <i @class($buttonContent['icon'])></i>
+                <i @class($icon['class'])></i>
             </span>
         @endif
     </a>
