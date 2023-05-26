@@ -1,5 +1,7 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
-import { maxFileSize } from '@/Libs/defaults';
+import { maxFileSize as maxFileSizeResponse } from '@/Libs/settings';
+
+const maxFileSize = await maxFileSizeResponse();
 
 export default {
     type: "FileDragDrop",
