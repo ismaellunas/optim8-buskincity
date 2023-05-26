@@ -99,7 +99,14 @@
 
                 <div class="columns is-multiline">
                     <div class="column is-full">
+                        <biz-form-checkbox-toggle
+                            v-model="form.is_sending_user_creation_email"
+                            text="Send user creation email"
+                            :value="form.is_sending_user_creation_email"
+                        />
+
                         <biz-form-text-editor
+                            v-show="form.is_sending_user_creation_email"
                             v-model="form.create_user_email"
                             :config="messageConfig"
                             :label="i18n.user_creation"
@@ -107,7 +114,14 @@
                     </div>
 
                     <div class="column is-full">
+                        <biz-form-checkbox-toggle
+                            v-model="form.is_sending_user_update_email"
+                            text="Send user update email"
+                            :value="form.is_sending_user_update_email"
+                        />
+
                         <biz-form-text-editor
+                            v-show="form.is_sending_user_update_email"
                             v-model="form.update_user_email"
                             :config="messageConfig"
                             :label="i18n.user_update"
@@ -141,6 +155,7 @@
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextEditor from '@/Biz/Form/TextEditor.vue';
     import BizTable from '@/Biz/Table.vue';
@@ -162,6 +177,7 @@
         components: {
             BizButton,
             BizButtonIcon,
+            BizFormCheckboxToggle,
             BizFormSelect,
             BizFormTextEditor,
             BizTable,
@@ -222,6 +238,8 @@
                 role: mappingRules.value.role ?? null,
                 create_user_email: formBuilder.value.setting?.email?.automate_user_creation ?? null,
                 update_user_email: formBuilder.value.setting?.email?.automate_user_update ?? null,
+                is_sending_user_creation_email: formBuilder.value.setting?.email?.is_sending_user_creation_email ?? null,
+                is_sending_user_update_email: formBuilder.value.setting?.email?.is_sending_user_update_email ?? null,
             });
 
             return {

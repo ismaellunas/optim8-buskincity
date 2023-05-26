@@ -6,15 +6,14 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="description" content="{{ $metaDescription ?? config('app.name') }}">
-        <meta name="keywords" content="{{ $metaKeywords ?? config('app.name') }}">
 
         @stack('metas')
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        @include('favicon')
+
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
@@ -34,7 +33,7 @@
 
         @env ('production')
             <!-- Styles -->
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css" rel="stylesheet">
+            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
             <!-- Scripts -->
             <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
         @endenv
@@ -64,15 +63,12 @@
         {!! $trackingCodeAfterBody !!}
 
         <div id="app">
-            <loading-overlay id="loader" class="is-hidden"></loading-overlay>
             <section class="section">
                 <div class="container">
                     {{ $slot }}
                 </div>
             </section>
         </div>
-
-        @vite(['themes/'.config('theme.active').'/js/app.js'])
 
         <script>
             function showForm() {
@@ -110,13 +106,18 @@
                 });
             }
 
-            function setLoader() {
-                document.getElementById('loader').classList.remove('is-hidden');
-            }
+            function disableFieldset() {
+                const fieldset = document.getElementById('fieldset');
+
+                if (fieldset) {
+                    fieldset.setAttribute('disabled','disabled');
+                }
+
+                return true;
+            };
         </script>
 
         @stack('bottom_scripts')
-
 
         @if ($additionalJavascript)
             <script>
@@ -126,5 +127,4 @@
 
         {!! $trackingCodeBeforeBody !!}
     </body>
-
 </html>

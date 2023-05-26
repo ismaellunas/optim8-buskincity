@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\SettingService;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -44,7 +45,23 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            $domainRedirections = app(SettingService::class)->getDomainRedirections();
+            try {
+
+                $domainRedirections = app(SettingService::class)->getDomainRedirections();
+
+            } catch (QueryException $e) {
+
+                if ($e->getCode() == '42P01') {
+                    $domainRedirections = [];
+                } else {
+                    throw $e;
+                }
+
+            } catch (\Predis\Connection\ConnectionException $e) {
+
+                $domainRedirections = [];
+
+            }
 
             foreach ($domainRedirections as $destination) {
                 Route::domain($destination->from)->group(function () use ($destination) {

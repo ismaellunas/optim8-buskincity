@@ -72,7 +72,24 @@
                     <h1 class="title is-2 mb-4">Create Account</h1>
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6" onsubmit="setLoader()">
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('register') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
+
                         @csrf
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -132,7 +149,7 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
+                        <x-recaptcha action="register" />
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -149,17 +166,21 @@
                                 </div>
                             </div>
                         </div>
+
+                        </fieldset>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    @push('bottom_scripts')
-        @if ($errors->any())
+    @if ($errors->any())
+        @push('bottom_scripts')
             <script>
                 showForm();
+
+                function removeErrorMessage(element) { element.parentElement.remove() };
             </script>
-        @endif
-    @endpush
+        @endpush
+    @endif
 </x-layouts.auth>

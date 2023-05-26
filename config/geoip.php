@@ -117,7 +117,7 @@ return [
     |
     */
 
-    'cache' => 'none',
+    'cache' => 'all',
 
     /*
     |--------------------------------------------------------------------------
@@ -153,70 +153,18 @@ return [
 
     'default_location' => [
         'ip' => '127.0.0.1',
-        'type' => 'IPv4',
-        'hostname' => NULL,
-        'carrier' => array(
-            'name' => '',
-            'mcc' => '',
-            'mnc' => '',
-        ),
-        'company' => array(
-            'domain' => '',
-            'name' => '',
-            'type' => '',
-        ),
-        'connection' => array(
-            'asn' => 0,
-            'domain' => '',
-            'organization' => '',
-            'route' => '',
-            'type' => '',
-        ),
-        'currency' => array(
-            'code' => 'USD',
-            'name' => '',
-            'name_native' => '',
-            'plural' => '',
-            'plural_native' => '',
-            'symbol' => 'IDR',
-            'symbol_native' => 'Rp'
-        ),
-        'location' => array(
-            'continent' => array(
-                'code' => 'NA',
-                'name' => 'North America',
-            ),
-            'country' => array(
-                'area' => 0,
-                'calling_code' => '1',
-                'capital' => 'Washington DC',
-                'code' => 'US',
-                'name' => 'United States',
-                'tld' => '',
-            ),
-            'region' => array(
-                'code' => '',
-                'name' => '',
-            ),
-            'city' => 'New Haven',
-            'postal' => NULL,
-            'latitude' => 0,
-            'longitude' => 0,
-            'language' => array(
-                'code' => 'en',
-                'name' => 'English',
-                'native' => 'English',
-            ),
-            'in_eu' => false,
-        ),
-        'time_zone' => array(
-            'id' => env('GEOIP_TIMEZONE', 'ETC/UTC'),
-            'abbreviation' => '',
-            'current_time' => '',
-            'name' => '',
-            'offset' => 0,
-            'in_daylight_saving' => false,
-        )
+        'iso_code' => 'US',
+        'country' => 'United States',
+        'city' => 'New Haven',
+        'state' => '',
+        'state_name' => '',
+        'postal_code' => NULL,
+        'lat' => 0,
+        'lon' => 0,
+        'timezone' => env('GEOIP_TIMEZONE', 'ETC/UTC'),
+        'continent' => 'NA',
+        'currency' => 'USD',
+        'language_code' => 'en',
     ],
 
 ];

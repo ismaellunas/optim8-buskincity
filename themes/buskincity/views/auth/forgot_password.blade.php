@@ -52,7 +52,24 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('password.email') }}" onsubmit="setLoader()" method="post" class="mt-6">
+                        @if ($errors->any())
+                            <div class="notification is-danger mb-4">
+                                <button
+                                    class="delete"
+                                    type="button"
+                                    onclick="removeErrorMessage(this)"
+                                ></button>
+                                <ul class="alert alert-danger">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('password.email') }}" method="post" class="mt-6">
+                            <fieldset id="fieldset">
+
                             @csrf
                             <div class="field mb-5">
                                 <label class="label">Email</label>
@@ -64,15 +81,24 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha></x-recaptcha>
+                            <x-recaptcha action="forgot_password" />
 
                             <button type="submit" class="button is-medium is-primary is-fullwidth">
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>
                             </button>
+
+                            </fieldset>
                         </form>
+
                     </div>
                 @endif
             </div>
         </div>
     </div>
+
+    @push('bottom_scripts')
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove() };
+        </script>
+    @endpush
 </x-layouts.auth>

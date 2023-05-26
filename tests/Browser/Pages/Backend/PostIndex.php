@@ -22,11 +22,11 @@ class PostIndex extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Posts');
-        $browser->assertSee('Published');
-        $browser->assertSee('Scheduled');
-        $browser->assertSee('Draft');
-        $browser->assertSeeLink("Create New");
+        $browser->assertTitleContains(__('Posts'));
+        $browser->assertSee(__('Published'));
+        $browser->assertSee(__('Scheduled'));
+        $browser->assertSee(__('Draft'));
+        $browser->assertSeeLink(__('Create new'));
     }
 
     /**

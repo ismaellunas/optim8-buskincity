@@ -245,7 +245,7 @@ class User extends Authenticatable implements MustVerifyEmail
             : null;
     }
 
-    public function getRoleNameAttribute(): string
+    public function getRoleNameAttribute(): ?string
     {
         return $this->getRoleNames()->first();
     }

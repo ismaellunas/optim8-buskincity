@@ -68,7 +68,7 @@ class HandleInertiaRequests extends Middleware
             'debug' => config('app.debug'),
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
-                'message_expired' => fn () => $request->session()->get('message_expired')
+                'message_expired' => fn () => $request->session()->get('message_expired'),
             ],
             'errors' => function () {
                 if (Session::get('errors')) {

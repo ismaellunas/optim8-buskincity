@@ -1,5 +1,3 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth>
     <x-slot name="title">
         Login | {{ config('app.name') }}
@@ -55,10 +53,6 @@
                     <h1 class="title is-2 mb-4">Log In</h1>
                     <p>Please log in to continue.</p>
 
-                    @php
-                        $availableSocialiteDrivers = $loginService->getAvailableSocialiteDrivers();
-                    @endphp
-
                     @if (!empty($availableSocialiteDrivers))
                         @foreach ($availableSocialiteDrivers as $driver)
                             <a href="{{ route('oauth.redirect', $driver) }}" @class([
@@ -105,7 +99,9 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
+                    <form action="{{ route('login') }}" method="post" class="mt-6">
+                        <fieldset id="fieldset">
+
                         @csrf
                         <div class="field mb-5">
                             <label class="label">Email</label>
@@ -158,11 +154,13 @@
                             </div>
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
+                        <x-recaptcha action="login" />
 
                         <button class="button is-medium is-primary is-fullwidth">
                             <span class="has-text-weight-bold">Log In</span>
                         </button>
+
+                        </fieldset>
                     </form>
                 </div>
             </div>

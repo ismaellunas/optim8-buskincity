@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\RecaptchaService;
 use App\Services\SettingService;
 use Closure;
+use Illuminate\Http\Request;
 use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 
 class Recaptcha
@@ -16,7 +16,7 @@ class Recaptcha
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $settingService = app(SettingService::class);
 
@@ -27,7 +27,7 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
-            if (!$response->isSuccess()) {
+            if (! $response->isSuccess()) {
                 if (
                     in_array(
                         GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
@@ -41,19 +41,33 @@ class Recaptcha
                     return $next($request);
                 }
 
-                if (!$request->expectsJson()) {
-                    return redirect()
-                        ->back()
-                        ->with('failed', __('Recaptcha failed. Please try again.'));
-                }
+                return $this->failRequestAction($request);
+            }
 
-                return response([
-                    'success' => false,
-                    'message' => __('Recaptcha failed. Please try again.'),
-                ]);
+            if (
+                $response->isSuccess()
+                && $response->getScore() < config('constants.settings.recaptcha.minimal_score')
+            ) {
+                return $this->failRequestAction($request);
             }
         }
 
         return $next($request);
+    }
+
+    private function failRequestAction(Request $request)
+    {
+        if (! $request->expectsJson()) {
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'recaptcha' => __('Recaptcha verification failed. Please try again.'),
+                ]);
+        }
+
+        return response([
+            'success' => false,
+            'message' => __('Recaptcha verification failed. Please try again.'),
+        ]);
     }
 }

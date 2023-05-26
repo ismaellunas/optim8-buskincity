@@ -22,9 +22,9 @@ class UserCreate extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Add New User');
-        $browser->assertSee('First Name');
-        $browser->assertButtonEnabled("Create");
+        $browser->assertTitleContains(__('Add New User'));
+        $browser->assertSee(__('First name'));
+        $browser->assertButtonEnabled(__('Create'));
     }
 
     /**
@@ -34,7 +34,6 @@ class UserCreate extends Page
      */
     public function elements(): array
     {
-        return [
-        ];
+        return [];
     }
 }

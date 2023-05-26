@@ -4,9 +4,9 @@ import './bootstrap';
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
 import { createInertiaApp, router } from '@inertiajs/vue3';
+import { LoadingPlugin } from 'vue-loading-overlay';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import VueSweetalert2 from 'vue-sweetalert2';
-import VueLoading from 'vue-loading-overlay';
 import VueSocialSharing from 'vue-social-sharing'
 
 window.inertiaEventsCount = {
@@ -58,7 +58,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(VueSweetalert2)
-            .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000})
+            .use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000})
             .use(VueSocialSharing)
             .mount(el)
     },

@@ -159,20 +159,32 @@ class AutomateUserCreationController extends Controller
         $formMappingRule->save();
     }
 
-    private function saveCreateUserEmail(Form &$form, ?string $value)
+    private function saveSetting(Form $form, $request): void
     {
         $setting = $form->setting;
 
-        Arr::set($setting, 'email.automate_user_creation', $value);
+        Arr::set(
+            $setting,
+            'email.automate_user_creation',
+            $request->get('create_user_email')
+        );
 
-        $form->setting = $setting;
-    }
+        Arr::set($setting,
+            'email.automate_user_update',
+            $request->get('update_user_email')
+        );
 
-    private function saveUpdateUserEmail(Form &$form, ?string $value)
-    {
-        $setting = $form->setting;
+        Arr::set(
+            $setting,
+            'email.is_sending_user_creation_email',
+            $request->get('is_sending_user_creation_email', false)
+        );
 
-        Arr::set($setting, 'email.automate_user_update', $value);
+        Arr::set(
+            $setting,
+            'email.is_sending_user_update_email',
+            $request->get('is_sending_user_update_email', false)
+        );
 
         $form->setting = $setting;
     }
@@ -199,9 +211,7 @@ class AutomateUserCreationController extends Controller
 
         $this->removeOptionalFields($mappingRule, $storedMappingRules);
 
-        $this->saveCreateUserEmail($formBuilder, $request->get('create_user_email'));
-
-        $this->saveUpdateUserEmail($formBuilder, $request->get('update_user_email'));
+        $this->saveSetting($formBuilder, $request);
 
         $formBuilder->save();
 
@@ -264,9 +274,11 @@ class AutomateUserCreationController extends Controller
 
             if ($user->wasRecentlyCreated) {
 
-                Mail::to($user)->queue(
-                    new AutomateUserCreationEmail($user, $formBuilder)
-                );
+                if (Arr::get($formBuilder->setting, 'email.is_sending_user_creation_email', false)) {
+                    Mail::to($user)->queue(
+                        new AutomateUserCreationEmail($user, $formBuilder)
+                    );
+                }
 
                 $this->generateFlashMessage("The :resource was created!", [
                     'resource' => __('User'),
@@ -274,9 +286,11 @@ class AutomateUserCreationController extends Controller
 
             } else {
 
-                Mail::to($user)->queue(
-                    new AutomateUserUpdateEmail($user, $formBuilder)
-                );
+                if (Arr::get($formBuilder->setting, 'email.is_sending_user_update_email', false)) {
+                    Mail::to($user)->queue(
+                        new AutomateUserUpdateEmail($user, $formBuilder)
+                    );
+                }
 
                 $this->generateFlashMessage("The :resource was updated!", [
                     'resource' => __('User'),

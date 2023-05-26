@@ -394,7 +394,7 @@ class AutomateUserCreationService
         $profilePictureRule = $userRules
             ->firstWhere('to.column', 'profile_photo_media_id');
 
-        if ($profilePictureRule) {
+        if ($profilePictureRule && $profilePictureRule->from) {
             $this->updateProfilePhoto($user, $entry, $profilePictureRule);
         }
 

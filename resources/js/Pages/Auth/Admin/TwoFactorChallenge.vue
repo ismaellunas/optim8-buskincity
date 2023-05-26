@@ -51,6 +51,7 @@
 
                     <biz-recaptcha
                         ref="recaptcha"
+                        action="admin_tfa"
                         :site-key="recaptchaSiteKey"
                         @on-verify="recaptchaVerify"
                     />
@@ -156,7 +157,6 @@
                     }))
                     .post(this.route('admin.two-factor.login.attempt'), {
                         onStart: () => this.onStartLoadingOverlay(),
-                        onError: () => this.$refs.recaptcha.onExpired(),
                         onFinish: () => this.onEndLoadingOverlay(),
                     });
             },
