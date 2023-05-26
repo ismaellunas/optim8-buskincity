@@ -90,13 +90,7 @@
                                 <div class="is-flex is-align-items-center">
                                     <div class="pr-2">
                                         <figure class="image is-96x96 mr-3">
-                                            <img
-                                                width="96"
-                                                height="96"
-                                                src="http://localhost:8001/images/profile-picture-default.png"
-                                                class="is-rounded ls-is-cached lazyloaded"
-                                                alt="Author: Super Administrator"
-                                            />
+                                            <img width="96" height="96" src="http://localhost:8001/images/profile-picture-default.png" class="is-rounded ls-is-cached lazyloaded" alt="Author: Super Administrator">
                                         </figure>
                                     </div>
                                     <div>
@@ -133,7 +127,7 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="http://localhost:8001/blog/et-est-error-sapiente-ea-est">
-                                        <img src="/storage/images/default-post-thumbnail.png"/>
+                                        <img src="/storage/images/default-post-thumbnail.png">
                                     </a>
                                 </figure>
                                 <div class="p-5">
@@ -150,7 +144,7 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="http://localhost:8001/blog/error-laborum-itaque-molestiae">
-                                        <img src="/storage/images/default-post-thumbnail.png"/>
+                                        <img src="/storage/images/default-post-thumbnail.png">
                                     </a>
                                 </figure>
                                 <div class="p-5">
@@ -167,7 +161,7 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="http://localhost:8001/blog/fuga-dolorum-cumque-corrupti">
-                                        <img src="/storage/images/default-post-thumbnail.png"/>
+                                        <img src="/storage/images/default-post-thumbnail.png">
                                     </a>
                                 </figure>
                                 <div class="p-5">
