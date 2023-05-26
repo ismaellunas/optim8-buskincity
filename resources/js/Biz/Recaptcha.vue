@@ -1,17 +1,10 @@
 <template>
-    <div>
-        <biz-flash-failed
-            class="mb-2"
-            :flash="$page.props.flash"
-        />
-
-        <span
-            v-if="isRecaptchaError"
-            class="help has-text-danger"
-        >
-            Please check the reCAPTCHA!
-        </span>
-    </div>
+    <span
+        v-if="isRecaptchaError"
+        class="help has-text-danger"
+    >
+        Please check the reCAPTCHA!
+    </span>
 </template>
 
 <script>

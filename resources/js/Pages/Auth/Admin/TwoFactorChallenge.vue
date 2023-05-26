@@ -51,6 +51,7 @@
 
                     <biz-recaptcha
                         ref="recaptcha"
+                        action="admin_tfa"
                         :site-key="recaptchaSiteKey"
                         @on-verify="recaptchaVerify"
                     />
