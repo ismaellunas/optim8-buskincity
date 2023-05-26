@@ -134,7 +134,7 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
+                        <x-recaptcha tag="register" />
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">

@@ -154,7 +154,7 @@
                             </div>
                         </div>
 
-                        <x-recaptcha></x-recaptcha>
+                        <x-recaptcha tag="login" />
 
                         <button class="button is-medium is-primary is-fullwidth">
                             <span class="has-text-weight-bold">Log In</span>

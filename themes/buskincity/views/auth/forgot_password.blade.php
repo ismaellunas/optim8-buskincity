@@ -65,7 +65,7 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha></x-recaptcha>
+                            <x-recaptcha tag="forgot_password" />
 
                             <button type="submit" class="button is-medium is-primary is-fullwidth">
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>
