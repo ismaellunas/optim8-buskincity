@@ -43,6 +43,21 @@
                         </div>
                     @endif
 
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('two-factor.login') }}" method="post" class="mt-6">
                         <fieldset id="fieldset">
 
@@ -67,7 +82,7 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha tag="tfa" />
+                        <x-recaptcha action="tfa" />
 
                         <div class="buttons">
                             <button type="button" class="button is-medium recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
@@ -121,6 +136,8 @@
 
                 inputCode.classList.remove('is-hidden');
             }
+
+            function removeErrorMessage(element) { element.parentElement.remove() };
         </script>
     @endpush
 </x-layouts.auth>

@@ -51,6 +51,22 @@
                                 {{ session()->get('status') }}
                             </div>
                         @endif
+
+                        @if ($errors->any())
+                            <div class="notification is-danger mb-4">
+                                <button
+                                    class="delete"
+                                    type="button"
+                                    onclick="removeErrorMessage(this)"
+                                ></button>
+                                <ul class="alert alert-danger">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <form action="{{ route('password.email') }}" method="post" class="mt-6">
                             <fieldset id="fieldset">
 
@@ -65,7 +81,7 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha tag="forgot_password" />
+                            <x-recaptcha action="forgot_password" />
 
                             <button type="submit" class="button is-medium is-primary is-fullwidth">
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>
@@ -79,4 +95,10 @@
             </div>
         </div>
     </div>
+
+    @push('bottom_scripts')
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove() };
+        </script>
+    @endpush
 </x-layouts.auth>
