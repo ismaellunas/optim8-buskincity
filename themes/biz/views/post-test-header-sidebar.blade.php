@@ -72,7 +72,7 @@
                                                 src="http://localhost:8001/images/profile-picture-default.png"
                                                 class="is-rounded ls-is-cached lazyloaded"
                                                 alt="Author: Super Administrator"
-                                                >
+                                            />
                                         </figure>
                                     </div>
                                     <div>
