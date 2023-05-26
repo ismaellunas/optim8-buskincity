@@ -44,7 +44,7 @@
                         </div>
                     </header>
 
-                    <div class="content mt-5">
+                    <div id="post-content" class="content mt-5">
                         @if (
                             $post->coverImageUrl
                             && $post->is_cover_displayed
