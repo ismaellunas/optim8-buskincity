@@ -4,6 +4,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Controllers\{
     ApiOptionController,
     ApiPageBuilderController,
+    ApiSettingController,
     ApiWidgetController,
     CategoryController,
     DashboardController,
@@ -234,6 +235,9 @@ Route::name('api.')
 
         Route::get('widget/data/{uuid}', [ApiWidgetController::class, 'getStoredWidgetData'])
             ->name('widget.data');
+
+        Route::get('/setting/{key}/key', [ApiSettingController::class, 'getValueByKey'])
+            ->name('setting.key');
     });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
