@@ -23,7 +23,7 @@
         "vite": "^4.1.4",
         "vite-plugin-pwa": "^0.14.4",
         "vue": "~3.2.2",
-        "vue-loader": "^16.3.1",
+        "vue-loader": "^17.1.1",
         "webpack-dev-server": "^4.7.3"
     },
     "dependencies": {
