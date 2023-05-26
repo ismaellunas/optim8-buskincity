@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages\Backend;
 
+use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
@@ -22,12 +23,12 @@ class SettingTranslationManager extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Translation Manager');
-        $browser->assertButtonEnabled('Export');
-        $browser->assertButtonEnabled('Import');
-        $browser->assertButtonEnabled('Update');
-        $browser->assertSeeLink('Add New');
-        $browser->assertButtonEnabled('Update');
+        $browser->assertTitleContains(Str::title(__('Translation Manager')));
+        $browser->assertButtonEnabled(__('Export'));
+        $browser->assertButtonEnabled(__('Import'));
+        $browser->assertButtonEnabled(__('Update'));
+        $browser->assertSeeLink(__('Add new'));
+        $browser->assertButtonEnabled(__('Update'));
     }
 
     /**

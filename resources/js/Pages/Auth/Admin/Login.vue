@@ -62,6 +62,7 @@
 
                     <biz-recaptcha
                         ref="recaptcha"
+                        action="admin_login"
                         :site-key="recaptchaSiteKey"
                         @on-verify="recaptchaVerify"
                     />
@@ -151,7 +152,6 @@
                     }))
                     .post(this.route('admin.login'), {
                         onStart: () => this.onStartLoadingOverlay(),
-                        onError: () => this.$refs.recaptcha.onExpired(),
                         onFinish: () => {
                             this.form.reset('password');
                             this.onEndLoadingOverlay();

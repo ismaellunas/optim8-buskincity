@@ -228,7 +228,7 @@
                 date : 'Date',
                 timezone : 'Timezone',
                 time : 'Time',
-                check_in : 'Check-In',
+                check_in : 'Check-in',
                 actions : 'actions',
                 reschedule : 'Reschedule',
                 cancel : 'Cancel',

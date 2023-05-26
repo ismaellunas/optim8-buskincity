@@ -16,9 +16,8 @@ class ApiWidgetController extends Controller
 
         return [
             'records' => $userService->getLatestRegistrations(
-                auth()->user(),
                 $request->term,
-                $scopes,
+                $scopes
             ),
         ];
     }

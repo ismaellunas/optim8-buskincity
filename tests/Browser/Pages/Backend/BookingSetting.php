@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages\Backend;
 
+use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
@@ -22,9 +23,9 @@ class BookingSetting extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Booking Settings');
-        $browser->assertSee('Email');
-        $browser->assertSee('Check In');
+        $browser->assertTitleContains(Str::title(__('Booking Settings')));
+        $browser->assertSee(__('Email'));
+        $browser->assertSee(__('Check-in'));
     }
 
     /**

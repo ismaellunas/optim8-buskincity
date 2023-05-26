@@ -1,29 +1,26 @@
-<span
-    id="recaptcha-error-message"
-    class="help has-text-danger is-hidden"
->
-    Please check the reCAPTCHA!
-</span>
-
 @if (!empty($recaptchaSiteKey))
-    <div
-        class="g-recaptcha"
-        data-sitekey="{{ $recaptchaSiteKey }}"
-        data-size="invisible"
-        data-error-callback="recaptchaError"
-    ></div>
+    <input id="g-recaptcha-response" type="hidden" name="g-recaptcha-response" value="">
+
+    <span
+        id="recaptcha-error-message"
+        class="help has-text-danger is-hidden"
+    >
+        {{ __('Please check the reCAPTCHA!') }}
+    </span>
 
     @push('bottom_scripts')
+        <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}"></script>
         <script>
-            function recaptchaError() {
-                document.getElementById('recaptcha-error-message').classList.remove('is-hidden');
-            };
-
-            var onloadCallback = function() {
-                grecaptcha.execute();
-            };
+            grecaptcha.ready(function() {
+                try {
+                    grecaptcha.execute('{{ $recaptchaSiteKey }}', { action: '{{ $action }}' })
+                        .then((response) => {
+                            document.getElementById('g-recaptcha-response').value = response;
+                        });
+                } catch (error) {
+                    document.getElementById('recaptcha-error-message').classList.remove('is-hidden');
+                }
+            });
         </script>
-
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" async defer></script>
     @endpush
 @endif

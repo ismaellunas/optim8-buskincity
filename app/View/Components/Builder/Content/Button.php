@@ -6,11 +6,11 @@ class Button extends BaseContent
 {
     public $buttonClasses = [];
     public $buttonContent = [];
-    public $iconPosition = null;
     public $link = null;
     public $target = null;
     public $isDownload = false;
     public $textClasses = [];
+    public $icon = [];
 
     private $config = [];
     private $visibility = [];
@@ -25,15 +25,19 @@ class Button extends BaseContent
         parent::__construct($entity);
 
         $this->config = $this->getButtonConfig();
-        $this->visibility = $this->getButtonVisibility();
+
         $this->buttonClasses = $this->getButtonClasses();
-        $this->buttonContent = $this->getButtonContent();
         $this->textClasses = $this->getTextClasses();
-        $this->iconPosition = $this->config['iconPosition'] ?? null;
+        $this->wrapperClasses[] = $this->config['position'] ?? null;
+
+        $this->buttonContent = $this->getButtonContent();
+        $this->isDownload = $this->config['target'] === 'download';
         $this->link = $this->config['link'] ?? null;
         $this->target = $this->setTarget();
-        $this->isDownload = $this->config['target'] === 'download';
-        $this->wrapperClasses[] = $this->config['position'] ?? null;
+
+        $this->icon = $this->getButtonIcon();
+
+        $this->visibility = $this->getButtonVisibility();
     }
 
     private function getButtonConfig(): array
@@ -77,5 +81,10 @@ class Button extends BaseContent
     private function setTarget(): ?string
     {
         return $this->config['target'] !== 'download' ? $this->config['target'] : null;
+    }
+
+    public function getButtonIcon(): array
+    {
+        return $this->getConfig()['icon'];
     }
 }

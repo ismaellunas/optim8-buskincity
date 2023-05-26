@@ -18,7 +18,6 @@ export default {
     content: {
         button: {
             text: "Button",
-            icon: null,
         },
     },
     config: {
@@ -31,8 +30,11 @@ export default {
             width: null,
             style: null,
             position: null,
-            iconPosition: 'left',
             textWeight: null,
+        },
+        icon: {
+            class: null,
+            position: 'left',
         },
         visibility: visibility.config,
         dimension: dimension.config
@@ -112,7 +114,23 @@ export const config = {
                     options: defaultOption.concat(contentPositions),
                 },
             },
-            iconPosition: {
+            textWeight: {
+                component: "ConfigSelect",
+                label: "Text Weight",
+                settings: {
+                    options: defaultOption.concat(textWeights),
+                },
+            },
+        }
+    },
+    icon: {
+        label: "Icon",
+        config: {
+            class: {
+                label: "Class",
+                component: "ConfigInputIcon",
+            },
+            position: {
                 component: "ConfigSelect",
                 label: "Icon Position",
                 settings: {
@@ -122,13 +140,6 @@ export const config = {
                             { value: "right", name: "Right"},
                         ]
                     ),
-                },
-            },
-            textWeight: {
-                component: "ConfigSelect",
-                label: "Text Weight",
-                settings: {
-                    options: defaultOption.concat(textWeights),
                 },
             },
         }

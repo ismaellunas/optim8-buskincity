@@ -1,40 +1,25 @@
 <template>
-    <div>
-        <template
-            v-if="isRecaptchaAvailable"
-        >
-            <vue-recaptcha
-                ref="vueRecaptcha"
-                :sitekey="siteKey"
-                size="invisible"
-                theme="light"
-                @expired="onExpired"
-                @error="onError"
-                @verify="onVerify"
-            />
-        </template>
-
-        <span
-            v-if="isRecaptchaError"
-            class="help has-text-danger"
-        >
-            Please check the reCAPTCHA!
-        </span>
-    </div>
+    <span
+        v-if="isRecaptchaError"
+        class="help has-text-danger"
+    >
+        Please check the reCAPTCHA!
+    </span>
 </template>
 
 <script>
-    import { VueRecaptcha } from 'vue-recaptcha';
+    import BizFlashFailed from '@/Biz/FlashFailed.vue';
 
     export default {
         name: 'BizRecaptcha',
 
         components: {
-            VueRecaptcha,
+            BizFlashFailed,
         },
 
         props: {
             siteKey: { type: [String, null], default: null },
+            action: { type: String, default: 'submit' },
         },
 
         emits: [
@@ -44,6 +29,7 @@
         data() {
             return {
                 isRecaptchaError: false,
+                recaptchaScript: null,
             }
         },
 
@@ -52,36 +38,43 @@
                 return !!this.siteKey
                     && !this.isRecaptchaError;
             },
+        },
 
-            isRecaptchaLoaded() {
-                return !!this.$refs.vueRecaptcha;
-            },
+        mounted() {
+            if (this.isRecaptchaAvailable) {
+                this.recaptchaScript = document.createElement('script')
+
+                this.recaptchaScript.setAttribute(
+                    'src',
+                    'https://www.google.com/recaptcha/api.js?render=' + this.siteKey
+                );
+                document.head.appendChild(this.recaptchaScript);
+            }
+        },
+
+        unmounted() {
+            if (this.isRecaptchaAvailable && this.recaptchaScript) {
+                document.head.removeChild(this.recaptchaScript);
+            }
         },
 
         methods: {
             execute() {
-                if (this.isRecaptchaLoaded) {
-                    this.$refs.vueRecaptcha.execute();
-                } else {
-                    this.$emit('on-verify');
-                }
-            },
+                const self = this;
 
-            onExpired() {
-                if (
-                    this.isRecaptchaLoaded
-                    && this.isRecaptchaAvailable
-                ) {
-                    this.$refs.vueRecaptcha.reset();
-                }
-            },
-
-            onError() {
-                this.isRecaptchaError = true;
-            },
-
-            onVerify(response) {
-                this.$emit('on-verify', response);
+                grecaptcha.ready(function() {
+                    try {
+                        grecaptcha.execute(self.siteKey, {
+                            action: self.action
+                        })
+                            .then((response) => {
+                                self.$emit('on-verify', response);
+                            });
+                    } catch (error) {
+                        self.isRecaptchaError = true;
+                        self.$emit('on-verify');
+                    }
+                });
             },
         },
     }

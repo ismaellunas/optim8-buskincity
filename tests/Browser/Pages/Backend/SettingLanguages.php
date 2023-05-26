@@ -22,9 +22,9 @@ class SettingLanguages extends Page
     {
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
-        $browser->assertTitleContains('Languages');
-        $browser->assertButtonEnabled('Update');
-        $browser->assertSee('Default Language');
+        $browser->assertTitleContains(__('Languages'));
+        $browser->assertButtonEnabled(__('Update'));
+        $browser->assertSee(__('Default language'));
     }
 
     /**
@@ -34,7 +34,6 @@ class SettingLanguages extends Page
      */
     public function elements(): array
     {
-        return [
-        ];
+        return [];
     }
 }

@@ -31,8 +31,8 @@ class UserEdit extends Page
         $browser->waitForInertiaNavigate();
         $browser->assertPathIs($this->url());
         $browser->assertTitleContains('Edit User');
-        $browser->assertSee('First Name');
-        $browser->assertButtonEnabled("Update");
+        $browser->assertSee(__('First name'));
+        $browser->assertButtonEnabled(__('Update'));
     }
 
     /**

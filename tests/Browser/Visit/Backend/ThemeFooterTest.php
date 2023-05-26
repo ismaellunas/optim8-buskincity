@@ -24,7 +24,7 @@ class ThemeFooterTest extends BaseVisitTestCase
                 ->loginAs($this->user)
                 ->visit(new ThemeFooter())
                 ->clickNavigationTab()
-                ->assertSee('Menu Items')
+                ->assertSee(__('Menu items'))
                 ->assertButtonEnabled('Add new segment');
         });
     }

@@ -12,18 +12,15 @@
             class="button"
             :class="buttonClass"
         >
-            <span
-                v-if="config.button.iconPosition === 'left' || config.button.iconPosition === null"
-                class="icon"
-                @click="openModal()"
-            >
-                <template v-if="entity.content.button.icon !== null">
-                    <i :class="entity.content.button.icon" />
-                </template>
-                <template v-else>
-                    <i class="empty-icon" />
-                </template>
-            </span>
+            <template v-if="hasIcon">
+                <span
+                    v-if="config.icon.position === 'left' || config.icon.position === null"
+                    class="icon"
+                    @click="openModal()"
+                >
+                    <i :class="config.icon.class" />
+                </span>
+            </template>
 
             <span
                 :class="inputAreaClass"
@@ -32,29 +29,16 @@
                 v-text="entity.content.button.text"
             />
 
-            <span
-                v-if="config.button.iconPosition === 'right'"
-                class="icon"
-                @click="openModal()"
-            >
-                <template v-if="entity.content.button.icon !== null">
-                    <i :class="entity.content.button.icon" />
-                </template>
-                <template v-else>
-                    <i class="empty-icon" />
-                </template>
-            </span>
+            <template v-if="hasIcon">
+                <span
+                    v-if="config.icon.position === 'right'"
+                    class="icon"
+                    @click="openModal()"
+                >
+                    <i :class="config.icon.class" />
+                </span>
+            </template>
         </a>
-
-        <biz-icon-browser
-            v-if="isModalOpen"
-            :can-remove="true"
-            :has-type="true"
-            :icon-classes="iconClasses"
-            @close="closeModal()"
-            @on-selected-icon="onSelectedIcon"
-            @remove-icon="removeIcon"
-        />
     </div>
 </template>
 
@@ -62,9 +46,7 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import BizIconBrowser from '@/Biz/Modal/IconBrowser.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
@@ -73,7 +55,6 @@
         name: "ContentButton",
 
         components: {
-            BizIconBrowser,
             BizToolbarContent,
         },
 
@@ -81,7 +62,6 @@
             MixinContentHasDimension,
             MixinDeletableContent,
             MixinDuplicableContent,
-            MixinHasModal,
         ],
 
         props: {
@@ -120,20 +100,16 @@
                     (this.config.button.textWeight)
                 ).filter(Boolean);
             },
+
+            hasIcon() {
+                return !! this.config.icon.class;
+            },
         },
 
         methods: {
             onEditText(evt) {
                 this.entity.content.button.text = evt.target.innerText;
             },
-
-            onSelectedIcon(icon) {
-                this.entity.content.button.icon = icon;
-            },
-
-            removeIcon() {
-                this.entity.content.button.icon = null;
-            }
         },
     }
 </script>
