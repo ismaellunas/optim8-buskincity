@@ -54,6 +54,7 @@
 
                 <biz-recaptcha
                     ref="recaptcha"
+                    action="admin_forgot_password"
                     :site-key="recaptchaSiteKey"
                     @on-verify="recaptchaVerify"
                 />

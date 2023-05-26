@@ -69,7 +69,6 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'message_expired' => fn () => $request->session()->get('message_expired'),
-                'failed' => fn () => $request->session()->get('failed'),
             ],
             'errors' => function () {
                 if (Session::get('errors')) {
