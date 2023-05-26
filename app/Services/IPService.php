@@ -50,17 +50,17 @@ class IPService
 
     public function getCountryCode(string $default = null): ?string
     {
-        return $this->getClientData()['location']['country']['code'] ?? $default;
+        return $this->getClientData()->iso_code ?? $default;
     }
 
     public function getLanguageCode(): ?string
     {
-        return $this->getClientData()['location']['language']['code'];
+        return $this->getClientData()->language_code ?? null;
     }
 
-    public function getTimezone(): ?string
+    public function getTimezone(): string
     {
-        return $this->getClientData()['time_zone']['id'] ?? config('app.timezone');
+        return $this->getClientData()->timezone ?? config('app.timezone');
     }
 
     public function getGeoLocation(): ?array
@@ -73,20 +73,18 @@ class IPService
         }
 
         return [
-            'latitude' => $this->getClientData()['location']['longitude'],
-            'longitude' => $this->getClientData()['location']['latitude'],
+            'latitude' => $this->getClientData()->lat ?? null,
+            'longitude' => $this->getClientData()->lon ?? null,
         ];
     }
 
     public function getCity(string $default = null): ?string
     {
-        return data_get($this->getClientData(), 'location.city') ?? $default;
+        return $this->getClientData()->city ?? $default;
     }
 
     public function getDateTime(): Carbon
     {
-        $currentTime = data_get($this->getClientData(), 'time_zone.current_time') ?? null;
-
-        return new Carbon($currentTime);
+        return Carbon::now($this->getTimezone());
     }
 }
