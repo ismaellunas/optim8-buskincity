@@ -254,6 +254,10 @@ Route::prefix(Localization::setLocale())
             ->where('slug', '[\w\d\-\_]+')
             ->name('blog.show');
 
+        Route::get('test-'.LaravelLocalization::transRoute('blog.show'), [PostController::class, 'showTestVue'])
+            ->where('slug', '[\w\d\-\_]+')
+            ->name('blog.show.test');
+
         Route::get('/{page_translation}', [PageController::class, 'show'])
             ->name('frontend.pages.show');
 

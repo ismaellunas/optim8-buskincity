@@ -82,4 +82,48 @@ class PostController extends Controller
             'relatedArticles' => $this->postService->getRelatedArticles($post),
         ]);
     }
+
+    public function showTestVue(string $slug)
+    {
+        $locale = $this->translationService->currentLanguage();
+
+        $post = $this->postService->getFirstBySlug($slug, $locale);
+
+        if ($post && $post['status'] != Post::STATUS_PUBLISHED) {
+
+            $user = auth()->user();
+            if ($user === null || $user->can('post.read') === false) {
+                return redirect()->route($this->baseRouteName.'.index');
+            }
+
+        }
+
+        if (!$post) {
+            $post = $this->postService->getFirstBySlug($slug);
+        }
+
+        if (!$post) {
+            return redirect()->route($this->baseRouteName.'.index');
+        }
+
+        $publishedOn = null;
+        if ($post->published_at) {
+            $publishedOn = __('Published on :date', [
+                'date' => $post->published_at->format(config('constants.format.date_post')),
+            ]);
+        }
+
+        return view('post-test-vue', [
+            'currentLanguage' => $this->translationService->currentLanguage(),
+            'post' => $post,
+            'content' => $this->postService->transformContent($post->purifiedContent),
+            'readingTime' => $this->postService->readingTime($post->plain_text_content),
+            'tableOfContents' => $this->postService->tableOfContents($post->content),
+            'publishedOn' => $publishedOn,
+            'lastUpdatedOn' => __('Last updated on :date', [
+                'date' => $post->updated_at->format(config('constants.format.date_post')),
+            ]),
+            'relatedArticles' => $this->postService->getRelatedArticles($post),
+        ]);
+    }
 }
