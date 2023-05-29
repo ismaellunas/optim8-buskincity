@@ -58,7 +58,7 @@ class Master extends Component
         return view('components.layouts.master');
     }
 
-    private function getStyle($style): ?string
+    protected function getStyle($style): ?string
     {
         if (is_array($style)) {
             return implode(' ', $style);

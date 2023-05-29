@@ -67,6 +67,8 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
+
+        @vite('themes/'.config('theme.active').'/js/post.js')
     </head>
 
     <body
@@ -99,7 +101,7 @@
 
         @stack('bottom_scripts')
 
-        @vite(['themes/'.config('theme.active').'/js/app.js', 'resources/js/bulma-misc.js'])
+        @vite('resources/js/bulma-misc.js')
 
         @stack('bottom_styles')
 

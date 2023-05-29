@@ -4,4 +4,4 @@
     :currencies="{{ Illuminate\Support\Js::from($currencyOptions) }}"
     :messages="{{ Illuminate\Support\Js::from($errors->all()) }}"
     :list-minimal-payments="{{ Illuminate\Support\Js::from($listMinimalPayments) }}"
-/>
+></form-donation>
