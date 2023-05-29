@@ -1,6 +1,6 @@
 @inject('userProfile', 'App\Services\UserProfileService')
 
-<x-layouts.master>
+<x-layouts.master-basic>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -219,6 +219,16 @@
         </div>
     </x-modal>
 
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
+    @endpush
+
+    @push('styles')
+        @env ('production')
+            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
+        @endenv
+    @endpush
+
     @push('bottom_scripts')
     <script>
         function openModal(id) {
@@ -228,4 +238,4 @@
         }
     </script>
     @endpush
-</x-layouts.master>
+</x-layouts.master-basic>
