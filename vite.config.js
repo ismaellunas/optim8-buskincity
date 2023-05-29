@@ -19,7 +19,6 @@ export default defineConfig((command, mode) => {
     const hostUrl = new URL(`${env.APP_URL}`);
 
     input.push(`themes/${env.THEME_ACTIVE}/js/app.js`);
-    //input.push(`themes/${env.THEME_ACTIVE}/js/post.js`);
     input.push(`themes/${env.THEME_ACTIVE}/sass/app.sass`);
 
     return {
