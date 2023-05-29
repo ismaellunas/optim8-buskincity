@@ -68,7 +68,7 @@
 
         {!! $trackingCodeInsideHead !!}
 
-        @vite('themes/'.config('theme.active').'/js/post.js')
+        @vite('themes/'.config('theme.parent').'/js/post.js')
     </head>
 
     <body
