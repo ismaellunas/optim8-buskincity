@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Vite;
 
 class SettingService
 {
-    private static function getKey(string $key): string
+    public static function getKey(string $key): string
     {
         return app(SettingCache::class)->remember($key, function () use ($key) {
             return Setting::key($key)->value('value') ?? "";

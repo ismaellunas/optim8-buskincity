@@ -8,6 +8,6 @@ class ApiSettingController extends Controller
 {
     public function getValueByKey(string $key): mixed
     {
-        return app(SettingService::class)->getMaxFileSize($key);
+        return SettingService::getKey($key);
     }
 }
