@@ -24,6 +24,7 @@ class SettingController extends CrudController
                 'create' => __('Create'),
                 'actions' => __('Actions'),
                 'are_you_sure' => __('Are you sure?'),
+                'update' => __('Update'),
             ],
             'can' => [
                 'spaceType' => [
