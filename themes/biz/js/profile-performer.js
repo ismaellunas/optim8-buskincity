@@ -14,4 +14,4 @@ const profilePerformer = createApp({
     },
 })
 profilePerformer.use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000})
-profilePerformer.mount("#app");
+profilePerformer.mount("#app-vue");
