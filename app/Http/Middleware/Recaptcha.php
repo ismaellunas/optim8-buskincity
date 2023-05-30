@@ -9,24 +9,21 @@ use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 
 class Recaptcha
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
+    protected $settingService;
+
+    public function __construct()
+    {
+        $this->settingService = app(SettingService::class);
+    }
+
     public function handle(Request $request, Closure $next)
     {
-        $settingService = app(SettingService::class);
-
-        if ($settingService->isRecaptchaKeyExists()) {
-            $recaptchaKeys = $settingService->getRecaptchaKeys();
+        if ($this->settingService->isRecaptchaKeyExists()) {
+            $recaptchaKeys = $this->settingService->getRecaptchaKeys();
             $secretKey = $recaptchaKeys['recaptcha_secret_key'] ?? null;
 
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
-
             if (! $response->isSuccess()) {
                 if (
                     in_array(
@@ -46,13 +43,21 @@ class Recaptcha
 
             if (
                 $response->isSuccess()
-                && $response->getScore() < config('constants.settings.recaptcha.minimal_score')
+                && $response->getScore() < $this->getRecaptchaScore()
             ) {
                 return $this->failRequestAction($request);
             }
         }
 
         return $next($request);
+    }
+
+    protected function getRecaptchaScore(): float
+    {
+        $recaptchaScores = $this->settingService->getRecaptchaScores();
+
+        return (float)$recaptchaScores['recaptcha_score']
+            ?? config('constants.settings.recaptcha.score');
     }
 
     private function failRequestAction(Request $request)

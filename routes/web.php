@@ -128,7 +128,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware([
                 'guest:'.config('fortify.guard'),
-                'recaptcha',
+                'recaptchaForgotPasswordPage',
                 'throttle:defaultRequest'
             ])
             ->name('password.email');
@@ -141,7 +141,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::post('/register', [RegisteredUserController::class, 'store'])
             ->middleware([
                 'guest:'.config('fortify.guard'),
-                'recaptcha',
+                'recaptchaRegisterPage',
             ]);
     }
 
