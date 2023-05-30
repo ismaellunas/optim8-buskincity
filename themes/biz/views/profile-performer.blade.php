@@ -1,4 +1,8 @@
 @inject('userProfile', 'App\Services\UserProfileService')
+@php
+    $countryCode = $userProfile->getMeta('country');
+    $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
+@endphp
 
 <x-layouts.master-basic>
     <x-slot name="title">
@@ -21,10 +25,6 @@
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
 
-                        @php
-                            $countryCode = $userProfile->getMeta('country');
-                            $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
-                        @endphp
                         @if ($flagUrl)
                         <span class="flag">
                             <img src="{{ $flagUrl }}" alt="Portugal" class="is-rounded">
@@ -126,9 +126,7 @@
 
                         <div class="column is-7">
                             @if ($userProfile->getMeta('gallery'))
-                                <gallery
-                                    :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}"
-                                >
+                                <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
                                     <template v-slot="{ index, thumbnailUrl, openModal }">
                                         <div class="column is-one-third-desktop is-half-tablet">
                                             <div class="card" @click.prevent="openModal(index)">
@@ -189,6 +187,7 @@
     </x-modal>
     @endcan
 
+    {{--
     <x-modal id="modal-gallery">
         <div class="modal-content">
             <div class="card">
@@ -218,6 +217,7 @@
             </div>
         </div>
     </x-modal>
+    --}}
 
     @push('scripts')
         @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
