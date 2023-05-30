@@ -19,7 +19,7 @@
             document.getElementById("{{ $formId }}").addEventListener('submit', function(event) {
                 event.preventDefault();
 
-                @if (! empty($recaptchaSiteKey))
+                if (typeof grecaptcha !== 'undefined') {
                     grecaptcha.ready(function() {
                         try {
                             grecaptcha.execute('{{ $recaptchaSiteKey }}', { action: '{{ $action }}' })
@@ -34,9 +34,9 @@
                             event.target.submit();
                         }
                     });
-                @else
+                } else {
                     event.target.submit();
-                @endif
+                }
             });
         }, false);
     </script>
