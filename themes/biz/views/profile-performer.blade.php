@@ -41,7 +41,7 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                <a href="#" class="has-text-primary has-text-weight-bold" onclick="openModal('long-bio')">{{ __('Read more') }}</a>
+                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
                                 @endif
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 @endif
 
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary" onclick="openModal('donation')">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
@@ -227,15 +227,5 @@
         @env ('production')
             <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
         @endenv
-    @endpush
-
-    @push('bottom_scripts')
-    <script>
-        function openModal(id) {
-            let modal = document.getElementById(id);
-
-            modal.classList.add('is-active');
-        }
-    </script>
     @endpush
 </x-layouts.master-basic>
