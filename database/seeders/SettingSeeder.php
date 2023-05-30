@@ -215,6 +215,8 @@ class SettingSeeder extends Seeder
         $this->populateSocialiteSetting();
 
         $this->populateKeySetting();
+
+        $this->populateRecaptchaScoreSetting();
     }
 
     private function createSetting($data)
@@ -320,6 +322,37 @@ class SettingSeeder extends Seeder
         foreach ($settings as $setting) {
             $setting['value'] = env(Str::upper($setting['key']), null);
 
+            $this->createSetting($setting);
+        }
+    }
+
+    private function populateRecaptchaScoreSetting(): void
+    {
+        $settings = [
+            [
+                "key" => "recaptcha_score",
+                "display_name" => null,
+                "value" => 0.6,
+                "group" => "recaptcha.score",
+                "order" => 1,
+            ],
+            [
+                "key" => "recaptcha_score_register",
+                "display_name" => null,
+                "value" => 0.9,
+                "group" => "recaptcha.score",
+                "order" => 2,
+            ],
+            [
+                "key" => "recaptcha_score_forgot_password",
+                "display_name" => null,
+                "value" => 0.9,
+                "group" => "recaptcha.score",
+                "order" => 3,
+            ],
+        ];
+
+        foreach ($settings as $setting) {
             $this->createSetting($setting);
         }
     }
