@@ -189,38 +189,6 @@
     </x-modal>
     @endcan
 
-    {{--
-    <x-modal id="modal-gallery">
-        <div class="modal-content">
-            <div class="card">
-                <div class="card-image">
-                    <figure class="image is-3by2">
-                        <img class="image-source" src="" alt="">
-                    </figure>
-                </div>
-                <footer class="card-footer">
-                    <div class="column">
-                        <div class="is-pulled-left">
-                            <a href="">
-                                <span class="icon is-small">
-                                    <i class="fas fa-lg fa-chevron-circle-left"></i>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="is-pulled-right has-text-primary">
-                            <a href="">
-                                <span class="icon is-small">
-                                    <i class="fas fa-lg fa-chevron-circle-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </x-modal>
-    --}}
-
     @push('scripts')
         @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
         @can ('receiveDonation', $user)
