@@ -339,14 +339,14 @@ class SettingSeeder extends Seeder
             [
                 "key" => "recaptcha_score_register",
                 "display_name" => null,
-                "value" => 0.9,
+                "value" => 0.7,
                 "group" => "recaptcha.score",
                 "order" => 2,
             ],
             [
                 "key" => "recaptcha_score_forgot_password",
                 "display_name" => null,
-                "value" => 0.9,
+                "value" => 0.7,
                 "group" => "recaptcha.score",
                 "order" => 3,
             ],
