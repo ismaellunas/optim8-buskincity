@@ -536,8 +536,14 @@ class MediaService
         ];
     }
 
-    public static function maxFileSize()
+    public static function maxFileSize(): int
     {
-        return app(SettingService::class)->getMaxFileSize();
+        $maxFileSize = SettingService::getKey('max_file_size');
+
+        if ($maxFileSize == "") {
+            $maxFileSize = config('constants.max_file_size');
+        }
+
+        return (int)$maxFileSize;
     }
 }

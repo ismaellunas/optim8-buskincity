@@ -601,15 +601,4 @@ class SettingService
             return ($value) ? collect(json_decode($value, true)) : collect();
         });
     }
-
-    public function getMaxFileSize(): int
-    {
-        $maxFileSize = $this->getKey('max_file_size');
-
-        if ($maxFileSize == "") {
-            $maxFileSize = config('constants.max_file_size');
-        }
-
-        return (int)$maxFileSize;
-    }
 }
