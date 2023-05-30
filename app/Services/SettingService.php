@@ -601,4 +601,11 @@ class SettingService
             return ($value) ? collect(json_decode($value, true)) : collect();
         });
     }
+
+    public function getRecaptchaScores(): array
+    {
+        return app(SettingCache::class)->remember('recaptcha_scores', function () {
+            return $this->getKeysByGroup('recaptcha.score');
+        });
+    }
 }
