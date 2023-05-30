@@ -192,46 +192,6 @@ if (App::environment('production')) {
     );
 }
 
-Route::get('/post-646f59ff0b909', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
-Route::get('/post-646f5c66c5611', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test1', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
-Route::get('/post-646f5c66c5612', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test-no-content', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
-Route::get('/post-646f5c66c5613', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test-header-sidebar', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
-Route::get('/post-646f5c66c5614', function () {
-    $settingService = app(\App\Services\SettingService::class);
-
-    return view('post-test-content-only', [
-        'appCssUrl' => $settingService->getFrontendCssUrl(),
-    ]);
-});
-
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
@@ -261,6 +221,10 @@ Route::prefix(Localization::setLocale())
         Route::get(LaravelLocalization::transRoute('blog.show'), [PostController::class, 'show'])
             ->where('slug', '[\w\d\-\_]+')
             ->name('blog.show');
+
+        Route::get('test-'.LaravelLocalization::transRoute('blog.show'), [PostController::class, 'showTestVue'])
+            ->where('slug', '[\w\d\-\_]+')
+            ->name('blog.show.test');
 
         Route::get('/{page_translation}', [PageController::class, 'show'])
             ->name('frontend.pages.show');

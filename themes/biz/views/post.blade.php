@@ -1,6 +1,6 @@
 @inject('storageService', 'App\Services\StorageService')
 
-<x-layouts.master>
+<x-layouts.post>
     <x-slot name="title">
         {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
     </x-slot>
@@ -44,7 +44,7 @@
                         </div>
                     </header>
 
-                    <div class="content mt-5">
+                    <div id="post-content" class="content mt-5">
                         @if (
                             $post->coverImageUrl
                             && $post->is_cover_displayed
@@ -149,4 +149,4 @@
             </div>
         </div>
     @endif
-</x-layouts.master>
+</x-layouts.post>

@@ -9,6 +9,8 @@ export default defineConfig((command, mode) => {
         'resources/js/frontend.js',
         'resources/js/bulma-misc.js',
         'resources/js/fontawesome.js',
+        'themes/biz/js/post.js',
+        'themes/biz/js/profile-performer.js',
         'resources/sass/app.sass',
         'resources/sass/local.sass',
     ];

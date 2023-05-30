@@ -1,6 +1,10 @@
 @inject('userProfile', 'App\Services\UserProfileService')
+@php
+    $countryCode = $userProfile->getMeta('country');
+    $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
+@endphp
 
-<x-layouts.master>
+<x-layouts.master-basic>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -21,10 +25,6 @@
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
 
-                        @php
-                            $countryCode = $userProfile->getMeta('country');
-                            $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
-                        @endphp
                         @if ($flagUrl)
                         <span class="flag">
                             <img src="{{ $flagUrl }}" alt="Portugal" class="is-rounded">
@@ -41,7 +41,7 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                <a href="#" class="has-text-primary has-text-weight-bold" onclick="openModal('long-bio')">{{ __('Read more') }}</a>
+                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
                                 @endif
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 @endif
 
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary" onclick="openModal('donation')">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
@@ -126,9 +126,7 @@
 
                         <div class="column is-7">
                             @if ($userProfile->getMeta('gallery'))
-                                <gallery
-                                    :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}"
-                                >
+                                <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
                                     <template v-slot="{ index, thumbnailUrl, openModal }">
                                         <div class="column is-one-third-desktop is-half-tablet">
                                             <div class="card" @click.prevent="openModal(index)">
@@ -189,6 +187,7 @@
     </x-modal>
     @endcan
 
+    {{--
     <x-modal id="modal-gallery">
         <div class="modal-content">
             <div class="card">
@@ -218,14 +217,15 @@
             </div>
         </div>
     </x-modal>
+    --}}
 
-    @push('bottom_scripts')
-    <script>
-        function openModal(id) {
-            let modal = document.getElementById(id);
-
-            modal.classList.add('is-active');
-        }
-    </script>
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
     @endpush
-</x-layouts.master>
+
+    @push('styles')
+        @env ('production')
+            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
+        @endenv
+    @endpush
+</x-layouts.master-basic>

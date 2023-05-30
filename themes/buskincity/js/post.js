@@ -11,21 +11,20 @@ import './bootstrap';
  */
 import FormDonation from './components/FormDonation.vue';
 import LoadingOverlay from './components/LoadingOverlay.vue';
-import { components as defaultComponents } from '@/frontend-bootstrap';
-import { createApp } from 'vue';
 import { LoadingPlugin } from 'vue-loading-overlay';
-
-const components = {
-    FormDonation,
-    LoadingOverlay,
-};
+import { components as defaultComponents } from '@/frontend-bootstrap';
+import { createApp } from "vue";
 
 const app = createApp({
-    components: {
-        ...defaultComponents,
-        ...components
-    },
-});
+        components: {
+            ...defaultComponents,
+            ...{
+                FormDonation,
+                LoadingOverlay,
+            }
+        },
+    });
+
 app.use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
 
 // const files = require.context('./', true, /\.vue$/i)
@@ -35,4 +34,4 @@ app.use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 
  * Next, attach Vue application instance to the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-app.mount("#app");
+app.mount("#post-content");
