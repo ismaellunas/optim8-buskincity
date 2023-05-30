@@ -4,8 +4,8 @@ import './bootstrap';
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
 import { createInertiaApp, router } from '@inertiajs/vue3';
-import { LoadingPlugin } from 'vue-loading-overlay';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { LoadingPlugin } from 'vue-loading-overlay';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueSocialSharing from 'vue-social-sharing'
 

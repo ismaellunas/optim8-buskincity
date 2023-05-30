@@ -42,8 +42,6 @@
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
         @env ('production')
-            <!-- Styles -->
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
             <!-- Scripts -->
             <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
         @endenv
@@ -58,6 +56,8 @@
             @endif
         @endenv
 
+        @vite('resources/js/bulma-misc.js')
+
         @stack('scripts')
 
         @if ($additionalCss)
@@ -67,8 +67,6 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
-
-        @vite('themes/'.config('theme.parent').'/js/post.js')
     </head>
 
     <body
@@ -100,8 +98,6 @@
         @endif
 
         @stack('bottom_scripts')
-
-        @vite('resources/js/bulma-misc.js')
 
         @stack('bottom_styles')
 

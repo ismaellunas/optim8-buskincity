@@ -60,6 +60,8 @@
 
         @stack('scripts')
 
+        @vite(['themes/'.config('theme.active').'/js/app.js', 'resources/js/bulma-misc.js'])
+
         @if ($additionalCss)
             <style type="text/css">
                 {!! $additionalCss !!}
@@ -98,8 +100,6 @@
         @endif
 
         @stack('bottom_scripts')
-
-        @vite(['themes/'.config('theme.active').'/js/app.js', 'resources/js/bulma-misc.js'])
 
         @stack('bottom_styles')
 
