@@ -602,10 +602,36 @@ class SettingService
         });
     }
 
-    public function getRecaptchaScores(): array
+    public function getRecaptchaScore(): float
     {
-        return app(SettingCache::class)->remember('recaptcha_scores', function () {
-            return $this->getKeysByGroup('recaptcha.score');
-        });
+        $recaptchaScore = $this->getKey('recaptcha_score');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getRegisterRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_register');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getForgotPasswordRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_forgot_password');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
     }
 }

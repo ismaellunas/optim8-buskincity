@@ -54,10 +54,7 @@ class Recaptcha
 
     protected function getRecaptchaScore(): float
     {
-        $recaptchaScores = $this->settingService->getRecaptchaScores();
-
-        return (float)$recaptchaScores['recaptcha_score']
-            ?? config('constants.settings.recaptcha.score');
+        return $this->settingService->getRecaptchaScore();
     }
 
     private function failRequestAction(Request $request)
