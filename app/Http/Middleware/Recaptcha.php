@@ -66,13 +66,13 @@ class Recaptcha
             return redirect()
                 ->back()
                 ->withErrors([
-                    'recaptcha' => __('Recaptcha verification failed. Please try again.'),
+                    'recaptcha' => __('The process could not be completed due to a connection problem. Please try again.'),
                 ]);
         }
 
         return response([
             'success' => false,
-            'message' => __('Recaptcha verification failed. Please try again.'),
+            'message' => __('The process could not be completed due to a connection problem. Please try again.'),
         ]);
     }
 }
