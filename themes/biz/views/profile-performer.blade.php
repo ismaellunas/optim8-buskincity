@@ -88,62 +88,64 @@
                         </div>
                     </div>
 
-                    @if ($userProfile->isModuleBookingActivated())
+                    <div id="app-vue">
+                        @if ($userProfile->isModuleBookingActivated())
+                            <div class="columns is-multiline mt-5">
+                                <div class="column is-12">
+                                    <h2 class="title is-3">
+                                        {{ __('Upcoming Events') }}
+                                    </h2>
+                                </div>
+                                <div class="column is-12">
+                                    <booking-events
+                                        get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
+                                    ></booking-events>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="columns is-multiline mt-5">
                             <div class="column is-12">
                                 <h2 class="title is-3">
-                                    {{ __('Upcoming Events') }}
+                                    {{ __('Gallery') }}
                                 </h2>
                             </div>
-                            <div class="column is-12">
-                                <booking-events
-                                    get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
-                                ></booking-events>
+                            <div class="column is-5">
+                                @if (
+                                    $userProfile->getMeta('promotional_video')
+                                    && OEmbed::get($userProfile->getMeta('promotional_video'))
+                                )
+                                    <figure class="image is-16by9">
+                                        {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
+                                    </figure>
+                                @else
+                                    <div class="hero is-medium is-primary is-radius">
+                                        <div class="hero-body"></div>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
-                    @endif
 
-                    <div class="columns is-multiline mt-5">
-                        <div class="column is-12">
-                            <h2 class="title is-3">
-                                {{ __('Gallery') }}
-                            </h2>
-                        </div>
-                        <div class="column is-5">
-                            @if (
-                                $userProfile->getMeta('promotional_video')
-                                && OEmbed::get($userProfile->getMeta('promotional_video'))
-                            )
-                                <figure class="image is-16by9">
-                                    {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
-                                </figure>
-                            @else
-                                <div class="hero is-medium is-primary is-radius">
-                                    <div class="hero-body"></div>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="column is-7">
-                            @if ($userProfile->getMeta('gallery'))
-                                <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
-                                    <template v-slot="{ index, thumbnailUrl, openModal }">
-                                        <div class="column is-one-third-desktop is-half-tablet">
-                                            <div class="card" @click.prevent="openModal(index)">
-                                                <div class="card-image">
-                                                    <figure class="image is-3by2">
-                                                        <img :src="thumbnailUrl" alt="" >
-                                                    </figure>
+                            <div class="column is-7">
+                                @if ($userProfile->getMeta('gallery'))
+                                    <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
+                                        <template v-slot="{ index, thumbnailUrl, openModal }">
+                                            <div class="column is-one-third-desktop is-half-tablet">
+                                                <div class="card" @click.prevent="openModal(index)">
+                                                    <div class="card-image">
+                                                        <figure class="image is-3by2">
+                                                            <img :src="thumbnailUrl" alt="" >
+                                                        </figure>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </template>
-                                </gallery>
-                            @else
-                                <div class="hero is-medium is-primary is-radius">
-                                    <div class="hero-body"></div>
-                                </div>
-                            @endif
+                                        </template>
+                                    </gallery>
+                                @else
+                                    <div class="hero is-medium is-primary is-radius">
+                                        <div class="hero-body"></div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,6 +223,9 @@
 
     @push('scripts')
         @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
+        @can ('receiveDonation', $user)
+        @vite('themes/'.config('theme.parent').'/js/donation.js')
+        @endcan
     @endpush
 
     @push('styles')
