@@ -197,7 +197,7 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Address & contact information",
-                    "order" => 1,
+                    "order" => 2,
                     "fields" => [
                         [
                             "type" => "Phone",
@@ -291,7 +291,7 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Social media",
-                    "order" => 1,
+                    "order" => 3,
                     "fields" => [
                         [
                             "type" => "Text",
@@ -412,7 +412,7 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Media",
-                    "order" => 1,
+                    "order" => 4,
                     "fields" => [
                         [
                             "type" => "Video",
