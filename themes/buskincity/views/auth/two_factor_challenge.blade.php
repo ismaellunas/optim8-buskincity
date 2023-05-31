@@ -31,12 +31,6 @@
                         {{ __('Please confirm access to your account by entering one of your emergency recovery codes.') }}
                     </p>
 
-                    @error('email')
-                        <div class="notification is-danger mt-4">
-                            {{ $message }}
-                        </div>
-                    @endif
-
                     @if (session('failed'))
                         <div class="notification is-danger mt-4">
                             {{ session('failed') }}
@@ -44,7 +38,7 @@
                     @endif
 
                     @if ($errors->any())
-                        <div class="notification is-danger mb-4">
+                        <div class="notification is-danger mt-4">
                             <button
                                 class="delete"
                                 type="button"
@@ -58,7 +52,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('two-factor.login') }}" method="post" class="mt-6">
+                    <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post" class="mt-6">
                         <fieldset id="fieldset">
 
                         @csrf
@@ -82,7 +76,10 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha action="tfa" />
+                        <x-recaptcha
+                            action="tfa"
+                            form-id="form-tfa"
+                        />
 
                         <div class="buttons">
                             <button type="button" class="button is-medium recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
