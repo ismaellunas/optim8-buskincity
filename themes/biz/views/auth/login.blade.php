@@ -98,7 +98,7 @@
                     @endif
 
                     <div class="has-text-left">
-                        <form action="{{ route('login') }}" method="post" onsubmit="setLoader()">
+                        <form id="form-login" action="{{ route('login') }}" method="post">
                             @csrf
                             <div class="field">
                                 <label class="label">Email</label>
@@ -150,7 +150,10 @@
                                 </div>
                             </div>
 
-                            <x-recaptcha action="login" />
+                            <x-recaptcha
+                                action="login"
+                                form-id="form-login"
+                            />
 
                             <button type="submit" class="button is-block is-info is-fullwidth">
                                 Log In <i class="fas fa-sign-in-alt"></i>
