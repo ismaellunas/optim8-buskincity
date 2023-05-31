@@ -508,7 +508,7 @@ class MediaService
             ]),
             __('Max file size: :filesize.', [
                 'filesize' => HumanReadable::bytesToHuman(
-                    self::maxFileSize() * 1024
+                    SettingService::maxFileSize() * 1024
                 )
             ]),
         ];
@@ -522,7 +522,7 @@ class MediaService
             ]),
             __('Max file size: :filesize.', [
                 'filesize' => HumanReadable::bytesToHuman(
-                    self::maxFileSize() * 1024
+                    SettingService::maxFileSize() * 1024
                 )
             ]),
         ];
@@ -536,7 +536,7 @@ class MediaService
             ]),
             __('Max file size: :filesize.', [
                 'filesize' => HumanReadable::bytesToHuman(
-                    self::maxFileSize() * 1024
+                    SettingService::maxFileSize() * 1024
                 )
             ]),
             __('Recommended dimension: :dimension.', [
