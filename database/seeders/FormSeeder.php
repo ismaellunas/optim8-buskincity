@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Services\GlobalOptionService;
 use App\Models\Form;
 use App\Models\FieldGroup;
-use App\Services\MediaService;
+use App\Services\SettingService;
 use Illuminate\Database\Seeder;
 
 class FormSeeder extends Seeder
@@ -19,7 +19,7 @@ class FormSeeder extends Seeder
     {
         $imageMimes = ['image'];
         $imageAndVideoMimes = ['image', 'video'];
-        $maxFileSize = MediaService::maxFileSize();
+        $maxFileSize = SettingService::maxFileSize();
 
         $about = [
             "key" => "about",

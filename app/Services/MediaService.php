@@ -535,15 +535,4 @@ class MediaService
             'are_you_sure' => __('Are you sure?'),
         ];
     }
-
-    public static function maxFileSize(): int
-    {
-        $maxFileSize = SettingService::getKey('max_file_size');
-
-        if ($maxFileSize == "") {
-            $maxFileSize = config('constants.max_file_size');
-        }
-
-        return (int)$maxFileSize;
-    }
 }
