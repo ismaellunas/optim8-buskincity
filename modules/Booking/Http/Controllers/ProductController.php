@@ -275,7 +275,12 @@ class ProductController extends CrudController
     private function getInstructions(): array
     {
         return [
-            'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+            'mediaLibrary' => [
+                ...MediaService::defaultMediaLibraryInstructions(),
+                ...[
+                    __('Recommended ratio: :ratio.', [ 'ratio' => '16:9' ])
+                ]
+            ],
         ];
     }
 
