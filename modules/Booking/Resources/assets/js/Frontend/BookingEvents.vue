@@ -218,7 +218,6 @@
                         }
                     })
                     .catch((error) => {
-                        console.error(error);
                         self.records = self.setting = {};
                         self.cityOptions = [];
                     })
