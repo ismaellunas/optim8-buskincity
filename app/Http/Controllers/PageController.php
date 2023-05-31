@@ -106,6 +106,10 @@ class PageController extends CrudController
                 'templates' => PageSettingLayout::options(),
             ],
             'i18n' => $this->translationCreateEditPage(),
+            'instructions' => [
+                'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
+            ],
         ]));
     }
 
@@ -189,6 +193,10 @@ class PageController extends CrudController
                 'templates' => PageSettingLayout::options(),
             ],
             'i18n' => $this->translationCreateEditPage(),
+            'instructions' => [
+                'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
+            ],
         ]));
     }
 

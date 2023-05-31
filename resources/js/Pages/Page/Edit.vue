@@ -56,6 +56,7 @@
             return {
                 can: this.can,
                 i18n: this.i18n,
+                instructions: this.instructions,
                 media: this.media,
                 settingOptions: this.settingOptions,
             }
@@ -69,6 +70,7 @@
             can: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
             i18n: { type: Object, default: () => {} },
+            instructions: { type: Object, default:() => {} },
             media: { type: Object, default: () => {} },
             page: { type: Object, required: true },
             settingOptions: { type: Object, default:() => {} },

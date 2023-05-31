@@ -73,7 +73,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
-                            :instructions="instructions.mediaLibrary"
+                            :instructions="instructions.faviconMediaLibrary"
                             :message="error('favicon')"
                         />
                     </div>
@@ -123,7 +123,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
-                            :instructions="instructions.mediaLibrary"
+                            :instructions="instructions.logoMediaLibrary"
                             :message="error('qrcode_public_page_logo')"
                         />
                     </div>

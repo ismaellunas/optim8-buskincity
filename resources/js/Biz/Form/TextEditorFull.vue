@@ -20,6 +20,7 @@
             title="Media Library"
             :accepted-file-type="acceptedTypes"
             :data="media"
+            :instructions="mediaLibraryInstructions"
             :is-download-enabled="isDownloadEnabled"
             :is-upload-enabled="isUploadEnabled"
             :query-params="mediaListQueryParams"
@@ -151,6 +152,8 @@
                 const self = this;
 
                 self.setTypeToMedia(meta.filetype);
+
+                self.setInstructions(meta.filetype);
 
                 self.openModal();
 

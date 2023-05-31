@@ -30,7 +30,7 @@ class UserUpdateRequest extends UserStoreRequest
             ],
             'photo' => [
                 'nullable',
-                'mimes:jpg,jpeg,png',
+                'mimes:' . implode(',', config('constants.extensions.image')),
                 'max:'.config('constants.file_size.profile_picture'),
             ],
             'language_id' => ['required', 'exists:App\Models\Language,id'],

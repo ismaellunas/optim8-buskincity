@@ -293,6 +293,13 @@ return [
 
     'max_file_size' => 10 * 1024,
 
+    'dimensions' => [
+        'favicon' => '16 x 16px',
+        'logo' => '300 x 300px',
+        'profile_picture' => '300 x 300px',
+        'cover' => '2560 x 576px',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway

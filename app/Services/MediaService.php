@@ -514,6 +514,54 @@ class MediaService
         ];
     }
 
+    public static function videoMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.video'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    self::maxFileSize() * 1024
+                )
+            ]),
+        ];
+    }
+
+    public static function logoMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    self::maxFileSize() * 1024
+                )
+            ]),
+            __('Recommended dimension: :dimension.', [
+                'dimension' => config('constants.dimensions.logo')
+            ]),
+        ];
+    }
+
+    public static function profilePictureInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    config('constants.file_size.profile_picture') * 1024
+                )
+            ]),
+            __('Recommended dimension: :dimension.', [
+                'dimension' => config('constants.dimensions.profile_picture'),
+            ]),
+        ];
+    }
+
     public static function defaultMediaLibraryTranslations(): array
     {
         return [
