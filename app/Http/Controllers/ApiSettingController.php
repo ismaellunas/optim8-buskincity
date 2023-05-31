@@ -6,8 +6,8 @@ use App\Services\SettingService;
 
 class ApiSettingController extends Controller
 {
-    public function getValueByKey(string $key): mixed
+    public function maxFileSize(): int
     {
-        return app(SettingService::class)->getMaxFileSize($key);
+        return SettingService::maxFileSize();
     }
 }

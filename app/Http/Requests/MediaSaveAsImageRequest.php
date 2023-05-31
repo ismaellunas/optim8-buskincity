@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Services\MediaService;
+use App\Services\SettingService;
 
 class MediaSaveAsImageRequest extends BaseFormRequest
 {
@@ -23,7 +23,7 @@ class MediaSaveAsImageRequest extends BaseFormRequest
      */
     public function rules()
     {
-        $max = MediaService::maxFileSize();
+        $max = SettingService::maxFileSize();
 
         return [
             'image' => [

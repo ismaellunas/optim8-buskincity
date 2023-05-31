@@ -583,9 +583,4 @@ class MediaService
             'are_you_sure' => __('Are you sure?'),
         ];
     }
-
-    public static function maxFileSize()
-    {
-        return app(SettingService::class)->getMaxFileSize();
-    }
 }

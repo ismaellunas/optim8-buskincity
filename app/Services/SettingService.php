@@ -602,9 +602,9 @@ class SettingService
         });
     }
 
-    public function getMaxFileSize(): int
+    public static function maxFileSize(): int
     {
-        $maxFileSize = $this->getKey('max_file_size');
+        $maxFileSize = self::getKey('max_file_size');
 
         if ($maxFileSize == "") {
             $maxFileSize = config('constants.max_file_size');

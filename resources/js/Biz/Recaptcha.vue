@@ -8,14 +8,8 @@
 </template>
 
 <script>
-    import BizFlashFailed from '@/Biz/FlashFailed.vue';
-
     export default {
         name: 'BizRecaptcha',
-
-        components: {
-            BizFlashFailed,
-        },
 
         props: {
             siteKey: { type: [String, null], default: null },
