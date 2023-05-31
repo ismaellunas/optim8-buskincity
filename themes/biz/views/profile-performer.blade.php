@@ -1,7 +1,13 @@
 @inject('userProfile', 'App\Services\UserProfileService')
+@inject('eventService', 'Modules\Booking\Services\EventService')
 @php
     $countryCode = $userProfile->getMeta('country');
     $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
+    $hasPromitionalVideo = (
+        $userProfile->getMeta('promotional_video')
+        && OEmbed::get($userProfile->getMeta('promotional_video'))
+    );
+    $hasUploadedGallery = !empty($userProfile->getMeta('gallery'));
 @endphp
 
 <x-layouts.master-basic>
@@ -89,7 +95,10 @@
                     </div>
 
                     <div id="app-vue">
-                        @if ($userProfile->isModuleBookingActivated())
+                        @if (
+                            $userProfile->isModuleBookingActivated()
+                            && !empty($eventService->getNearestSearchableUpcomingEventByUser($user->id))
+                        )
                             <div class="columns is-multiline mt-5">
                                 <div class="column is-12">
                                     <h2 class="title is-3">
@@ -104,49 +113,41 @@
                             </div>
                         @endif
 
-                        <div class="columns is-multiline mt-5">
-                            <div class="column is-12">
-                                <h2 class="title is-3">
-                                    {{ __('Gallery') }}
-                                </h2>
-                            </div>
-                            <div class="column is-5">
-                                @if (
-                                    $userProfile->getMeta('promotional_video')
-                                    && OEmbed::get($userProfile->getMeta('promotional_video'))
-                                )
-                                    <figure class="image is-16by9">
-                                        {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
-                                    </figure>
-                                @else
-                                    <div class="hero is-medium is-primary is-radius">
-                                        <div class="hero-body"></div>
+                        @if ($hasPromitionalVideo || $hasUploadedGallery)
+                            <div class="columns is-multiline mt-5">
+                                <div class="column is-12">
+                                    <h2 class="title is-3">
+                                        {{ __('Gallery') }}
+                                    </h2>
+                                </div>
+
+                                @if ($hasPromitionalVideo)
+                                    <div class="column is-5">
+                                        <figure class="image is-16by9">
+                                            {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
+                                        </figure>
                                     </div>
                                 @endif
-                            </div>
 
-                            <div class="column is-7">
-                                @if ($userProfile->getMeta('gallery'))
-                                    <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
-                                        <template v-slot="{ index, thumbnailUrl, openModal }">
-                                            <div class="column is-one-third-desktop is-half-tablet">
-                                                <div class="card" @click.prevent="openModal(index)">
-                                                    <div class="card-image">
-                                                        <figure class="image is-3by2">
-                                                            <img :src="thumbnailUrl" alt="" >
-                                                        </figure>
+                                @if ($hasUploadedGallery)
+                                    <div class="column is-7">
+                                        <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
+                                            <template v-slot="{ index, thumbnailUrl, openModal }">
+                                                <div class="column is-one-third-desktop is-half-tablet">
+                                                    <div class="card" @click.prevent="openModal(index)">
+                                                        <div class="card-image">
+                                                            <figure class="image is-3by2">
+                                                                <img :src="thumbnailUrl" alt="" >
+                                                            </figure>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </template>
-                                    </gallery>
-                                @else
-                                    <div class="hero is-medium is-primary is-radius">
-                                        <div class="hero-body"></div>
+                                            </template>
+                                        </gallery>
                                     </div>
                                 @endif
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
