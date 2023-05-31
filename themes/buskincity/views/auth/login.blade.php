@@ -99,7 +99,7 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <form action="{{ route('login') }}" method="post" class="mt-6">
+                    <form id="form-login" action="{{ route('login') }}" method="post" class="mt-6">
                         <fieldset id="fieldset">
 
                         @csrf
@@ -154,7 +154,10 @@
                             </div>
                         </div>
 
-                        <x-recaptcha action="login" />
+                        <x-recaptcha
+                            action="login"
+                            form-id="form-login"
+                        />
 
                         <button class="button is-medium is-primary is-fullwidth">
                             <span class="has-text-weight-bold">Log In</span>
