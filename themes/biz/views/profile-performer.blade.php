@@ -1,6 +1,10 @@
 @inject('userProfile', 'App\Services\UserProfileService')
+@php
+    $countryCode = $userProfile->getMeta('country');
+    $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
+@endphp
 
-<x-layouts.master>
+<x-layouts.master-basic>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -21,10 +25,6 @@
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
 
-                        @php
-                            $countryCode = $userProfile->getMeta('country');
-                            $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
-                        @endphp
                         @if ($flagUrl)
                         <span class="flag">
                             <img src="{{ $flagUrl }}" alt="Portugal" class="is-rounded">
@@ -41,7 +41,7 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                <a href="#" class="has-text-primary has-text-weight-bold" onclick="openModal('long-bio')">{{ __('Read more') }}</a>
+                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
                                 @endif
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 @endif
 
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary" onclick="openModal('donation')">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
@@ -88,64 +88,64 @@
                         </div>
                     </div>
 
-                    @if ($userProfile->isModuleBookingActivated())
+                    <div id="app-vue">
+                        @if ($userProfile->isModuleBookingActivated())
+                            <div class="columns is-multiline mt-5">
+                                <div class="column is-12">
+                                    <h2 class="title is-3">
+                                        {{ __('Upcoming Events') }}
+                                    </h2>
+                                </div>
+                                <div class="column is-12">
+                                    <booking-events
+                                        get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
+                                    ></booking-events>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="columns is-multiline mt-5">
                             <div class="column is-12">
                                 <h2 class="title is-3">
-                                    {{ __('Upcoming Events') }}
+                                    {{ __('Gallery') }}
                                 </h2>
                             </div>
-                            <div class="column is-12">
-                                <booking-events
-                                    get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
-                                ></booking-events>
+                            <div class="column is-5">
+                                @if (
+                                    $userProfile->getMeta('promotional_video')
+                                    && OEmbed::get($userProfile->getMeta('promotional_video'))
+                                )
+                                    <figure class="image is-16by9">
+                                        {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
+                                    </figure>
+                                @else
+                                    <div class="hero is-medium is-primary is-radius">
+                                        <div class="hero-body"></div>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
-                    @endif
 
-                    <div class="columns is-multiline mt-5">
-                        <div class="column is-12">
-                            <h2 class="title is-3">
-                                {{ __('Gallery') }}
-                            </h2>
-                        </div>
-                        <div class="column is-5">
-                            @if (
-                                $userProfile->getMeta('promotional_video')
-                                && OEmbed::get($userProfile->getMeta('promotional_video'))
-                            )
-                                <figure class="image is-16by9">
-                                    {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
-                                </figure>
-                            @else
-                                <div class="hero is-medium is-primary is-radius">
-                                    <div class="hero-body"></div>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="column is-7">
-                            @if ($userProfile->getMeta('gallery'))
-                                <gallery
-                                    :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}"
-                                >
-                                    <template v-slot="{ index, thumbnailUrl, openModal }">
-                                        <div class="column is-one-third-desktop is-half-tablet">
-                                            <div class="card" @click.prevent="openModal(index)">
-                                                <div class="card-image">
-                                                    <figure class="image is-3by2">
-                                                        <img :src="thumbnailUrl" alt="" >
-                                                    </figure>
+                            <div class="column is-7">
+                                @if ($userProfile->getMeta('gallery'))
+                                    <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
+                                        <template v-slot="{ index, thumbnailUrl, openModal }">
+                                            <div class="column is-one-third-desktop is-half-tablet">
+                                                <div class="card" @click.prevent="openModal(index)">
+                                                    <div class="card-image">
+                                                        <figure class="image is-3by2">
+                                                            <img :src="thumbnailUrl" alt="" >
+                                                        </figure>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </template>
-                                </gallery>
-                            @else
-                                <div class="hero is-medium is-primary is-radius">
-                                    <div class="hero-body"></div>
-                                </div>
-                            @endif
+                                        </template>
+                                    </gallery>
+                                @else
+                                    <div class="hero is-medium is-primary is-radius">
+                                        <div class="hero-body"></div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,43 +189,16 @@
     </x-modal>
     @endcan
 
-    <x-modal id="modal-gallery">
-        <div class="modal-content">
-            <div class="card">
-                <div class="card-image">
-                    <figure class="image is-3by2">
-                        <img class="image-source" src="" alt="">
-                    </figure>
-                </div>
-                <footer class="card-footer">
-                    <div class="column">
-                        <div class="is-pulled-left">
-                            <a href="">
-                                <span class="icon is-small">
-                                    <i class="fas fa-lg fa-chevron-circle-left"></i>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="is-pulled-right has-text-primary">
-                            <a href="">
-                                <span class="icon is-small">
-                                    <i class="fas fa-lg fa-chevron-circle-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </x-modal>
-
-    @push('bottom_scripts')
-    <script>
-        function openModal(id) {
-            let modal = document.getElementById(id);
-
-            modal.classList.add('is-active');
-        }
-    </script>
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/profile-performer.js')
+        @can ('receiveDonation', $user)
+        @vite('themes/'.config('theme.parent').'/js/donation.js')
+        @endcan
     @endpush
-</x-layouts.master>
+
+    @push('styles')
+        @env ('production')
+            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
+        @endenv
+    @endpush
+</x-layouts.master-basic>
