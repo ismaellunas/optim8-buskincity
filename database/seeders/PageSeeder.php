@@ -732,7 +732,7 @@ class PageSeeder extends Seeder
                                 ],
                                 "icon" => [
                                     "class" => null,
-                                    "iconPosition" => "left",
+                                    "position" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -836,7 +836,7 @@ class PageSeeder extends Seeder
                                 ],
                                 "icon" => [
                                     "class" => null,
-                                    "iconPosition" => "left",
+                                    "position" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -918,7 +918,7 @@ class PageSeeder extends Seeder
                                 ],
                                 "icon" => [
                                     "class" => null,
-                                    "iconPosition" => "left",
+                                    "position" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -960,7 +960,7 @@ class PageSeeder extends Seeder
                                 ],
                                 "icon" => [
                                     "class" => null,
-                                    "iconPosition" => "left",
+                                    "position" => "left",
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -1449,7 +1449,7 @@ class PageSeeder extends Seeder
                                 ],
                                 "icon" => [
                                     "class" => null,
-                                    "iconPosition" => "left",
+                                    "position" => "left",
                                 ],
                                 "visibility" => ["device" => null],
                                 "dimension" => [
