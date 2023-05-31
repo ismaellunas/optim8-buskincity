@@ -602,6 +602,39 @@ class SettingService
         });
     }
 
+    public function getRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getRegisterRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_register');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getForgotPasswordRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_forgot_password');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
     public static function maxFileSize(): int
     {
         $maxFileSize = self::getKey('max_file_size');

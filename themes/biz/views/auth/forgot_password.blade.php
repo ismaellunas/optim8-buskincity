@@ -45,7 +45,7 @@
                         </div>
                     @endif
 
-                    <form method="post" action="{{ route('password.email') }}" onsubmit="setLoader()">
+                    <form id="form-forgot-password" method="post" action="{{ route('password.email') }}">
                         <div class="mb-4">
                             @csrf
 
@@ -60,7 +60,10 @@
                             </div>
                         </div>
 
-                        <x-recaptcha action="forgot_password" />
+                        <x-recaptcha
+                            action="forgot_password"
+                            form-id="form-forgot-password"
+                        />
 
                         <div class="mt-4">
                             <button type="submit" class="button is-info">
