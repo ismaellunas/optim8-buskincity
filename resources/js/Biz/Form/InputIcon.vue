@@ -29,6 +29,7 @@
             v-if="isModalOpen"
             :icon-classes="iconClasses"
             :has-type="hasType"
+            :can-remove="canRemove"
             @close="closeModal()"
             @on-selected-icon="onSelectedIcon"
         />
