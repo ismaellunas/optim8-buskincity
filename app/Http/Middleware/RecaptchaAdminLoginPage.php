@@ -2,20 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\SettingService;
 use Closure;
 use Illuminate\Http\Request;
 use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 
-class Recaptcha
+class RecaptchaAdminLoginPage extends Recaptcha
 {
-    protected $settingService;
-
-    public function __construct()
-    {
-        $this->settingService = app(SettingService::class);
-    }
-
     public function handle(Request $request, Closure $next)
     {
         if ($this->settingService->isRecaptchaKeyExists()) {
@@ -25,9 +17,22 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
             if (! $response->isSuccess()) {
+                if (
+                    in_array(
+                        GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
+                        $response->getErrorCodes()
+                    )
+                    || in_array(
+                        'invalid-input-secret',
+                        $response->getErrorCodes()
+                    )
+                ) {
+
+                    return $next($request);
+
+                }
 
                 return $this->failRequestAction($request);
-
             }
 
             if (
@@ -41,26 +46,5 @@ class Recaptcha
         }
 
         return $next($request);
-    }
-
-    protected function getRecaptchaScore(): float
-    {
-        return $this->settingService->getRecaptchaScore();
-    }
-
-    protected function failRequestAction(Request $request)
-    {
-        if (! $request->expectsJson()) {
-            return redirect()
-                ->back()
-                ->withErrors([
-                    'recaptcha' => __('The process could not be completed due to a connection problem. Please try again.'),
-                ]);
-        }
-
-        return response([
-            'success' => false,
-            'message' => __('The process could not be completed due to a connection problem. Please try again.'),
-        ]);
     }
 }
