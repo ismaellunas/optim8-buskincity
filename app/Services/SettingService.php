@@ -602,9 +602,42 @@ class SettingService
         });
     }
 
-    public function getMaxFileSize(): int
+    public function getRecaptchaScore(): float
     {
-        $maxFileSize = $this->getKey('max_file_size');
+        $recaptchaScore = $this->getKey('recaptcha_score');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getRegisterRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_register');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public function getForgotPasswordRecaptchaScore(): float
+    {
+        $recaptchaScore = $this->getKey('recaptcha_score_forgot_password');
+
+        if ($recaptchaScore == '') {
+            return config('constants.settings.recaptcha.score');
+        }
+
+        return (float)$recaptchaScore;
+    }
+
+    public static function maxFileSize(): int
+    {
+        $maxFileSize = self::getKey('max_file_size');
 
         if ($maxFileSize == "") {
             $maxFileSize = config('constants.max_file_size');

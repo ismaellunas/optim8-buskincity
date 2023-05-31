@@ -258,7 +258,7 @@ return [
         ],
 
         'recaptcha' => [
-            'minimal_score' => env('RECAPTCHA_MINIMAL_SCORE', 0.6),
+            'score' => 0.6,
         ]
     ],
 

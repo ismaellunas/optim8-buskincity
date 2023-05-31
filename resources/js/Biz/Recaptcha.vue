@@ -8,14 +8,8 @@
 </template>
 
 <script>
-    import BizFlashFailed from '@/Biz/FlashFailed.vue';
-
     export default {
         name: 'BizRecaptcha',
-
-        components: {
-            BizFlashFailed,
-        },
 
         props: {
             siteKey: { type: [String, null], default: null },
@@ -62,19 +56,23 @@
             execute() {
                 const self = this;
 
-                grecaptcha.ready(function() {
-                    try {
-                        grecaptcha.execute(self.siteKey, {
-                            action: self.action
-                        })
-                            .then((response) => {
-                                self.$emit('on-verify', response);
-                            });
-                    } catch (error) {
-                        self.isRecaptchaError = true;
-                        self.$emit('on-verify');
-                    }
-                });
+                if (self.isRecaptchaAvailable) {
+                    grecaptcha.ready(function() {
+                        try {
+                            grecaptcha.execute(self.siteKey, {
+                                action: self.action
+                            })
+                                .then((response) => {
+                                    self.$emit('on-verify', response);
+                                });
+                        } catch (error) {
+                            self.isRecaptchaError = true;
+                            self.$emit('on-verify');
+                        }
+                    });
+                } else {
+                    self.$emit('on-verify');
+                }
             },
         },
     }

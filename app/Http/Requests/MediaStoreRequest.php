@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
+use App\Services\SettingService;
 use App\Services\TranslationService;
 use Illuminate\Support\Str;
 
@@ -27,7 +28,7 @@ class MediaStoreRequest extends BaseFormRequest
     public function rules()
     {
         $mimes = MediaService::getExtensions();
-        $max = MediaService::maxFileSize();
+        $max = SettingService::maxFileSize();
 
         return [
             ...[

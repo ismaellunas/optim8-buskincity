@@ -8,6 +8,7 @@ use App\Models\Media;
 use App\Rules\FieldMaxFile;
 use App\Rules\FieldMinFile;
 use App\Services\MediaService;
+use App\Services\SettingService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -286,7 +287,7 @@ class File extends BaseField
 
     private function checkValidationMaxFileSize(): void
     {
-        $maxFileSize = MediaService::maxFileSize();
+        $maxFileSize = SettingService::maxFileSize();
 
         if (
             array_key_exists('max', $this->validation['rules'])

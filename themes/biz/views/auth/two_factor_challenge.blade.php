@@ -23,12 +23,6 @@
                         </p>
                     </div>
 
-                    @error('email')
-                        <div class="notification is-danger mt-4">
-                            {{ $message }}
-                        </div>
-                    @endif
-
                     @if (session('failed'))
                         <div class="notification is-danger">
                             {{ session('failed') }}
@@ -51,7 +45,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('two-factor.login') }}" onsubmit="setLoader()" method="post">
+                    <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post">
                         @csrf
                         <div id="code" class="field mb-5 recovery">
                             <label class="label">Code</label>
@@ -73,7 +67,10 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha action="tfa" />
+                        <x-recaptcha
+                            action="tfa"
+                            form-id="form-tfa"
+                        />
 
                         <div class="buttons">
                             <button type="button" class="button recovery" data-target="recovery-code" onclick="toggleRecovery(this)">

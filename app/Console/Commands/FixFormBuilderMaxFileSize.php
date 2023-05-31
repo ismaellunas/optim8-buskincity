@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\FieldGroup;
-use App\Services\MediaService;
+use App\Services\SettingService;
 use Illuminate\Console\Command;
 
 class FixFormBuilderMaxFileSize extends Command
@@ -30,7 +30,7 @@ class FixFormBuilderMaxFileSize extends Command
     public function handle()
     {
         $fieldGroups = FieldGroup::all();
-        $defaultMaxFileSize = MediaService::maxFileSize();
+        $defaultMaxFileSize = SettingService::maxFileSize();
 
         foreach ($fieldGroups as $fieldGroup) {
             $fields = $fieldGroup->fields;
