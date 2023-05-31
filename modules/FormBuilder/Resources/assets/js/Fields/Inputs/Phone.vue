@@ -15,13 +15,20 @@
             :country-options="computedCountryOptions"
         >
             <template
-                v-if="modelValue.note"
+                v-if="hasNotes"
                 #note
             >
                 <p
-                    class="help"
+                    class="help is-info"
                 >
-                    {{ modelValue.note }}
+                    <ul>
+                        <li
+                            v-for="(note, index) in modelValue.notes"
+                            :key="index"
+                        >
+                            {{ note }}
+                        </li>
+                    </ul>
                 </p>
             </template>
         </biz-form-phone>
@@ -30,6 +37,7 @@
 
 <script>
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
+    import MixinField from '@formbuilder/Mixins/Field';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import BizFormPhone from '@/Biz/Form/Phone.vue';
     import { isEmpty } from '@/Libs/utils';
@@ -44,16 +52,12 @@
 
         mixins: [
             MixinDuplicableContent,
+            MixinField
         ],
 
         inject: [
             'countryOptions'
         ],
-
-        props: {
-            id: { type: String, required: true },
-            modelValue: { type: Object, required: true },
-        },
 
         emits: ['delete-content'],
 

@@ -24,13 +24,14 @@
                     >
                         {{ instruction }}
                     </li>
+
+                    <li
+                        v-for="(note, index) in schema.notes"
+                        :key="index"
+                    >
+                        {{ note }}
+                    </li>
                 </ul>
-            </p>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
             </p>
         </template>
     </form-field-files>

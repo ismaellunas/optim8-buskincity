@@ -20,7 +20,7 @@ abstract class BaseField
     public $roles;
     public $storedValue;
     public $entity;
-    public $note;
+    public $notes = [];
     public $column;
 
     public function __construct(string $name, array $data = [])
@@ -45,8 +45,8 @@ abstract class BaseField
             $this->defaultValue = $data['default_value'];
         }
 
-        if (array_key_exists('note', $data)) {
-            $this->note = $data['note'];
+        if (array_key_exists('notes', $data)) {
+            $this->notes = $data['notes'];
         }
 
         if (array_key_exists('column', $data)) {
@@ -90,7 +90,7 @@ abstract class BaseField
             'default_value' => $this->defaultValue,
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
-            'note' => $this->note,
+            'notes' => $this->notes,
             'column' => $this->column,
         ];
     }

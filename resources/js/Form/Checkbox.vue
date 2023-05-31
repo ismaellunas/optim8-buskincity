@@ -11,12 +11,21 @@
         :required="schema.is_required"
         :value="schema.value"
     >
-        <template #note>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
             <p
-                v-if="schema.note"
-                class="help"
+                class="help is-info"
             >
-                {{ schema.note }}
+                <ul>
+                    <li
+                        v-for="(note, index) in schema.notes"
+                        :key="index"
+                    >
+                        {{ note }}
+                    </li>
+                </ul>
             </p>
         </template>
     </biz-form-checbox-toggle>
