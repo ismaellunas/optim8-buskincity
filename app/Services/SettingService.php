@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Vite;
 
 class SettingService
 {
-    public static function getKey(string $key): string
+    private static function getKey(string $key): string
     {
         return app(SettingCache::class)->remember($key, function () use ($key) {
             return Setting::key($key)->value('value') ?? "";
@@ -600,5 +600,16 @@ class SettingService
 
             return ($value) ? collect(json_decode($value, true)) : collect();
         });
+    }
+
+    public static function maxFileSize(): int
+    {
+        $maxFileSize = self::getKey('max_file_size');
+
+        if ($maxFileSize == "") {
+            $maxFileSize = config('constants.max_file_size');
+        }
+
+        return (int)$maxFileSize;
     }
 }
