@@ -1,4 +1,7 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
+import { maxFileSize as maxFileSizeResponse } from '@/Libs/settings';
+
+const maxFileSize = await maxFileSizeResponse();
 
 export default {
     type: "FileDragDrop",
@@ -15,7 +18,7 @@ export default {
         rules: {
             required: false,
             mimes: ['image'],
-            max: null,
+            max: maxFileSize,
         },
         message: []
     },
@@ -82,6 +85,8 @@ export const config = {
                 label: "Maximal File Size",
                 settings: {
                     addons: 'KiB',
+                    max: maxFileSize,
+                    note: `Max file size: ${maxFileSize} KiB`
                 }
             },
         },

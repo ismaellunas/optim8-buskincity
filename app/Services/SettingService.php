@@ -634,4 +634,15 @@ class SettingService
 
         return (float)$recaptchaScore;
     }
+
+    public static function maxFileSize(): int
+    {
+        $maxFileSize = self::getKey('max_file_size');
+
+        if ($maxFileSize == "") {
+            $maxFileSize = config('constants.max_file_size');
+        }
+
+        return (int)$maxFileSize;
+    }
 }

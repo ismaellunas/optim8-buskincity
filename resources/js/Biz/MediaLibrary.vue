@@ -153,7 +153,7 @@
             </template>
 
             <biz-error-notifications
-                :errors="$page.props.errors"
+                :errors="errorMessage"
             />
 
             <template
@@ -342,6 +342,7 @@
                     successSaveAsMedia: "A new media has been created",
                 },
                 icon,
+                errorMessage: {},
             };
         },
 
@@ -523,9 +524,15 @@
                     )
                         .then((response) => {
                             self.onSuccessSubmit(response);
+
+                            self.errorMessage = null;
                         })
-                        .catch(() => {
+                        .catch((error) => {
                             oopsAlert();
+
+                            self.errorMessage = {
+                                default: error.response.data.errors,
+                            };
                         }).then(() => {
                             self.onEndLoadingOverlay();
 
@@ -539,9 +546,13 @@
                                 page,
                                 page.props.flash.message
                             );
+
+                            self.errorMessage = null;
                         },
                         onError: () => {
                             oopsAlert();
+
+                            self.errorMessage = this.$page.props.errors;
                         },
                         onFinish: () => {
                             self.onEndLoadingOverlay();
