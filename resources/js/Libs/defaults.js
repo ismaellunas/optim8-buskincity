@@ -76,7 +76,7 @@ export const appName = import.meta.env.VITE_APP_NAME;
 
 export const oneMegabyte = 1024;
 
-export const userImage = '/images/profile-picture-default.png';
+export const userImage = '/images/profile-picture-default.jpg';
 
 export const pageStatus = {
     draft: 0,

@@ -23,7 +23,7 @@
                 </div>
                 <div class="column is-11">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <img src="{{ $userProfile->getProfilePhotoUrl() }}" alt="{{ $user->fullName }}" class="is-rounded">
 
                         @if ($flagUrl)
                         <span class="flag">
@@ -175,7 +175,7 @@
                 <div class="card-content">
                     <div class="is-flex">
                         <figure class="profile-picture image is-48x48 mr-3">
-                            <img src="{{ $user->profilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
+                            <img src="{{ $userProfile->getProfilePhotoUrl() }}" alt="{{ $user->fullName }}" class="is-rounded">
                         </figure>
                         <div>
                             <h2 class="title is-5 m-0">{{ __('Donate to') }} {{ $userProfile->getMeta('stage_name') }}</h2>
