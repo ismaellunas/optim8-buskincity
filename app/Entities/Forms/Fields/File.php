@@ -255,7 +255,13 @@ class File extends BaseField
         ) {
             $bytes = $rules['max'];
 
-            $additionalInstructions[] = 'Max file size: '. HumanReadable::bytesToHuman($bytes * 1024);
+            $maxFileInstruction = 'Max file size: '. HumanReadable::bytesToHuman($bytes * 1024);
+
+            if ($this->maxFileNumber && $this->maxFileNumber > 1) {
+                $maxFileInstruction .= '/file.';
+            }
+
+            $additionalInstructions[] = $maxFileInstruction;
         }
 
         return $instructions

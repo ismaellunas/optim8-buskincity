@@ -19,6 +19,10 @@ class FileDragDrop extends File
         $this->maxFileSize = $data['validation']['rules']['max'] ?? null;
 
         $this->convertMimesOnValidation();
+
+        if (! $data['is_multiple_upload']) {
+            $this->maxFileNumber = 1;
+        }
     }
 
     public function schema(): array
