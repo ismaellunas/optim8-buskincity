@@ -65,6 +65,20 @@ class Event extends BaseModel
             ->whereDate('booked_at', '<=', $dates[1]);
     }
 
+    public function scopeOrderByTimezone($query, $timezone = 'UTC', $direction = 'ASC')
+    {
+        $eventTable = Event::getTableName();
+        $scheduleTable = Schedule::getTableName();
+
+        $timezoneSubQuery = (
+            "SELECT {$scheduleTable}.timezone ".
+            "FROM {$scheduleTable} ".
+            "WHERE {$scheduleTable}.id = {$eventTable}.schedule_id"
+        );
+
+        $query->orderByRaw("(($eventTable.booked_at AT TIME ZONE ($timezoneSubQuery)) AT TIME ZONE '$timezone') $direction");
+    }
+
     public function getFormattedBookedAtAttribute(): string
     {
         return $this->booked_at->format(config('constants.format.date_time_minute'));
