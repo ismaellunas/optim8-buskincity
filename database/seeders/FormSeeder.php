@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use App\Models\Form;
 use App\Models\FieldGroup;
+use App\Services\SettingService;
 use Illuminate\Database\Seeder;
 
 class FormSeeder extends Seeder
@@ -19,6 +19,7 @@ class FormSeeder extends Seeder
     {
         $imageMimes = ['image'];
         $imageAndVideoMimes = ['image', 'video'];
+        $maxFileSize = SettingService::maxFileSize();
 
         $about = [
             "key" => "about",
@@ -439,7 +440,7 @@ class FormSeeder extends Seeder
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageMimes,
-                                    "max" => config('constants.one_megabyte') * 50,
+                                    "max" => $maxFileSize,
                                 ],
                                 "messages" => []
                             ],
@@ -460,7 +461,7 @@ class FormSeeder extends Seeder
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageAndVideoMimes,
-                                    "max" => config('constants.one_megabyte') * 50,
+                                    "max" => $maxFileSize,
                                 ],
                                 "messages" => []
                             ],

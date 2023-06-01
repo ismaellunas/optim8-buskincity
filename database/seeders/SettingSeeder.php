@@ -189,6 +189,16 @@ class SettingSeeder extends Seeder
 
         $this->createSetting($favicon);
 
+        $favicon = [
+            "key" => "max_file_size",
+            "display_name" => null,
+            "value" => config('constants.max_file_size'),
+            "group" => "validation.file",
+            "order" => "1",
+        ];
+
+        $this->createSetting($favicon);
+
         $others = [
             [
                 "key" => "default_language",
