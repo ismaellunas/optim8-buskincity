@@ -8,6 +8,7 @@ use App\Models\{
 };
 use App\Services\ModuleService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 
 class UserProfileService
 {
@@ -109,6 +110,14 @@ class UserProfileService
             $medium = $media->first();
 
             return $medium->getOptimizedImageUrl($width, $height);
+        }
+
+        $coverDefaultPath = config('constants.cover_path');
+
+        if (File::exists(public_path($coverDefaultPath))) {
+
+            return $coverDefaultPath;
+
         }
 
         return "";
