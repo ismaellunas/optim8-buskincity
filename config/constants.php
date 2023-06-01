@@ -143,7 +143,8 @@ return [
         'USD' => '&dollar;',
     ],
 
-    'profile_photo_path' => '/images/profile-picture-default.png',
+    'profile_photo_path' => '/images/profile-picture-default.jpg',
+    'cover_path' => '/images/cover-default.jpg',
 
     'max_length' => [
         'meta_description' => 160,

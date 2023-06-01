@@ -93,6 +93,12 @@ class UserProfileService
         return collect();
     }
 
+    public function getProfilePhotoUrl(): string
+    {
+        return $this->user->optimizedProfilePhotoUrl
+            ?? config('constants.profile_photo_path');
+    }
+
     public function getCoverBackgroundUrl(
         ?int $width = null,
         ?int $height = null
