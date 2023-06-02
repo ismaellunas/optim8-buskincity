@@ -16,18 +16,10 @@
                 v-if="hasNotes"
                 #note
             >
-                <p
-                    class="help is-info"
-                >
-                    <ul>
-                        <li
-                            v-for="(note, index) in modelValue.notes"
-                            :key="index"
-                        >
-                            {{ note }}
-                        </li>
-                    </ul>
-                </p>
+                <biz-field-notes
+                    type="info"
+                    :notes="modelValue.notes"
+                />
             </template>
         </form-input>
     </div>
@@ -36,6 +28,7 @@
 <script>
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinField from '@formbuilder/Mixins/Field';
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import FormInput from '@/Biz/Form/Input.vue';
 
@@ -43,6 +36,7 @@
         name: 'InputText',
 
         components: {
+            BizFieldNotes,
             BizToolbarContent,
             FormInput,
         },

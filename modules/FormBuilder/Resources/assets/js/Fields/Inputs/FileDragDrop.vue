@@ -14,20 +14,10 @@
             <template
                 #note
             >
-                <p
-                    class="help is-info"
-                >
-                    <ul>
-                        <li>Accepted file extensions:...</li>
-                        <li>Max file size:...</li>
-                        <li
-                            v-for="(note, index) in modelValue.notes"
-                            :key="index"
-                        >
-                            {{ note }}
-                        </li>
-                    </ul>
-                </p>
+                <biz-field-notes
+                    type="info"
+                    :notes="notes"
+                />
             </template>
         </form-file-upload>
     </div>
@@ -36,6 +26,7 @@
 <script>
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinField from '@formbuilder/Mixins/Field';
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
 
@@ -43,6 +34,7 @@
         name: 'InputFileDragDrop',
 
         components: {
+            BizFieldNotes,
             BizToolbarContent,
             FormFileUpload,
         },
@@ -58,6 +50,15 @@
             return {
                 value: [],
             };
+        },
+
+        computed: {
+            notes() {
+                return [
+                    'Accepted file extensions:...',
+                    'Max file size:...'
+                ].concat(this.modelValue.notes);
+            },
         },
     }
 </script>

@@ -16,28 +16,16 @@
         :selected-files="selectedFiles"
     >
         <template #note>
-            <p class="help is-info">
-                <ul>
-                    <li
-                        v-for="instruction, index in schema.instructions"
-                        :key="index"
-                    >
-                        {{ instruction }}
-                    </li>
-
-                    <li
-                        v-for="(note, index) in schema.notes"
-                        :key="index"
-                    >
-                        {{ note }}
-                    </li>
-                </ul>
-            </p>
+            <biz-field-notes
+                type="info"
+                :notes="notes"
+            />
         </template>
     </form-file-upload>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -46,6 +34,7 @@
         name: 'FormFileDragDrop',
 
         components: {
+            BizFieldNotes,
             FormFileUpload,
         },
 
@@ -82,6 +71,13 @@
             return {
                 selectedFiles: [],
             };
+        },
+
+        computed: {
+            notes() {
+                return this.schema.instructions
+                    .concat(this.schema.notes);
+            },
         },
 
         methods: {
