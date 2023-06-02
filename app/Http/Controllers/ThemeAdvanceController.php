@@ -65,7 +65,7 @@ class ThemeAdvanceController extends CrudController
                         ...MediaService::defaultMediaLibraryInstructions(),
                         ...[
                             __('Recommended dimension: :dimension.', [
-                                'dimension' => config('constants.dimensions.favicon')
+                                'dimension' => config('constants.recomended_dimensions.favicon')
                             ]),
                         ]
                     ],

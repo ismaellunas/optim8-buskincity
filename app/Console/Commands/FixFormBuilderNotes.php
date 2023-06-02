@@ -39,7 +39,7 @@ class FixFormBuilderNotes extends Command
                     && $field['name'] == 'cover_background_photo'
                 ) {
                     $fields[$key]['notes'] = [
-                        'Recommended dimension: ' . config('constants.dimensions.cover') . '.',
+                        'Recommended dimension: ' . config('constants.recomended_dimensions.cover') . '.',
                     ];
                 } else {
                     $note = $field['note'];

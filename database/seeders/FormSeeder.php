@@ -445,7 +445,7 @@ class FormSeeder extends Seeder
                             "file_label" => "Choose an image",
                             "placeholder" => 'Drop files here...',
                             "notes" => [
-                                'Recommended dimension: ' . config('constants.dimensions.cover') . '.',
+                                'Recommended dimension: ' . config('constants.recomended_dimensions.cover') . '.',
                             ],
                             "readonly" => false,
                             "disabled" => false,

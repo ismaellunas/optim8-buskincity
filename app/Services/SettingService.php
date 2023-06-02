@@ -174,8 +174,14 @@ class SettingService
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
+            $dimensions = config('constants.dimensions.logo');
+
             return ($media
-                ? $media->getOptimizedImageUrl(600, 600, 'limitFit')
+                ? $media->getOptimizedImageUrl(
+                    $dimensions['width'],
+                    $dimensions['height'],
+                    'limitFit'
+                )
                 : null
             );
         });

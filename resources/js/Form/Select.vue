@@ -32,23 +32,16 @@
             v-if="schema.notes.length > 0"
             #note
         >
-            <p
-                class="help is-info"
-            >
-                <ul>
-                    <li
-                        v-for="(note, index) in schema.notes"
-                        :key="index"
-                    >
-                        {{ note }}
-                    </li>
-                </ul>
-            </p>
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-select>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -57,6 +50,7 @@
         name: 'FormSelect',
 
         components: {
+            BizFieldNotes,
             BizFormSelect,
         },
 

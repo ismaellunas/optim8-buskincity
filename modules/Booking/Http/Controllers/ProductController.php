@@ -278,7 +278,9 @@ class ProductController extends CrudController
             'mediaLibrary' => [
                 ...MediaService::defaultMediaLibraryInstructions(),
                 ...[
-                    __('Recommended ratio: :ratio.', [ 'ratio' => '16:9' ])
+                    __('Recommended dimension: :dimension.', [
+                        'dimension' => config('constants.recomended_dimensions.gallery')
+                    ])
                 ]
             ],
         ];

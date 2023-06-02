@@ -16,28 +16,16 @@
         :selected-files="selectedFiles"
     >
         <template #note>
-            <p class="help is-info">
-                <ul>
-                    <li
-                        v-for="instruction, index in schema.instructions"
-                        :key="index"
-                    >
-                        {{ instruction }}
-                    </li>
-
-                    <li
-                        v-for="(note, index) in schema.notes"
-                        :key="index"
-                    >
-                        {{ note }}
-                    </li>
-                </ul>
-            </p>
+            <biz-field-notes
+                type="info"
+                :notes="notes"
+            />
         </template>
     </form-field-files>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import FormFieldFiles from '@/Biz/Form/FieldFiles.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -46,6 +34,7 @@
         name: 'FormFile',
 
         components: {
+            BizFieldNotes,
             FormFieldFiles,
         },
 
@@ -101,6 +90,11 @@
                 });
 
                 return fileMessages;
+            },
+
+            notes() {
+                return this.schema.instructions
+                    .concat(this.schema.notes);
             },
         },
 
