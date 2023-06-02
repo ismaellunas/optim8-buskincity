@@ -74,7 +74,7 @@
                                         <img
                                             width="96"
                                             height="96"
-                                            src="{{ $post->author->optimizedProfilePhotoUrl ?? config('constants.profile_photo_path') }}"
+                                            src="{{ $post->author->optimizedProfilePhotoOrDefaultUrl }}"
                                             class="is-rounded ls-is-cached lazyloaded"
                                             alt="Author: {{ $post->author->fullName }}"
                                         >
