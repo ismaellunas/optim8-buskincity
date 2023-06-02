@@ -23,7 +23,7 @@
                 </div>
                 <div class="column is-11">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $userProfile->getProfilePhotoUrl() }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
 
                         @if ($flagUrl)
                         <span class="flag">
