@@ -217,7 +217,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getOptimizedProfilePhotoUrlAttribute(): ?string
     {
         if ($this->profilePhoto) {
-            return $this->profilePhoto->getOptimizedImageUrl(300, 300);
+            $dimensions = config('constants.dimensions.profile_picture');
+
+            return $this->profilePhoto->getOptimizedImageUrl(
+                $dimensions['width'],
+                $dimensions['height'],
+            );
         }
 
         return null;

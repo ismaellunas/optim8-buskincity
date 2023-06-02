@@ -293,11 +293,23 @@ return [
 
     'max_file_size' => 10 * 1024,
 
-    'dimensions' => [
-        'favicon' => '16 x 16px',
+    'recomended_dimensions' => [
+        'favicon' => '180 x 180px',
         'logo' => '300 x 300px',
-        'profile_picture' => '300 x 300px',
+        'profile_picture' => '600 x 600px',
         'cover' => '2560 x 576px',
+        'gallery' => '1280 x 720px',
+    ],
+
+    'dimensions' => [
+        'profile_picture' => [
+            'width' => 300,
+            'height' => 300,
+        ],
+        'logo' => [
+            'width' => 300,
+            'height' => 300,
+        ],
     ],
 
     /*

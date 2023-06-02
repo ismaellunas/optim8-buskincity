@@ -540,7 +540,7 @@ class MediaService
                 )
             ]),
             __('Recommended dimension: :dimension.', [
-                'dimension' => config('constants.dimensions.logo')
+                'dimension' => config('constants.recomended_dimensions.logo')
             ]),
         ];
     }
@@ -557,7 +557,7 @@ class MediaService
                 )
             ]),
             __('Recommended dimension: :dimension.', [
-                'dimension' => config('constants.dimensions.profile_picture'),
+                'dimension' => config('constants.recomended_dimensions.profile_picture'),
             ]),
         ];
     }

@@ -100,7 +100,7 @@ class SpaceController extends CrudController
             'coverMediaLibrary' => [
                 ...MediaService::defaultMediaLibraryInstructions(),
                 ...[
-                    __('Recommended dimension: :dimension.', [ 'dimension' => config('constants.dimensions.cover') ]),
+                    __('Recommended dimension: :dimension.', [ 'dimension' => config('constants.recomended_dimensions.cover') ]),
                 ]
             ],
         ];
