@@ -83,7 +83,7 @@
 
                     <div class="has-text-left">
 
-                        <form action="{{ route('register') }}" method="post" onsubmit="setLoader()">
+                        <form id="form-register" action="{{ route('register') }}" method="post">
                             @csrf
 
                             <div class="field">
@@ -142,7 +142,10 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha action="register" />
+                            <x-recaptcha
+                                action="register"
+                                form-id="form-register"
+                            />
 
                             <div class="flex mt-4">
                                 <div class="columns is-gapless">

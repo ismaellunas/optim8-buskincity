@@ -67,7 +67,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('password.email') }}" method="post" class="mt-6">
+                        <form id="form-forgot-password" action="{{ route('password.email') }}" method="post" class="mt-6">
                             <fieldset id="fieldset">
 
                             @csrf
@@ -81,7 +81,10 @@
                                 @enderror
                             </div>
 
-                            <x-recaptcha action="forgot_password" />
+                            <x-recaptcha
+                                action="forgot_password"
+                                form-id="form-forgot-password"
+                            />
 
                             <button type="submit" class="button is-medium is-primary is-fullwidth">
                                 <span class="has-text-weight-bold">{{ __('Send Reset Link')}}</span>

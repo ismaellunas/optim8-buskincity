@@ -87,7 +87,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('register') }}" method="post" class="mt-6">
+                    <form id="form-register" action="{{ route('register') }}" method="post" class="mt-6">
                         <fieldset id="fieldset">
 
                         @csrf
@@ -149,7 +149,10 @@
                             @enderror
                         </div>
 
-                        <x-recaptcha action="register" />
+                        <x-recaptcha
+                            action="register"
+                            form-id="form-register"
+                        />
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
