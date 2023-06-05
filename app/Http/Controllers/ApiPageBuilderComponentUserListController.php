@@ -134,10 +134,7 @@ class ApiPageBuilderComponentUserListController extends Controller
             return array_merge(
                 [
                     'full_name' => $user->fullName,
-                    'profile_photo_url' => (
-                        $user->optimizedProfilePhotoUrl
-                        ?? config('constants.profile_photo_path')
-                    ),
+                    'profile_photo_url' => $user->optimizedProfilePhotoOrDefaultUrl,
                     'profile_page_url' => (
                         $user->hasPublicPage
                         ? $user->profilePageUrl
