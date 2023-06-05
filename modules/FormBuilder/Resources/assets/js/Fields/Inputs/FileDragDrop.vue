@@ -12,14 +12,12 @@
             :placeholder="modelValue.placeholder"
         >
             <template
-                v-if="modelValue.note"
                 #note
             >
-                <p
-                    class="help"
-                >
-                    {{ modelValue.note }}
-                </p>
+                <biz-field-notes
+                    type="info"
+                    :notes="notes"
+                />
             </template>
         </form-file-upload>
     </div>
@@ -27,6 +25,8 @@
 
 <script>
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
+    import MixinField from '@formbuilder/Mixins/Field';
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
 
@@ -34,18 +34,15 @@
         name: 'InputFileDragDrop',
 
         components: {
+            BizFieldNotes,
             BizToolbarContent,
             FormFileUpload,
         },
 
         mixins: [
             MixinDuplicableContent,
+            MixinField,
         ],
-
-        props: {
-            id: { type: String, required: true },
-            modelValue: { type: Object, required: true },
-        },
 
         emits: ['delete-content'],
 
@@ -53,6 +50,15 @@
             return {
                 value: [],
             };
+        },
+
+        computed: {
+            notes() {
+                return [
+                    'Accepted file extensions:...',
+                    'Max file size:...'
+                ].concat(this.modelValue.notes);
+            },
         },
     }
 </script>

@@ -10,18 +10,20 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-checkbox-group>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -30,6 +32,7 @@
         name: 'FormCheckboxGroup',
 
         components: {
+            BizFieldNotes,
             BizFormCheckboxGroup,
         },
 

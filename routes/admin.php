@@ -4,6 +4,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Controllers\{
     ApiOptionController,
     ApiPageBuilderController,
+    ApiSettingController,
     ApiWidgetController,
     CategoryController,
     DashboardController,
@@ -234,6 +235,9 @@ Route::name('api.')
 
         Route::get('widget/data/{uuid}', [ApiWidgetController::class, 'getStoredWidgetData'])
             ->name('widget.data');
+
+        Route::get('/setting/max-file-size', [ApiSettingController::class, 'maxFileSize'])
+            ->name('setting.max-file-size');
     });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
@@ -246,7 +250,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             $limiter ? 'throttle:'.$limiter : null,
-            env('MID_RECAPTCHA_ENABLED', true) ? 'recaptcha' : null,
+            env('MID_RECAPTCHA_ENABLED', true) ? 'recaptchaAdminLoginPage' : null,
         ]))
         ->name('login.attempt');
 

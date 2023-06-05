@@ -16,6 +16,7 @@
                     :message="error('photo')"
                     :original-image="user.profile_photo_url"
                     :show-delete-button="isDeleteButtonShown"
+                    :notes="instructions?.profilePicture"
                     @on-cropped-image="onCroppedImage()"
                     @on-delete-image="onDeleteImage()"
                 >
@@ -131,6 +132,12 @@
             MixinHasLoader,
             MixinHasPageErrors,
         ],
+
+        inject: {
+            instructions: {
+                default: () => {},
+            },
+        },
 
         props: {
             languageOptions: { type: Array, default: () => [] },

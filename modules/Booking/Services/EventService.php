@@ -292,6 +292,22 @@ class EventService
             });
     }
 
+    public function getNearestSearchableUpcomingEventByUser(int $userId): ?Carbon
+    {
+        $scopes['dateRange'] = [
+            Carbon::today()->subWeek()->toDateString(),
+            Carbon::today()->addYear()->toDateString(),
+        ];
+
+        $event = Event::where(function ($query) use ($userId, $scopes) {
+            $this->scopeUpcomingEventsByUser($query, $userId, $scopes);
+        })
+            ->orderByTimezone('UTC')
+            ->first();
+
+        return $event ? $event->booked_at : null;
+    }
+
     public function getUpcomingEventsByUser(
         int $userId,
         array $scopes = null,

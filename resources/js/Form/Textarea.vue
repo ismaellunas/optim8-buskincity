@@ -10,18 +10,20 @@
         :required="schema.is_required"
         :rows="schema.rows"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-textarea>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -30,6 +32,7 @@
         name: 'FormTextarea',
 
         components: {
+            BizFieldNotes,
             BizFormTextarea,
         },
 

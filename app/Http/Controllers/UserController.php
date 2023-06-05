@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\{
     CountryService,
     LanguageService,
+    MediaService,
     UserService,
 };
 use Illuminate\Http\Request;
@@ -93,6 +94,9 @@ class UserController extends CrudController
             'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
             'title' => $this->getCreateTitle(),
             'i18n' => $this->translationCreateEditPage(),
+            'instructions' => [
+                'profilePicture' => MediaService::profilePictureInstructions(),
+            ],
         ]));
     }
 
@@ -172,6 +176,9 @@ class UserController extends CrudController
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getEditTitle(),
             'i18n' => $this->translationCreateEditPage(),
+            'instructions' => [
+                'profilePicture' => MediaService::profilePictureInstructions(),
+            ],
         ]));
     }
 

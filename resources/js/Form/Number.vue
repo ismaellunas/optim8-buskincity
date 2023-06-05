@@ -9,18 +9,20 @@
         :required="schema.is_required"
         :message="error(schema.name, bagName, errors)"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-number>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormNumber from '@/Biz/Form/Number.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -29,6 +31,7 @@
         name: 'FormNumber',
 
         components: {
+            BizFieldNotes,
             BizFormNumber,
         },
 

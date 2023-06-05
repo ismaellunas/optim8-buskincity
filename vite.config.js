@@ -52,5 +52,8 @@ export default defineConfig((command, mode) => {
                 host: hostUrl.hostname,
             },
         },
+        build: {
+            target: 'esnext',
+        },
     };
 });

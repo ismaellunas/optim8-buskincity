@@ -12,6 +12,7 @@ use App\Http\Requests\{
 };
 use App\Models\Media;
 use App\Services\MediaService;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -59,14 +60,14 @@ class MediaController extends CrudController
             'instructions' => [
                 'mediaLibrary' => [
                     __('Accepted file extensions: :extensions.', [
-                        'extensions' => implode(',', MediaService::getExtensions()),
+                        'extensions' => implode(', ', MediaService::getExtensions()),
                     ]),
                     __('Max file upload: :maxupload.', [
                         'maxupload' => 5
                     ]),
-                    __('Max file size: :filesize.', [
+                    __('Max file size: :filesize per file.', [
                         'filesize' => HumanReadable::bytesToHuman(
-                            (50 * config('constants.one_megabyte')) * 1024
+                            SettingService::maxFileSize() * 1024
                         )
                     ]),
                 ],
