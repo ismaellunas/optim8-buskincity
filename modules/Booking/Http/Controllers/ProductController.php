@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Http\Controllers;
 
+use App\Helpers\HumanReadable;
 use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
 use App\Services\CountryService;
@@ -276,12 +277,17 @@ class ProductController extends CrudController
     {
         return [
             'mediaLibrary' => [
-                ...MediaService::defaultMediaLibraryInstructions(),
-                ...[
-                    __('Recommended dimension: :dimension.', [
-                        'dimension' => config('constants.recomended_dimensions.gallery')
-                    ])
-                ]
+                __('Accepted file extensions: :extensions.', [
+                    'extensions' => implode(', ', config('constants.extensions.image'))
+                ]),
+                __('Max file size: :filesize per file.', [
+                    'filesize' => HumanReadable::bytesToHuman(
+                        SettingService::maxFileSize() * 1024
+                    )
+                ]),
+                __('Recommended dimension: :dimension.', [
+                    'dimension' => config('constants.recomended_dimensions.gallery')
+                ])
             ],
         ];
     }

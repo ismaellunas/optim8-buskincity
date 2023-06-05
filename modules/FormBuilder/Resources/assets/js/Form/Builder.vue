@@ -1,6 +1,7 @@
 <template>
     <div v-if="isShown">
         <biz-flash-notifications :flash="flash" />
+
         <biz-notifications
             class="is-danger"
             :message="errorMessage"
@@ -205,6 +206,8 @@
 
                 self.onStartLoadingOverlay();
 
+                self.flash.message = null;
+
                 axios.post(
                     self.urls.save,
                     formData,
@@ -225,7 +228,9 @@
                         }
                     })
                     .catch((error) => {
-                        oopsAlert();
+                        oopsAlert({
+                            text: 'There are errors in the form. Please check the fields marked in red for more information.'
+                        });
 
                         self.formErrors = error.response.data.errors;
                         self.errorMessage = error.response.data.message;

@@ -65,7 +65,7 @@ class MediaController extends CrudController
                     __('Max file upload: :maxupload.', [
                         'maxupload' => 5
                     ]),
-                    __('Max file size: :filesize / file.', [
+                    __('Max file size: :filesize per file.', [
                         'filesize' => HumanReadable::bytesToHuman(
                             SettingService::maxFileSize() * 1024
                         )
