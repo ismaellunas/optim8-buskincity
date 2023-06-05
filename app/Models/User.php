@@ -415,4 +415,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return !! $this->password;
     }
+
+    public function getOptimizedProfilePhotoOrDefaultUrlAttribute(): string
+    {
+        return $this->optimizedProfilePhotoUrl
+            ?? config('constants.profile_photo_path');
+    }
 }
