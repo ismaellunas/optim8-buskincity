@@ -70,6 +70,7 @@
         provide() {
             return {
                 i18n: this.i18n,
+                instructions: this.instructions,
             };
         },
 
@@ -85,6 +86,7 @@
                 cancel : 'Cancel',
                 Create : 'Create',
             }) },
+            instructions: { type: Object, default: () => {} },
         },
 
         setup(props) {

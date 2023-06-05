@@ -761,6 +761,7 @@
     "Published": "Published",
     "Accepted file extensions: :extensions.": "Accepted file extensions: :extensions.",
     "Max file size: :filesize.": "Max file size: :filesize.",
+    "Max file size: :filesize per file.": "Max file size: :filesize per file.",
     "error 401": "Unauthorized",
     "error 403": "Forbidden",
     "error 404": "Not Found",
@@ -1007,5 +1008,7 @@
     "User with email :email already exists. Proceeding will update their details.": "User with email :email already exists. Proceeding will update their details.",
     "A new user named ':name' with the email address ':email' will be created.": "A new user named ':name' with the email address ':email' will be created.",
     "Please check the reCAPTCHA!": "Please check the reCAPTCHA!",
-    "The process could not be completed due to a connection problem. Please try again.": "The process could not be completed due to a connection problem. Please try again."
+    "The process could not be completed due to a connection problem. Please try again.": "The process could not be completed due to a connection problem. Please try again.",
+    "Recommended dimension: :dimension.": "Recommended dimension: :dimension.",
+    "Recommended ratio: :ratio.": "Recommended ratio: :ratio."
 }

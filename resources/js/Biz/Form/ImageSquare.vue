@@ -199,6 +199,10 @@
                 type: [Array, Object, String],
                 default: '',
             },
+            instructions: {
+                type: Array,
+                default: () => []
+            },
         },
 
         emits: [

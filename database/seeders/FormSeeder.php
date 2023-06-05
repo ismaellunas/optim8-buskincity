@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use App\Models\Form;
 use App\Models\FieldGroup;
+use App\Services\SettingService;
 use Illuminate\Database\Seeder;
 
 class FormSeeder extends Seeder
@@ -19,6 +19,7 @@ class FormSeeder extends Seeder
     {
         $imageMimes = ['image'];
         $imageAndVideoMimes = ['image', 'video'];
+        $maxFileSize = SettingService::maxFileSize();
 
         $about = [
             "key" => "about",
@@ -59,7 +60,7 @@ class FormSeeder extends Seeder
                             "name" => "short_description",
                             "label" => "Short Description",
                             "placeholder" => "Short description about yourself",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => [],
                             "readonly" => false,
                             "disabled" => false,
@@ -118,7 +119,7 @@ class FormSeeder extends Seeder
                             "type" => "Select",
                             "name" => "discipline",
                             "label" => "Discipline",
-                            "note" => null,
+                            "notes" => [],
                             "readonly" => false,
                             "disabled" => false,
                             "options" => app(GlobalOptionService::class)->getDisciplineOptions(),
@@ -136,7 +137,7 @@ class FormSeeder extends Seeder
                             "name" => "stage_name",
                             "label" => "Stage name",
                             "placeholder" => "Enter your stage name",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -155,7 +156,7 @@ class FormSeeder extends Seeder
                             "name" => "short_bio",
                             "label" => "Short bio",
                             "placeholder" => "Short description about yourself",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => [],
                             "readonly" => false,
                             "disabled" => false,
@@ -176,7 +177,7 @@ class FormSeeder extends Seeder
                             "name" => "long_bio",
                             "label" => "Long bio",
                             "placeholder" => "Long description about yourself",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => [],
                             "readonly" => false,
                             "disabled" => false,
@@ -196,14 +197,14 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Address & contact information",
-                    "order" => 1,
+                    "order" => 2,
                     "fields" => [
                         [
                             "type" => "Phone",
                             "name" => "phone",
                             "label" => "Phone",
                             "placeholder" => "Enter your phone number",
-                            "note" => null,
+                            "notes" => [],
                             "readonly" => false,
                             "disabled" => false,
                             "validation" => [
@@ -218,7 +219,7 @@ class FormSeeder extends Seeder
                             "name" => "address",
                             "label" => "Address",
                             "placeholder" => "Street address",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -237,7 +238,7 @@ class FormSeeder extends Seeder
                             "name" => "city",
                             "label" => "City",
                             "placeholder" => "City",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -256,7 +257,7 @@ class FormSeeder extends Seeder
                             "name" => "postcode",
                             "label" => "Postcode",
                             "placeholder" => "Postcode",
-                            "note" => null,
+                            "notes" => [],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -274,7 +275,7 @@ class FormSeeder extends Seeder
                             "type" => "Country",
                             "name" => "country",
                             "label" => "Country",
-                            "note" => null,
+                            "notes" => [],
                             "readonly" => false,
                             "disabled" => false,
                             "validation" => [
@@ -290,14 +291,16 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Social media",
-                    "order" => 1,
+                    "order" => 3,
                     "fields" => [
                         [
                             "type" => "Text",
                             "name" => "facebook",
                             "label" => "Facebook",
                             "placeholder" => "Your Facebook URL",
-                            "note" => 'E.g: https://www.facebook.com/buskincity',
+                            "notes" => [
+                                'E.g: https://www.facebook.com/buskincity'
+                            ],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -318,7 +321,9 @@ class FormSeeder extends Seeder
                             "name" => "twitter",
                             "label" => "Twitter",
                             "placeholder" => "Your Twitter URL",
-                            "note" => 'E.g: https://twitter.com/BuskinCity',
+                            "notes" => [
+                                'E.g: https://twitter.com/BuskinCity'
+                            ],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -339,7 +344,9 @@ class FormSeeder extends Seeder
                             "name" => "instagram",
                             "label" => "Instagram",
                             "placeholder" => "Your Instagram URL",
-                            "note" => 'E.g: https://www.instagram.com/buskincity/',
+                            "notes" => [
+                                'E.g: https://www.instagram.com/buskincity/'
+                            ],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -360,7 +367,9 @@ class FormSeeder extends Seeder
                             "name" => "youtube",
                             "label" => "Youtube",
                             "placeholder" => "Your Youtube URL",
-                            "note" => 'E.g: https://www.youtube.com/c/BuskinCity',
+                            "notes" => [
+                                'E.g: https://www.youtube.com/c/BuskinCity'
+                            ],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -381,7 +390,9 @@ class FormSeeder extends Seeder
                             "name" => "tiktok",
                             "label" => "TikTok",
                             "placeholder" => "Your TikTok URL",
-                            "note" => 'E.g: https://www.tiktok.com/@buskincity',
+                            "notes" => [
+                                'E.g: https://www.tiktok.com/@buskincity'
+                            ],
                             "default_value" => "",
                             "readonly" => false,
                             "disabled" => false,
@@ -401,14 +412,16 @@ class FormSeeder extends Seeder
                 ],
                 [
                     "title" => "Media",
-                    "order" => 1,
+                    "order" => 4,
                     "fields" => [
                         [
                             "type" => "Video",
                             "name" => "promotional_video",
                             "label" => "Promotional video",
                             "placeholder" => "Youtube/Vimeo Video URL",
-                            "note" => 'E.g: https://vimeo.com/553766867',
+                            "notes" => [
+                                'E.g: https://vimeo.com/553766867'
+                            ],
                             "default_value" => null,
                             "readonly" => false,
                             "disabled" => false,
@@ -431,7 +444,9 @@ class FormSeeder extends Seeder
                             "label" => "Cover background photo",
                             "file_label" => "Choose an image",
                             "placeholder" => 'Drop files here...',
-                            "note" => null,
+                            "notes" => [
+                                'Recommended dimension: ' . config('constants.recomended_dimensions.cover') . '.',
+                            ],
                             "readonly" => false,
                             "disabled" => false,
                             "max_file_number" => 1,
@@ -439,7 +454,7 @@ class FormSeeder extends Seeder
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageMimes,
-                                    "max" => config('constants.one_megabyte') * 50,
+                                    "max" => $maxFileSize,
                                 ],
                                 "messages" => []
                             ],
@@ -452,7 +467,7 @@ class FormSeeder extends Seeder
                             "label" => "Gallery",
                             "file_label" => "Choose an image",
                             "placeholder" => "Drop files here...",
-                            "note" => null,
+                            "notes" => [],
                             "readonly" => false,
                             "disabled" => false,
                             "max_file_number" => 5,
@@ -460,7 +475,7 @@ class FormSeeder extends Seeder
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageAndVideoMimes,
-                                    "max" => config('constants.one_megabyte') * 50,
+                                    "max" => $maxFileSize,
                                 ],
                                 "messages" => []
                             ],

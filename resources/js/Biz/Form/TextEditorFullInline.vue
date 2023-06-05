@@ -11,6 +11,7 @@
             title="Media Library"
             :accepted-file-type="acceptedTypes"
             :data="media"
+            :instructions="mediaLibraryInstructions"
             :query-params="mediaListQueryParams"
             :search="search"
             :style="{zIndex: 1300}"
@@ -102,6 +103,8 @@
                 const self = this;
 
                 self.setTypeToMedia(meta.filetype);
+
+                self.setInstructions(meta.filetype);
 
                 self.openModal();
 

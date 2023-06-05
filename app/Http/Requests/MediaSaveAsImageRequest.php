@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Services\SettingService;
+
 class MediaSaveAsImageRequest extends BaseFormRequest
 {
     /**
@@ -21,11 +23,13 @@ class MediaSaveAsImageRequest extends BaseFormRequest
      */
     public function rules()
     {
+        $max = SettingService::maxFileSize();
+
         return [
             'image' => [
                 'required',
                 'file',
-                'max:'.config('constants.one_megabyte') * 50,
+                'max:'. $max,
                 'mimes:'.implode(',', config('constants.extensions.image')),
             ],
         ];

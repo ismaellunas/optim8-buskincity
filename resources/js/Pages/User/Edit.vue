@@ -145,6 +145,8 @@
         provide() {
             return {
                 isFormDisabled: this.isFormDisabled,
+                i18n: this.i18n,
+                instructions: this.instructions,
             };
         },
 
@@ -164,6 +166,7 @@
                 profile_information : 'Profile information',
                 password : 'Password',
             }) },
+            instructions: { type: Object, default: () => {} },
         },
 
         setup(props) {

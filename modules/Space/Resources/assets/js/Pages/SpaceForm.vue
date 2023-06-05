@@ -82,7 +82,7 @@
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="logoMedia"
-                        :instructions="instructions.mediaLibrary"
+                        :instructions="instructions.logoMediaLibrary"
                         :message="error('logo')"
                     />
                 </div>
@@ -96,7 +96,7 @@
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="coverMedia"
-                        :instructions="instructions.mediaLibrary"
+                        :instructions="instructions.coverMediaLibrary"
                         :message="error('cover')"
                     />
                 </div>

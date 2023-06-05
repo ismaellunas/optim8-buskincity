@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
+use App\Services\SettingService;
 use App\Services\TranslationService;
 use Illuminate\Support\Str;
 
@@ -27,6 +28,7 @@ class MediaStoreRequest extends BaseFormRequest
     public function rules()
     {
         $mimes = MediaService::getExtensions();
+        $max = SettingService::maxFileSize();
 
         return [
             ...[
@@ -38,7 +40,7 @@ class MediaStoreRequest extends BaseFormRequest
                 '*.file' => [
                     'sometimes',
                     'file',
-                    'max:'.config('constants.one_megabyte') * 50,
+                    'max:'.$max,
                     'mimes:'.implode(',', $mimes),
                 ],
             ],
