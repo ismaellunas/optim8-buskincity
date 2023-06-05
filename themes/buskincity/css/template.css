@@ -11851,8 +11851,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 .b752-public-profile .profile-background {
-  background-size: 100% auto;
   background-position: center center;
+  background-size: cover;
 }
 .b752-public-profile .profile-picture {
   position: relative;
