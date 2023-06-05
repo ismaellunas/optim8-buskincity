@@ -143,7 +143,8 @@ return [
         'USD' => '&dollar;',
     ],
 
-    'profile_photo_path' => '/images/profile-picture-default.png',
+    'profile_photo_path' => '/images/profile-picture-default.jpg',
+    'cover_path' => '/images/cover-default.jpg',
 
     'max_length' => [
         'meta_description' => 160,
@@ -289,6 +290,27 @@ return [
         'login',
         'register',
         'admin.login',
+    ],
+
+    'max_file_size' => 10 * 1024,
+
+    'recomended_dimensions' => [
+        'favicon' => '180 x 180px',
+        'logo' => '300 x 300px',
+        'profile_picture' => '600 x 600px',
+        'cover' => '2560 x 576px',
+        'gallery' => '1280 x 720px',
+    ],
+
+    'dimensions' => [
+        'profile_picture' => [
+            'width' => 300,
+            'height' => 300,
+        ],
+        'logo' => [
+            'width' => 300,
+            'height' => 300,
+        ],
     ],
 
     /*

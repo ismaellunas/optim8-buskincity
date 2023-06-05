@@ -7,7 +7,7 @@ export default {
     label: "Phone",
     name: "phone",
     placeholder: null,
-    note: null,
+    notes: [],
     default_value: {
         country: null,
         number: null
@@ -44,9 +44,9 @@ export const config = {
                 component: "ConfigInput",
                 label: "Placeholder",
             },
-            note: {
-                component: "ConfigInput",
-                label: "Note",
+            notes: {
+                component: "ConfigNotes",
+                label: "Notes",
             },
             column: {
                 component: "ConfigSelect",

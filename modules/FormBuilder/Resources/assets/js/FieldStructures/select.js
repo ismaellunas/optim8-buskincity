@@ -7,7 +7,7 @@ export default {
     label: "Select",
     name: 'select',
     placeholder: null,
-    note: null,
+    notes: [],
     default_value: null,
     readonly: false,
     disabled: false,
@@ -43,9 +43,9 @@ export const config = {
                     placeholder: 'field_name'
                 },
             },
-            note: {
-                component: "ConfigInput",
-                label: "Note",
+            notes: {
+                component: "ConfigNotes",
+                label: "Notes",
             },
             column: {
                 component: "ConfigSelect",

@@ -12,7 +12,7 @@ class HumanReadable
     {
         $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 
-        for ($i = 0; $bytes > 1024; $i++) {
+        for ($i = 0; $bytes >= 1024; $i++) {
             $bytes /= 1024;
         }
 

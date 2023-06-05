@@ -25,27 +25,18 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
             if (! $response->isSuccess()) {
-                if (
-                    in_array(
-                        GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
-                        $response->getErrorCodes()
-                    )
-                    || in_array(
-                        'invalid-input-secret',
-                        $response->getErrorCodes()
-                    )
-                ) {
-                    return $next($request);
-                }
 
                 return $this->failRequestAction($request);
+
             }
 
             if (
                 $response->isSuccess()
                 && $response->getScore() < $this->getRecaptchaScore()
             ) {
+
                 return $this->failRequestAction($request);
+
             }
         }
 
@@ -57,7 +48,7 @@ class Recaptcha
         return $this->settingService->getRecaptchaScore();
     }
 
-    private function failRequestAction(Request $request)
+    protected function failRequestAction(Request $request)
     {
         if (! $request->expectsJson()) {
             return redirect()

@@ -174,8 +174,14 @@ class SettingService
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
+            $dimensions = config('constants.dimensions.logo');
+
             return ($media
-                ? $media->getOptimizedImageUrl(600, 600, 'limitFit')
+                ? $media->getOptimizedImageUrl(
+                    $dimensions['width'],
+                    $dimensions['height'],
+                    'limitFit'
+                )
                 : null
             );
         });
@@ -633,5 +639,16 @@ class SettingService
         }
 
         return (float)$recaptchaScore;
+    }
+
+    public static function maxFileSize(): int
+    {
+        $maxFileSize = self::getKey('max_file_size');
+
+        if ($maxFileSize == "") {
+            $maxFileSize = config('constants.max_file_size');
+        }
+
+        return (int)$maxFileSize;
     }
 }

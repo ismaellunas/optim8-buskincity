@@ -367,6 +367,10 @@
                     is_thumbnail_displayed_note: 'If checked, the thumbnail will be displayed in the post content.',
                 })
             },
+
+            instructions: {
+                default: () => {},
+            },
         },
 
         props: {
@@ -380,7 +384,6 @@
             modelValue: { type: Object, required: true },
             modules: { type: Object, default: () => {} },
             statusOptions: { type: Array, default: () => [] },
-            instructions: { type: Object, default: () => {} },
         },
 
         emits: ['on-submit'],

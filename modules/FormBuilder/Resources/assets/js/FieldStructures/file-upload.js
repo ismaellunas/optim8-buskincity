@@ -1,4 +1,7 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
+import { maxFileSize as maxFileSizeResponse } from '@/Libs/settings';
+
+const maxFileSize = await maxFileSizeResponse();
 
 export default {
     type: "FileDragDrop",
@@ -7,7 +10,7 @@ export default {
     label: "File",
     name: "file",
     placeholder: "Drop files here...",
-    note: null,
+    notes: [],
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
@@ -15,7 +18,7 @@ export default {
         rules: {
             required: false,
             mimes: ['image'],
-            max: null,
+            max: maxFileSize,
         },
         message: []
     },
@@ -44,9 +47,9 @@ export const config = {
                 component: "ConfigInput",
                 label: "Placeholder",
             },
-            note: {
-                component: "ConfigInput",
-                label: "Note",
+            notes: {
+                component: "ConfigNotes",
+                label: "Notes",
             },
             column: {
                 component: "ConfigSelect",
@@ -82,6 +85,8 @@ export const config = {
                 label: "Maximal File Size",
                 settings: {
                     addons: 'KiB',
+                    max: maxFileSize,
+                    note: `Max file size: ${maxFileSize} KiB`
                 }
             },
         },

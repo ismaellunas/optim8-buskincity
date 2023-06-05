@@ -16,7 +16,6 @@
                 <span
                     v-if="config.icon.position === 'left' || config.icon.position === null"
                     class="icon"
-                    @click="openModal()"
                 >
                     <i :class="config.icon.class" />
                 </span>
@@ -33,7 +32,6 @@
                 <span
                     v-if="config.icon.position === 'right'"
                     class="icon"
-                    @click="openModal()"
                 >
                     <i :class="config.icon.class" />
                 </span>

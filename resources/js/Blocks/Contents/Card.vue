@@ -66,6 +66,7 @@
         <biz-modal-media-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :instructions="instructions?.mediaLibrary"
             :is-download-enabled="can.media.read"
             :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
@@ -90,7 +91,6 @@
     import BizImage from '@/Biz/Image.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
-    import icon from '@/Libs/icon-class';
     import { clear as iconClear, edit as iconEdit, image as iconImage } from '@/Libs/icon-class';
     import { concat } from 'lodash';
     import { inject } from "vue";

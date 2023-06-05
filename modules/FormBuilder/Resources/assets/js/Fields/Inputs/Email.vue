@@ -14,14 +14,13 @@
             :placeholder="modelValue.placeholder"
         >
             <template
-                v-if="modelValue.note"
+                v-if="hasNotes"
                 #note
             >
-                <p
-                    class="help"
-                >
-                    {{ modelValue.note }}
-                </p>
+                <biz-field-notes
+                    type="info"
+                    :notes="modelValue.notes"
+                />
             </template>
         </form-input>
     </div>
@@ -29,6 +28,8 @@
 
 <script>
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
+    import MixinField from '@formbuilder/Mixins/Field';
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import FormInput from '@/Biz/Form/Input.vue';
 
@@ -36,25 +37,16 @@
         name: 'InputEmail',
 
         components: {
+            BizFieldNotes,
             BizToolbarContent,
             FormInput,
         },
 
         mixins: [
             MixinDuplicableContent,
+            MixinField,
         ],
 
-        props: {
-            id: { type: String, required: true },
-            modelValue: { type: Object, required: true },
-        },
-
         emits: ['delete-content'],
-
-        data() {
-            return {
-                value: null,
-            };
-        },
     };
 </script>
