@@ -11,18 +11,20 @@
         :required="schema.is_required"
         :value="schema.value"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-checbox-toggle>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -31,6 +33,7 @@
         name: 'FormCheckbox',
 
         components: {
+            BizFieldNotes,
             BizFormChecboxToggle,
         },
 

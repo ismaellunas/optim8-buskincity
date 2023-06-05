@@ -28,18 +28,20 @@
             </option>
         </template>
 
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-select>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -48,6 +50,7 @@
         name: 'FormSelect',
 
         components: {
+            BizFieldNotes,
             BizFormSelect,
         },
 

@@ -92,6 +92,7 @@ class PostController extends CrudController
                     'title' => $this->getCreateTitle(),
                     'instructions' => [
                         'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                        'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
                     ],
                     'i18n' => $this->translationCreateEditPage(),
                 ],
@@ -172,6 +173,7 @@ class PostController extends CrudController
                     'title' => $this->getEditTitle(),
                     'instructions' => [
                         'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                        'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
                     ],
                     'i18n' => $this->translationCreateEditPage(),
                 ],

@@ -86,6 +86,7 @@
                 sessions: this.sessions,
                 socialiteDrivers: this.socialiteDrivers,
                 supportedLanguageOptions: this.supportedLanguageOptions,
+                instructions: this.instructions,
             }
         },
 
@@ -99,6 +100,7 @@
             socialiteDrivers: { type: Array, default:() => []},
             supportedLanguageOptions: { type: Array, default: () => [] },
             title: { type: String, default: 'Profile' },
+            instructions: { type: Object, default: () => {} },
         },
 
         data() {

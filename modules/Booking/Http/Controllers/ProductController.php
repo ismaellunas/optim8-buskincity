@@ -275,7 +275,14 @@ class ProductController extends CrudController
     private function getInstructions(): array
     {
         return [
-            'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+            'mediaLibrary' => [
+                ...MediaService::defaultMediaLibraryInstructions(),
+                ...[
+                    __('Recommended dimension: :dimension.', [
+                        'dimension' => config('constants.recomended_dimensions.gallery')
+                    ])
+                ]
+            ],
         ];
     }
 

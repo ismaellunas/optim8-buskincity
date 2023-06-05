@@ -10,7 +10,7 @@ export default {
     label: "File",
     name: "file",
     placeholder: "Drop files here...",
-    note: null,
+    notes: [],
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
@@ -47,9 +47,9 @@ export const config = {
                 component: "ConfigInput",
                 label: "Placeholder",
             },
-            note: {
-                component: "ConfigInput",
-                label: "Note",
+            notes: {
+                component: "ConfigNotes",
+                label: "Notes",
             },
             column: {
                 component: "ConfigSelect",

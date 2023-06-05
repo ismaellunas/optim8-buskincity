@@ -69,6 +69,7 @@
     import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
     import ConfigSelect from '@/Blocks/Configs/Select.vue';
+    import ConfigNotes from '@/Blocks/Configs/Notes.vue';
     import TRBL from '@/Blocks/Configs/TRBL.vue';
     import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
     import configs from './../FieldStructures/configs';
@@ -91,6 +92,7 @@
             ConfigNumberAddons,
             ConfigRowSection,
             ConfigSelect,
+            ConfigNotes,
             TRBL,
             TRBLInput,
         },

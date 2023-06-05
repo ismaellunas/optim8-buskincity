@@ -13,6 +13,7 @@
                         :message="error('photo', errorBag)"
                         :original-image="photoUrl"
                         :show-delete-button="isDeleteButtonShown"
+                        :notes="instructions?.profilePicture"
                         @on-cropped-image="onCroppedImage()"
                         @on-delete-image="onDeleteImage()"
                     >
@@ -159,6 +160,7 @@
                 language : 'Language',
                 open_public_profile: 'Open public profile',
             }) },
+            instructions: { default: () => {} },
             isFormDisabled: { default: false, },
         },
 

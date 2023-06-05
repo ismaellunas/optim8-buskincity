@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\{
     LanguageService,
     LoginService,
+    MediaService,
 };
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Jetstream;
@@ -41,6 +42,9 @@ class UserProfileController extends JetUserProfileController
                 'socialiteDrivers' => $socialiteDrivers,
                 'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
                 'optimizedProfilePhotoUrl' => $user->optimizedProfilePhotoUrl,
+                'instructions' => [
+                    'profilePicture' => MediaService::profilePictureInstructions(),
+                ],
             ]
         );
     }

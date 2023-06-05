@@ -34,6 +34,7 @@
         <biz-modal-media-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :instructions="instructions?.mediaLibrary"
             :is-download-enabled="can.media.read"
             :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
