@@ -10,40 +10,30 @@
     @endif
 
     <section class="section theme-font">
-        <div
-            id="main-container"
-            class="container"
-        >
-            <div class="columns">
-                <div class="column">
+        <div id="main-container" class="container">
+            <div class="columns is-multiline is-mobile">
+                <div class="column is-4-desktop is-8-tablet is-12-mobile is-offset-8-desktop is-offset-4-tablet">
                     <form action="{{ $searchRoute }}" method="get">
                         <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">
-                                    {{ __('Search') }}
-                                </label>
-                            </div>
                             <div class="field-body">
                                 <div class="field">
-                                    <div class="control">
-                                        <div class="columns">
-                                            <div class="column is-three-quarters">
-                                                <input
-                                                    class="input"
-                                                    type="text"
-                                                    placeholder="{{ __('Search') }}..."
-                                                    maxlength="255"
-                                                    name="term"
-                                                    value="{{ request('term') }}"
-                                                >
-                                            </div>
-                                            <div class="column">
-                                                <button class="button">
-                                                    <span class="icon" >
-                                                        <i class="fas fa-search"></i>
-                                                    </span>
-                                                </button>
-                                            </div>
+                                    <div class="field has-addons">
+                                        <div class="control is-expanded">
+                                            <input
+                                                class="input"
+                                                type="text"
+                                                placeholder="{{ __('Search') }}..."
+                                                maxlength="255"
+                                                name="term"
+                                                value="{{ request('term') }}"
+                                            >
+                                        </div>
+                                        <div class="control">
+                                            <button class="button">
+                                                <span class="icon" >
+                                                    <i class="fas fa-search"></i>
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="columns is-multiline">
+            <div class="columns is-multiline is-mobile">
                 @foreach ($records as $record)
                     <x-post-item
                         :post="$record"
