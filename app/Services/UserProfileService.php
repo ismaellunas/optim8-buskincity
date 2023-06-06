@@ -86,6 +86,11 @@ class UserProfileService
                     $height
                 );
 
+                $mappedMedium['optimized_url'] = $medium->getOptimizedImageUrl(
+                    1200,
+                    800
+                );
+
                 return $mappedMedium;
             });
         }
