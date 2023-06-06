@@ -9,17 +9,26 @@ export default {
         MixinContentHasImage,
         MixinMediaImage,
     ],
+
+    inject: {
+        instructions: {
+            default: () => {},
+        }
+    },
+
     setup() {
         return {
             pageMedia: [],
         };
     },
+
     data() {
         return {
             imageListQueryParams: {},
             imageListRouteName: 'admin.media.lists',
         }
     },
+
     methods: {
         selectImage(image) {
             let hasImage = false;
@@ -50,10 +59,12 @@ export default {
 
             this.onImageSelected();
         },
+
         updateImage(response) {
             this.selectImage(response.data[0]);
             this.onImageUpdated();
         },
+
         getImagesList(url) {
             const self = this;
             axios.get(url, {params: this.imageListQueryParams})
@@ -65,16 +76,20 @@ export default {
                     self.onImageListLoadedFail(error);
                 });
         },
+
         setTerm(term) {
             this.imageListQueryParams['term'] = term;
         },
+
         setView(view) {
             this.imageListQueryParams['view'] = view;
         },
+
         onImageSelected() {},
         onImageUpdated() {},
         onImageListLoadedSuccess(data) {},
         onImageListLoadedFail(error) {},
+
         search(term) {
             this.setTerm(term);
             this.getImagesList(route(this.imageListRouteName));

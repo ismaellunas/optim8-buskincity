@@ -19,18 +19,20 @@
             />
         </template>
 
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </form-input>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import FormInput from '@/Biz/Form/Input.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
@@ -41,6 +43,7 @@
         name: 'FormVideo',
 
         components: {
+            BizFieldNotes,
             BizIcon,
             FormInput,
         },

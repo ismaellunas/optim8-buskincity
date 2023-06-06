@@ -7,18 +7,20 @@
         :required="schema.is_required"
         :options="schema.options"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-radio>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormRadio from '@/Biz/Form/Radio.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
@@ -27,6 +29,7 @@
         name: 'FormRadio',
 
         components: {
+            BizFieldNotes,
             BizFormRadio,
         },
 

@@ -3,9 +3,16 @@ import { acceptedImageTypes, acceptedVideoTypes } from '@/Libs/defaults';
 export default {
     name: 'MixinMediaTextEditor',
 
+    inject: {
+        instructions: {
+            default: () => {},
+        }
+    },
+
     data() {
         return {
             fileType: null,
+            mediaLibraryInstructions: [],
         };
     },
 
@@ -35,6 +42,18 @@ export default {
             default:
                 this.setType([fileType]);
                 break;
+            }
+        },
+
+        setInstructions(fileType) {
+            switch (fileType) {
+                case "media":
+                    this.mediaLibraryInstructions = this.instructions?.videoMediaLibrary;
+                    break;
+
+                default:
+                    this.mediaLibraryInstructions = this.instructions?.mediaLibrary;
+                    break;
             }
         },
     },

@@ -3,6 +3,7 @@
 namespace App\Entities\Forms\Fields;
 
 use App\Helpers\MimeType;
+use Illuminate\Support\Arr;
 
 class FileDragDrop extends File
 {
@@ -19,6 +20,10 @@ class FileDragDrop extends File
         $this->maxFileSize = $data['validation']['rules']['max'] ?? null;
 
         $this->convertMimesOnValidation();
+
+        if (! Arr::get($data, 'is_multiple_upload', false)) {
+            $this->maxFileNumber = 1;
+        }
     }
 
     public function schema(): array

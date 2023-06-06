@@ -58,7 +58,7 @@ class StripeController extends Controller
             'defaultCountry' => $settings->get('stripe_default_country'),
             'isEnabled' => $settings->get('stripe_is_enabled'),
             'instructions' => [
-                'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                'mediaLibrary' => MediaService::logoMediaLibraryInstructions(),
             ],
             'logoMedia' => $logoMedia,
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),

@@ -11,18 +11,20 @@
         :country-options="schema.countryOptions"
         :default-country="schema.defaultCountry"
     >
-        <template #note>
-            <p
-                v-if="schema.note"
-                class="help"
-            >
-                {{ schema.note }}
-            </p>
+        <template
+            v-if="schema.notes.length > 0"
+            #note
+        >
+            <biz-field-notes
+                type="info"
+                :notes="schema.notes"
+            />
         </template>
     </biz-form-phone>
 </template>
 
 <script>
+    import BizFieldNotes from '@/Biz/FieldNotes.vue';
     import BizFormPhone from '@/Biz/Form/Phone.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { concat } from 'lodash';
@@ -32,6 +34,7 @@
         name: 'FormPhone',
 
         components: {
+            BizFieldNotes,
             BizFormPhone,
         },
 

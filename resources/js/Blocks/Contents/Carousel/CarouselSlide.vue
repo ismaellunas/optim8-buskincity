@@ -13,60 +13,30 @@
                 :ratio="config?.carousel?.ratio"
                 :src="imageSrc"
             >
-                <biz-button
+                <biz-button-icon
+                    type="button"
                     class="is-small is-overlay"
                     style="z-index: 1"
-                    type="button"
+                    :icon="isFormDisplayed ? iconClear : iconEdit"
                     @click="toggleEdit"
-                >
-                    <span
-                        v-if="isFormDisplayed"
-                        class="icon"
-                    >
-                        <i class="fas fa-times-circle" />
-                    </span>
-                    <span
-                        v-else
-                        class="icon"
-                    >
-                        <i class="fas fa-pen" />
-                    </span>
-                </biz-button>
+                />
             </biz-image>
+
             <div
                 v-if="isFormDisplayed"
                 class="card-content has-background-info-light is-flex is-justify-content-center is-align-items-center card-custom"
             >
-                <biz-button
-                    class="is-small is-overlay"
-                    style="z-index: 1"
-                    type="button"
-                    @click="toggleEdit"
-                >
-                    <span
-                        v-if="isFormDisplayed"
-                        class="icon"
-                    >
-                        <i class="fas fa-times-circle" />
-                    </span>
-                    <span
-                        v-else
-                        class="icon"
-                    >
-                        <i class="fas fa-pen" />
-                    </span>
-                </biz-button>
                 <div class="block has-text-centered">
-                    <biz-button
+                    <biz-button-icon
+                        icon-class="is-small"
                         type="button"
                         style="z-index: 1"
+                        :disabled="!can.media.browse"
+                        :icon="iconImage"
                         @click="$emit('open-modal', index)"
                     >
                         <span>Open Media</span>
-                        <span class="icon is-small">
-                            <i class="far fa-image" />
-                        </span>
-                    </biz-button>
+                    </biz-button-icon>
                 </div>
             </div>
         </div>
@@ -76,15 +46,16 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { clear as iconClear, edit as iconEdit, image as iconImage } from '@/Libs/icon-class';
 
     export default {
         name: 'CarouselSlide',
 
         components: {
-            BizButton,
+            BizButtonIcon,
             BizImage,
         },
 
@@ -92,6 +63,8 @@
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
         ],
+
+        inject: ['can'],
 
         props: {
             config: {
@@ -142,6 +115,9 @@
                 entityImage: this.entityMedia,
                 images: this.dataImages ?? {},
                 isFormOpen: false,
+                iconClear,
+                iconEdit,
+                iconImage,
             };
         },
 

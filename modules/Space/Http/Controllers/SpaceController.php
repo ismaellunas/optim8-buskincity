@@ -96,7 +96,13 @@ class SpaceController extends CrudController
     private function instructions(): array
     {
         return [
-            'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+            'logoMediaLibrary' => MediaService::logoMediaLibraryInstructions(),
+            'coverMediaLibrary' => [
+                ...MediaService::defaultMediaLibraryInstructions(),
+                ...[
+                    __('Recommended dimension: :dimension.', [ 'dimension' => config('constants.recomended_dimensions.cover') ]),
+                ]
+            ],
         ];
     }
 

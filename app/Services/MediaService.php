@@ -508,8 +508,56 @@ class MediaService
             ]),
             __('Max file size: :filesize.', [
                 'filesize' => HumanReadable::bytesToHuman(
-                    self::maxFileSize() * 1024
+                    SettingService::maxFileSize() * 1024
                 )
+            ]),
+        ];
+    }
+
+    public static function videoMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.video'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    SettingService::maxFileSize() * 1024
+                )
+            ]),
+        ];
+    }
+
+    public static function logoMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    SettingService::maxFileSize() * 1024
+                )
+            ]),
+            __('Recommended dimension: :dimension.', [
+                'dimension' => config('constants.recomended_dimensions.logo')
+            ]),
+        ];
+    }
+
+    public static function profilePictureInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    config('constants.file_size.profile_picture') * 1024
+                )
+            ]),
+            __('Recommended dimension: :dimension.', [
+                'dimension' => config('constants.recomended_dimensions.profile_picture'),
             ]),
         ];
     }
