@@ -22,12 +22,15 @@
     <div class="b752-public-profile section is-small theme-font">
         <div class="container">
             <div class="columns is-multiline is-centered">
-                <div class="column is-12">
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 398) }});">
-                        <div class="hero-body"></div>
+                        <div class="hero-body">
+                            <div class="title">&nbsp;</div>
+                            <div class="subtitle">&nbsp;</div>
+                        </div>
                     </div>
                 </div>
-                <div class="column is-11">
+                <div class="column is-11-tablet is-12-mobile">
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
 
@@ -37,12 +40,14 @@
                         </span>
                         @endif
                     </figure>
+                </div>
 
+                <div class="column is-11-desktop is-12-mobile">
                     <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') }}</h1>
                     <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
 
-                    <div class="columns is-multiline mt-3">
-                        <div class="column is-8">
+                    <div class="columns is-multiline is-mobile mt-3">
+                        <div class="column is-8-desktop is-12-tablet is-12-mobile">
                             <div class="content">
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
@@ -51,7 +56,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="column is-4">
+                        <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
                                 @if ($userProfile->getMeta('tiktok'))
                                 <a href="{{ $userProfile->getMeta('tiktok') }}" target="_blank" class="button">
@@ -99,13 +104,13 @@
                             $userProfile->isModuleBookingActivated()
                             && !empty($eventService->getNearestSearchableUpcomingEventByUser($user->id))
                         )
-                            <div class="columns is-multiline mt-5">
-                                <div class="column is-12">
+                            <div class="columns is-multiline is-mobile mt-5">
+                                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                                     <h2 class="title is-3">
                                         {{ __('Upcoming Events') }}
                                     </h2>
                                 </div>
-                                <div class="column is-12">
+                                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                                     <booking-events
                                         get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
                                     ></booking-events>
@@ -114,15 +119,15 @@
                         @endif
 
                         @if ($hasPromitionalVideo || $hasUploadedGallery)
-                            <div class="columns is-multiline mt-5">
-                                <div class="column is-12">
+                            <div class="columns is-multiline is-mobile mt-5">
+                                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                                     <h2 class="title is-3">
                                         {{ __('Gallery') }}
                                     </h2>
                                 </div>
 
                                 @if ($hasPromitionalVideo)
-                                    <div class="column is-5">
+                                    <div class="column is-5-desktop is-12-tablet is-12-mobile">
                                         <figure class="image is-16by9">
                                             {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
                                         </figure>
@@ -130,10 +135,10 @@
                                 @endif
 
                                 @if ($hasUploadedGallery)
-                                    <div class="column is-7">
+                                    <div class="column is-7-desktop is-12-tablet is-12-mobile">
                                         <gallery :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}">
                                             <template v-slot="{ index, thumbnailUrl, openModal }">
-                                                <div class="column is-one-third-desktop is-half-tablet">
+                                                <div class="column is-4-desktop is-6-tablet is-12-mobile">
                                                     <div class="card" @click.prevent="openModal(index)">
                                                         <div class="card-image">
                                                             <figure class="image is-3by2">
@@ -176,7 +181,7 @@
                 <div class="card-content">
                     <div class="is-flex">
                         <figure class="profile-picture image is-48x48 mr-3">
-                            <img src="{{ $userProfile->getProfilePhotoUrl() }}" alt="{{ $user->fullName }}" class="is-rounded">
+                            <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
                         </figure>
                         <div>
                             <h2 class="title is-5 m-0">{{ __('Donate to') }} {{ $userProfile->getMeta('stage_name') }}</h2>
