@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { inRange} from 'lodash';
 import mime from 'mime';
 
