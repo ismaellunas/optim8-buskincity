@@ -7,8 +7,8 @@
 
         <div ref="eventTableScrollPoint" />
 
-        <div class="columns">
-            <div class="column is-3">
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-3-desktop is-6-tablet is-12-mobile">
                 <biz-filter-date-range
                     v-model="dateRange"
                     auto-apply
@@ -25,7 +25,7 @@
 
             <div
                 v-if="cityOptions.length"
-                class="column is-3"
+                class="column is-3-desktop is-6-tablet is-12-mobile"
             >
                 <biz-select
                     v-model="selectedCity"
@@ -41,7 +41,7 @@
                 </biz-select>
             </div>
 
-            <div class="column is-3">
+            <div class="column is-3-desktop is-6-tablet is-12-mobile">
                 <biz-button
                     class="is-primary"
                     type="button"
