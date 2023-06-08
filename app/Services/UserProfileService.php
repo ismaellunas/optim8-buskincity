@@ -88,8 +88,8 @@ class UserProfileService
                 );
 
                 $mappedMedium['optimized_url'] = $medium->getOptimizedImageUrl(
-                    1200,
-                    800
+                    config('constants.dimensions.gallery.width'),
+                    config('constants.dimensions.gallery.height')
                 );
 
                 return $mappedMedium;
