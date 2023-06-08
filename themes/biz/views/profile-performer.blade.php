@@ -16,12 +16,12 @@
     </x-slot>
 
     <x-slot name="metaDescription">
-        {{ $userProfile->getMeta('short_bio', $locale) ?? __('Public profile.') }}
+        {{ Str::limit($userProfile->getMeta('short_bio', $locale) ?? __('Public profile.'), 155, ' ...') }}
     </x-slot>
 
     <div class="b752-public-profile section is-small theme-font">
         <div class="container">
-            <div class="columns is-multiline is-centered">
+            <div class="columns is-multiline is-mobile is-centered">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 398) }});">
                         <div class="hero-body">
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="column is-11-tablet is-12-mobile">
+                <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
 
@@ -42,13 +42,13 @@
                     </figure>
                 </div>
 
-                <div class="column is-11-desktop is-12-mobile">
+                <div class="column is-11-desktop is-12-tablet is-12-mobile">
                     <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') }}</h1>
                     <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
 
                     <div class="columns is-multiline is-mobile mt-3">
                         <div class="column is-8-desktop is-12-tablet is-12-mobile">
-                            <div class="content">
+                            <div class="content has-text-justified">
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
@@ -165,7 +165,7 @@
             <div class="card">
                 <div class="card-content">
                     <h2 class="title is-4">{{ __('About me') }}</h2>
-                    <div class="content">
+                    <div class="content has-text-justified">
                         <p>{{ $userProfile->getMeta('long_bio', $locale) }}</p>
                     </div>
                 </div>
