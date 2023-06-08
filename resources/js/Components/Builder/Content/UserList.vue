@@ -1,75 +1,89 @@
 <template>
     <div class="pb-user-list">
-        <div class="columns is-multiline">
-            <div class="column is-12">
-                <div class="field is-grouped is-grouped-multiline">
-                    <div class="control">
-                        <p class="has-text-weight-bold is-size-7 is-uppercase pt-1">
-                            Filters
-                        </p>
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                <div class="columns is-multiline is-mobile">
+                    <div class="column is-1-desktop is-12-tablet is-12-mobile">
+                        <div class="field">
+                            <div class="control">
+                                <p class="has-text-weight-bold is-size-7 is-uppercase pt-1">
+                                    Filters
+                                </p>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="control">
-                        <biz-select
-                            v-model="filter.order_by"
-                            class="select is-small"
-                            placeholder="Order by"
-                            @change="selectOrderBy()"
-                        >
-                            <option
-                                v-for="orderByOption in orderByOptions"
-                                :key="orderByOption.id"
-                                :value="orderByOption.id"
-                            >
-                                {{ orderByOption.value }}
-                            </option>
-                        </biz-select>
-                    </div>
-
-                    <div class="control">
-                        <biz-select
-                            v-model="filter.country"
-                            class="select is-small"
-                            placeholder="Country"
-                            @change="selectCountry()"
-                        >
-                            <option
-                                v-for="countryOption in filteredCountryOptions"
-                                :key="countryOption.id"
-                                :value="countryOption.id"
-                            >
-                                {{ countryOption.value }}
-                            </option>
-                        </biz-select>
-                    </div>
-
-                    <div
-                        v-if="canFilteredByType"
-                        class="control"
-                    >
-                        <biz-select
-                            v-model="filter.type"
-                            class="select is-small"
-                            placeholder="Type"
-                            @change="selectType()"
-                        >
-                            <option
-                                v-for="typeOption in filteredTypeOptions"
-                                :key="typeOption.id"
-                                :value="typeOption.id"
-                            >
-                                {{ typeOption.value }}
-                            </option>
-                        </biz-select>
-                    </div>
-
-                    <div class="control">
-                        <biz-input
-                            v-model="filter.term"
-                            class="is-small"
-                            placeholder="Search by name"
-                            @keyup.prevent="search()"
-                        />
+                    <div class="column is-11-desktop is-12-tablet is-12-mobile">
+                        <div class="field is-horizontal">
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <biz-select
+                                            v-model="filter.order_by"
+                                            class="is-small is-fullwidth"
+                                            placeholder="Order by"
+                                            @change="selectOrderBy()"
+                                        >
+                                            <option
+                                                v-for="orderByOption in orderByOptions"
+                                                :key="orderByOption.id"
+                                                :value="orderByOption.id"
+                                            >
+                                                {{ orderByOption.value }}
+                                            </option>
+                                        </biz-select>
+                                    </p>
+                                </div>
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <biz-select
+                                            v-model="filter.country"
+                                            class="is-small is-fullwidth"
+                                            placeholder="Country"
+                                            @change="selectCountry()"
+                                        >
+                                            <option
+                                                v-for="countryOption in filteredCountryOptions"
+                                                :key="countryOption.id"
+                                                :value="countryOption.id"
+                                            >
+                                                {{ countryOption.value }}
+                                            </option>
+                                        </biz-select>
+                                    </p>
+                                </div>
+                                <div
+                                    v-if="canFilteredByType"
+                                    class="field"
+                                >
+                                    <p class="control is-expanded">
+                                        <biz-select
+                                            v-model="filter.type"
+                                            class="is-small is-fullwidth"
+                                            placeholder="Type"
+                                            @change="selectType()"
+                                        >
+                                            <option
+                                                v-for="typeOption in filteredTypeOptions"
+                                                :key="typeOption.id"
+                                                :value="typeOption.id"
+                                            >
+                                                {{ typeOption.value }}
+                                            </option>
+                                        </biz-select>
+                                    </p>
+                                </div>
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <biz-input
+                                            v-model="filter.term"
+                                            class="is-small is-fullwidth"
+                                            placeholder="Search by name"
+                                            @keyup.prevent="search()"
+                                        />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,7 +95,7 @@
                 <slot :user="user" />
             </template>
 
-            <div class="column is-12">
+            <div class="column is-12-desktop is-12-tablet is-12-mobile">
                 <biz-pagination
                     :is-ajax="true"
                     :links="users.links"

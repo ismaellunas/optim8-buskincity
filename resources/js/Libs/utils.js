@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { inRange} from 'lodash';
 import mime from 'mime';
 
@@ -174,4 +174,23 @@ export function extensionToMimes(extensions) {
     });
 
     return mimes.filter(Boolean);
+}
+
+export const useBreakpoints = () => {
+    let windowWidth = ref(window.innerWidth)
+
+    const onWidthChange = () => windowWidth.value = window.innerWidth
+    onMounted(() => window.addEventListener('resize', onWidthChange))
+    onUnmounted(() => window.removeEventListener('resize', onWidthChange))
+
+    const screenType = computed(() => {
+        if (windowWidth.value <= 768) return 'mobile';
+        if (windowWidth.value >= 769 && windowWidth.value < 1023) return 'tablet';
+        if (windowWidth.value >= 1024 && windowWidth.value < 1215) return 'desktop';
+        else return 'widescreen';
+    })
+
+    const screenWidth = computed(() => windowWidth.value);
+
+    return { screenWidth, screenType };
 }

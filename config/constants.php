@@ -311,6 +311,10 @@ return [
             'width' => 300,
             'height' => 300,
         ],
+        'gallery' => [
+            'width' => 1200,
+            'height' => 800,
+        ],
     ],
 
     /*

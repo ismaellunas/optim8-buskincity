@@ -11,7 +11,7 @@
     url="{{ $url }}"
 >
     <template v-slot="{ user }">
-        <div class="column is-3">
+        <div class="column is-3-desktop is-6-tablet is-12-mobile">
             <a
                 :href="user.profile_page_url ?? `#`"
                 class="b752-profile-box box is-shadowless has-text-centered"
