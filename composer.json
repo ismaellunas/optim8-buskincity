@@ -42,7 +42,7 @@
         "spatie/laravel-collection-macros": "^7.12",
         "spatie/laravel-permission": "^5.5",
         "spatie/laravel-translation-loader": "^2.7",
-        "stripe/stripe-php": "^7.113",
+        "stripe/stripe-php": "^10",
         "tightenco/ziggy": "^1.0",
         "torann/geoip": "^3.0",
         "webwizo/laravel-shortcodes": "1.0.*"

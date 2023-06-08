@@ -166,6 +166,7 @@
                             <tr>
                                 <th>Currency</th>
                                 <th>Amount</th>
+                                <th>Status</th>
                                 <th>Date</th>
                             </tr>
                             <tr
@@ -173,7 +174,19 @@
                                 :key="index"
                             >
                                 <td>{{ transaction.currency }}</td>
-                                <td>{{ transaction.amount }}</td>
+                                <td
+                                    :class="getAmountClass(transaction.amount)"
+                                >
+                                    {{ transaction.amount }}
+                                </td>
+                                <td>
+                                    <span
+                                        class="tag has-text-weight-bold"
+                                        :class="getStatusTagClass(transaction.reporting_category)"
+                                    >
+                                        {{ getStatusTagText(transaction.reporting_category) }}
+                                    </span>
+                                </td>
                                 <td>{{ transaction.created }}</td>
                             </tr>
                         </biz-table>
@@ -433,7 +446,49 @@
                         this.loader.hide();
                     }
                 });
-            }
+            },
+
+            getStatusTagClass(category) {
+                switch (category) {
+                    case 'dispute':
+                        return 'is-danger';
+                        break;
+
+                    case 'charge':
+                        return 'is-primary';
+                        break;
+
+                    default:
+                        return 'is-secondary';
+                        break;
+                }
+            },
+
+            getStatusTagText(text) {
+                switch (text) {
+                    case 'dispute':
+                        return 'Disputed';
+                        break;
+
+                    case 'charge':
+                        return 'Succeeded';
+                        break;
+
+                    default:
+                        return '-';
+                        break;
+                }
+            },
+
+            getAmountClass(amount) {
+                let amountClass = null;
+
+                if (amount < 0) {
+                    amountClass = 'has-text-danger';
+                }
+
+                return amountClass;
+            },
         },
     };
 </script>

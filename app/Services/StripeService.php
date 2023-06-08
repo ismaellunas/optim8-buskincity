@@ -172,6 +172,7 @@ class StripeService
                     'currency' => Str::upper($transaction->currency),
                     'amount' => $amount,
                     'created' => HumanReadable::timestampToDateTime($transaction->created),
+                    'reporting_category' => $transaction->reporting_category,
                 ];
             });
     }
