@@ -12,7 +12,7 @@
     <section class="section theme-font">
         <div id="main-container" class="container">
             <div class="columns is-multiline is-mobile">
-                <div class="column is-4-desktop is-8-tablet is-12-mobile is-offset-8-desktop is-offset-4-tablet">
+                <div class="column is-4-desktop is-6-tablet is-12-mobile is-offset-8-desktop is-offset-6-tablet">
                     <form action="{{ $searchRoute }}" method="get">
                         <div class="field is-horizontal">
                             <div class="field-body">
