@@ -24,7 +24,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="column is-11-tablet is-12-mobile">
+
+                <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
                         <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
 
@@ -36,7 +37,7 @@
                     </figure>
                 </div>
 
-                <div class="column is-11-desktop is-12-mobile">
+                <div class="column is-11-desktop is-12-tablet is-12-mobile">
                     <h1 class="title is-2 mt-5 mb-2">{{ $user->fullName }}</h1>
 
                     <div class="columns is-multiline is-mobile mt-3">
