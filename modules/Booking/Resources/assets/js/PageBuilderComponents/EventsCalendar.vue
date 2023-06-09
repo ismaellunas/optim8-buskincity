@@ -1,12 +1,13 @@
 <template>
     <div class="events-calendar">
-        <div class="columns">
-            <div class="column">
-                <div class="columns is-multiline">
-                    <div class="column is-4">
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-6-desktop is-6-tablet is-12-mobile">
+                <div class="columns is-multiline is-mobile">
+                    <div class="column is-6-desktop is-12-tablet is-12-mobile">
                         <div class="control has-icons-left">
                             <biz-select
                                 v-model="selectedLocation"
+                                class="is-fullwidth"
                                 placeholder="Any"
                             >
                                 <option
@@ -25,7 +26,7 @@
                         </div>
                     </div>
 
-                    <div class="column is-5">
+                    <div class="column is-6-desktop is-12-tablet is-12-mobile">
                         <biz-filter-date-range
                             v-model="queryParams.dates"
                             auto-apply
@@ -39,7 +40,7 @@
                         />
                     </div>
 
-                    <div class="column is-3">
+                    <div class="column is-12-desktop is-12-tablet is-12-mobile">
                         <biz-button
                             class="is-primary"
                             type="button"
@@ -68,8 +69,8 @@
                             </p>
                         </figure>
                         <div class="media-content">
-                            <div class="content">
-                                <p class="has-text-justified">
+                            <div class="content mb-1">
+                                <p class="has-text-justified mb-1">
                                     <a
                                         target="_blank"
                                         :href="record.user.profile_page_url ?? '#'"
@@ -81,36 +82,59 @@
                                             <strong>{{ record.user.name }}</strong>
                                         </template>
                                     </a>
-                                    <br>
-                                    <biz-icon :icon="icon.locationMark" />
-                                    {{ record.location.address }}
-                                    <br>
-                                    <biz-icon :icon="bookingIcon.calendar" />
-                                    {{ record.event.date }}, {{ record.event.start_end_time }}, {{ record.event.timezone }}
-                                    <br>
-                                    <biz-icon :icon="bookingIcon.duration" />
-                                    {{ record.event.duration }}
                                 </p>
+                                <table class="table is-narrow is-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="m-0 py-0 px-1">
+                                                <biz-icon :icon="icon.locationMark" />
+                                            </td>
+                                            <td class="m-0 py-0 px-1">
+                                                {{ record.location.address }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="m-0 py-0 px-1">
+                                                <biz-icon :icon="bookingIcon.calendar" />
+                                            </td>
+                                            <td class="m-0 py-0 px-1">
+                                                {{ record.event.date }}, {{ record.event.start_end_time }}, {{ record.event.timezone }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="m-0 py-0 px-1">
+                                                <biz-icon :icon="bookingIcon.duration" />
+                                            </td>
+                                            <td class="m-0 py-0 px-1">
+                                                {{ record.event.duration }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="buttons">
-                                <a
-                                    v-if="record.user.profile_page_url"
-                                    class="button my-0"
-                                    target="_blank"
-                                    :href="record.direction_url"
-                                >
-                                    Directions
-                                </a>
 
-                                <a
-                                    v-if="record.user.profile_page_url"
-                                    class="button is-primary my-0"
-                                    target="_blank"
-                                    :href="record.user.profile_page_url"
-                                >
-                                    Performer Detail
-                                </a>
-                            </div>
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a
+                                        v-if="record.user.profile_page_url"
+                                        class="level-item button my-0 p-2"
+                                        target="_blank"
+                                        :class="{'is-small': screenType == 'mobile'}"
+                                        :href="record.direction_url"
+                                    >
+                                        Directions
+                                    </a>
+                                    <a
+                                        v-if="record.user.profile_page_url"
+                                        class="level-item button is-primary my-0 p-2"
+                                        target="_blank"
+                                        :class="{'is-small': screenType == 'mobile'}"
+                                        :href="record.user.profile_page_url"
+                                    >
+                                        Performer Detail
+                                    </a>
+                                </div>
+                            </nav>
                         </div>
                     </article>
                 </div>
@@ -120,18 +144,34 @@
                 </div>
 
                 <biz-pagination
-                    class="mt-6"
+                    v-if="screenType == 'mobile'"
+                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
                     :is-ajax="true"
                     :links="events.links"
                     :query-params="queryParams"
+                    :size="paginationSize"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
 
-            <div class="column">
+            <div class="column is-6-desktop is-6-tablet is-12-mobile">
                 <div
                     ref="mapDiv"
-                    :style="mapStyle"
+                    :style="screenMapStyle"
+                />
+            </div>
+
+            <div
+                v-if="screenType != 'mobile'"
+                class="column is-6-desktop is-12-tablet is-12-mobile"
+            >
+                <biz-pagination
+                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
+                    :is-ajax="true"
+                    :links="events.links"
+                    :query-params="queryParams"
+                    :size="paginationSize"
+                    @on-clicked-pagination="getEvents"
                 />
             </div>
         </div>
@@ -150,10 +190,10 @@
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
-    import { clone, each, find, keys, get, groupBy, merge, map } from 'lodash';
+    import { clone, each, find, keys, get, groupBy, merge, map, toString } from 'lodash';
     import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
-    import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { useModelWrapper, isBlank, useBreakpoints } from '@/Libs/utils';
     import { userImage } from '@/Libs/defaults';
 
     export default {
@@ -175,7 +215,7 @@
             apiKey: { type: String, default: null },
             initPosition: { type: Object, default: null },
             isDraggable: { type: Boolean, default: true },
-            mapStyle: { type: [String, Array, Object], default: () => ["width: 100%", "height: 95vh"] },
+            mapStyle: { type: Object, default: () => ({ width: "100%", height: "95vh"}) },
             maxDate: { type: String, required: true },
             minDate: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
@@ -219,6 +259,8 @@
                 props.pageQueryParams
             );
 
+            const { screenType } = useBreakpoints();
+
             return {
                 availableLocations,
                 bookingIcon,
@@ -231,6 +273,7 @@
                 selectedLocation,
                 userImage,
                 infoWindow: ref(null),
+                screenType,
             };
         },
 
@@ -281,6 +324,30 @@
                     country: locationParts[0],
                     city: locationParts[1],
                 };
+            },
+
+            screenMapStyle() {
+                let screenMapStyle = {
+                    width: this.mapStyle.width,
+                    height: this.mapStyle.height,
+                };
+
+                const res = this.mapStyle.height.match(/(-?[\d.]+)([a-z%]*)/);
+
+                if (this.screenType == 'mobile') {
+                    screenMapStyle['height'] = toString(res[1] / 2) + res[2];
+                } else if (this.screenType == 'tablet') {
+                    screenMapStyle['height'] = toString(res[1] * (60 / 100)) + res[2];
+                }
+
+                return screenMapStyle;
+            },
+
+            paginationSize() {
+                if (this.screenType == 'mobile') {
+                    return "small";
+                }
+                return "normal";
             },
         },
 

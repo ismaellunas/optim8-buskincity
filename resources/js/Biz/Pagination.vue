@@ -2,6 +2,7 @@
     <div v-if="isPaginationDisplayed">
         <nav
             class="pagination is-centered"
+            :class="[sizeClass]"
             role="navigation"
             aria-label="pagination"
         >
@@ -86,6 +87,13 @@
             currentPage: { type: [Number, null], default: null },
             lastPage: { type: [Number, null], default: null },
             pagePropertyName: { type: String, default: 'page' },
+            size: {
+                type: String,
+                default: 'normal',
+                validator(value) {
+                    return ['small', 'normal', 'medium', 'large'].includes(value)
+                }
+            },
         },
         emits: ['on-clicked-pagination'],
         computed: {
@@ -134,7 +142,9 @@
 
                 return this.links.length > 3
             },
-
+            sizeClass() {
+                return 'is-' + this.size;
+            }
         },
         methods: {
             isBlank: isBlank,

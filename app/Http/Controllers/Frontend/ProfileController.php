@@ -4,22 +4,15 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\{
-    FormService,
-    SettingService,
-};
+use App\Services\SettingService;
 use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
-    private $formService;
     private $settingService;
 
-    public function __construct(
-        FormService $formService,
-        SettingService $settingService,
-    ) {
-        $this->formService = $formService;
+    public function __construct(SettingService $settingService)
+    {
         $this->settingService = $settingService;
     }
 

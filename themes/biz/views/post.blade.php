@@ -11,10 +11,11 @@
 
     <div class="b752-blog-post section is-medium">
         <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-7">
+            <div class="columns is-centered is-multiline is-mobile">
+                <div class="column is-7-desktop is-7-tablet is-12-mobile">
                     <header>
-                        <h1 class="title is-1">{{ $post->title }}</h1>
+                        <h1 class="title is-1 is-hidden-mobile">{{ $post->title }}</h1>
+                        <h1 class="title is-2 is-hidden-tablet">{{ $post->title }}</h1>
 
                         <div class="is-flex">
                             <nav class="breadcrumb">
@@ -85,10 +86,13 @@
                                         <h3 class="title is-5 m-0">
                                             {{ $post->author->fullName }}
                                         </h3>
-                                        <p class="is-size-7 ml-3">
+                                        <p class="is-size-7 is-hidden-touch ml-3">
                                             {{ __('Author') }}
                                         </p>
                                     </div>
+                                    <p class="is-size-7 is-hidden-desktop">
+                                        {{ __('Author') }}
+                                    </p>
                                     <p>
                                         {{ $post->author->getTranslatableMeta('short_description', $currentLanguage) }}
                                     </p>
@@ -98,7 +102,7 @@
                     @endif
                 </div>
 
-                <div class="column is-3 is-offset-1">
+                <div class="column is-3-desktop is-3-tablet is-12-mobile is-offset-1">
                     <div class="b752-blog-sidebar">
                         <aside class="menu">
                             <p class="menu-label">Table of Contents</p>
@@ -121,13 +125,13 @@
     @if (!$relatedArticles->isEmpty())
         <div class="section is-medium has-background-light">
             <div class="container">
-                <div class="columns is-multiline">
-                    <div class="column is-12">
+                <div class="columns is-multiline is-mobile">
+                    <div class="column is-12-desktop is-12-tablet is-12-mobile">
                         <h2 class="title is-2 mb-5">{{ __('Related Articles') }}</h2>
                     </div>
 
                     @foreach ($relatedArticles as $article)
-                        <div class="column is-4">
+                        <div class="column is-4-desktop is-6-tablet is-12-mobile">
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">

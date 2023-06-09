@@ -16,16 +16,16 @@
             id="main-container"
             class="container"
         >
-            <div class="columns is-multiline mt-3">
+            <div class="columns is-multiline is-mobile">
                 @foreach ($spaces as $space)
-                    <div class="column is-12 pt-6 pb-6">
-                        <div class="columns is-hidden-tablet">
-                            <div class="column is-12 has-text-centered">
+                    <div class="column is-12-desktop is-12-tablet is-12-mobile pt-4 pb-6">
+                        <div class="columns is-hidden-tablet is-multiline is-mobile">
+                            <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
                                 <figure class="image is-250x250 is-inline-block">
                                     <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                 </figure>
                             </div>
-                            <div class="column is-12">
+                            <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-justified">
                                 <h4 class="title is-4 has-text-primary">
                                     {{ ucwords($space->name) }}
                                 </h4>
@@ -38,16 +38,16 @@
                             </div>
                         </div>
 
-                        <div class="columns is-hidden-mobile">
+                        <div class="columns is-hidden-mobile is-multiline is-mobile">
                             @if ($loop->iteration % 2 == 0)
-                                <div class="column">
+                                <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-left">
                                         <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>
                                 </div>
                             @endif
 
-                            <div class="column">
+                            <div class="column is-8-desktop is-7-tablet is-12-mobile has-text-justified">
                                 <h4 class="title is-4 has-text-primary">
                                     {{ ucwords($space->name) }}
                                 </h4>
@@ -60,7 +60,7 @@
                             </div>
 
                             @if ($loop->iteration % 2 != 0)
-                                <div class="column">
+                                <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-right">
                                         <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>

@@ -1,7 +1,7 @@
 <template>
     <form
-        ref="form"
         v-if="hasRequirements"
+        ref="form"
         :action="submitRoute"
         method="POST"
         @submit.prevent="submit"
