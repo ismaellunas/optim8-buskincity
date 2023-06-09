@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import laravel, { refreshPaths } from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -22,11 +22,19 @@ export default defineConfig((command, mode) => {
     input.push(`themes/${env.THEME_ACTIVE}/js/app.js`);
     input.push(`themes/${env.THEME_ACTIVE}/sass/app.sass`);
 
+    let appRefreshPaths = [
+        ...refreshPaths,
+        ...new Set([
+            `themes/biz/**`,
+            `themes/${env.THEME_ACTIVE}/**`,
+        ]),
+    ];
+
     return {
         plugins: [
             laravel({
                 input,
-                refresh: true,
+                refresh: appRefreshPaths,
             }),
             vue({
                 template: {
