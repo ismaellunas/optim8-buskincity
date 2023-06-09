@@ -234,7 +234,7 @@
     import BizTable from '@/Biz/Table.vue';
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
-    import { merge } from 'lodash';
+    import { merge, startCase } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
     import { isBlank } from '@/Libs/utils';
 
@@ -455,7 +455,7 @@
                         break;
 
                     case 'charge':
-                        return 'is-primary';
+                        return 'is-success';
                         break;
 
                     default:
@@ -475,7 +475,7 @@
                         break;
 
                     default:
-                        return '-';
+                        return startCase(text);
                         break;
                 }
             },
