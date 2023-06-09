@@ -144,10 +144,12 @@
                 </div>
 
                 <biz-pagination
-                    class="mt-6"
+                    v-if="screenType == 'mobile'"
+                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
                     :is-ajax="true"
                     :links="events.links"
                     :query-params="queryParams"
+                    :size="paginationSize"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
@@ -155,7 +157,21 @@
             <div class="column is-6-desktop is-6-tablet is-12-mobile">
                 <div
                     ref="mapDiv"
-                    :style="mapStyle"
+                    :style="screenMapStyle"
+                />
+            </div>
+
+            <div
+                v-if="screenType != 'mobile'"
+                class="column is-6-desktop is-12-tablet is-12-mobile"
+            >
+                <biz-pagination
+                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
+                    :is-ajax="true"
+                    :links="events.links"
+                    :query-params="queryParams"
+                    :size="paginationSize"
+                    @on-clicked-pagination="getEvents"
                 />
             </div>
         </div>
@@ -174,7 +190,7 @@
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
-    import { clone, each, find, keys, get, groupBy, merge, map } from 'lodash';
+    import { clone, each, find, keys, get, groupBy, merge, map, toString } from 'lodash';
     import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
     import { useModelWrapper, isBlank, useBreakpoints } from '@/Libs/utils';
@@ -199,7 +215,7 @@
             apiKey: { type: String, default: null },
             initPosition: { type: Object, default: null },
             isDraggable: { type: Boolean, default: true },
-            mapStyle: { type: [String, Array, Object], default: () => ["width: 100%", "height: 95vh"] },
+            mapStyle: { type: Object, default: () => ({ width: "100%", height: "95vh"}) },
             maxDate: { type: String, required: true },
             minDate: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
@@ -308,6 +324,30 @@
                     country: locationParts[0],
                     city: locationParts[1],
                 };
+            },
+
+            screenMapStyle() {
+                let screenMapStyle = {
+                    width: this.mapStyle.width,
+                    height: this.mapStyle.height,
+                };
+
+                const res = this.mapStyle.height.match(/(-?[\d.]+)([a-z%]*)/);
+
+                if (this.screenType == 'mobile') {
+                    screenMapStyle['height'] = toString(res[1] / 2) + res[2];
+                } else if (this.screenType == 'tablet') {
+                    screenMapStyle['height'] = toString(res[1] * (60 / 100)) + res[2];
+                }
+
+                return screenMapStyle;
+            },
+
+            paginationSize() {
+                if (this.screenType == 'mobile') {
+                    return "small";
+                }
+                return "normal";
             },
         },
 

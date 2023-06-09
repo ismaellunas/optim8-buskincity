@@ -1,6 +1,7 @@
 @aware([
     'backgroundColor' => '',
     'columns' => [],
+    'configColumns' => [],
     'entities' => [],
     'hasBackgroundImage',
     'images' => [],
@@ -31,5 +32,6 @@
         :entities="$entities"
         :locale="$locale"
         :images="$images"
+        :config="$configColumns"
     />
 </div>

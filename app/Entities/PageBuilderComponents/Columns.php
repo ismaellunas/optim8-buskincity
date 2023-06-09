@@ -9,8 +9,6 @@ class Columns extends BaseComponent
 {
     protected function composeStyleBlocks(): void
     {
-        $styleBlock = null;
-
         if ($this->doesConfigHaveDimension()) {
             $this->styleBlocks[] = $this->getDimensionStyleBlock(
                 $this->getSelector()
@@ -29,6 +27,12 @@ class Columns extends BaseComponent
         if ($this->doesConfigHaveDimension()) {
             $this->mobileStyleBlocks[] = $this->getMobileDimensionStyleBlock(
                 $this->getSelector()
+            );
+        }
+
+        if ($this->doesWrapperHaveBackgroundImage()) {
+            $this->mobileStyleBlocks[] = $this->getBackgroundStyleBlock(
+                $this->getSelector().'-background'
             );
         }
     }
@@ -56,5 +60,14 @@ class Columns extends BaseComponent
     private function getMediaUrl(int $mediaId): ?string
     {
         return Media::find($mediaId)->optimizedImageUrl ?? null;
+    }
+
+    protected function calculateDimensionValue(string $key, mixed $value = null)
+    {
+        if ($value && in_array($key, ['left', 'right'])) {
+            return 'auto';
+        }
+
+        return parent::calculateDimensionValue($key, $value);
     }
 }

@@ -132,17 +132,21 @@ abstract class BaseComponent implements
 
     protected function calculateDimensionValue(string $key, mixed $value = null)
     {
-        if (
-            $value
-            && ($key == 'top' || $key == 'bottom')
-        ) {
-            $value = (int)$value / 2;
+        if ($value) {
+            if ($key == 'top' || $key == 'bottom') {
 
-            return ($value >= 12) ? $value : $this->defaultDimensionValue;
-        } else if (
-            !$value
-            && ($key == 'top' || $key == 'bottom')
-        ) {
+                $value = (int)$value / 2;
+
+                return ($value >= 12) ? $this->defaultDimensionValue : $value;
+
+            } elseif ($key == 'left' || $key == 'right') {
+
+                $value = (int) $value / 2;
+
+                return ($value >= 12) ? $this->defaultDimensionValue : 'auto';
+            }
+
+        } elseif (!$value && ($key == 'top' || $key == 'bottom')) {
             return 'auto';
         }
 
