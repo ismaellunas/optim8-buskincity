@@ -20,7 +20,7 @@ class Column extends Component
     {
         $this->uid = $uid;
         $this->components = $components;
-        $this->size = ($size == "auto") ? null : 'is-'.$size;
+        $this->size = implode(' ', $size);
     }
 
     /**

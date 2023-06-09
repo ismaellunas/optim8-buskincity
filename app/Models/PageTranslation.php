@@ -101,7 +101,7 @@ class PageTranslation extends BaseModel implements PublishableInterface
                 : $this->data->entities ?? []
         );
 
-        $css .= $this->getCssStyleBlocks($styledComponents['desktop']);
+        $css .= $this->getDesktopCssFromStyleBlocks($styledComponents['desktop']);
 
         $css .= $this->getMobileCssStyleBlocks($styledComponents['mobile']);
 
@@ -113,7 +113,7 @@ class PageTranslation extends BaseModel implements PublishableInterface
         $this->generated_style = $this->generatePageStyle();
     }
 
-    private function getCssStyleBlocks(array $styledComponents): string
+    private function getCssFromStyleBlocks(array $styledComponents): string
     {
         $css = "";
 
@@ -126,13 +126,19 @@ class PageTranslation extends BaseModel implements PublishableInterface
         return $css;
     }
 
+    private function getDesktopCssFromStyleBlocks(array $styledComponents): string
+    {
+        $css = $this->getCssFromStyleBlocks($styledComponents);
+        return "@media screen and (min-width: 1024px) { $css }";
+    }
+
     private function getMobileCssStyleBlocks(array $styledComponents): string
     {
         $template = "@media screen and (max-width: 1023px) {:css}";
 
         return preg_replace_array(
             '/:[a-z_]+/',
-            [$this->getCssStyleBlocks($styledComponents)],
+            [$this->getCssFromStyleBlocks($styledComponents)],
             $template
         );
     }
@@ -146,19 +152,14 @@ class PageTranslation extends BaseModel implements PublishableInterface
 
     private function getStyledComponents($entities): array
     {
-        $entities = collect($entities)
-            ->filter(function ($entity) {
-                $className = PageService::getEntityClassName($entity['componentName']);
+        $entities = collect($entities)->filter(function ($entity) {
+            $className = PageService::getEntityClassName($entity['componentName']);
 
-                if ($className) {
-                    return in_array(
-                        HasStyleInterface::class,
-                        class_implements($className)
-                    );
-                }
-
-                return false;
-            });
+            return (
+                $className
+                && in_array(HasStyleInterface::class, class_implements($className))
+            );
+        });
 
         return [
             'desktop' => $this->getStyleBlocks($entities),
