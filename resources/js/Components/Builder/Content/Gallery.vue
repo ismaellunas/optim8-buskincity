@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="columns is-multiline">
+        <div class="columns is-multiline is-mobile">
             <template
                 v-for="(medium, index) in media"
                 :key="index"
@@ -24,7 +24,7 @@
                             <img
                                 v-if="activeMedium.file_type == 'image'"
                                 class="image-source"
-                                :src="activeMedium.file_url"
+                                :src="activeMedium.optimized_url ?? activeMedium.file_url"
                             >
                             <iframe
                                 v-if="activeMedium.file_type == 'video'"

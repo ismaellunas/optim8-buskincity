@@ -451,6 +451,7 @@ class FormSeeder extends Seeder
                             "disabled" => false,
                             "max_file_number" => 1,
                             "min_file_number" => 0,
+                            "is_multiple_upload" => false,
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageMimes,
@@ -472,6 +473,7 @@ class FormSeeder extends Seeder
                             "disabled" => false,
                             "max_file_number" => 5,
                             "min_file_number" => 0,
+                            "is_multiple_upload" => true,
                             "validation" => [
                                 "rules" => [
                                     "mimes" => $imageAndVideoMimes,
