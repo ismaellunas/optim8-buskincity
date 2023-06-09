@@ -190,7 +190,8 @@ export const useBreakpoints = () => {
         else return 'widescreen';
     })
 
-    const screenWidth = computed(() => windowWidth.value);
-
-    return { screenWidth, screenType };
+    return {
+        screenWidth: computed(() => windowWidth.value),
+        screenType,
+    };
 }

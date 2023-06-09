@@ -16,6 +16,8 @@
 
 <div id="{{ $customId }}" @class([
         'columns',
+        'is-multiline',
+        'is-mobile',
         'pb-background-image' => $isBackgroundImageShown,
         $uniqueClass,
         $uniqueClass.'-background' => $isBackgroundImageShown,
@@ -27,7 +29,7 @@
         <x-builder.column
             :uid="$column['id']"
             :components="$column['components']"
-            :size="$getSize($configColumns['column'], $loop->index)"
+            :size="$getSize($loop->index)"
         />
     @endforeach
 </div>
