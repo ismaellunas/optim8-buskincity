@@ -9,12 +9,12 @@
 
         <div class="section is-small">
             <div class="container">
-                <div class="columns">
-                    <div class="column is-6">
-                        <h1 class="title is-2">
-                            {{ title ?? titleChild }}
-                        </h1>
+                <h1 class="title is-2">
+                    {{ title ?? titleChild }}
+                </h1>
 
+                <div class="columns is-multiline is-mobile">
+                    <div class="column is-6-desktop is-12-tablet is-12-mobile">
                         <p
                             v-if="description || descriptionChild"
                         >
