@@ -1,12 +1,12 @@
 <template>
-    <div class="column is-half">
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
 
         <div class="box is-shadowless">
-            <div class="columns is-multiline">
-                <div class="column is-full">
+            <div class="columns is-multiline is-mobile">
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <biz-table
                         v-if="data.records.length > 0"
                         is-fullwidth
@@ -34,7 +34,7 @@
                         Empty
                     </p>
                 </div>
-                <div class="column is-full">
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <p class="has-text-right">
                         <biz-button-link
                             class="is-small is-light"

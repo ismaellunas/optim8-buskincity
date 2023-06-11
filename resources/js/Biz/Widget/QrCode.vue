@@ -1,10 +1,10 @@
 <template>
-    <div class="column is-half">
+    <div class="column is-6-desktop is-6-mobile is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">
-            <div class="columns">
+            <div class="columns is-mobile">
                 <div class="column is-narrow">
                     <biz-qr-code
                         :height="128"
@@ -17,7 +17,9 @@
                 </div>
 
                 <div class="column">
-                    <p>{{ data.description }}</p>
+                    <p>
+                        {{ data.description }}
+                    </p>
 
                     <div class="buttons are-small mt-5">
                         <a

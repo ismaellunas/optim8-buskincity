@@ -63,6 +63,12 @@ class StripeConnectWidget implements WidgetInterface
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
+            'description' => __(
+                'If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:',
+                [
+                    'appName' => config('app.name'),
+                ]
+            )
         ];
     }
 

@@ -1,10 +1,12 @@
 <template>
-    <div class="column is-half">
+    <div class="column is-6-desktop is-6-mobile is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">
-            <p>As a performer, you have a public page to share with your audience. It's just like your unique site within BuskinCity. You can copy the link or share on your social media:</p>
+            <p>
+                {{ data.description }}
+            </p>
 
             <div class="buttons are-small mt-5">
                 <a

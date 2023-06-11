@@ -61,7 +61,14 @@ class SocialMediaShareWidget implements WidgetInterface
                     'class' => null,
                     'text' => 'LinkedIn',
                 ],
-            ]
+            ],
+            'description' => __(
+                'As a :role, you have a public page to share with your audience. It\'s just like your unique site within :appName. You can copy the link or share on your social media:',
+                [
+                    'role' => $this->user->roleName,
+                    'appName' => config('app.name'),
+                ]
+            ),
         ];
     }
 
