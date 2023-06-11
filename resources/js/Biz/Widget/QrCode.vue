@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-6-desktop is-6-mobile is-12-mobile">
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
