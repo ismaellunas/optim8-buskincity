@@ -26,6 +26,8 @@ class Button extends BaseContent
 
         $this->config = $this->getButtonConfig();
 
+        $this->visibility = $this->getButtonVisibility();
+
         $this->buttonClasses = $this->getButtonClasses();
         $this->textClasses = $this->getTextClasses();
         $this->wrapperClasses[] = $this->config['position'] ?? null;
@@ -36,8 +38,6 @@ class Button extends BaseContent
         $this->target = $this->setTarget();
 
         $this->icon = $this->getButtonIcon();
-
-        $this->visibility = $this->getButtonVisibility();
     }
 
     private function getButtonConfig(): array
