@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="columns is-multiline">
+        <div class="columns is-multiline is-mobile">
             <update-profile-information-form
                 v-if="$page.props.jetstream.canUpdateProfileInformation"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
                 :user="$page.props.user"
                 :language-options="supportedLanguageOptions"
                 @after-update-profile="reSchema()"
@@ -11,34 +11,34 @@
 
             <update-password-form
                 v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             />
 
             <set-password-form
                 v-else-if="can.set_password && ! $page.props.socialstream.hasPassword"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             />
 
             <biodata-form
                 :key="biodataFormKey"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
                 :user="$page.props.user"
             />
 
             <two-factor-authentication-form
                 v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             />
 
             <connected-accounts-form
                 v-if="isConnectedAccountFormEnabled"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             />
 
             <logout-other-browser-sessions-form
                 v-if="$page.props.socialstream.hasPassword"
                 :sessions="sessions"
-                class="column is-12"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             />
 
             <div
