@@ -3,6 +3,7 @@
         <div class="columns is-multiline">
             <biz-widget-stripe-connect
                 title="Stripe Connected"
+                class="is-12-tablet is-12-mobile"
                 :data="stripeConnectData"
                 :order="0"
             >
