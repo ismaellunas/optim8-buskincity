@@ -1,14 +1,14 @@
 <template>
-    <div class="columns is-multiline is-centered box">
-        <div class="column is-11">
+    <div class="columns is-multiline is-mobile is-centered box">
+        <div class="column is-11-desktop is-11-tablet is-12-desktop">
             <biz-breadcrumbs
                 :breadcrumbs="breadcrumbs"
             />
         </div>
 
-        <div class="column is-11">
-            <div class="columns">
-                <div class="column is-7">
+        <div class="column is-11-desktop is-11-tablet is-12-desktop">
+            <div class="columns is-multiline is-mobile">
+                <div class="column is-7-desktop is-7-tablet is-12-mobile">
                     <h1 class="title is-2 mt-5 mb-2">
                         {{ order.product.name }}
                     </h1>
@@ -28,11 +28,11 @@
                     />
                 </div>
 
-                <div class="column is-5">
-                    <div class="columns is-multiline is-centered mt-5">
+                <div class="column is-5-desktop is-5-tablet is-12-mobile">
+                    <div class="columns is-multiline is-mobile is-centered mt-5">
                         <div
                             v-if="mapPosition.latitude && mapPosition.latitude"
-                            class="column is-10"
+                            class="column is-10-desktop is-12-tablet is-12-mobile"
                         >
                             <div class="card">
                                 <biz-gmap-marker
@@ -48,7 +48,7 @@
 
                         <div
                             v-if="can.reschedule"
-                            class="column is-8"
+                            class="column is-8-desktop is-12-tablet is-12-mobile"
                         >
                             <biz-button-link
                                 class="is-fullwidth is-warning"
@@ -61,7 +61,7 @@
 
                         <div
                             v-if="can.cancel"
-                            class="column is-8"
+                            class="column is-8-desktop is-12-tablet is-12-mobile"
                         >
                             <biz-button-icon
                                 class="is-fullwidth is-danger"
@@ -75,7 +75,7 @@
 
                         <div
                             v-if="can.checkIn"
-                            class="column is-8"
+                            class="column is-8-desktop is-12-tablet is-12-mobile"
                         >
                             <biz-button-icon
                                 class="is-fullwidth"
