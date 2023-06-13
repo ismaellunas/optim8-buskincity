@@ -1,20 +1,15 @@
 <template>
     <div class="box">
-        <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
-
-                <div class="is-clearfix" />
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-4-desktop is-6-tablet is-12-mobile">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
         </div>
 
         <biz-table-index
-            class="column is-12"
             :records="products"
             :query-params="queryParams"
         >
