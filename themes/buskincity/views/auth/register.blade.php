@@ -5,11 +5,12 @@
         Signup | {{ config('app.name') }}
     </x-slot>
 
-    <div class="columns">
-        <div class="column is-5 is-hidden-mobile">
+    <div class="columns is-mobile">
+        <div class="column is-5-desktop is-6-tablet is-hidden-mobile">
             <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
-        <div class="is-flex is-flex-direction-column column is-7">
+
+        <div class="is-flex is-flex-direction-column column is-7-desktop is-6-tablet is-12-mobile">
             <nav class="level is-mobile">
                 <!-- Left side -->
                 <div class="level-left">
@@ -30,35 +31,37 @@
                 </div>
             </nav>
 
-            <div class="columns is-vcentered is-flex-grow-1">
-                <div id="socialMediaForm" class="column is-8 is-offset-2">
-                    @if (session('failed'))
-                        <div class="columns">
-                            <div class="column">
-                                <div class="notification is-danger">
-                                    {{ session('failed') }}
-                                </div>
-                            </div>
+            @if (session('failed'))
+                <div class="columns is-mobile is-vcentered is-flex-grow-1">
+                    <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
+                        <div class="notification is-danger">
+                            {{ session('failed') }}
                         </div>
-                    @endif
+                    </div>
+                </div>
+            @endif
 
+            <div class="columns is-mobile is-vcentered is-flex-grow-1">
+                <div id="socialMediaForm" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                     <h1 class="title is-2 mb-4">Sign Up</h1>
                     <p>Please choose a method to continue.</p>
 
-                    @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
-                        <a href="{{ route('oauth.redirect', $driver) }}" @class([
-                            "button is-medium is-light is-fullwidth",
-                            "mt-6" => $loop->first,
-                            "mt-4" => !$loop->first,
-                        ])>
-                            <span class="icon is-small">
-                                <i class="fa-brands fa-{{ $driver }}"></i>
-                            </span>
-                            <span>Sign up with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span></span>
-                        </a>
-                    @endforeach
+                    @if (!empty($loginService->getAvailableSocialiteDrivers()))
+                        @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
+                            <a href="{{ route('oauth.redirect', $driver) }}" @class([
+                                "button is-medium is-light is-fullwidth",
+                                "mt-6" => $loop->first,
+                                "mt-4" => !$loop->first,
+                            ])>
+                                <span class="icon is-small">
+                                    <i class="fa-brands fa-{{ $driver }}"></i>
+                                </span>
+                                <span>Sign up with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span></span>
+                            </a>
+                        @endforeach
 
-                    <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
+                        <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
+                    @endif
 
                     <a class="button is-medium is-light is-fullwidth mt-4" onclick="showForm()">
                         <span class="icon is-small">
@@ -68,7 +71,7 @@
                     </a>
                 </div>
 
-                <div id="formFields" class="column is-8 is-offset-2 is-hidden">
+                <div id="formFields" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile is-hidden">
                     <h1 class="title is-2 mb-4">Create Account</h1>
                     <p>Fill in your email and password to login.</p>
 
