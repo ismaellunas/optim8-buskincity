@@ -62,12 +62,31 @@ class Columns extends BaseComponent
         return Media::find($mediaId)->optimizedImageUrl ?? null;
     }
 
-    protected function calculateDimensionValue(string $key, mixed $value = null)
-    {
-        if ($value && in_array($key, ['left', 'right'])) {
-            return 'auto';
+    protected function calculateDimensionValue(
+        string $key,
+        mixed $value = null,
+        string $spaceType = null
+    ) {
+        if ($spaceType == 'margin' && in_array($key, ['right', 'left'])) {
+            return 0;
         }
 
-        return parent::calculateDimensionValue($key, $value);
+        if (is_null($value)) {
+            return null;
+        } else {
+            if ($spaceType == 'margin' && $key == 'top') {
+                $value = (int) $value;
+
+                if ($value >= 0) {
+                    return ($value >= $this->defaultDimensionValue)
+                        ? ($this->defaultDimensionValue * 2)
+                        : ($this->defaultDimensionValue + $value);
+                }
+
+                return null;
+            }
+        }
+
+        return parent::calculateDimensionValue($key, $value, $spaceType);
     }
 }
