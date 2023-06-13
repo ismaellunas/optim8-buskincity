@@ -13,10 +13,13 @@ class LastEventWidget implements WidgetInterface
 
     private $componentName = "EventUpcoming";
     private $title = "Last Events";
+    private $records = [];
 
     public function __construct($request)
     {
         $this->user = $request->user();
+
+        $this->records = $this->getRecords();
     }
 
     public function data(): array
@@ -26,14 +29,15 @@ class LastEventWidget implements WidgetInterface
             'componentName' => $this->componentName,
             'moduleName' => config('booking.name'),
             'data' => [
-                'records' => $this->getRecords(),
+                'records' => $this->records,
             ],
         ];
     }
 
     public function canBeAccessed(): bool
     {
-        return $this->user->hasRole([config('permission.role_names.performer')]);
+        return $this->user->hasRole([config('permission.role_names.performer')])
+            && $this->records->isNotEmpty();
     }
 
     private function getRecords(): Collection
