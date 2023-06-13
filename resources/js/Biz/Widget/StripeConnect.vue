@@ -1,12 +1,14 @@
 <template>
-    <div class="column is-half">
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">
             <template v-if="!data.hasConnectedAccount">
                 <slot name="description">
-                    <p>If you would like to receive donations and payments for private gigs through BuskinCity, please apply for payments with Stripe:</p>
+                    <p>
+                        {{ data.description }}
+                    </p>
                 </slot>
 
                 <label class="label mt-5">Country<sup class="has-text-danger">*</sup></label>

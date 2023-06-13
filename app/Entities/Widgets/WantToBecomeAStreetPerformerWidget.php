@@ -22,7 +22,6 @@ class WantToBecomeAStreetPerformerWidget implements WidgetInterface
             'title' => $this->title,
             'componentName' => $this->componentName,
             'data' => $this->data,
-            'columns' => '12',
         ];
     }
 

@@ -20,7 +20,7 @@ class DashboardController extends Controller
             "title" => "Welcome, ".$firstName,
             "widgets" => $widgetFrontendClass->generateWidgets(),
             "moduleWidgets" => $widgetFrontendClass->generateModuleWidgets($request),
-            "description" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+            "description" => null
         ]);
     }
 
