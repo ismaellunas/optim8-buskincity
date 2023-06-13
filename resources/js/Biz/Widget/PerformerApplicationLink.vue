@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="column"
-        :class="wrapperClass"
-    >
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
@@ -56,14 +53,6 @@
             data: { type: Object, default: null },
             order: {type: Number, required: true},
             title: { type: String, default: "" },
-        },
-
-        computed: {
-            wrapperClass() {
-                return [
-                    'is-'+this.columns,
-                ];
-            },
         },
     };
 </script>

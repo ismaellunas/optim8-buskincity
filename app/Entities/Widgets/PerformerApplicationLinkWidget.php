@@ -28,7 +28,6 @@ class PerformerApplicationLinkWidget implements WidgetInterface
         $data = [
             'title' => $this->title,
             'componentName' => $this->componentName,
-            'columns' => "6",
         ];
 
         if (!$this->hasSubmittedApplication()) {
