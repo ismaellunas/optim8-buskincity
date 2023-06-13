@@ -1,167 +1,167 @@
 <template>
-    <div>
-        <div class="columns is-multiline">
-            <div
-                v-if="!hasConnectedAccount"
-                class="column is-12"
-            >
-                <div class="box is-shadowless">
-                    <biz-form-select
-                        v-model="createStripeForm.country"
-                        label="Country"
-                        :message="error('country')"
+    <div class="columns is-multiline is-mobile">
+        <div
+            v-if="!hasConnectedAccount"
+            class="column is-12-desktop is-12-tablet is-12-mobile"
+        >
+            <div class="box is-shadowless">
+                <biz-form-select
+                    v-model="createStripeForm.country"
+                    label="Country"
+                    :message="error('country')"
+                >
+                    <option
+                        v-for="option in countryOptions"
+                        :key="option.id"
+                        :value="option.id"
                     >
-                        <option
-                            v-for="option in countryOptions"
-                            :key="option.id"
-                            :value="option.id"
-                        >
-                            {{ option.value }}
+                        {{ option.value }}
+                    </option>
+                </biz-form-select>
+
+                <div class="control">
+                    <biz-button
+                        class="is-medium is-primary"
+                        @click="createConnectedAccount"
+                    >
+                        <span class="has-text-weight-bold">Create Connected Account</span>
+                    </biz-button>
+                </div>
+            </div>
+        </div>
+
+        <div
+            v-else
+            class="column is-12-desktop is-12-tablet is-12-mobile"
+        >
+            <div class="box is-shadowless">
+                <div class="control">
+                    <biz-button
+                        v-if="hasPassedOnboarding"
+                        class="is-medium is-primary"
+                        type="button"
+                        @click="redirectToStripe"
+                    >
+                        <span class="has-text-weight-bold">Login To Stripe</span>
+                    </biz-button>
+
+                    <biz-button
+                        v-else
+                        class="is-medium is-primary"
+                        type="button"
+                        @click="redirectToOnboardingAccount"
+                    >
+                        <span class="has-text-weight-bold">Continue Onboarding Process</span>
+                    </biz-button>
+                </div>
+            </div>
+        </div>
+
+        <div
+            v-if="hasConnectedAccount"
+            class="column is-12-desktop is-12-tablet is-12-mobile"
+        >
+            <div class="box is-shadowless">
+                <h2 class="title is-3">
+                    Setting
+                </h2>
+
+                <form @submit.prevent="submit">
+                    <biz-form-select
+                        v-model="settingForm.is_enabled"
+                        label="Is Enabled ?"
+                        :message="error('is_enabled')"
+                    >
+                        <option :value="true">
+                            Enabled
+                        </option>
+                        <option :value="false">
+                            Disabled
                         </option>
                     </biz-form-select>
 
-                    <div class="control">
-                        <biz-button
-                            class="is-medium is-primary"
-                            @click="createConnectedAccount"
-                        >
-                            <span class="has-text-weight-bold">Create Connected Account</span>
-                        </biz-button>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                v-else
-                class="column is-12"
-            >
-                <div class="box is-shadowless">
-                    <div class="control">
-                        <biz-button
-                            v-if="hasPassedOnboarding"
-                            class="is-medium is-primary"
-                            type="button"
-                            @click="redirectToStripe"
-                        >
-                            <span class="has-text-weight-bold">Login To Stripe</span>
-                        </biz-button>
-
-                        <biz-button
-                            v-else
-                            class="is-medium is-primary"
-                            type="button"
-                            @click="redirectToOnboardingAccount"
-                        >
-                            <span class="has-text-weight-bold">Continue Onboarding Process</span>
-                        </biz-button>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                v-if="hasConnectedAccount"
-                class="column is-12"
-            >
-                <div class="box is-shadowless">
-                    <h2 class="title is-3">
-                        Setting
-                    </h2>
-
-                    <form @submit.prevent="submit">
-                        <biz-form-select
-                            v-model="settingForm.is_enabled"
-                            label="Is Enabled ?"
-                            :message="error('is_enabled')"
-                        >
-                            <option :value="true">
-                                Enabled
-                            </option>
-                            <option :value="false">
-                                Disabled
-                            </option>
-                        </biz-form-select>
-
-                        <div class="field is-grouped is-grouped-left">
-                            <div class="control">
-                                <biz-button class="is-medium is-primary">
-                                    <span class="has-text-weight-bold">Update</span>
-                                </biz-button>
-                            </div>
+                    <div class="field is-grouped is-grouped-left">
+                        <div class="control">
+                            <biz-button class="is-medium is-primary">
+                                <span class="has-text-weight-bold">Update</span>
+                            </biz-button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <div
-                v-if="hasConnectedAccount"
-                class="column is-12"
-            >
-                <div class="box is-shadowless">
-                    <h2 class="title is-3">
-                        Balances
+        <div
+            v-if="hasConnectedAccount"
+            class="column is-12-desktop is-12-tablet is-12-mobile"
+        >
+            <div class="box is-shadowless">
+                <h2 class="title is-3">
+                    Balances
+                </h2>
+
+                <div
+                    v-if="balance.available"
+                    class="mb-4"
+                >
+                    <h2 class="subtitle">
+                        Available
                     </h2>
 
-                    <div
-                        v-if="balance.available"
-                        class="mb-4"
-                    >
-                        <h2 class="subtitle">
-                            Available
-                        </h2>
+                    <biz-table class="is-bordered is-hoverable is-fullwidth">
+                        <tr>
+                            <th>Currency</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr
+                            v-for="available, index in balance.available"
+                            :key="index"
+                        >
+                            <td>{{ available.currency.toUpperCase() }}</td>
+                            <td>{{ available.amount / 100 }}</td>
+                        </tr>
+                    </biz-table>
+                </div>
 
-                        <biz-table class="is-bordered is-hoverable is-fullwidth">
-                            <tr>
-                                <th>Currency</th>
-                                <th>Amount</th>
-                            </tr>
-                            <tr
-                                v-for="available, index in balance.available"
-                                :key="index"
-                            >
-                                <td>{{ available.currency.toUpperCase() }}</td>
-                                <td>{{ available.amount / 100 }}</td>
-                            </tr>
-                        </biz-table>
-                    </div>
+                <div
+                    v-if="balance.pending"
+                    class="mb-4"
+                >
+                    <h2 class="subtitle">
+                        Pending
+                    </h2>
 
-                    <div
-                        v-if="balance.pending"
-                        class="mb-4"
-                    >
-                        <h2 class="subtitle">
-                            Pending
-                        </h2>
-
-                        <biz-table class="is-bordered is-hoverable is-fullwidth">
-                            <tr>
-                                <th>Currency</th>
-                                <th>Amount</th>
-                            </tr>
-                            <tr
-                                v-for="pending, index in balance.pending"
-                                :key="index"
-                            >
-                                <td>{{ pending.currency.toUpperCase() }}</td>
-                                <td>{{ pending.amount / 100 }}</td>
-                            </tr>
-                        </biz-table>
-                    </div>
+                    <biz-table class="is-bordered is-hoverable is-fullwidth">
+                        <tr>
+                            <th>Currency</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr
+                            v-for="pending, index in balance.pending"
+                            :key="index"
+                        >
+                            <td>{{ pending.currency.toUpperCase() }}</td>
+                            <td>{{ pending.amount / 100 }}</td>
+                        </tr>
+                    </biz-table>
                 </div>
             </div>
+        </div>
 
-            <div
-                v-if="hasConnectedAccount"
-                class="column is-12"
-            >
-                <div class="box is-shadowless">
-                    <h1 class="title">
-                        Transactions
-                    </h1>
+        <div
+            v-if="hasConnectedAccount"
+            class="column is-12-desktop is-12-tablet is-12-mobile"
+        >
+            <div class="box is-shadowless">
+                <h1 class="title">
+                    Transactions
+                </h1>
 
-                    <div
-                        v-if="balanceTransactions.data.length > 0"
-                        class="mb-4"
-                    >
+                <div
+                    v-if="balanceTransactions.data.length > 0"
+                    class="mb-4"
+                >
+                    <div class="table-container">
                         <biz-table class="is-bordered is-hoverable is-fullwidth">
                             <tr>
                                 <th>Currency</th>
@@ -190,35 +190,35 @@
                                 <td>{{ transaction.created }}</td>
                             </tr>
                         </biz-table>
-
-                        <nav
-                            class="pagination"
-                            role="navigation"
-                            aria-label="pagination"
-                        >
-                            <button
-                                class="pagination-previous button"
-                                :disabled="isPreviousDisabled"
-                                @click="paginationVisit(balanceTransactions.previous_url)"
-                            >
-                                Previous
-                            </button>
-                            <button
-                                class="pagination-next button"
-                                :disabled="isNextDisabled"
-                                @click="paginationVisit(balanceTransactions.next_url)"
-                            >
-                                Next page
-                            </button>
-                        </nav>
                     </div>
 
-                    <div
-                        v-else
-                        class="mb-4"
+                    <nav
+                        class="pagination"
+                        role="navigation"
+                        aria-label="pagination"
                     >
-                        <p>No transactions</p>
-                    </div>
+                        <button
+                            class="pagination-previous button"
+                            :disabled="isPreviousDisabled"
+                            @click="paginationVisit(balanceTransactions.previous_url)"
+                        >
+                            Previous
+                        </button>
+                        <button
+                            class="pagination-next button"
+                            :disabled="isNextDisabled"
+                            @click="paginationVisit(balanceTransactions.next_url)"
+                        >
+                            Next page
+                        </button>
+                    </nav>
+                </div>
+
+                <div
+                    v-else
+                    class="mb-4"
+                >
+                    <p>No transactions</p>
                 </div>
             </div>
         </div>
