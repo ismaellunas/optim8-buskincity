@@ -1,6 +1,6 @@
 <template>
-    <div class="booking-time columns">
-        <div class="column is-7">
+    <div class="booking-time columns is-multiline is-mobile">
+        <div class="column is-6-desktop is-6-tablet is-12-mobile">
             <biz-field class="is-grouped is-grouped-centered">
                 <p class="control">
                     <biz-datepicker
@@ -44,7 +44,7 @@
 
         <div
             id="reschedule-available-time-list-wrapper"
-            class="column is-5"
+            class="column is-6-desktop is-6-tablet is-12-mobile"
         >
             <div
                 id="reschedule-available-time-list"

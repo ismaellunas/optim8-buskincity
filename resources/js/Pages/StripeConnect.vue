@@ -163,32 +163,37 @@
                 >
                     <div class="table-container">
                         <biz-table class="is-bordered is-hoverable is-fullwidth">
-                            <tr>
-                                <th>Currency</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                            <tr
-                                v-for="transaction, index in balanceTransactions.data"
-                                :key="index"
-                            >
-                                <td>{{ transaction.currency }}</td>
-                                <td
-                                    :class="getAmountClass(transaction.amount)"
+                            <thead>
+                                <tr>
+                                    <th>Currency</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr
+                                    v-for="transaction, index in balanceTransactions.data"
+                                    :key="index"
                                 >
-                                    {{ transaction.amount }}
-                                </td>
-                                <td>
-                                    <span
-                                        class="tag has-text-weight-bold"
-                                        :class="getStatusTagClass(transaction.reporting_category)"
+                                    <td>{{ transaction.currency }}</td>
+                                    <td
+                                        :class="getAmountClass(transaction.amount)"
                                     >
-                                        {{ getStatusTagText(transaction.reporting_category) }}
-                                    </span>
-                                </td>
-                                <td>{{ transaction.created }}</td>
-                            </tr>
+                                        {{ transaction.amount }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="tag has-text-weight-bold"
+                                            :class="getStatusTagClass(transaction.reporting_category)"
+                                        >
+                                            {{ getStatusTagText(transaction.reporting_category) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ transaction.created }}</td>
+                                </tr>
+                            </tbody>
                         </biz-table>
                     </div>
 

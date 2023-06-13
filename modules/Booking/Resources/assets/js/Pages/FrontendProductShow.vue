@@ -1,6 +1,6 @@
 <template>
     <div class="columns is-multiline is-mobile is-centered box">
-        <div class="column is-11-desktop is-11-tablet is-12-mobile">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <nav
                 class="breadcrumb"
                 aria-label="breadcrumbs"
@@ -23,7 +23,7 @@
             </nav>
         </div>
 
-        <div class="column is-11-desktop is-11-tablet is-12-mobile">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <h1 class="title is-2 mt-5 mb-2">
                 {{ product.name }}
             </h1>
