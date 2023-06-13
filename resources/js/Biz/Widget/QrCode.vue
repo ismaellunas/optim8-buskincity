@@ -4,8 +4,8 @@
             {{ title }}
         </h2>
         <div class="box is-shadowless">
-            <div class="columns is-mobile">
-                <div class="column is-narrow">
+            <div class="columns is-multiline is-mobile">
+                <div class="column is-4-desktop is-12-tablet is-12-mobile">
                     <biz-qr-code
                         :height="128"
                         :width="128"
@@ -16,7 +16,7 @@
                     />
                 </div>
 
-                <div class="column">
+                <div class="column is-8-desktop is-12-tablet is-12-mobile">
                     <p>
                         {{ data.description }}
                     </p>
