@@ -1,6 +1,6 @@
 <template>
     <div class="columns is-multiline is-mobile is-centered box">
-        <div class="column is-11-desktop is-11-tablet is-12-mobile">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <nav
                 class="breadcrumb"
                 aria-label="breadcrumbs"
@@ -27,7 +27,7 @@
                 </ul>
             </nav>
         </div>
-        <div class="column is-11-desktop is-11-tablet is-12-mobile">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <div class="columns is-multiline is-mobile mt-3">
                 <div class="column is-5-desktop is-12-tablet is-12-mobile">
                     <div class="card">

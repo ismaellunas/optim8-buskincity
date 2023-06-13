@@ -1,12 +1,12 @@
 <template>
     <div class="columns is-multiline is-mobile is-centered box">
-        <div class="column is-11-desktop is-11-tablet is-12-desktop">
+        <div class="column is-11-desktop is-12-tablet is-12-desktop">
             <biz-breadcrumbs
                 :breadcrumbs="breadcrumbs"
             />
         </div>
 
-        <div class="column is-11-desktop is-11-tablet is-12-desktop">
+        <div class="column is-11-desktop is-12-tablet is-12-desktop">
             <div class="columns is-multiline is-mobile">
                 <div class="column is-7-desktop is-7-tablet is-12-mobile">
                     <h1 class="title is-2 mt-5 mb-2">
