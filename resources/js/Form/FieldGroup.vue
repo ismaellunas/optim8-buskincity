@@ -15,14 +15,14 @@
         </header>
 
         <div class="card-content">
-            <div class="columns is-multiline">
+            <div class="columns is-multiline is-mobile">
                 <template
                     v-for="(field, name) in group.fields"
                     :key="name"
                 >
                     <div
                         class="column"
-                        :class="field.column ? field.column : `is-full`"
+                        :class="getColumnSizeClass(field.column)"
                     >
                         <component
                             :is="field.type"
@@ -114,6 +114,19 @@
                 }
 
                 return this.errors;
+            },
+        },
+
+        methods: {
+            getColumnSizeClass(size) {
+                if (size) {
+                    return [
+                        size + '-desktop',
+                        size + '-tablet',
+                        'is-12-mobile',
+                    ].join(' ');
+                }
+                return 'is-12-mobile is-12-tablet is-12-desktop';
             },
         },
     };
