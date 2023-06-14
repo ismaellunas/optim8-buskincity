@@ -89,7 +89,7 @@
                         </div>
                     @endif
 
-                    <form id="form-register" action="{{ route('register') }}" method="post" class="mt-6">
+                    <form id="form-register" action="{{ route('register') }}" method="post" class="mt-4">
                         <fieldset id="fieldset">
 
                         @csrf
