@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="generated-form-builder">
         <div class="columns">
             <div class="column">
                 <biz-language-tab

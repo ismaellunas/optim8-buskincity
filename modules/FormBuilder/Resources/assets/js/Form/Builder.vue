@@ -1,5 +1,8 @@
 <template>
-    <div v-if="isShown">
+    <div
+        v-if="isShown"
+        class="generated-form-builder"
+    >
         <biz-flash-notifications :flash="flash" />
 
         <biz-notifications
