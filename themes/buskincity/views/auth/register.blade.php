@@ -73,7 +73,6 @@
 
                 <div id="formFields" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile is-hidden">
                     <h1 class="title is-2 mb-4">Create Account</h1>
-                    <p>Fill in your email and password to login.</p>
 
                     @if ($errors->any())
                         <div class="notification is-danger mb-4">
