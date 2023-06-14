@@ -3,11 +3,12 @@
         {{ __('Forgot Password') }} | {{ config('app.name') }}
     </x-slot>
 
-    <div class="columns">
-        <div class="column is-5 is-hidden-mobile">
+    <div class="columns is-mobile">
+        <div class="column is-5-desktop is-6-tablet is-hidden-mobile">
             <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
-        <div class="is-flex is-flex-direction-column column is-7">
+
+        <div class="is-flex is-flex-direction-column column is-7-desktop is-6-tablet is-12-mobile">
             <nav class="level is-mobile">
                 <!-- Left side -->
                 <div class="level-left">
@@ -28,15 +29,15 @@
                 </div>
             </nav>
 
-            <div class="columns is-vcentered is-flex-grow-1">
+            <div class="columns is-mobile is-vcentered is-flex-grow-1">
                 @if (session()->get('status_key') == 'passwords.sent')
-                    <div class="column is-8 is-offset-2 has-text-centered">
+                    <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile has-text-centered">
                         <i class="fa-light fa-paper-plane is-size-1 has-text-primary mb-5"></i>
                         <h1 class="title is-2 mb-4">{{ __('Instructions Sent!') }}</h1>
                         <p>{{ __('Please check your email with instructions to reset your password.') }}</p>
                     </div>
                 @else
-                    <div class="column is-8 is-offset-2">
+                    <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                         <h1 class="title is-2 mb-4">{{ __('Forgot Password') }}</h1>
                         <p>{{ __('We will send you an email with instructions to reset your password.') }}</p>
 
@@ -53,7 +54,7 @@
                         @endif
 
                         @if ($errors->any())
-                            <div class="notification is-danger mb-4">
+                            <div class="notification is-danger mt-4">
                                 <button
                                     class="delete"
                                     type="button"
