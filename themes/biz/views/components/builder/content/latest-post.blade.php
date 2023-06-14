@@ -1,9 +1,9 @@
 @inject('storageService', 'App\Services\StorageService')
 
-<div @class([$uniqueClass, 'columns is-multiline'])>
+<div @class([$uniqueClass, 'pb-latest-post columns is-multiline'])>
     @if (!$posts->isEmpty())
         @for ($i = 0; $i < $limit; $i++)
-            <div class="column">
+            <div class="column is-4-desktop is-6-tablet is-12-mobile">
                 @isset($posts[$i])
                     <article class="b752-blog-item box is-clipped p-0">
                         <figure>
