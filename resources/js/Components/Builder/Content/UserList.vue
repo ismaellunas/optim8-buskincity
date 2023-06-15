@@ -97,7 +97,9 @@
 
             <div class="column is-12-desktop is-12-tablet is-12-mobile">
                 <biz-pagination
+                    :current-page="users.current_page"
                     :is-ajax="true"
+                    :last-page="users.last_page"
                     :links="users.links"
                     @on-clicked-pagination="onClickedPagination"
                 />
