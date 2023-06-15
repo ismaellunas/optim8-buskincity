@@ -68,21 +68,19 @@
         <div id="app">
             <loading-overlay id="loader" class="is-hidden"></loading-overlay>
 
-            <section class="hero is-fullheight">
-                <div class="hero-body">
-                    <div class="container has-text-centered">
-                        <div class="columns">
-                            <div class="column is-two-fifths has-text-left">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <figure class="image is-3by4">
-                                            <img src="{{ $storageService::getImageUrl(config('constants.default_images.user_auth_card')) }}">
-                                        </figure>
-                                    </div>
+            <section class="section is-flex is-align-items-center" style="height: 100vh">
+                <div class="container">
+                    <div class="columns is-multiline">
+                        <div class="column is-5-desktop is-6-tablet is-hidden-mobile">
+                            <div class="card">
+                                <div class="card-image">
+                                    <figure class="image is-3by4">
+                                        <img src="{{ $storageService::getImageUrl(config('constants.default_images.user_auth_card')) }}">
+                                    </figure>
                                 </div>
                             </div>
-                            {{ $slot }}
                         </div>
+                        {{ $slot }}
                     </div>
                 </div>
             </section>
