@@ -1,36 +1,34 @@
 <template>
-    <div>
-        <div class="columns is-multiline">
-            <template
-                v-for="(widget, order) in widgets"
-                :key="order"
-            >
-                <component
-                    :is="widget.componentName"
-                    class="mb-5"
-                    :columns="widget.columns"
-                    :data="widget.data"
-                    :order="order"
-                    :title="widget.title"
-                />
-            </template>
-        </div>
+    <div class="columns is-multiline is-mobile">
+        <template
+            v-for="(widget, order) in widgets"
+            :key="order"
+        >
+            <component
+                :is="widget.componentName"
+                class="mb-5"
+                :columns="widget.columns"
+                :data="widget.data"
+                :order="order"
+                :title="widget.title"
+            />
+        </template>
+    </div>
 
-        <div class="columns is-multiline">
-            <template
-                v-for="(widget, order) in moduleWidgets"
-                :key="order"
-            >
-                <component
-                    :is="asyncComponents[ widget.componentName ]"
-                    class="mb-5"
-                    :columns="widget.columns"
-                    :data="widget.data"
-                    :order="order"
-                    :title="widget.title"
-                />
-            </template>
-        </div>
+    <div class="columns is-multiline is-mobile">
+        <template
+            v-for="(widget, order) in moduleWidgets"
+            :key="order"
+        >
+            <component
+                :is="asyncComponents[ widget.componentName ]"
+                class="mb-5"
+                :columns="widget.columns"
+                :data="widget.data"
+                :order="order"
+                :title="widget.title"
+            />
+        </template>
     </div>
 </template>
 

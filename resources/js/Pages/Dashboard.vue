@@ -1,10 +1,8 @@
 <template>
-    <div>
-        <biz-widget-columns
-            :widgets="widgets"
-            :module-widgets="moduleWidgets"
-        />
-    </div>
+    <biz-widget-columns
+        :widgets="widgets"
+        :module-widgets="moduleWidgets"
+    />
 </template>
 
 <script>
