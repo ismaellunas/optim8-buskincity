@@ -15,7 +15,7 @@
 
     $branch = "main";
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
-    $remote = $_ENV['REMOTE_NAME'] ?? 'heroku';
+    $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
     $heroku_app = $_ENV['HEROKU_APP'];
     $heroku_vars = [
@@ -141,7 +141,7 @@
 @endtask
 
 @task('heroku:push')
-    git push {{ $remote }} {{ $branch }}
+    git push {{ $git_remote }} {{ $branch }}
 @endtask
 
 @task('heroku:postgresql-credentials')
