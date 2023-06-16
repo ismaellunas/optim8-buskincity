@@ -227,6 +227,8 @@ class SettingSeeder extends Seeder
         $this->populateKeySetting();
 
         $this->populateRecaptchaScoreSetting();
+
+        $this->populateCookieConsentSetting();
     }
 
     private function createSetting($data)
@@ -358,6 +360,37 @@ class SettingSeeder extends Seeder
                 "display_name" => null,
                 "value" => 0.7,
                 "group" => "recaptcha.score",
+                "order" => 3,
+            ],
+        ];
+
+        foreach ($settings as $setting) {
+            $this->createSetting($setting);
+        }
+    }
+
+    private function populateCookieConsentSetting()
+    {
+        $settings = [
+            [
+                "key" => "cookie_consent_is_enabled",
+                "display_name" => null,
+                "value" => true,
+                "group" => "cookie_consent",
+                "order" => 1,
+            ],
+            [
+                "key" => "cookie_consent_message",
+                "display_name" => null,
+                "value" => "<p>This website uses cookies to ensure you get the best experience on our website.<br><a href='#'>Learn more</a></p>",
+                "group" => "cookie_consent",
+                "order" => 2,
+            ],
+            [
+                "key" => "cookie_consent_message_decline",
+                "display_name" => null,
+                "value" => "<p>We understand and respect your decision to decline cookie usage on our website, Thank you for visiting.</p>",
+                "group" => "cookie_consent",
                 "order" => 3,
             ],
         ];
