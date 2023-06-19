@@ -94,8 +94,10 @@
                     v-if="records?.links?.length > 3"
                 >
                     <biz-pagination
-                        :links="records?.links"
+                        :current-page="records.current_page"
                         :is-ajax="true"
+                        :last-page="records.last_page"
+                        :links="records?.links"
                         @on-clicked-pagination="getRecords"
                     />
                 </biz-panel-block>

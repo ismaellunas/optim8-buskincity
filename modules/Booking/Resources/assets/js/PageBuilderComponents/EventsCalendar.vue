@@ -171,6 +171,8 @@
                     :links="events.links"
                     :query-params="queryParams"
                     :size="paginationSize"
+                    :current-page="events.current_page"
+                    :last-page="events.last_page"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
@@ -192,6 +194,8 @@
                     :links="events.links"
                     :query-params="queryParams"
                     :size="paginationSize"
+                    :current-page="events.current_page"
+                    :last-page="events.last_page"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
