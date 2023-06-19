@@ -1,6 +1,6 @@
 <template>
-    <div class="columns is-multiline is-centered box">
-        <div class="column is-11">
+    <div class="columns is-multiline is-mobile is-centered box">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <nav
                 class="breadcrumb"
                 aria-label="breadcrumbs"
@@ -22,7 +22,8 @@
                 </ul>
             </nav>
         </div>
-        <div class="column is-11">
+
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <h1 class="title is-2 mt-5 mb-2">
                 {{ product.name }}
             </h1>
@@ -31,8 +32,8 @@
                 <biz-tag>{{ product.sku }}</biz-tag>
             </p>
 
-            <div class="columns is-multiline mt-3">
-                <div class="column is-8">
+            <div class="columns is-multiline is-mobile mt-3">
+                <div class="column is-8-desktop is-8-tablet is-12-mobile">
                     <div class="content">
                         <p>
                             {{ isShortDescription ? product.short_description : product.description }}
@@ -50,8 +51,8 @@
                     </div>
                 </div>
 
-                <div class="column is-4">
-                    <biz-table>
+                <div class="column is-4-desktop is-4-tablet is-12-mobile">
+                    <biz-table is-fullwidth>
                         <tbody>
                             <tr>
                                 <th>Duration</th>
@@ -66,25 +67,18 @@
                 </div>
             </div>
 
-            <div class="columns is-multiline mt-5">
-                <div class="column is-12">
+            <div
+                v-if="hasProductGallery"
+                class="columns is-multiline is-mobile mt-5"
+            >
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <h2 class="title is-3">
                         Gallery
                     </h2>
                 </div>
 
-                <div class="column is-5">
-                    <div
-                        v-if="product.gallery.length == 0"
-                        class="hero is-medium is-primary is-radius"
-                    >
-                        <div class="hero-body" />
-                    </div>
-
-                    <div
-                        v-else
-                        class="card"
-                    >
+                <div class="column is-5-desktop is-5-tablet is-12-mobile">
+                    <div class="card">
                         <div class="card-image">
                             <biz-image
                                 ratio="is-3by2"
@@ -94,15 +88,12 @@
                     </div>
                 </div>
 
-                <div class="column is-7">
-                    <div
-                        v-if="product.gallery.length > 0"
-                        class="columns is-multiline"
-                    >
+                <div class="column is-7-desktop is-7-tablet is-12-mobile">
+                    <div class="columns is-multiline is-mobile">
                         <div
                             v-for="(image, imageIndex) in product.gallery"
                             :key="image.id"
-                            class="column is-one-third-desktop is-half-tablet"
+                            class="column is-4-desktop is-6-tablet is-6-mobile"
                         >
                             <div class="card">
                                 <div class="card-image">
@@ -116,18 +107,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        v-else
-                        class="hero is-medium is-primary is-radius"
-                    >
-                        <div class="hero-body" />
-                    </div>
                 </div>
             </div>
 
-            <div class="columns is-multiline mt-5">
-                <div class="column is-12">
+            <div class="columns is-multiline is-mobile mt-5">
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <h2 class="title is-3">
                         Event Booking
                     </h2>
@@ -135,7 +119,7 @@
 
                 <div
                     v-if="mapPosition.latitude && mapPosition.longitude"
-                    class="column is-4"
+                    class="column is-4-desktop is-12-tablet is-12-mobile"
                 >
                     <div class="card">
                         <biz-gmap-marker
@@ -149,7 +133,7 @@
                     </div>
                 </div>
 
-                <div class="column is-8">
+                <div class="column is-8-desktop is-12-tablet is-12-mobile">
                     <div class="card">
                         <div class="card-content">
                             <div class="content">
@@ -326,6 +310,10 @@
                 }
 
                 return null;
+            },
+
+            hasProductGallery() {
+                return this.product.gallery.length > 0;
             },
         },
 

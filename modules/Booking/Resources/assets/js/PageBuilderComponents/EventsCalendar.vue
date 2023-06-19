@@ -52,23 +52,49 @@
                 </div>
 
                 <div
-                    v-if="events.data"
-                    class="block"
+                    v-for="record in events.data"
+                    :key="record.id"
+                    class="box pb-1 mb-2"
                 >
-                    <article
-                        v-for="record in events.data"
-                        :key="record.id"
-                        class="media"
-                    >
-                        <figure class="media-left">
-                            <p class="image is-64x64">
-                                <img
-                                    class="is-rounded"
-                                    :src="record.user?.profile_photo_url ?? userImage"
-                                >
-                            </p>
-                        </figure>
-                        <div class="media-content">
+                    <div class="columns is-mobile is-multiline">
+                        <div class="column is-4-desktop is-12-tablet is-12-mobile">
+                            <div class="columns is-mobile is-multiline level">
+                                <div class="column is-12-desktop is-6-tablet is-6-mobile level-left">
+                                    <div>
+                                        <figure class="image is-128x128 level-item">
+                                            <img
+                                                class="is-rounded"
+                                                :src="record.user?.profile_photo_url ?? userImage"
+                                            >
+                                        </figure>
+                                    </div>
+                                </div>
+
+                                <div class="column is-12-desktop is-6-tablet is-6-mobile is-hidden-desktop level-right">
+                                    <div class="buttons is-right">
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="button level-item mb-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.direction_url"
+                                        >
+                                            Directions
+                                        </a>
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="button is-primary level-item"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.user.profile_page_url"
+                                        >
+                                            Performer Detail
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
                             <div class="content mb-1">
                                 <p class="has-text-justified mb-1">
                                     <a
@@ -83,73 +109,70 @@
                                         </template>
                                     </a>
                                 </p>
-                                <table class="table is-narrow is-borderless">
+                                <table class="table is-narrow is-borderless mb-2">
                                     <tbody>
                                         <tr>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 <biz-icon :icon="icon.locationMark" />
                                             </td>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 {{ record.location.address }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 <biz-icon :icon="bookingIcon.calendar" />
                                             </td>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 {{ record.event.date }}, {{ record.event.start_end_time }}, {{ record.event.timezone }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 <biz-icon :icon="bookingIcon.duration" />
                                             </td>
-                                            <td class="m-0 py-0 px-1">
+                                            <td class="m-0 py-0 px-0">
                                                 {{ record.event.duration }}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
+
+                                <nav class="level is-mobile is-hidden-touch">
+                                    <div class="level-left">
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="level-item button my-0 p-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.direction_url"
+                                        >
+                                            Directions
+                                        </a>
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="level-item button is-primary my-0 p-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.user.profile_page_url"
+                                        >
+                                            Performer Detail
+                                        </a>
+                                    </div>
+                                </nav>
                             </div>
-
-                            <nav class="level is-mobile">
-                                <div class="level-left">
-                                    <a
-                                        v-if="record.user.profile_page_url"
-                                        class="level-item button my-0 p-2"
-                                        target="_blank"
-                                        :class="{'is-small': screenType == 'mobile'}"
-                                        :href="record.direction_url"
-                                    >
-                                        Directions
-                                    </a>
-                                    <a
-                                        v-if="record.user.profile_page_url"
-                                        class="level-item button is-primary my-0 p-2"
-                                        target="_blank"
-                                        :class="{'is-small': screenType == 'mobile'}"
-                                        :href="record.user.profile_page_url"
-                                    >
-                                        Performer Detail
-                                    </a>
-                                </div>
-                            </nav>
                         </div>
-                    </article>
-                </div>
-
-                <div v-else>
-                    No Event
+                    </div>
                 </div>
 
                 <biz-pagination
                     v-if="screenType == 'mobile'"
-                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
                     :is-ajax="true"
                     :links="events.links"
                     :query-params="queryParams"
                     :size="paginationSize"
+                    :current-page="events.current_page"
+                    :last-page="events.last_page"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
@@ -166,11 +189,13 @@
                 class="column is-6-desktop is-12-tablet is-12-mobile"
             >
                 <biz-pagination
-                    :class="{'mt-6': screenType == 'desktop' || screenType == 'widescreen'}"
+                    class="mt-4"
                     :is-ajax="true"
                     :links="events.links"
                     :query-params="queryParams"
                     :size="paginationSize"
+                    :current-page="events.current_page"
+                    :last-page="events.last_page"
                     @on-clicked-pagination="getEvents"
                 />
             </div>
@@ -338,6 +363,8 @@
                     screenMapStyle['height'] = toString(res[1] / 2) + res[2];
                 } else if (this.screenType == 'tablet') {
                     screenMapStyle['height'] = toString(res[1] * (60 / 100)) + res[2];
+                } else if (this.screenType == 'desktop') {
+                    screenMapStyle['height'] = toString(res[1]) + res[2];
                 }
 
                 return screenMapStyle;

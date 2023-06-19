@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="column"
-        :class="wrapperClass"
-    >
+    <div class="column is-12-desktop is-12-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
@@ -48,14 +45,6 @@
             return {
                 iconPreview,
             };
-        },
-
-        computed: {
-            wrapperClass() {
-                return [
-                    'is-'+this.columns,
-                ];
-            },
         },
     };
 </script>
