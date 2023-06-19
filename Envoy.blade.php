@@ -54,7 +54,6 @@
 @story('heroku:deploy')
     git-restore-and-stash
     git-checkout
-    install-dependencies
     git-commit-deployment
     heroku:maintenance-on
     heroku:push
@@ -69,7 +68,6 @@
 @story('heroku:deploy-full')
     git-restore-and-stash
     git-checkout
-    install-dependencies
     git-commit-deployment
     heroku:maintenance-on
     heroku:config-set
