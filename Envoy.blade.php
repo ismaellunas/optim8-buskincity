@@ -51,7 +51,7 @@
     ];
 @endsetup
 
-@story('heroku:deploy')
+@story('heroku:deploy', ['confirm' => true])
     git-restore-and-stash
     git-checkout
     git-commit-deployment
