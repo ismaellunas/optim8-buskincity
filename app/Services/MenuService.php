@@ -411,6 +411,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.error-log.*'),
                             'isEnabled' => $user->can('viewAny', ErrorLog::class),
                         ],
+                        [
+                            'title' => __('GDPR Cookie Consent'),
+                            'link' => route('admin.settings.cookie-consent.edit'),
+                            'isActive' => $request->routeIs('admin.settings.cookie-consent.*'),
+                            'isEnabled' => $user->can('system.cookie_consent'),
+                        ],
                     ],
                 ],
                 [

@@ -15,6 +15,7 @@ use Illuminate\Support\{
     Str,
 };
 use Illuminate\Support\Facades\Vite;
+use Mews\Purifier\Facades\Purifier;
 
 class SettingService
 {
@@ -650,5 +651,32 @@ class SettingService
         }
 
         return (int)$maxFileSize;
+    }
+
+    public function isCookieConsentEnabled(): bool
+    {
+        $value = $this->getKey('cookie_consent_is_enabled');
+
+        if ($value == "") {
+            $value = false;
+        }
+
+        return boolval($value);
+    }
+
+    public function getCookieConsentMessage(): string
+    {
+        return Purifier::clean(
+            $this->getKey('cookie_consent_message'),
+            'tinymce'
+        );
+    }
+
+    public function getCookieConsentMessageDecline(): string
+    {
+        return Purifier::clean(
+            $this->getKey('cookie_consent_message_decline'),
+            'tinymce'
+        );
     }
 }

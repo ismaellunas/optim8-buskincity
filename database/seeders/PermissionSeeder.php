@@ -62,6 +62,7 @@ class PermissionSeeder extends Seeder
             'system.theme',
             'system.payment',
             'system.log',
+            'system.cookie_consent',
 
             'payment.management',
 

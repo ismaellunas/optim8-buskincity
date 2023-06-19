@@ -36,6 +36,24 @@ export const emailConfig = {
     noneditable_regexp: /\{\{[^\}]+\}\}/g,
 };
 
+export const defaultConfig = {
+    menubar: false,
+    branding: false,
+    plugins: [
+        'advlist autolink lists link image charmap',
+        'searchreplace visualblocks code fullscreen',
+        'print preview anchor insertdatetime media',
+        'paste code help wordcount table'
+    ],
+    block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
+    toolbar: 'formatselect | bold italic link | alignleft aligncenter alignright alignjustify | bullist numlist | table',
+    formats: {
+        bold: { inline: 'b' }
+    },
+    extended_valid_elements:'b',
+    invalid_elements:'strong',
+};
+
 export const fullConfig = {
     height: 500,
     menubar: false,
