@@ -15,32 +15,39 @@
 
     $branch = "main";
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
+    $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
     $heroku_app = $_ENV['HEROKU_APP'];
     $heroku_vars = [
-        //'APP_DEBUG',
+        'APP_DEBUG',
         'APP_DOMAIN',
-        //'APP_ENV',
-        //'APP_HTTPS_IS_ON',
-        //'APP_ID',
-        //'APP_KEY',
-        //'APP_NAME',
-        //'APP_URL',
-        //'CACHE_DRIVER',
-        //'DB_CONNECTION',
-        'MAIL_MAILER',
-        'MAIL_HOST',
-        'MAIL_PORT',
-        'MAIL_USERNAME',
-        'MAIL_PASSWORD',
+        'APP_ENV',
+        'APP_HTTPS_IS_ON',
+        'APP_ID',
+        'APP_KEY',
+        'APP_NAME',
+        'APP_URL',
+        'CACHE_DRIVER',
+        'DB_CONNECTION',
+        'ERROR_REPORTING',
+        'FOLDER_PREFIX',
         'MAIL_ENCRYPTION',
         'MAIL_FROM_ADDRESS',
         'MAIL_FROM_NAME',
-        //'QUEUE_CONNECTION',
-        //'SCOUT_DRIVER',
-        //'TELESCOPE_ENABLED',
-        // 'REDIS_URL',
-        // 'DATABASE_URL',
+        'MAIL_HOST',
+        'MAIL_MAILER',
+        'MAIL_PASSWORD',
+        'MAIL_PORT',
+        'MAIL_USERNAME',
+        'QUEUE_CONNECTION',
+        'REDIS_CLIENT',
+        'REDIS_SCHEME',
+        'SCOUT_DRIVER',
+        'SESSION_DRIVER',
+        'SESSION_SECURE_COOKIE',
+        'TELESCOPE_ENABLED',
+        'THEME_ACTIVE',
+        'VITE_APP_NAME',
     ];
 @endsetup
 
@@ -77,17 +84,17 @@
 
 @task('heroku:migration')
     @if (! $skipMigration)
-        heroku run php artisan migrate --force
+        heroku run -a {{ $heroku_app }} php artisan migrate --force
     @endif
 @endtask
 
 @task('heroku:clean-after-deploy')
-    heroku run php artisan optimize:clear
-    heroku run rm Envoy.blade.php
+    heroku run -a {{ $heroku_app }} php artisan optimize:clear
+    heroku run -a {{ $heroku_app }} rm Envoy.blade.php
 @endtask
 
 @task('heroku:restart')
-    heroku restart worker
+    heroku restart -a {{ $heroku_app }} worker
 @endtask
 
 @task('install-dependencies')
@@ -118,11 +125,11 @@
 @endtask
 
 @task('heroku:maintenance-on')
-    heroku maintenance:on
+    heroku maintenance:on -a {{ $heroku_app }}
 @endtask
 
 @task('heroku:maintenance-off')
-    heroku maintenance:off
+    heroku maintenance:off -a {{ $heroku_app }}
 @endtask
 
 @task('heroku:config-set')
@@ -134,7 +141,7 @@
 @endtask
 
 @task('heroku:push')
-    git push heroku {{ $branch }}
+    git push {{ $git_remote }} {{ $branch }}
 @endtask
 
 @task('heroku:postgresql-credentials')
@@ -142,7 +149,7 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run php artisan route:list --path="admin"
+    heroku run -a {{ $heroku_app }} php artisan route:list --path="admin"
 @endtask
 
 @task('nwatch')
