@@ -97,8 +97,11 @@
 
             <div class="column is-12-desktop is-12-tablet is-12-mobile">
                 <biz-pagination
+                    :current-page="users.current_page"
                     :is-ajax="true"
+                    :last-page="users.last_page"
                     :links="users.links"
+                    :size="screenType == 'mobile' ? 'small' : 'normal'"
                     @on-clicked-pagination="onClickedPagination"
                 />
             </div>
@@ -113,6 +116,7 @@
     import BizPagination from '@/Biz/Pagination.vue';
     import { union, isEmpty, forEach, debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
+    import { useBreakpoints } from '@/Libs/utils';
 
     export default {
         components: {
@@ -140,6 +144,14 @@
                     'stage_name',
                 ],
             },
+        },
+
+        setup() {
+            const { screenType } = useBreakpoints();
+
+            return {
+                screenType,
+            };
         },
 
         data() {
