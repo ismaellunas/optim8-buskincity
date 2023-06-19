@@ -12,9 +12,11 @@ class Icon extends Component
         private string $icon,
         private ?string $iconClass = '',
         public $class = null,
-        private ?string $type = 'fa-light',
+        private ?string $type = null,
         private ?bool $isSmall = false,
     ) {
+        $this->type = config('constants.icon.type');
+
         $this->iconClasses = $this->getIconClasses();
         $this->iconWrapperClasses = $this->getIconWrapperClasses();
     }
