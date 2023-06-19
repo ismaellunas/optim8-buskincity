@@ -139,6 +139,8 @@
                 </component>
             </div>
             <biz-pagination
+                :current-page="records.current_page"
+                :last-page="records.last_page"
                 :links="records.links"
                 :query-params="queryParams"
             />

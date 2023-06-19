@@ -25,6 +25,8 @@
                     <biz-pagination
                         :is-ajax="true"
                         :links="data?.links ?? []"
+                        :current-page="data.current_page"
+                        :last-page="data.last_page"
                         @on-clicked-pagination="$emit('on-clicked-pagination', $event)"
                     />
                 </div>
