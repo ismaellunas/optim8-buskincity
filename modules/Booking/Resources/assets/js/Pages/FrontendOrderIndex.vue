@@ -1,16 +1,17 @@
 <template>
     <div class="box">
-        <div class="columns is-multiline">
-            <div class="column is-4-desktop">
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-4-desktop is-4-tablet is-12-mobile">
                 <biz-filter-search
                     v-model="term"
                     @search="search"
                 />
             </div>
 
-            <div class="column is-2-desktop">
+            <div class="column is-2-desktop is-2-tablet is-12-mobile">
                 <biz-select
                     v-model="status"
+                    class="is-fullwidth"
                     @change="onStatusChanged()"
                 >
                     <option
@@ -23,7 +24,7 @@
                 </biz-select>
             </div>
 
-            <div class="column is-4 is-3-widescreen">
+            <div class="column is-4-desktop is-3-tablet is-12-mobile">
                 <biz-filter-date-range
                     v-model="dates"
                     max-range="31"
@@ -31,9 +32,10 @@
                 />
             </div>
 
-            <div class="column is-narrow">
+            <div class="column is-2-desktop is-3-tablet is-12-mobile">
                 <biz-select
                     v-model="location"
+                    class="is-fullwidth"
                     placeholder="Any"
                     @change="onLocationChanged()"
                 >

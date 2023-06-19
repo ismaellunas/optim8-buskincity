@@ -9,15 +9,16 @@
 
         <div class="section is-small">
             <div class="container">
-                <div class="columns">
-                    <div class="column is-6">
-                        <h1 class="title is-2">
-                            {{ title ?? titleChild }}
-                        </h1>
+                <h1 class="title is-2">
+                    {{ title ?? titleChild }}
+                </h1>
 
-                        <p
-                            v-if="description || descriptionChild"
-                        >
+                <div
+                    v-if="hasDescription"
+                    class="columns is-multiline is-mobile"
+                >
+                    <div class="column is-6-desktop is-12-tablet is-12-mobile">
+                        <p>
                             {{ description ?? descriptionChild }}
                         </p>
                     </div>
@@ -62,6 +63,10 @@
 
             descriptionChild() {
                 return head(this.$slots.default())?.type.props.description?.default ?? '';
+            },
+
+            hasDescription() {
+                return this.description || this.descriptionChild;
             },
         },
     };

@@ -130,6 +130,8 @@
                     :is-ajax="isAjax"
                     :links="records?.links ?? []"
                     :query-params="queryParams"
+                    :current-page="records.current_page"
+                    :last-page="records.last_page"
                 />
             </div>
         </div>

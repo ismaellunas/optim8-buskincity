@@ -184,10 +184,11 @@ export const useBreakpoints = () => {
     onUnmounted(() => window.removeEventListener('resize', onWidthChange))
 
     const screenType = computed(() => {
-        if (windowWidth.value <= 768) return 'mobile';
-        if (windowWidth.value >= 769 && windowWidth.value < 1023) return 'tablet';
-        if (windowWidth.value >= 1024 && windowWidth.value < 1215) return 'desktop';
-        else return 'widescreen';
+        if (windowWidth.value >= 1408) return 'fullhd';
+        if (windowWidth.value >= 1126 && windowWidth.value < 1408) return 'widescreen';
+        if (windowWidth.value >= 1024) return 'desktop';
+        if (windowWidth.value >= 769) return 'tablet';
+        else return 'mobile';
     })
 
     return {
