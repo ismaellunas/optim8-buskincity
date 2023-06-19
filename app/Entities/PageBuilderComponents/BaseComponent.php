@@ -109,29 +109,38 @@ abstract class BaseComponent implements
 
         $this->getSpaceDimensionConfig('margin', false)
             ->each(function ($value, $key) use ($styleBlock) {
-                $value = $this->calculateDimensionValue($key, $value);
-                $unit = ($value != "auto")
-                    ? $this->getUnitSpaceDimension('margin')
-                    : null;
+                $value = $this->calculateDimensionValue($key, $value, 'margin');
 
-                $styleBlock->addStyle('margin-'.$key, $value.$unit);
+                if (!is_null($value)) {
+                    $unit = !in_array($value, ["auto", "inherit"])
+                        ? $this->getUnitSpaceDimension('margin')
+                        : null;
+
+                    $styleBlock->addStyle('margin-'.$key, $value.$unit);
+                }
             });
 
         $this->getSpaceDimensionConfig('padding')
             ->each(function ($value, $key) use ($styleBlock) {
-                $value = $this->calculateDimensionValue($key, $value);
-                $unit = ($value != "auto")
-                    ? $this->getUnitSpaceDimension('padding')
-                    : null;
+                $value = $this->calculateDimensionValue($key, $value, 'padding');
 
-                $styleBlock->addStyle('padding-'.$key, $value.$unit);
+                if (!is_null($value)) {
+                    $unit = !in_array($value, ["auto", "inherit"])
+                        ? $this->getUnitSpaceDimension('padding')
+                        : null;
+
+                    $styleBlock->addStyle('padding-'.$key, $value.$unit);
+                }
             });
 
         return $styleBlock;
     }
 
-    protected function calculateDimensionValue(string $key, mixed $value = null)
-    {
+    protected function calculateDimensionValue(
+        string $key,
+        mixed $value = null,
+        string $spaceType = null
+    ) {
         if ($value) {
             if ($key == 'top' || $key == 'bottom') {
 
@@ -139,18 +148,17 @@ abstract class BaseComponent implements
 
                 return ($value >= 12) ? $this->defaultDimensionValue : $value;
 
-            } elseif ($key == 'left' || $key == 'right') {
-
-                $value = (int) $value / 2;
-
-                return ($value >= 12) ? $this->defaultDimensionValue : 'auto';
             }
 
         } elseif (!$value && ($key == 'top' || $key == 'bottom')) {
-            return 'auto';
+            return 'inherit';
         }
 
-        return $this->defaultDimensionValue;
+        if ($key == 'left' || $key == 'right') {
+            return $this->defaultDimensionValue / 2;
+        }
+
+        return $this->defaultDimensionValue / 2;
     }
 
     private function getSpaceDimensionConfig(

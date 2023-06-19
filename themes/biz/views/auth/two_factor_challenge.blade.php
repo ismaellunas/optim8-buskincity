@@ -1,94 +1,98 @@
 <x-layouts.auth>
-    <div class="column is-three-fifths has-text-left">
-        <div class="level">
+    <div class="column is-7-desktop is-6-tablet is-12-mobile">
+        <div class="level is-mobile">
             <div class="level-left">
                 <div class="level-item">
                     <a href="{{ route('login') }}">
-                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                        <span>Back</span>
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+
+                            <span>{{ __('Back') }}</span>
+                        </span>
                     </a>
                 </div>
             </div>
         </div>
-        <section class="section">
-            <div class="columns" id="formFields">
-                <div class="column is-9 is-offset-1">
-                    <div class="mb-4">
-                        <p class="recovery" data-target="recovery-code">
-                            {{ __('Please confirm access to your account by entering the authentication code provided by your authenticator application.') }}
-                        </p>
 
-                        <p class="recovery is-hidden" data-target="code">
-                            {{ __('Please confirm access to your account by entering one of your emergency recovery codes.') }}
-                        </p>
+        <div class="columns is-multiline is-mobile" id="formFields">
+            <div class="column is-8-desktop is-offset-2-desktop is-12-tablet is-12-mobile">
+                <div class="mb-4">
+                    <p class="recovery" data-target="recovery-code">
+                        {{ __('Please confirm access to your account by entering the authentication code provided by your authenticator application.') }}
+                    </p>
+
+                    <p class="recovery is-hidden" data-target="code">
+                        {{ __('Please confirm access to your account by entering one of your emergency recovery codes.') }}
+                    </p>
+                </div>
+
+                @if (session('failed'))
+                    <div class="notification is-danger">
+                        {{ session('failed') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="notification is-danger mb-4">
+                        <button
+                            class="delete"
+                            type="button"
+                            onclick="removeErrorMessage(this)"
+                        ></button>
+
+                        <ul class="alert alert-danger">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post">
+                    @csrf
+                    <div id="code" class="field mb-5 recovery">
+                        <label class="label">Code</label>
+                        <div class="control">
+                            <input type="text" name="code" value="{{ old('code') }}" class="input">
+                        </div>
+                        @error('code')
+                            <p class="help is-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    @if (session('failed'))
-                        <div class="notification is-danger">
-                            {{ session('failed') }}
+                    <div id="recovery-code" class="field mb-5 recovery is-hidden">
+                        <label class="label">Recovery Code</label>
+                        <div class="control">
+                            <input type="text" name="recovery_code" value="{{ old('recovery_code') }}" class="input">
                         </div>
-                    @endif
+                        @error('recovery_code')
+                            <p class="help is-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                    @if ($errors->any())
-                        <div class="notification is-danger mb-4">
-                            <button
-                                class="delete"
-                                type="button"
-                                onclick="removeErrorMessage(this)"
-                            ></button>
+                    <x-recaptcha
+                        action="tfa"
+                        form-id="form-tfa"
+                    />
 
-                            <ul class="alert alert-danger">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    <div class="buttons">
+                        <button type="button" class="button recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
+                            {{ __('Use a recovery code')}}
+                        </button>
 
-                    <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post">
-                        @csrf
-                        <div id="code" class="field mb-5 recovery">
-                            <label class="label">Code</label>
-                            <div class="control">
-                                <input type="text" name="code" value="{{ old('code') }}" class="input">
-                            </div>
-                            @error('code')
-                                <p class="help is-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <button type="button" class="button recovery is-hidden" data-target="code" onclick="toggleRecovery(this)">
+                            {{ __('Use an authentication code')}}
+                        </button>
 
-                        <div id="recovery-code" class="field mb-5 recovery is-hidden">
-                            <label class="label">Recovery Code</label>
-                            <div class="control">
-                                <input type="text" name="recovery_code" value="{{ old('recovery_code') }}" class="input">
-                            </div>
-                            @error('recovery_code')
-                                <p class="help is-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <x-recaptcha
-                            action="tfa"
-                            form-id="form-tfa"
-                        />
-
-                        <div class="buttons">
-                            <button type="button" class="button recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
-                                {{ __('Use a recovery code')}}
-                            </button>
-
-                            <button type="button" class="button recovery is-hidden" data-target="code" onclick="toggleRecovery(this)">
-                                {{ __('Use an authentication code')}}
-                            </button>
-
-                            <button type="submit" class="button is-info">
-                                {{ __('Log In')}}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                        <button type="submit" class="button is-info">
+                            {{ __('Log In')}}
+                        </button>
+                    </div>
+                </form>
             </div>
-        </section>
+        </div>
     </div>
 
     @push('bottom_scripts')

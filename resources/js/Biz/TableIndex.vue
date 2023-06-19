@@ -30,6 +30,7 @@
             :query-params="queryParams"
             :last-page="records.last_page ?? null"
             :current-page="records.current_page ?? null"
+            :size="screenType == 'mobile' ? 'small' : 'normal'"
             @on-clicked-pagination="onClickedPagination"
         />
     </div>
@@ -39,6 +40,7 @@
     import BizPagination from '@/Biz/Pagination.vue';
     import BizTable from '@/Biz/Table.vue';
     import BizTableInfo from '@/Biz/TableInfo.vue';
+    import { useBreakpoints } from '@/Libs/utils';
 
     export default {
         name: 'BizTableIndex',
@@ -59,6 +61,13 @@
         emits: [
             'on-clicked-pagination'
         ],
+
+        setup() {
+            const { screenType } = useBreakpoints();
+            return {
+                screenType,
+            };
+        },
 
         computed: {
             hasTableHeadSlot() {

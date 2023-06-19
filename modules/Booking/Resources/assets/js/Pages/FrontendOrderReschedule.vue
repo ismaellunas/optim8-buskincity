@@ -1,6 +1,6 @@
 <template>
-    <div class="columns is-multiline is-centered box">
-        <div class="column is-11">
+    <div class="columns is-multiline is-mobile is-centered box">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
             <nav
                 class="breadcrumb"
                 aria-label="breadcrumbs"
@@ -27,9 +27,9 @@
                 </ul>
             </nav>
         </div>
-        <div class="column is-11">
-            <div class="columns is-multiline mt-3">
-                <div class="column is-5">
+        <div class="column is-11-desktop is-12-tablet is-12-mobile">
+            <div class="columns is-multiline is-mobile mt-3">
+                <div class="column is-5-desktop is-12-tablet is-12-mobile">
                     <div class="card">
                         <div class="card-content">
                             <table-event-reschedule-detail :event="order.event" />
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <div class="column is-7">
+                <div class="column is-7-desktop is-12-tablet is-12-mobile">
                     <div class="card">
                         <div class="card-content">
                             <booking-time
