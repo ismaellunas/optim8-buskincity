@@ -51,6 +51,7 @@
                         <div class="column is-6">
                             <span class="has-text-weight-bold">
                                 {{ i18n.message }}
+                                <sup class="has-text-danger">*</sup>
                             </span>
                         </div>
 
@@ -59,11 +60,14 @@
                                 v-model="form.message"
                                 :config="editorConfig"
                             />
+
+                            <biz-input-error :message="error('message')" />
                         </div>
 
                         <div class="column is-6">
                             <span class="has-text-weight-bold">
                                 {{ i18n.message_decline }}
+                                <sup class="has-text-danger">*</sup>
                             </span>
                         </div>
 
@@ -72,6 +76,8 @@
                                 v-model="form.message_decline"
                                 :config="editorConfig"
                             />
+
+                            <biz-input-error :message="error('message_decline')" />
                         </div>
                     </div>
                 </fieldset>
@@ -86,6 +92,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import BizSelect from '@/Biz/Select.vue';
     import BizTextEditor from '@/Biz/EditorTinymce.vue';
     import { success as successAlert } from '@/Libs/alert';
@@ -99,6 +106,7 @@
         components: {
             BizButton,
             BizErrorNotifications,
+            BizInputError,
             BizSelect,
             BizTextEditor,
         },

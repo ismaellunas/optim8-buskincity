@@ -29,11 +29,11 @@ class CookieConsentSettingRequest extends FormRequest
                 'boolean',
             ],
             'message' => [
-                'nullable',
+                'required',
                 'max: 1000',
             ],
             'message_decline' => [
-                'nullable',
+                'required',
                 'max: 1000',
             ],
         ];
