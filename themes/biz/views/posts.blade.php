@@ -30,9 +30,7 @@
                                         </div>
                                         <div class="control">
                                             <button class="button">
-                                                <span class="icon" >
-                                                    <i class="fas fa-search"></i>
-                                                </span>
+                                                <x-icon icon="fa-search" />
                                             </button>
                                         </div>
                                     </div>

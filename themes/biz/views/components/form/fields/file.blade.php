@@ -21,7 +21,7 @@
                             class="button is-link"
                             download
                         >
-                            <i class="fa-solid fa-download"></i>
+                            <x-icon icon="fa-download" />
                         </a>
                     </div>
                 </div>

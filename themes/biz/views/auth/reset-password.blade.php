@@ -5,9 +5,7 @@
                 <div class="level-item">
                     <a href="{{ route('password.request') }}">
                         <span class="icon-text">
-                            <span class="icon">
-                                <i class="fas fa-arrow-left"></i>
-                            </span>
+                            <x-icon icon="fa-arrow-left" />
 
                             <span>{{ __('Back') }}</span>
                         </span>
@@ -70,14 +68,10 @@
                                     </div>
                                     <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                         <button type="button" class="button" tabindex="-1">
-                                            <span class="icon">
-                                                <i class="fas fa-eye"></i>
-                                            </span>
+                                            <x-icon icon="fa-eye" />
                                         </button>
                                         <button type="button" class="button is-hidden" tabindex="-1">
-                                            <span class="icon">
-                                                <i class="fas fa-eye-slash"></i>
-                                            </span>
+                                            <x-icon icon="fa-eye-slash" />
                                         </button>
                                     </div>
                                 </div>
@@ -103,14 +97,10 @@
                                     </div>
                                     <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password-confirmation">
                                         <button type="button" class="button" tabindex="-1">
-                                            <span class="icon">
-                                                <i class="fas fa-eye"></i>
-                                            </span>
+                                            <x-icon icon="fa-eye" />
                                         </button>
                                         <button type="button" class="button is-hidden" tabindex="-1">
-                                            <span class="icon">
-                                                <i class="fas fa-eye-slash"></i>
-                                            </span>
+                                            <x-icon icon="fa-eye-slash" />
                                         </button>
                                     </div>
                                 </div>
