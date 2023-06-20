@@ -111,6 +111,6 @@
 
         {!! $trackingCodeBeforeBody !!}
 
-        @include('cookie-consent::index')
+        @stack('bottom_inject')
     </body>
 </html>
