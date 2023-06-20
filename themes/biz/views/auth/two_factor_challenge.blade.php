@@ -5,9 +5,7 @@
                 <div class="level-item">
                     <a href="{{ route('login') }}">
                         <span class="icon-text">
-                            <span class="icon">
-                                <i class="fas fa-arrow-left"></i>
-                            </span>
+                            <x-icon icon="fa-arrow-left" />
 
                             <span>{{ __('Back') }}</span>
                         </span>

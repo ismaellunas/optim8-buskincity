@@ -12,9 +12,7 @@
                 <!-- Left side -->
                 <div class="level-left">
                     <a href="{{ route('login') }}"  class="button is-white">
-                        <span class="icon is-small">
-                            <i class="fa-regular fa-arrow-left"></i>
-                        </span>
+                        <x-icon icon="fa-arrow-left" is-small />
                         <span class="has-text-weight-bold">{{ __('Back') }}</span>
                     </a>
                 </div>

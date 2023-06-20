@@ -15,9 +15,7 @@
                 <!-- Left side -->
                 <div class="level-left">
                     <a onclick="backOrOpenSocialMediaForm()" class="button is-white">
-                        <span class="icon is-small">
-                            <i class="fa-regular fa-arrow-left"></i>
-                        </span>
+                        <x-icon icon="fa-arrow-left" is-small />
                         <span class="has-text-weight-bold">Back</span>
                     </a>
                 </div>
@@ -53,9 +51,7 @@
                                 "mt-6" => $loop->first,
                                 "mt-4" => !$loop->first,
                             ])>
-                                <span class="icon is-small">
-                                    <i class="fa-brands fa-{{ $driver }}"></i>
-                                </span>
+                                <x-icon icon="fa-brands fa-{{ $driver }}" is-small />
                                 <span>Sign up with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span></span>
                             </a>
                         @endforeach
@@ -64,9 +60,7 @@
                     @endif
 
                     <a class="button is-medium is-light is-fullwidth mt-4" onclick="showForm()">
-                        <span class="icon is-small">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
+                        <x-icon icon="fa-envelope" is-small />
                         <span>Sign up with <span class="has-text-weight-bold">Email</span></span>
                     </a>
                 </div>
@@ -136,12 +130,12 @@
                                 <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                     <button type="button" class="button" tabindex="-1">
                                         <span class="icon">
-                                            <i class="fa-light fa-eye"></i>
+                                            <x-icon icon="fa-eye" />
                                         </span>
                                     </button>
                                     <button type="button" class="button is-hidden" tabindex="-1">
                                         <span class="icon">
-                                            <i class="fa-light fa-eye-slash"></i>
+                                            <x-icon icon="fa-eye-slash" />
                                         </span>
                                     </button>
                                 </div>

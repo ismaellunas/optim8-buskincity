@@ -13,9 +13,7 @@
                 <!-- Left side -->
                 <div class="level-left">
                     <a href="{{ route('login') }}"  class="button is-white">
-                        <span class="icon is-small">
-                            <i class="fa-regular fa-arrow-left"></i>
-                        </span>
+                        <x-icon icon="fa-arrow-left" is-small />
                         <span class="has-text-weight-bold">{{ __('Back') }}</span>
                     </a>
                 </div>
@@ -32,7 +30,12 @@
             <div class="columns is-mobile is-vcentered is-flex-grow-1">
                 @if (session()->get('status_key') == 'passwords.sent')
                     <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile has-text-centered">
-                        <i class="fa-light fa-paper-plane is-size-1 has-text-primary mb-5"></i>
+                        <x-icon
+                            class="mb-5"
+                            icon="fa-paper-plane"
+                            icon-class="is-size-1 has-text-primary"
+                        />
+
                         <h1 class="title is-2 mb-4">{{ __('Instructions Sent!') }}</h1>
                         <p>{{ __('Please check your email with instructions to reset your password.') }}</p>
                     </div>

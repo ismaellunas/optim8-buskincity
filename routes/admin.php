@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     ApiSettingController,
     ApiWidgetController,
     CategoryController,
+    CookieConsentController,
     DashboardController,
     ErrorLogController,
     LanguageController,
@@ -157,6 +158,13 @@ Route::middleware(array_filter([
                 ->name('keys.edit');
             Route::post('/keys', [SettingKeyController::class, 'update'])
                 ->name('keys.update');
+        });
+
+        Route::middleware('can:system.cookie_consent')->group(function () {
+            Route::get('/cookie-consent', [CookieConsentController::class, 'edit'])
+                ->name('cookie-consent.edit');
+            Route::post('/cookie-consent', [CookieConsentController::class, 'update'])
+                ->name('cookie-consent.update');
         });
     });
 
