@@ -10,39 +10,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ?? config('app.name') }}</title>
-
         @if (!empty($metaDescription) && $metaDescription != "")
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 
         @stack('metas')
 
+        <title>{{ $title ?? config('app.name') }}</title>
+
         @include('favicon')
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-        @if (empty($fontUrls))
-            <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-        @endif
-
-        @if (!empty($fontUrls['mainTextFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['headingsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['headingsFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['buttonsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['buttonsFont'] }}">
-        @endif
-
-        @stack('styles')
+        @include('head-fonts', ['fontUrls' => $fontUrls])
 
         <link rel="stylesheet" href="{{ $appCssUrl }}">
+
+        @stack('styles')
 
         @env ('production')
             <!-- Styles -->

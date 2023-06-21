@@ -11,19 +11,9 @@
         @include('favicon')
 
         <!-- Fonts -->
+        @include('head-fonts', ['fontUrls' => $fontUrls])
+
         <link rel="stylesheet" href="{{ $appCssUrl }}">
-
-        @if (!empty($fontUrls['mainTextFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['headingsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['headingsFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['buttonsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['buttonsFont'] }}">
-        @endif
 
         @stack('styles')
 
