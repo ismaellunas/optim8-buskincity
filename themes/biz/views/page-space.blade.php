@@ -58,9 +58,30 @@
                                 <div class="column is-4-desktop is-6-tablet is-12-mobile">
                                     <div class="card">
                                         <div class="card-content">
-                                            <i class="fa-solid fa-user"></i> : {{ $contact['name'] }}<br>
-                                            <i class="fa-solid fa-phone"></i> : {{ $pageSpace->getPhoneNumberFormat($contact['phone']) }}<br>
-                                            <i class="fa-solid fa-envelope"></i> : {{ $contact['email'] ?? '-' }}
+                                            <span class="icon-text">
+                                                <x-icon icon="fa-user" />
+                                                <span>
+                                                    : {{ $contact['name'] }}
+                                                </span>
+                                            </span>
+
+                                            <br>
+
+                                            <span class="icon-text">
+                                                <x-icon icon="fa-phone" />
+                                                <span>
+                                                    : {{ $pageSpace->getPhoneNumberFormat($contact['phone']) }}
+                                                </span>
+                                            </span>
+
+                                            <br>
+
+                                            <span class="icon-text">
+                                                <x-icon icon="fa-envelope" />
+                                                <span>
+                                                    : {{ $contact['email'] ?? '-' }}
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

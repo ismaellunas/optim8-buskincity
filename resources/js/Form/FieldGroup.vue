@@ -25,7 +25,7 @@
                         :class="getColumnSizeClass(field.column)"
                     >
                         <component
-                            :is="field.type"
+                            :is="asyncComponents[field.type]"
                             v-if="!field.is_translated"
                             :ref="'field__' + name"
                             v-model="form[ name ]"
@@ -34,7 +34,7 @@
                         />
 
                         <component
-                            :is="field.type"
+                            :is="asyncComponents[field.type]"
                             v-else
                             :ref="'field__' + name"
                             v-model="form[ name ][ selectedLocale ]"
@@ -50,37 +50,11 @@
 </template>
 
 <script>
-    import Checkbox from './Checkbox.vue';
-    import CheckboxGroup from './CheckboxGroup.vue';
-    import Email from './Email.vue';
-    import File from './File.vue';
-    import FileDragDrop from './FileDragDrop.vue';
-    import Number from './Number.vue';
-    import Phone from './Phone.vue';
-    import Radio from './Radio.vue';
-    import Select from './Select.vue';
-    import Text from './Text.vue';
-    import Textarea from './Textarea.vue';
-    import Video from './Video.vue';
-    import { useModelWrapper, isEmpty } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
+    import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'FormFieldGroup',
-
-        components: {
-            Checkbox,
-            CheckboxGroup,
-            Email,
-            File,
-            FileDragDrop,
-            Number,
-            Phone,
-            Radio,
-            Select,
-            Text,
-            Textarea,
-            Video,
-        },
 
         props: {
             group: {
@@ -102,7 +76,30 @@
         },
 
         setup(props, { emit }) {
+            const asyncComponents = {};
+            const listComponents = [
+                'Checkbox',
+                'CheckboxGroup',
+                'Email',
+                'File',
+                'FileDragDrop',
+                'Number',
+                'Phone',
+                'Radio',
+                'Select',
+                'Text',
+                'Textarea',
+                'Video',
+            ];
+
+            listComponents.forEach((componentName) => {
+                asyncComponents[componentName] = defineAsyncComponent(() => import(
+                    `../Form/${componentName}.vue`)
+                );
+            });
+
             return {
+                asyncComponents,
                 form: useModelWrapper(props, emit),
             };
         },
