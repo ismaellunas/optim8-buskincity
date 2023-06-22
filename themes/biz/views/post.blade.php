@@ -51,8 +51,9 @@
                             && $post->is_cover_displayed
                         )
                             <img
-                                src="{{ $post->coverImageUrl }}"
+                                data-src="{{ $post->coverImageUrl }}"
                                 alt="{{ $post->meta_description }}"
+                                class="lazyload"
                             >
                         @endif
 
@@ -135,7 +136,10 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                                        <img
+                                            data-src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                            class="lazyload"
+                                        >
                                     </a>
                                 </figure>
                                 <div class="p-5">
