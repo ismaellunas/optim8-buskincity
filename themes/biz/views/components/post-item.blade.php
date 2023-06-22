@@ -4,10 +4,10 @@
     <article class="b752-blog-item box is-clipped p-0">
         <figure>
             <a href="{{ $link }}">
-                <img
-                    data-src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                    class="lazyload"
-                >
+                <x-image
+                    src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                    is-lazyload
+                />
             </a>
         </figure>
         <div class="p-5">

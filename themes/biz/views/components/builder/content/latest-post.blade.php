@@ -8,10 +8,10 @@
                     <article class="b752-blog-item box is-clipped p-0">
                         <figure>
                             <a href="{{ route('blog.show', $posts[$i]->slug) }}">
-                                <img
-                                    data-src="{{ $posts[$i]->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                                    class="lazyload"
-                                >
+                                <x-image
+                                    src="{{ $posts[$i]->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                    is-lazyload
+                                />
                             </a>
                         </figure>
                         <div class="p-5">

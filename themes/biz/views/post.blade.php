@@ -50,11 +50,11 @@
                             $post->coverImageUrl
                             && $post->is_cover_displayed
                         )
-                            <img
-                                data-src="{{ $post->coverImageUrl }}"
+                            <x-image
+                                src="{{ $post->coverImageUrl }}"
                                 alt="{{ $post->meta_description }}"
-                                class="lazyload"
-                            >
+                                is-lazyload
+                            />
                         @endif
 
                         {!! Shortcode::compile($content) !!}
@@ -136,10 +136,10 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img
-                                            data-src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                                            class="lazyload"
-                                        >
+                                        <x-image
+                                            src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                            is-lazyload
+                                        />
                                     </a>
                                 </figure>
                                 <div class="p-5">

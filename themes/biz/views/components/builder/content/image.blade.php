@@ -1,14 +1,14 @@
 @aware(['images' => [], 'locale' => null])
 
 <div @class([$uniqueClass, $position])>
-    <x-image
+    <x-figure-image
         :media="$imageMedia"
         :locale="$locale"
         :ratio="$ratio"
         :rounded="$rounded"
         :square="$fixedSquare"
         :has-position="$hasPosition"
-        :style="$imageStyles"
+        :img-style="$imageStyles"
         is-lazyload
     />
 </div>

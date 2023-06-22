@@ -8,26 +8,26 @@
             >
                 @if ($cardLink)
                     <a href="{{ $cardLink }}">
-                        <x-image
+                        <x-figure-image
                             :media="$imageMedia"
                             :locale="$locale"
                             :ratio="$ratio"
                             :rounded="$rounded"
                             :square="$fixedSquare"
                             :has-position="$hasPosition"
-                            :style="$imageStyles"
+                            :img-style="$imageStyles"
                             is-lazyload
                         />
                     </a>
                 @else
-                    <x-image
+                    <x-figure-image
                         :media="$imageMedia"
                         :locale="$locale"
                         :ratio="$ratio"
                         :rounded="$rounded"
                         :square="$fixedSquare"
                         :has-position="$hasPosition"
-                        :style="$imageStyles"
+                        :img-style="$imageStyles"
                         is-lazyload
                     />
                 @endif
