@@ -91,9 +91,3 @@
         },
     }
 </script>
-
-<style>
-.grecaptcha-badge {
-    visibility: visible !important;
-}
-</style>
