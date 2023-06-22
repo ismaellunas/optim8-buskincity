@@ -214,9 +214,8 @@ class PageService
                         'locales' => $locales,
                     ];
                 }
-            })->filter(function ($value) {
-                return $value != null;
             })
+            ->filter()
             ->sortBy('value')
             ->values()
             ->all()
