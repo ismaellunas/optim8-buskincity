@@ -21,15 +21,11 @@
         @stack('styles')
 
         @env ('production')
-            <!-- Styles -->
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
             <!-- Scripts -->
             <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
-            @vite(['resources/sass/local.sass'])
-
             @if (config('constants.fontawesome_local'))
                 @vite(['resources/js/fontawesome.js'])
             @else
