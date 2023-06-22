@@ -12,6 +12,7 @@ class Image extends Component
     public $square;
     public $style;
     public $locale;
+    public $isLazyload;
 
     public $imageClasses = [];
     public $figureClasses = [];
@@ -35,6 +36,7 @@ class Image extends Component
         string $hasPosition = null,
         string $src = null,
         string $locale = null,
+        bool $isLazyload = false,
         $media = null
     ) {
         $this->_alt = $alt;
@@ -47,6 +49,7 @@ class Image extends Component
         $this->hasPosition = $hasPosition;
         $this->media = $media;
         $this->locale = $locale;
+        $this->isLazyload = $isLazyload;;
 
         $this->style = $this->getStyle($style);
         $this->imageClasses = $this->getImageClasses();
@@ -104,6 +107,10 @@ class Image extends Component
         $classes = collect();
 
         $classes->push($this->rounded);
+
+        if ($this->isLazyload) {
+            $classes->push('lazyload');
+        }
 
         return $classes->filter()->all();
     }

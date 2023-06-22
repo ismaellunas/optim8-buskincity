@@ -16,6 +16,7 @@
                             :square="$fixedSquare"
                             :has-position="$hasPosition"
                             :style="$imageStyles"
+                            is-lazyload
                         />
                     </a>
                 @else
@@ -27,6 +28,7 @@
                         :square="$fixedSquare"
                         :has-position="$hasPosition"
                         :style="$imageStyles"
+                        is-lazyload
                     />
                 @endif
             </div>

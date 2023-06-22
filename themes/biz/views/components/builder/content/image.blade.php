@@ -9,5 +9,6 @@
         :square="$fixedSquare"
         :has-position="$hasPosition"
         :style="$imageStyles"
+        is-lazyload
     />
 </div>
