@@ -193,10 +193,4 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
-
-    @push('styles')
-        @env ('production')
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
-        @endenv
-    @endpush
 </x-layouts.master-basic>
