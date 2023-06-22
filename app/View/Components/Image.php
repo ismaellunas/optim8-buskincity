@@ -7,20 +7,16 @@ use Illuminate\View\Component;
 
 class Image extends Component
 {
-    public $ratio;
-    public $rounded;
-    public $square;
     public $style;
-    public $locale;
     public $isLazyload;
 
     public $imageClasses = [];
-    public $figureClasses = [];
 
     private $_alt;
     private $_src;
+    private $rounded;
+    private $locale;
     private $media;
-    private $hasPosition;
 
     /**
      * Create a new component instance.
@@ -29,12 +25,9 @@ class Image extends Component
      */
     public function __construct(
         mixed $style = null,
-        string $alt = null,
-        string $ratio = null,
-        string $rounded = null,
-        string $square = null,
-        string $hasPosition = null,
         string $src = null,
+        string $alt = null,
+        string $rounded = null,
         string $locale = null,
         bool $isLazyload = false,
         $media = null
@@ -43,17 +36,12 @@ class Image extends Component
         $this->_src = $src;
 
         $this->rounded = $rounded;
-        $this->ratio = $ratio;
-        $this->rounded = $rounded;
-        $this->square = $square;
-        $this->hasPosition = $hasPosition;
         $this->media = $media;
         $this->locale = $locale;
         $this->isLazyload = $isLazyload;;
 
         $this->style = $this->getStyle($style);
         $this->imageClasses = $this->getImageClasses();
-        $this->figureClasses = $this->getFigureClasses();
     }
 
     /**
@@ -110,20 +98,6 @@ class Image extends Component
 
         if ($this->isLazyload) {
             $classes->push('lazyload');
-        }
-
-        return $classes->filter()->all();
-    }
-
-    private function getFigureClasses(): array
-    {
-        $classes = collect();
-
-        $classes->push($this->ratio);
-        $classes->push($this->square);
-
-        if ($this->hasPosition && !$this->ratio) {
-            $classes->push('is-inline-block');
         }
 
         return $classes->filter()->all();
