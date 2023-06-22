@@ -33,8 +33,6 @@
         @endenv
 
         @env ('local')
-            @vite(['resources/sass/local.sass'])
-
             @if (config('constants.fontawesome_local'))
                 @vite(['resources/js/fontawesome.js'])
             @else
