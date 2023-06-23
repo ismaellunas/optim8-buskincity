@@ -46,3 +46,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 import 'lazysizes';
 import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+
+/**
+ * Prevent Google Maps from loading the Roboto font.
+ */
+var head = document.getElementsByTagName('head')[0];
+
+var insertBefore = head.insertBefore;
+
+head.insertBefore = function (newElement, referenceElement) {
+
+    if (newElement.href && newElement.href.indexOf('https://fonts.googleapis.com/css?family=Roboto') === 0) {
+        return;
+    }
+
+    insertBefore.call(head, newElement, referenceElement);
+};
