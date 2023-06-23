@@ -8,6 +8,7 @@
 .env.deploy
 .env.dusk.local
 .env.sail
+.env.staging
 .env.testing
 .phpunit.result.cache
 docker-compose.override.yml
