@@ -46,7 +46,7 @@ abstract class BaseField
         }
 
         if (array_key_exists('notes', $data)) {
-            $this->notes = $data['notes'];
+            $this->notes = $this->filterNotes($data['notes']);
         }
 
         if (array_key_exists('column', $data)) {
@@ -190,5 +190,13 @@ abstract class BaseField
 
             return $newRules;
         })->all();
+    }
+
+    private function filterNotes(array $notes): array
+    {
+        return collect($notes)
+            ->filter()
+            ->values()
+            ->all();
     }
 }

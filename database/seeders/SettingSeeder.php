@@ -393,6 +393,13 @@ class SettingSeeder extends Seeder
                 "group" => "cookie_consent",
                 "order" => 3,
             ],
+            [
+                "key" => "cookie_consent_redirect_decline_page_id",
+                "display_name" => null,
+                "value" => null,
+                "group" => "cookie_consent",
+                "order" => 4,
+            ],
         ];
 
         foreach ($settings as $setting) {

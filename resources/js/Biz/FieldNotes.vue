@@ -1,7 +1,8 @@
 <template>
     <ul
-        class="help"
+        class="help ml-0"
         :class="typeClass"
+        style="list-style-type: none;"
     >
         <li
             v-for="(note, index) in notes"

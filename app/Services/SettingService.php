@@ -6,6 +6,7 @@ use App\Entities\Caches\SettingCache;
 use App\Helpers\CssUnitConverter;
 use App\Helpers\MinifyCss;
 use App\Models\{
+    Page,
     Media,
     Setting,
 };
@@ -15,6 +16,7 @@ use Illuminate\Support\{
     Str,
 };
 use Illuminate\Support\Facades\Vite;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
 
 class SettingService
@@ -678,5 +680,42 @@ class SettingService
             $this->getKey('cookie_consent_message_decline'),
             'tinymce'
         );
+    }
+
+    public function getCookieConsentRedirectDeclineUrl(): string
+    {
+        $currentLocale = currentLocale();
+        $key = 'cookie_consent_redirect_decline_page_id';
+
+        return app(SettingCache::class)
+            ->remember($key . ':' . $currentLocale, function () use ($key, $currentLocale) {
+                $value = Setting::key($key)->value('value');
+
+                try {
+                    $pageTranslation = Page::with([
+                            'translations' => function ($query) {
+                                $query->select([
+                                    'id',
+                                    'page_id',
+                                    'locale',
+                                    'slug',
+                                ]);
+                            },
+                        ])
+                        ->find($value)
+                        ->translateOrDefault($currentLocale);
+                } catch (\Throwable $th) {
+
+                    return "";
+
+                }
+
+                return LaravelLocalization::localizeURL(
+                    route('frontend.pages.show', [
+                        'page_translation' => $pageTranslation->slug,
+                    ]),
+                    $currentLocale
+                );
+            });
     }
 }

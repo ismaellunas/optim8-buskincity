@@ -174,4 +174,51 @@ class PageService
             })
             ->all();
     }
+
+    public function getPageOptions(?string $placeholder = null): array
+    {
+        $options = [];
+
+        if ($placeholder) {
+            $options[] = [
+                'id' => null,
+                'value' => $placeholder,
+                'locale' => null,
+            ];
+        }
+
+        return [
+            ...$options,
+            ...Page::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'title',
+                    ])
+                    ->published();
+                },
+            ])
+            ->get(['id'])
+            ->map(function ($page) {
+                if (count($page->translations) !== 0) {
+                    $locales = $page
+                        ->translations
+                        ->map(function ($translation) {
+                            return $translation->locale;
+                        });
+                    return [
+                        'id' => $page->id,
+                        'value' => $page->title ?? $page->translations[0]->title,
+                        'locales' => $locales,
+                    ];
+                }
+            })
+            ->filter()
+            ->sortBy('value')
+            ->values()
+            ->all()
+        ];
+    }
 }
