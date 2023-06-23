@@ -32,4 +32,10 @@
     @push('bottom_styles')
         <link rel="stylesheet" href="{{ $page->styleUrl }}">
     @endpush
+
+    @push('bottom_inject')
+        @if (request()->routeIs('homepage'))
+            @include('cookie-consent::index')
+        @endif
+    @endpush
 </x-layouts.master>
