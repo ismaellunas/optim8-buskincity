@@ -47,14 +47,18 @@
 
                     <div id="post-content" class="content mt-5">
                         @if (
-                            $post->coverImageUrl
+                            ! empty($post->coverImageWithDimension)
                             && $post->is_cover_displayed
                         )
-                            <x-image
-                                src="{{ $post->coverImageUrl }}"
-                                alt="{{ $post->meta_description }}"
-                                is-lazyload
-                            />
+                            <figure class="image">
+                                <x-image
+                                    src="{{ $post->coverImageWithDimension['url'] }}"
+                                    alt="{{ $post->meta_description }}"
+                                    width="{{ $post->coverImageWithDimension['width'] }}"
+                                    height="{{ $post->coverImageWithDimension['height'] }}"
+                                    is-lazyload
+                                />
+                            </figure>
                         @endif
 
                         {!! Shortcode::compile($content) !!}
@@ -138,6 +142,8 @@
                                     <a href="{{ route('blog.show', $article->slug) }}">
                                         <x-image
                                             src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                            width="600"
+                                            height="400"
                                             is-lazyload
                                         />
                                     </a>

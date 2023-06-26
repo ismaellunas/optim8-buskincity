@@ -185,6 +185,7 @@ class PostService
                         'file_url',
                         'version',
                     ]);
+                    $query->selectDimension();
                 },
             ])
             ->when($locale, function ($query) use ($locale) {
