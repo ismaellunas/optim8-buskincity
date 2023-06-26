@@ -43,7 +43,7 @@ export default defineConfig((command, mode) => {
                     },
                 },
             }),
-            VitePWA(),
+            VitePWA({ registerType: 'autoUpdate' })
         ],
         resolve: {
             alias: {
