@@ -18,9 +18,11 @@
             >
                 <figure class="b752-profile-picture image is-128x128 is-inline-block">
                     <img
-                        class="is-rounded"
-                        :src="user.profile_photo_url"
+                        :data-src="user.profile_photo_url"
                         :alt="user.full_name"
+                        width="128"
+                        height="128"
+                        class="is-rounded lazyload"
                     >
                     <span
                         v-if="user.country"
@@ -29,7 +31,9 @@
                         <img
                             :src="`/images/flags/` + user.country.toLowerCase() + `.svg`"
                             alt="country"
-                            class="is-rounded"
+                            width="34"
+                            height="34"
+                            class="is-rounded lazyload"
                         >
                     </span>
                 </figure>

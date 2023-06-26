@@ -11,6 +11,8 @@
                 :alt="entityImage.alt"
                 :ratio="config?.ratio"
                 :data-src="entityImage.optimizedImageUrl"
+                :width="entityImage?.width"
+                :height="entityImage?.height"
                 class="lazyload"
             />
         </div>
