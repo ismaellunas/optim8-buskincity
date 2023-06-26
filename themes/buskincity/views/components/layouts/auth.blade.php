@@ -55,6 +55,8 @@
             </section>
         </div>
 
+        @vite(['themes/'.config('theme.active').'/js/app.js'])
+
         <script>
             function showForm() {
                 document.getElementById('formFields').classList.remove('is-hidden');

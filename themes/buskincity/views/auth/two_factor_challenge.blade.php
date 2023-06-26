@@ -5,7 +5,14 @@
 
     <div class="columns is-mobile">
         <div class="column is-5-desktop is-6-tablet is-hidden-mobile">
-            <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
+            <x-image
+                src="{{ url('/themes/buskincity/images/login.jpg') }}"
+                alt="BuskinCity buskers performing on the street"
+                class="is-radius"
+                width="470"
+                height="600"
+                is-lazyload
+            />
         </div>
         <div class="is-flex is-flex-direction-column column is-7-desktop is-6-tablet is-12-mobile">
             <nav class="level is-mobile">
