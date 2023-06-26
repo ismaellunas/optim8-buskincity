@@ -16,6 +16,7 @@ class Image extends Component
     private $_src;
     private $_width;
     private $_height;
+    private $class;
     private $rounded;
     private $locale;
     private $media;
@@ -31,6 +32,7 @@ class Image extends Component
         string $alt = null,
         string $width = null,
         string $height = null,
+        string $class = null,
         string $rounded = null,
         string $locale = null,
         bool $isLazyload = false,
@@ -41,6 +43,7 @@ class Image extends Component
         $this->_width = $width;
         $this->_height = $height;
 
+        $this->class = $class;
         $this->rounded = $rounded;
         $this->media = $media;
         $this->locale = $locale;
@@ -119,6 +122,7 @@ class Image extends Component
     {
         $classes = collect();
 
+        $classes->push($this->class);
         $classes->push($this->rounded);
 
         if ($this->isLazyload) {
