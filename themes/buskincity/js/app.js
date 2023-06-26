@@ -1,38 +1,17 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+import './../../biz/js/bootstrap';
 
-import './bootstrap';
-
-/**
- * We will create a fresh Vue application instance.
- */
-import FormDonation from './components/FormDonation.vue';
-import LoadingOverlay from './components/LoadingOverlay.vue';
 import { LoadingPlugin } from 'vue-loading-overlay';
-import { components as defaultComponents } from '@/frontend-bootstrap';
-import { createApp } from "vue";
-
-const components = {
-    FormDonation,
-    LoadingOverlay,
-};
+import { createApp, defineAsyncComponent } from 'vue';
+import { loadingOptions } from './../../../resources/js/Libs/defaults';
 
 const app = createApp({
-        components: {
-            ...defaultComponents,
-            ...components
-        },
-    })
-    .use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
+    components: {
+        LoadingOverlay: defineAsyncComponent(() =>
+            import('./../../biz/js/components/LoadingOverlay.vue')
+        ),
+    },
+});
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => app.component(key.split('/').pop().split('.')[0], files(key).default))
+app.use(LoadingPlugin, loadingOptions);
 
-/**
- * Next, attach Vue application instance to the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
 app.mount("#app");
