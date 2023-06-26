@@ -12,6 +12,7 @@ export default defineConfig((command, mode) => {
         'themes/biz/js/donation.js',
         'themes/biz/js/post.js',
         'themes/biz/js/profile-performer.js',
+        'themes/biz/js/public-profile.js',
         'resources/sass/app.sass',
     ];
 
