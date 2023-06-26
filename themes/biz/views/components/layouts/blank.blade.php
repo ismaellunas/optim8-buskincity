@@ -30,8 +30,6 @@
 
         @stack('bottom_scripts')
 
-        @vite(['themes/'.config('theme.active').'/js/app.js'])
-
         @if ($additionalJavascript)
             <script>
                 {!! $additionalJavascript !!}
