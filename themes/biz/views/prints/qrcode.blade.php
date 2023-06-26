@@ -1,5 +1,5 @@
 <x-layouts.blank>
-    <div class="page">
+    <div id="app-qr-code" class="page">
         <div class="subpage text-centered">
             <biz-qr-code
                 :height="500"
@@ -9,6 +9,8 @@
             ></biz-qr-code>
         </div>
     </div>
+
+    @vite(['themes/biz/js/print-qr-code.js'])
 
     @push('styles')
     <style>
