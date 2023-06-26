@@ -14,6 +14,8 @@ class Image extends Component
 
     private $_alt;
     private $_src;
+    private $_width;
+    private $_height;
     private $rounded;
     private $locale;
     private $media;
@@ -27,6 +29,8 @@ class Image extends Component
         mixed $style = null,
         string $src = null,
         string $alt = null,
+        string $width = null,
+        string $height = null,
         string $rounded = null,
         string $locale = null,
         bool $isLazyload = false,
@@ -34,6 +38,8 @@ class Image extends Component
     ) {
         $this->_alt = $alt;
         $this->_src = $src;
+        $this->_width = $width;
+        $this->_height = $height;
 
         $this->rounded = $rounded;
         $this->media = $media;
@@ -61,7 +67,6 @@ class Image extends Component
             return $this->_alt;
 
         } elseif (!empty($this->media)) {
-
             $translation = $this->media->translate($this->locale, true);
 
             if (!empty($translation)) {
@@ -78,6 +83,26 @@ class Image extends Component
             return $this->_src;
         } elseif ($this->media) {
             return $this->media->optimizedImageUrl;
+        }
+        return null;
+    }
+
+    public function width(): mixed
+    {
+        if ($this->_width) {
+            return $this->_width;
+        } elseif ($this->media) {
+            return $this->media['width'] ?? null;
+        }
+        return null;
+    }
+
+    public function height(): mixed
+    {
+        if ($this->_height) {
+            return $this->_height;
+        } elseif ($this->media) {
+            return $this->media['height'] ?? null;
         }
         return null;
     }

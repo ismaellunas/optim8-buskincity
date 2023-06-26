@@ -63,8 +63,10 @@
                                     <div>
                                         <figure class="image is-128x128 level-item">
                                             <img
-                                                class="is-rounded"
-                                                :src="record.user?.profile_photo_url ?? userImage"
+                                                :data-src="record.user?.profile_photo_url ?? userImage"
+                                                width="128"
+                                                height="128"
+                                                class="is-rounded lazyload"
                                             >
                                         </figure>
                                     </div>
