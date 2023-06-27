@@ -205,18 +205,13 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button.vue';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
-    import BizIcon from '@/Biz/Icon.vue';
-    import BizPagination from '@/Biz/Pagination.vue';
-    import BizSelect from '@/Biz/Select.vue';
     import bookingIcon from '@mod/Booking/Resources/assets/js/Libs/booking-icon';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
     import { clone, each, find, keys, get, groupBy, merge, map, toString } from 'lodash';
-    import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
+    import { computed, defineAsyncComponent, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
     import { useModelWrapper, isBlank, useBreakpoints } from '@/Libs/utils';
     import { userImage } from '@/Libs/defaults';
@@ -225,11 +220,21 @@
         name: 'EventsCalendar',
 
         components: {
-            BizButton,
-            BizIcon,
-            BizSelect,
-            BizPagination,
-            BizFilterDateRange,
+            BizButton: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Button.vue')
+            ),
+            BizFilterDateRange: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Filter/DateRange.vue')
+            ),
+            BizIcon: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Icon.vue')
+            ),
+            BizPagination: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Pagination.vue')
+            ),
+            BizSelect: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Select.vue')
+            ),
         },
 
         mixins: [
