@@ -145,10 +145,18 @@ class Post extends BaseModel implements PublishableInterface
     public function getCoverImageWithDimensionAttribute(): array
     {
         if ($this->coverImage) {
+            $width = $this->coverImage['width'];
+            $height = $this->coverImage['height'];
+
+            if ($width > 700) {
+                $height = $height * (700 / $width);
+                $width = 700;
+            }
+
             return [
                 'url' => $this->coverImage->optimizedImageUrl,
-                'width' => $this->coverImage['width'],
-                'height' => $this->coverImage['height'],
+                'width' => $width,
+                'height' => $height,
             ];
         }
 
