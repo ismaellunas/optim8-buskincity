@@ -6,7 +6,7 @@
             <div class="column is-4-desktop is-6-tablet is-12-mobile">
                 @isset($posts[$i])
                     <article class="b752-blog-item box is-clipped p-0">
-                        <figure>
+                        <figure class="image">
                             <a href="{{ route('blog.show', $posts[$i]->slug) }}">
                                 <x-image
                                     src="{{ $posts[$i]->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
