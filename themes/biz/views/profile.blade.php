@@ -4,7 +4,7 @@
     $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
 @endphp
 
-<x-layouts.master-basic>
+<x-layouts.master>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -69,4 +69,4 @@
     @push('scripts')
         @vite('themes/'.config('theme.parent').'/js/public-profile.js')
     @endpush
-</x-layouts.master-basic>
+</x-layouts.master>

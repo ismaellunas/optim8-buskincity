@@ -95,7 +95,7 @@
 
                     <h1 class="title is-2 mt-5 mb-2">{{ __('Upcoming Events') }}</h1>
 
-                    <div class="columns is-multiline is-mobile mt-3">
+                    <div id="app-page-space" class="columns is-multiline is-mobile mt-3">
                         <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <space-events
                                 get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
@@ -212,4 +212,8 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/page-space.js')
+    @endpush
 </x-layouts.master>

@@ -71,17 +71,20 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button.vue';
-    import BizLink from '@/Biz/Link.vue';
-    import { isBlank, serialize } from '@/Libs/utils';
+    import { defineAsyncComponent } from 'vue';
     import { first, last, isNull, omit } from 'lodash';
+    import { isBlank, serialize } from '@/Libs/utils';
 
     export default {
         name: 'BizPagination',
 
         components: {
-            BizButton,
-            BizLink,
+            BizButton: defineAsyncComponent(() =>
+                import('./Button.vue')
+            ),
+            BizLink: defineAsyncComponent(() =>
+                import('./Link.vue')
+            ),
         },
 
         props: {

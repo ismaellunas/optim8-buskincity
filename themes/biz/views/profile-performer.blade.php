@@ -10,7 +10,7 @@
     $hasUploadedGallery = !empty($userProfile->getMeta('gallery'));
 @endphp
 
-<x-layouts.master-basic>
+<x-layouts.master>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -220,4 +220,4 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
-</x-layouts.master-basic>
+</x-layouts.master>
