@@ -66,14 +66,46 @@ return [
         ],
     ],
     'theme_font_sizes' => [
-        'font_size_heading_1' => 48,
-        'font_size_heading_2' => 32,
-        'font_size_heading_3' => 28,
-        'font_size_heading_4' => 24,
-        'font_size_heading_5' => 20,
-        'font_size_heading_6' => 16,
-        'font_size_text' => 16,
-        'font_size_small' => 12,
+        'font_size_heading_1' => [
+            'desktop' => 48,
+            'tablet' => 28,
+            'mobile' => 24,
+        ],
+        'font_size_heading_2' => [
+            'desktop' => 32,
+            'tablet' => 22,
+            'mobile' => 20,
+        ],
+        'font_size_heading_3' => [
+            'desktop' => 28,
+            'tablet' => 16,
+            'mobile' => 14,
+        ],
+        'font_size_heading_4' => [
+            'desktop' => 24,
+            'tablet' => 14,
+            'mobile' => 12,
+        ],
+        'font_size_heading_5' => [
+            'desktop' => 20,
+            'tablet' => 12,
+            'mobile' => 10,
+        ],
+        'font_size_heading_6' => [
+            'desktop' => 16,
+            'tablet' => 10,
+            'mobile' => 8,
+        ],
+        'font_size_text' => [
+            'desktop' => 16,
+            'tablet' => 14,
+            'mobile' => 12,
+        ],
+        'font_size_small' => [
+            'desktop' => 12,
+            'tablet' => 10,
+            'mobile' => 8,
+        ],
     ],
     'theme_uppercases' => [
         'site_title',

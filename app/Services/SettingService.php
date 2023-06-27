@@ -126,7 +126,14 @@ class SettingService
 
     public function getFontSizes(): array
     {
-        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
+        return $this->getSettingsByGroup('font_size')
+            ->transform(function ($setting) {
+                $setting->value = json_decode($setting->value, TRUE);
+
+                return $setting;
+            })
+            ->keyBy('key')
+            ->all();
     }
 
     public function getKeys()
