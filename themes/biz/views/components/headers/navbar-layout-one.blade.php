@@ -8,7 +8,7 @@
                     <x-image
                         src="{{ $logo['url'] }}"
                         width="{{ $logo['width'] }}"
-                        height="{{ $logo['height'] }}"
+                        height="80"
                         is-lazyload
                     />
                 </figure>
