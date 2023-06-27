@@ -87,14 +87,16 @@
 </template>
 
 <script>
-    import BizSelect from '@/Biz/Select.vue';
+    import { defineAsyncComponent } from 'vue';
     import { find } from 'lodash';
 
     export default {
-        name: 'FormDonation',
+        name: 'ContentFormDonation',
 
         components: {
-            BizSelect,
+            BizSelect: defineAsyncComponent(() =>
+                import('./../../../../resources/js/Biz/Select.vue')
+            ),
         },
 
         props: {

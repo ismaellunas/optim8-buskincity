@@ -66,6 +66,8 @@
     import { nth } from 'lodash';
 
     export default {
+        name: 'ContentGallery',
+
         components: {
             BizIcon: defineAsyncComponent(() =>
                 import('./../../../Biz/Icon.vue')
