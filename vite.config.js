@@ -15,7 +15,7 @@ export default defineConfig((command, mode) => {
         'themes/biz/js/post.js',
         'themes/biz/js/print-qr-code.js',
         'themes/biz/js/profile-performer.js',
-        'themes/biz/js/public-profile.js',
+        'themes/biz/js/basic.js',
     ];
 
     const env = loadEnv(mode, process.cwd(), '');

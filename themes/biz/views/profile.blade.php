@@ -67,6 +67,6 @@
     </div>
 
     @push('scripts')
-        @vite('themes/'.config('theme.parent').'/js/public-profile.js')
+        @vite('themes/'.config('theme.parent').'/js/basic.js')
     @endpush
 </x-layouts.master>
