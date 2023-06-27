@@ -1,19 +1,21 @@
 import { defineConfig, loadEnv } from 'vite';
 import laravel, { refreshPaths } from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig((command, mode) => {
     let input = [
         'resources/js/app.js',
-        'resources/js/frontend.js',
         'resources/js/bulma-misc.js',
         'resources/js/fontawesome.js',
+        'resources/sass/app.sass',
         'themes/biz/js/donation.js',
+        'themes/biz/js/page-space.js',
+        'themes/biz/js/page.js',
         'themes/biz/js/post.js',
+        'themes/biz/js/print-qr-code.js',
         'themes/biz/js/profile-performer.js',
         'themes/biz/js/public-profile.js',
-        'resources/sass/app.sass',
     ];
 
     const env = loadEnv(mode, process.cwd(), '');

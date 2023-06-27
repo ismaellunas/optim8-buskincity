@@ -82,3 +82,10 @@ export const pageStatus = {
     draft: 0,
     published: 1,
 };
+
+export const loadingOptions = {
+    color:'#3280bf',
+    loader: 'dots',
+    opacity: 0.3,
+    zIndex: 8000,
+};

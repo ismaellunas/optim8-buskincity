@@ -111,18 +111,22 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizSelect from '@/Biz/Select.vue';
-    import BizInput from '@/Biz/Input.vue';
-    import BizPagination from '@/Biz/Pagination.vue';
-    import { union, isEmpty, forEach, debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
+    import { defineAsyncComponent } from 'vue';
+    import { union, isEmpty, forEach, debounce } from 'lodash';
     import { useBreakpoints } from '@/Libs/utils';
 
     export default {
         components: {
-            BizSelect,
-            BizInput,
-            BizPagination,
+            BizInput: defineAsyncComponent(() =>
+                import('./../../../Biz/Input.vue')
+            ),
+            BizPagination: defineAsyncComponent(() =>
+                import('./../../../Biz/Pagination.vue')
+            ),
+            BizSelect: defineAsyncComponent(() =>
+                import('./../../../Biz/Select.vue')
+            ),
         },
 
         mixins: [
