@@ -206,8 +206,8 @@ class SettingService
             if ($media) {
 
                 return [
-                    'width' => $media->assets['width'],
-                    'height' => $media->assets['height'],
+                    'width' => $dimensions['width'],
+                    'height' => $dimensions['height'],
                     'url' => $media->getOptimizedImageUrl(
                         $dimensions['width'],
                         $dimensions['height'],
