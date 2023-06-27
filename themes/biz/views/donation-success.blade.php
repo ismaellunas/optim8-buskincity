@@ -1,4 +1,4 @@
-<x-layouts.master-basic>
+<x-layouts.master>
     <x-slot name="title">
         {{ __('Donation') . ' - ' . __('Success') }}
     </x-slot>
@@ -31,4 +31,4 @@
             </div>
         </div>
     </div>
-</x-layouts.master-basic>
+</x-layouts.master>

@@ -14,7 +14,7 @@
         {{ trim($page->meta_description ?? "") }}
     </x-slot>
 
-    <div @class([
+    <div id="app-page" @class([
         'page-wrapper' => true,
         'py-6' => !$page->isLayoutNoHeaderAndFooter,
     ])>
@@ -28,6 +28,10 @@
             />
         @endforeach
     </div>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/page.js')
+    @endpush
 
     @push('bottom_styles')
         <link rel="stylesheet" href="{{ $page->styleUrl }}">
