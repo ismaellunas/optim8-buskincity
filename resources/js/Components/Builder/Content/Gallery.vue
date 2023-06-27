@@ -62,14 +62,17 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon.vue';
-    import BizModal from '@/Biz/Modal.vue';
+    import { defineAsyncComponent } from 'vue';
     import { nth } from 'lodash';
 
     export default {
         components: {
-            BizIcon,
-            BizModal,
+            BizIcon: defineAsyncComponent(() =>
+                import('./../../../Biz/Icon.vue')
+            ),
+            BizModal: defineAsyncComponent(() =>
+                import('./../../../Biz/Modal.vue')
+            ),
         },
 
         props: {

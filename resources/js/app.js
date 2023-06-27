@@ -1,11 +1,12 @@
 import './bootstrap';
 
 // Import modules...
+import { LoadingPlugin } from 'vue-loading-overlay';
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
 import { createInertiaApp, router } from '@inertiajs/vue3';
+import { loadingOptions } from './Libs/defaults';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { LoadingPlugin } from 'vue-loading-overlay';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueSocialSharing from 'vue-social-sharing'
 
@@ -58,7 +59,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(VueSweetalert2)
-            .use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000})
+            .use(LoadingPlugin, loadingOptions)
             .use(VueSocialSharing)
             .mount(el)
     },

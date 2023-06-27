@@ -56,4 +56,8 @@
             />
         </div>
     </section>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/app.js')
+    @endpush
 </x-layouts.master>
