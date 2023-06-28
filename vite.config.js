@@ -10,11 +10,12 @@ export default defineConfig((command, mode) => {
         'resources/js/fontawesome.js',
         'resources/sass/app.sass',
         'themes/biz/js/donation.js',
-        'themes/biz/js/page.js',
         'themes/biz/js/page-space.js',
+        'themes/biz/js/page.js',
         'themes/biz/js/post.js',
         'themes/biz/js/print-qr-code.js',
         'themes/biz/js/profile-performer.js',
+        'themes/biz/js/basic.js',
     ];
 
     const env = loadEnv(mode, process.cwd(), '');

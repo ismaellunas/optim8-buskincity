@@ -67,7 +67,7 @@
 
         @if ($hasHeader)
             <x-headers.header
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
@@ -77,7 +77,7 @@
 
         @if ($hasFooter)
             <x-footer
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
