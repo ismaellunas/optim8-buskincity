@@ -196,6 +196,35 @@ class SettingService
             ?? StorageService::getImageUrl(config('constants.default_images.logo'));
     }
 
+    public function getLogoWithDimensionOrDefault()
+    {
+        return app(SettingCache::class)->remember('logo_media', function () {
+            $media = $this->getLogoMedia();
+
+            $dimensions = config('constants.dimensions.logo');
+
+            if ($media) {
+
+                return [
+                    'width' => $dimensions['width'],
+                    'height' => $dimensions['height'],
+                    'url' => $media->getOptimizedImageUrl(
+                        $dimensions['width'],
+                        $dimensions['height'],
+                        'limitFit'
+                    ),
+                ];
+            }
+
+            return [
+                'width' => $dimensions['width'],
+                'height' => $dimensions['height'],
+                'url' => StorageService::getImageUrl(config('constants.default_images.logo')),
+            ];
+
+        });
+    }
+
     public function getLogoMedia(): ?Media
     {
         $media = $this->getMediaFromSetting(

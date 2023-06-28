@@ -76,14 +76,21 @@ class PageController extends Controller
         if (!empty($pageTranslation->data['media'])) {
             $mediaIds = collect($pageTranslation->data['media'])->pluck('id');
 
-            $images = Media::whereIn('id', $mediaIds)
+            $images = Media::select([
+                    'id',
+                    'version',
+                    'file_name',
+                    'extension',
+                ])
+                ->selectDimension()
+                ->whereIn('id', $mediaIds)
                 ->image()
                 ->with([
                     'translations' => function ($q) {
                         $q->select(['id', 'locale', 'alt', 'media_id']);
                     },
                 ])
-                ->get(['id', 'version', 'file_name', 'extension'])
+                ->get()
                 ->transform(function ($media) {
                     $media->alt = $media->alt ?? $media->translations[0]->alt;
 

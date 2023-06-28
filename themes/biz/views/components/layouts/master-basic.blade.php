@@ -40,6 +40,8 @@
             @endif
         @endenv
 
+        @vite('resources/js/bulma-misc.js')
+
         @stack('scripts')
 
         @if ($additionalCss)
@@ -49,8 +51,6 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
-
-        @vite('themes/'.config('theme.active').'/js/post.js')
     </head>
 
     <body
@@ -82,8 +82,6 @@
         @endif
 
         @stack('bottom_scripts')
-
-        @vite('resources/js/bulma-misc.js')
 
         @stack('bottom_styles')
 

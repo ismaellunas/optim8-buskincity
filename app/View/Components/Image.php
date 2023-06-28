@@ -14,6 +14,9 @@ class Image extends Component
 
     private $_alt;
     private $_src;
+    private $_width;
+    private $_height;
+    private $class;
     private $rounded;
     private $locale;
     private $media;
@@ -27,6 +30,9 @@ class Image extends Component
         mixed $style = null,
         string $src = null,
         string $alt = null,
+        string $width = null,
+        string $height = null,
+        string $class = null,
         string $rounded = null,
         string $locale = null,
         bool $isLazyload = false,
@@ -34,7 +40,10 @@ class Image extends Component
     ) {
         $this->_alt = $alt;
         $this->_src = $src;
+        $this->_width = $width;
+        $this->_height = $height;
 
+        $this->class = $class;
         $this->rounded = $rounded;
         $this->media = $media;
         $this->locale = $locale;
@@ -61,7 +70,6 @@ class Image extends Component
             return $this->_alt;
 
         } elseif (!empty($this->media)) {
-
             $translation = $this->media->translate($this->locale, true);
 
             if (!empty($translation)) {
@@ -82,6 +90,26 @@ class Image extends Component
         return null;
     }
 
+    public function width(): mixed
+    {
+        if ($this->_width) {
+            return $this->_width;
+        } elseif ($this->media) {
+            return $this->media['width'] ?? null;
+        }
+        return null;
+    }
+
+    public function height(): mixed
+    {
+        if ($this->_height) {
+            return $this->_height;
+        } elseif ($this->media) {
+            return $this->media['height'] ?? null;
+        }
+        return null;
+    }
+
     public function getStyle($style): ?string
     {
         if (is_array($style)) {
@@ -94,6 +122,7 @@ class Image extends Component
     {
         $classes = collect();
 
+        $classes->push($this->class);
         $classes->push($this->rounded);
 
         if ($this->isLazyload) {

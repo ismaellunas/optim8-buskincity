@@ -4,6 +4,7 @@
         :class="composedFigureClass"
     >
         <img
+            v-bind="$attrs"
             :alt="alt"
             :description="description"
             :class="composedImgClass"
