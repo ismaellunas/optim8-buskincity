@@ -23,6 +23,15 @@
       font-size: {{ $font_size_text['desktop'] }}em
     .content.is-small
       font-size: {{ $font_size_small['desktop'] }}em
+    .label
+      font-size: {{ $font_size_text['desktop'] }}em
+    .input, .textarea
+      font-size: {{ $font_size_text['desktop'] }}em
+    .select select
+      font-size: {{ $font_size_text['desktop'] }}em
+    .control
+      .button
+        font-size: {{ $font_size_text['desktop'] }}em
 
   {{ $media }} screen and (min-width: {{ $tablet }}) and (max-width: {{ $desktop }} - 1px)
     .title.is-1
@@ -41,6 +50,15 @@
       font-size: {{ $font_size_text['tablet'] }}em
     .content.is-small
       font-size: {{ $font_size_small['tablet'] }}em
+    .label
+      font-size: {{ $font_size_text['tablet'] }}em
+    .input, .textarea
+      font-size: {{ $font_size_text['tablet'] }}em
+    .select select
+      font-size: {{ $font_size_text['tablet'] }}em
+    .control
+      .button
+        font-size: {{ $font_size_text['tablet'] }}em
 
   {{ $media }} screen and (max-width: {{ $tablet }} - 1px)
     .title.is-1
@@ -59,5 +77,14 @@
       font-size: {{ $font_size_text['mobile'] }}em
     .content.is-small
       font-size: {{ $font_size_small['mobile'] }}em
+    .label
+      font-size: {{ $font_size_text['mobile'] }}em
+    .input, .textarea
+      font-size: {{ $font_size_text['mobile'] }}em
+    .select select
+      font-size: {{ $font_size_text['mobile'] }}em
+    .control
+      .button
+        font-size: {{ $font_size_text['mobile'] }}em
 
 {!! nl2br('') !!}
