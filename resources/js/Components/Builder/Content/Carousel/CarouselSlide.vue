@@ -10,7 +10,10 @@
             <biz-image
                 :alt="entityImage.alt"
                 :ratio="config?.ratio"
-                :src="entityImage.optimizedImageUrl"
+                :data-src="entityImage.optimizedImageUrl"
+                :width="entityImage?.width"
+                :height="entityImage?.height"
+                class="lazyload"
             />
         </div>
     </transition>

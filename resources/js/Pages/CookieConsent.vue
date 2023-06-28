@@ -79,6 +79,37 @@
 
                             <biz-input-error :message="error('message_decline')" />
                         </div>
+
+                        <div class="column is-12">
+                            <h3 class="title is-3">
+                                {{ capitalCase(i18n.redirection) }}
+                            </h3>
+                        </div>
+
+                        <div class="column is-6">
+                            <span class="has-text-weight-bold">
+                                {{ i18n.redirect_after_decline }}
+                                <p class="help is-info">
+                                    {{ i18n.redirect_after_decline_note }}
+                                </p>
+                            </span>
+                        </div>
+
+                        <div class="column is-6">
+                            <biz-select
+                                v-model="form.redirect_decline_page_id"
+                            >
+                                <option
+                                    v-for="(option, index) in pageOptions"
+                                    :key="index"
+                                    :value="option.id"
+                                >
+                                    {{ option.value }}
+                                </option>
+                            </biz-select>
+
+                            <biz-input-error :message="error('redirect_decline_page_id')" />
+                        </div>
                     </div>
                 </fieldset>
             </form>
@@ -125,6 +156,7 @@
                 save: 'Save',
             }) },
             settings: { type: Object, required: true },
+            pageOptions: { type: Array, default: () => [] },
         },
 
         setup(props) {
@@ -133,6 +165,7 @@
                     is_enabled: props.settings?.cookie_consent_is_enabled ?? false,
                     message: props.settings?.cookie_consent_message,
                     message_decline: props.settings?.cookie_consent_message_decline,
+                    redirect_decline_page_id: props.settings?.cookie_consent_redirect_decline_page_id ?? null,
                 })
             };
         },

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Jenssegers\Agent\Agent;
 
 class IPService
 {
@@ -42,7 +43,16 @@ class IPService
     public function getClientData(): mixed
     {
         if (is_null($this->clientData)) {
-            $this->clientData = geoip($this->getClientIp());
+            if (! (new Agent())->isRobot()) {
+
+                $this->clientData = geoip($this->getClientIp());
+
+            } else {
+
+                $this->clientData = config('geoip.default_location');
+
+            }
+
         }
 
         return $this->clientData;

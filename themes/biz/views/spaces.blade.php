@@ -22,7 +22,14 @@
                         <div class="columns is-hidden-tablet is-multiline is-mobile">
                             <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
                                 <figure class="image is-250x250 is-inline-block">
-                                    <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                    <x-image
+                                        src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                        alt="{{ $space->name }}"
+                                        width="250"
+                                        height="250"
+                                        rounded="is-rounded"
+                                        is-lazyload
+                                    />
                                 </figure>
                             </div>
                             <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-justified">
@@ -42,7 +49,14 @@
                             @if ($loop->iteration % 2 == 0)
                                 <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-left">
-                                        <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                        <x-image
+                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                            alt="{{ $space->name }}"
+                                            width="250"
+                                            height="250"
+                                            rounded="is-rounded"
+                                            is-lazyload
+                                        />
                                     </figure>
                                 </div>
                             @endif
@@ -62,7 +76,14 @@
                             @if ($loop->iteration % 2 != 0)
                                 <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-right">
-                                        <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                        <x-image
+                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                            alt="{{ $space->name }}"
+                                            width="250"
+                                            height="250"
+                                            rounded="is-rounded"
+                                            is-lazyload
+                                        />
                                     </figure>
                                 </div>
                             @endif
@@ -74,4 +95,8 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/basic.js')
+    @endpush
 </x-layouts.master>

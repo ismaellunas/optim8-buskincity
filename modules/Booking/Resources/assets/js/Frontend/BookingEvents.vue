@@ -137,24 +137,30 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button.vue';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
-    import BizLoader from '@/Biz/Loader.vue';
-    import BizModalCard from '@/Biz/ModalCard.vue';
-    import BizSelect from '@/Biz/Select.vue';
-    import BizTableIndex from '@/Biz/TableIndex.vue';
-    import { ref } from 'vue';
+    import { defineAsyncComponent, ref } from 'vue';
 
     export default {
         name: 'BookingEvents',
 
         components: {
-            BizButton,
-            BizFilterDateRange,
-            BizLoader,
-            BizModalCard,
-            BizSelect,
-            BizTableIndex,
+            BizButton: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Button.vue')
+            ),
+            BizFilterDateRange: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Filter/DateRange.vue')
+            ),
+            BizLoader: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Loader.vue')
+            ),
+            BizModalCard: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/ModalCard.vue')
+            ),
+            BizSelect: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Select.vue')
+            ),
+            BizTableIndex: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/TableIndex.vue')
+            ),
         },
 
         props: {

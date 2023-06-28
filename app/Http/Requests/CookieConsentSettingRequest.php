@@ -36,6 +36,10 @@ class CookieConsentSettingRequest extends FormRequest
                 'required',
                 'max: 1000',
             ],
+            'redirect_decline_page_id' => [
+                'nullable',
+                'exists:App\Models\Page,id'
+            ],
         ];
     }
 }

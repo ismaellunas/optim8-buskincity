@@ -30,10 +30,14 @@
 
                 <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
-                        <img
-                            src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $pageSpace->defaultLogoUrl() }}"
+                        <x-image
+                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $pageSpace->defaultLogoUrl() }}"
                             alt="{{ $space->name }}"
-                            class="is-rounded">
+                            width="250"
+                            height="250"
+                            rounded="is-rounded"
+                            is-lazyload
+                        />
                     </figure>
                 </div>
 
@@ -91,7 +95,7 @@
 
                     <h1 class="title is-2 mt-5 mb-2">{{ __('Upcoming Events') }}</h1>
 
-                    <div class="columns is-multiline is-mobile mt-3">
+                    <div id="app-page-space" class="columns is-multiline is-mobile mt-3">
                         <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <space-events
                                 get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
@@ -106,7 +110,14 @@
                                 <div class="columns is-multiline is-mobile is-hidden-tablet">
                                     <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
                                         <figure class="image is-250x250 is-inline-block">
-                                            <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                            <x-image
+                                                src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
+                                                alt="{{ $spaceChild->name }}"
+                                                width="250"
+                                                height="250"
+                                                rounded="is-rounded"
+                                                is-lazyload
+                                            />
                                         </figure>
                                     </div>
                                     <div class="column is-12-desktop is-12-tablet is-12-mobile">
@@ -134,7 +145,14 @@
                                     @if ($loop->iteration % 2 == 0)
                                         <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                             <figure class="image is-250x250 is-pulled-left">
-                                                <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                                <x-image
+                                                    src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
+                                                    alt="{{ $spaceChild->name }}"
+                                                    width="250"
+                                                    height="250"
+                                                    rounded="is-rounded"
+                                                    is-lazyload
+                                                />
                                             </figure>
                                         </div>
                                     @endif
@@ -162,7 +180,14 @@
                                     @if ($loop->iteration % 2 != 0)
                                         <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                             <figure class="image is-250x250 is-pulled-right">
-                                                <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                                <x-image
+                                                    src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
+                                                    alt="{{ $spaceChild->name }}"
+                                                    width="250"
+                                                    height="250"
+                                                    rounded="is-rounded"
+                                                    is-lazyload
+                                                />
                                             </figure>
                                         </div>
                                     @endif
@@ -187,4 +212,8 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/page-space.js')
+    @endpush
 </x-layouts.master>

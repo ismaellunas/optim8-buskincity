@@ -3,7 +3,6 @@
 namespace App\View\Components\Headers;
 
 use App\Services\LoginService;
-use App\Services\StorageService;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
@@ -11,15 +10,13 @@ abstract class BaseNavbarLayout extends Component
 {
     public $menus;
     public $currentLanguage;
-    public $logoUrl;
     public $languageOptions;
     public $layoutName;
 
-    public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
+    public function __construct($menus, $currentLanguage, $languageOptions)
     {
         $this->currentLanguage = $currentLanguage;
         $this->menus = $menus ?? [];
-        $this->logoUrl = $logoUrl;
         $this->languageOptions = $languageOptions;
     }
 

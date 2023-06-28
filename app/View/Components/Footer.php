@@ -7,15 +7,15 @@ use Illuminate\View\Component;
 
 class Footer extends Component
 {
-    public $logoUrl;
+    public $logo;
     public $menus;
     public $socialMediaMenus;
 
-    public function __construct($logoUrl)
+    public function __construct(array $logo)
     {
         $menuService = app(MenuService::class);
 
-        $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
+        $this->logo = $logo;
         $this->menus = $menuService->getFrontendUserFooterMenus(request()) ?? [];
         $this->socialMediaMenus = $menuService->getSocialMediaMenus();
     }
