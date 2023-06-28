@@ -247,56 +247,56 @@ class SettingSeeder extends Seeder
             [
                 "key" => "font_size_heading_1",
                 "display_name" => "Heading 1",
-                "value" => $defaultFontSizes['font_size_heading_1'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_1']),
                 "group" => "font_size",
                 "order" => "1"
             ],
             [
                 "key" => "font_size_heading_2",
                 "display_name" => "Heading 2",
-                "value" => $defaultFontSizes['font_size_heading_2'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_2']),
                 "group" => "font_size",
                 "order" => "2"
             ],
             [
                 "key" => "font_size_heading_3",
                 "display_name" => "Heading 3",
-                "value" => $defaultFontSizes['font_size_heading_3'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_3']),
                 "group" => "font_size",
                 "order" => "3"
             ],
             [
                 "key" => "font_size_heading_4",
                 "display_name" => "Heading 4",
-                "value" => $defaultFontSizes['font_size_heading_4'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_4']),
                 "group" => "font_size",
                 "order" => "4"
             ],
             [
                 "key" => "font_size_heading_5",
                 "display_name" => "Heading 5",
-                "value" => $defaultFontSizes['font_size_heading_5'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_5']),
                 "group" => "font_size",
                 "order" => "5"
             ],
             [
                 "key" => "font_size_heading_6",
                 "display_name" => "Heading 6",
-                "value" => $defaultFontSizes['font_size_heading_6'],
+                "value" => json_encode($defaultFontSizes['font_size_heading_6']),
                 "group" => "font_size",
                 "order" => "6"
             ],
             [
                 "key" => "font_size_text",
                 "display_name" => "Text",
-                "value" => $defaultFontSizes['font_size_text'],
+                "value" => json_encode($defaultFontSizes['font_size_text']),
                 "group" => "font_size",
                 "order" => "7"
             ],
             [
                 "key" => "font_size_small",
                 "display_name" => "Small",
-                "value" => $defaultFontSizes['font_size_small'],
+                "value" => json_encode($defaultFontSizes['font_size_small']),
                 "group" => "font_size",
                 "order" => "8"
             ]
