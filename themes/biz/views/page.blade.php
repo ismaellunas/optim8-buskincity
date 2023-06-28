@@ -14,7 +14,7 @@
         {{ trim($page->meta_description ?? "") }}
     </x-slot>
 
-    <div @class([
+    <div id="app-page" @class([
         'page-wrapper' => true,
         'py-6' => !$page->isLayoutNoHeaderAndFooter,
     ])>
@@ -29,7 +29,17 @@
         @endforeach
     </div>
 
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/page.js')
+    @endpush
+
     @push('bottom_styles')
         <link rel="stylesheet" href="{{ $page->styleUrl }}">
+    @endpush
+
+    @push('bottom_inject')
+        @if (request()->routeIs('homepage'))
+            @include('cookie-consent::index')
+        @endif
     @endpush
 </x-layouts.master>

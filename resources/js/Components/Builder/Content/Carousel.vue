@@ -26,13 +26,16 @@
 </template>
 
 <script>
-    import CarouselMain from '@/Components/Builder/Content/Carousel/CarouselMain.vue';
-    import CarouselSlide from '@/Components/Builder/Content/Carousel/CarouselSlide.vue';
+    import { defineAsyncComponent } from 'vue';
 
     export default {
         components: {
-            CarouselMain,
-            CarouselSlide,
+            CarouselMain: defineAsyncComponent(() =>
+                import('./../../../Components/Builder/Content/Carousel/CarouselMain.vue')
+            ),
+            CarouselSlide: defineAsyncComponent(() =>
+                import('./../../../Components/Builder/Content/Carousel/CarouselSlide.vue')
+            ),
         },
 
         props: {

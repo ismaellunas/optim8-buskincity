@@ -47,13 +47,18 @@
 
                     <div id="post-content" class="content mt-5">
                         @if (
-                            $post->coverImageUrl
+                            ! empty($post->coverImageWithDimension)
                             && $post->is_cover_displayed
                         )
-                            <img
-                                src="{{ $post->coverImageUrl }}"
-                                alt="{{ $post->meta_description }}"
-                            >
+                            <figure class="image">
+                                <x-image
+                                    src="{{ $post->coverImageWithDimension['url'] }}"
+                                    alt="{{ $post->meta_description }}"
+                                    width="{{ $post->coverImageWithDimension['width'] }}"
+                                    height="{{ $post->coverImageWithDimension['height'] }}"
+                                    is-lazyload
+                                />
+                            </figure>
                         @endif
 
                         {!! Shortcode::compile($content) !!}
@@ -133,9 +138,14 @@
                     @foreach ($relatedArticles as $article)
                         <div class="column is-4-desktop is-6-tablet is-12-mobile">
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
-                                <figure>
+                                <figure class="image">
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                                        <x-image
+                                            src="{{ $article->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                            width="480"
+                                            height="320"
+                                            is-lazyload
+                                        />
                                     </a>
                                 </figure>
                                 <div class="p-5">

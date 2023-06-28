@@ -1,17 +1,17 @@
 import './bootstrap';
 
-import LoadingOverlay from './components/LoadingOverlay.vue';
 import { LoadingPlugin } from 'vue-loading-overlay';
-import { components as defaultComponents } from '@/frontend-bootstrap';
-import { createApp } from 'vue';
+import { createApp, defineAsyncComponent } from 'vue';
+import { loadingOptions } from './../../../resources/js/Libs/defaults';
 
-const app = createApp({
+const appPostContent = createApp({
     components: {
-        ...defaultComponents,
-        ...{ LoadingOverlay }
+        FormBuilder: defineAsyncComponent(() =>
+            import('./../../../modules/FormBuilder/Resources/assets/js/Form/Builder.vue')
+        ),
     },
 });
 
-app.use(LoadingPlugin, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
+appPostContent.use(LoadingPlugin, loadingOptions);
 
-app.mount("#post-content");
+appPostContent.mount("#post-content");

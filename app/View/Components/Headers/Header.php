@@ -13,19 +13,19 @@ class Header extends Component
     public $menus;
     public $currentLanguage;
     public $languageOptions;
-    public $logoUrl;
+    public $logo;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($logoUrl)
+    public function __construct(array $logo)
     {
         $menuService = app(MenuService::class);
         $settingService = app(SettingService::class);
         $currentLanguage = currentLocale();
 
-        $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
+        $this->logo = $logo;
         $this->currentLanguage = $currentLanguage;
         $this->menus = $menuService->getFrontendUserMenus(request()) ?? [];
         $this->headerLayout = $settingService->getHeaderLayout();

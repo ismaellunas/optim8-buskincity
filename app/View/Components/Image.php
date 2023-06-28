@@ -7,19 +7,19 @@ use Illuminate\View\Component;
 
 class Image extends Component
 {
-    public $ratio;
-    public $rounded;
-    public $square;
     public $style;
-    public $locale;
+    public $isLazyload;
 
     public $imageClasses = [];
-    public $figureClasses = [];
 
     private $_alt;
     private $_src;
+    private $_width;
+    private $_height;
+    private $class;
+    private $rounded;
+    private $locale;
     private $media;
-    private $hasPosition;
 
     /**
      * Create a new component instance.
@@ -28,29 +28,29 @@ class Image extends Component
      */
     public function __construct(
         mixed $style = null,
-        string $alt = null,
-        string $ratio = null,
-        string $rounded = null,
-        string $square = null,
-        string $hasPosition = null,
         string $src = null,
+        string $alt = null,
+        string $width = null,
+        string $height = null,
+        string $class = null,
+        string $rounded = null,
         string $locale = null,
+        bool $isLazyload = false,
         $media = null
     ) {
         $this->_alt = $alt;
         $this->_src = $src;
+        $this->_width = $width;
+        $this->_height = $height;
 
+        $this->class = $class;
         $this->rounded = $rounded;
-        $this->ratio = $ratio;
-        $this->rounded = $rounded;
-        $this->square = $square;
-        $this->hasPosition = $hasPosition;
         $this->media = $media;
         $this->locale = $locale;
+        $this->isLazyload = $isLazyload;;
 
         $this->style = $this->getStyle($style);
         $this->imageClasses = $this->getImageClasses();
-        $this->figureClasses = $this->getFigureClasses();
     }
 
     /**
@@ -70,7 +70,6 @@ class Image extends Component
             return $this->_alt;
 
         } elseif (!empty($this->media)) {
-
             $translation = $this->media->translate($this->locale, true);
 
             if (!empty($translation)) {
@@ -91,6 +90,26 @@ class Image extends Component
         return null;
     }
 
+    public function width(): mixed
+    {
+        if ($this->_width) {
+            return $this->_width;
+        } elseif ($this->media) {
+            return $this->media['width'] ?? null;
+        }
+        return null;
+    }
+
+    public function height(): mixed
+    {
+        if ($this->_height) {
+            return $this->_height;
+        } elseif ($this->media) {
+            return $this->media['height'] ?? null;
+        }
+        return null;
+    }
+
     public function getStyle($style): ?string
     {
         if (is_array($style)) {
@@ -103,20 +122,11 @@ class Image extends Component
     {
         $classes = collect();
 
+        $classes->push($this->class);
         $classes->push($this->rounded);
 
-        return $classes->filter()->all();
-    }
-
-    private function getFigureClasses(): array
-    {
-        $classes = collect();
-
-        $classes->push($this->ratio);
-        $classes->push($this->square);
-
-        if ($this->hasPosition && !$this->ratio) {
-            $classes->push('is-inline-block');
+        if ($this->isLazyload) {
+            $classes->push('lazyload');
         }
 
         return $classes->filter()->all();

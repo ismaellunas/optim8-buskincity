@@ -6,9 +6,14 @@
             <div class="column is-4-desktop is-6-tablet is-12-mobile">
                 @isset($posts[$i])
                     <article class="b752-blog-item box is-clipped p-0">
-                        <figure>
+                        <figure class="image">
                             <a href="{{ route('blog.show', $posts[$i]->slug) }}">
-                                <img src="{{ $posts[$i]->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                                <x-image
+                                    src="{{ $posts[$i]->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                    width="480"
+                                    height="320"
+                                    is-lazyload
+                                />
                             </a>
                         </figure>
                         <div class="p-5">

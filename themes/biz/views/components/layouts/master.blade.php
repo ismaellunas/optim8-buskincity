@@ -10,47 +10,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ $title ?? config('app.name') }}</title>
-
         @if (!empty($metaDescription) && $metaDescription != "")
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 
         @stack('metas')
 
+        <title>{{ $title ?? config('app.name') }}</title>
+
         @include('favicon')
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-        @if (!empty($fontUrls['mainTextFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['headingsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['headingsFont'] }}">
-        @endif
-
-        @if (!empty($fontUrls['buttonsFont']))
-            <link rel="stylesheet" href="{{ $fontUrls['buttonsFont'] }}">
-        @endif
-
-        @stack('styles')
+        @include('head-fonts', ['fontUrls' => $fontUrls])
 
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
+        @stack('styles')
+
         @env ('production')
-            <!-- Styles -->
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
             <!-- Scripts -->
             <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
-            @vite(['resources/sass/local.sass'])
-
             @if (config('constants.fontawesome_local'))
                 @vite(['resources/js/fontawesome.js'])
             @else
@@ -58,9 +40,9 @@
             @endif
         @endenv
 
-        @stack('scripts')
+        @vite('resources/js/bulma-misc.js')
 
-        @vite(['themes/'.config('theme.active').'/js/app.js', 'resources/js/bulma-misc.js'])
+        @stack('scripts')
 
         @if ($additionalCss)
             <style type="text/css">
@@ -85,7 +67,7 @@
 
         @if ($hasHeader)
             <x-headers.header
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
@@ -95,7 +77,7 @@
 
         @if ($hasFooter)
             <x-footer
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
@@ -111,6 +93,6 @@
 
         {!! $trackingCodeBeforeBody !!}
 
-        @include('cookie-consent::index')
+        @stack('bottom_inject')
     </body>
 </html>

@@ -2,9 +2,14 @@
 
 <div class="column is-4-desktop is-6-tablet is-12-mobile">
     <article class="b752-blog-item box is-clipped p-0">
-        <figure>
+        <figure class="image">
             <a href="{{ $link }}">
-                <img src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                <x-image
+                    src="{{ $post->getOptimizedCoverImageUrl(480, 320) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                    width="480"
+                    height="320"
+                    is-lazyload
+                />
             </a>
         </figure>
         <div class="p-5">

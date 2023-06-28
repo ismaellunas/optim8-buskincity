@@ -308,8 +308,8 @@ return [
             'height' => 300,
         ],
         'logo' => [
-            'width' => 300,
-            'height' => 300,
+            'width' => 250,
+            'height' => 250,
         ],
         'gallery' => [
             'width' => 1200,

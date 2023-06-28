@@ -1,8 +1,17 @@
+@aware(['logo'])
+
 <nav class="navbar has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ $menus['navLogo']['link'] }}">
-                <img src="{{ $logoUrl }}">
+                <figure class="image">
+                    <x-image
+                        src="{{ $logo['url'] }}"
+                        width="{{ $logo['width'] }}"
+                        height="80"
+                        is-lazyload
+                    />
+                </figure>
             </a>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarExampleTransparentExample">
