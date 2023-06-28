@@ -109,6 +109,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $query->where('user_id', $userId);
     }
 
+    public function scopeSelectDimension($query)
+    {
+        return $query->selectRaw('assets::json->\'width\' as width, assets::json->\'height\' as height');
+    }
+
     // Accessors:
     public function getSlicedFileNameAttribute()
     {

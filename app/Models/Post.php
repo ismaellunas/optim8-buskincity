@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Contracts\PublishableInterface;
 use App\Helpers\HtmlToText;
 use App\Models\Category;
-use App\Models\Media;
 use App\Services\PostService;
 use App\Traits\HasLocale;
 use App\Traits\Mediable;
@@ -143,9 +142,25 @@ class Post extends BaseModel implements PublishableInterface
         );
     }
 
-    public function getCoverImageUrlAttribute(): ?string
+    public function getCoverImageWithDimensionAttribute(): array
     {
-        return $this->coverImage->optimizedImageUrl ?? null;
+        if ($this->coverImage) {
+            $width = $this->coverImage['width'];
+            $height = $this->coverImage['height'];
+
+            if ($width > 700) {
+                $height = $height * (700 / $width);
+                $width = 700;
+            }
+
+            return [
+                'url' => $this->coverImage->optimizedImageUrl,
+                'width' => $width,
+                'height' => $height,
+            ];
+        }
+
+        return [];
     }
 
     public function getPurifiedContentAttribute(): string
