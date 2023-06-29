@@ -128,7 +128,14 @@ class SettingService
 
     public function getFontSizes(): array
     {
-        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
+        return $this->getSettingsByGroup('font_size')
+            ->transform(function ($setting) {
+                $setting->value = json_decode($setting->value, TRUE);
+
+                return $setting;
+            })
+            ->keyBy('key')
+            ->all();
     }
 
     public function getKeys()
@@ -359,7 +366,15 @@ class SettingService
             Setting::where('group', 'font_size')
                 ->get(['key', 'value'])
                 ->mapWithKeys(function ($setting) {
-                    return [$setting->key => CssUnitConverter::pxToEm($setting->value ?? 0)];
+                    $value = json_decode($setting->value, TRUE);
+
+                    foreach (array_keys($value) as $device) {
+                        $value[$device] = CssUnitConverter::pxToEm($value[$device] ?? 0);
+                    }
+
+                    return [
+                        $setting->key => $value
+                    ];
                 })
                 ->all()
         );
