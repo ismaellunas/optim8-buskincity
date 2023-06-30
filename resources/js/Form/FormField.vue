@@ -75,8 +75,13 @@
             },
         },
 
-        mounted() {
-            this.form = this.createForm();
+        watch: {
+            formField: {
+                handler(newVal) {
+                    this.form = this.createForm();
+                },
+                immediate: true,
+            },
         },
 
         methods: {
