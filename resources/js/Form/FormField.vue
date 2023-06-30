@@ -7,7 +7,6 @@
         <field-group
             v-for="(group, index) in formField.fieldGroups"
             :key="index"
-            :ref="'field_group__'+index"
             v-model="form"
             :group="group"
             :selected-locale="selectedLocale"
@@ -33,7 +32,7 @@
     import BizButton from '@/Biz/Button.vue';
     import FieldGroup from './FieldGroup.vue';
     import { useForm, usePage } from '@inertiajs/vue3';
-    import { isEmpty, forOwn, forEach } from 'lodash';
+    import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
 
     export default {
@@ -141,8 +140,6 @@
 
                                 self.$emit('on-success-submit');
 
-                                self.resetFields();
-
                             },
                             onError: errors => {
                                 oopsAlert({isScrollToTop: false});
@@ -154,17 +151,6 @@
                             },
                         }
                     );
-            },
-
-
-            resetFields() {
-                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
-                    forEach(fieldGroup.$refs, (field, fieldKey) => {
-                        if (field.reset) {
-                            field.reset();
-                        }
-                    });
-                });
             },
         },
     }
