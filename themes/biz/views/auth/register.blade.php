@@ -107,7 +107,7 @@
 
                 <div class="has-text-left">
 
-                    <form id="form-register" action="{{ route('register') }}" method="post">
+                    <form id="form-register" action="{{ route('register') }}" method="post" onsubmit="setLoader()">
                         @csrf
 
                         <div class="field">
