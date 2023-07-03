@@ -20,7 +20,8 @@ class PublicPageIsAvailable
 
         if (
             $user->can('public_page.'.$permission)
-            && !$user->is_suspended
+            && ! $user->is_suspended
+            && ! $user->isSuperAdministrator
         ) {
             return $next($request);
         }

@@ -38,11 +38,6 @@
             >
                 <div class="columns">
                     <div class="column">
-                        <h2>
-                            <b>{{ i18n.typography }}</b>
-                        </h2>
-                    </div>
-                    <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button class="is-link">
@@ -54,6 +49,14 @@
                 </div>
 
                 <fieldset :disabled="isProcessing">
+                    <div class="columns">
+                        <div class="column">
+                            <h2 class="title is-2">
+                                <b>{{ i18n.typography }}</b>
+                            </h2>
+                        </div>
+                    </div>
+
                     <div class="columns">
                         <div class="column is-half">
                             <h3>
@@ -335,6 +338,77 @@
                             </p>
                         </div>
                     </div>
+
+                    <hr>
+
+                    <div class="columns">
+                        <div class="column is-half">
+                            <h2 class="title is-2">
+                                <b>{{ i18n.sizes }}</b>
+                            </h2>
+                        </div>
+
+                        <div class="column">
+                            <div class="columns">
+                                <div
+                                    v-for="(deviceIcon, deviceMode) in devices"
+                                    :key="deviceMode"
+                                    class="column"
+                                >
+                                    <biz-icon
+                                        :icon="deviceIcon"
+                                        :title="deviceMode + ` mode`"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-for="fontSize in sortedFontSizes"
+                        :key="fontSize.key"
+                        class="columns"
+                    >
+                        <div class="column is-half">
+                            <h3>{{ fontSize.display_name }}</h3>
+                        </div>
+
+                        <div class="column">
+                            <div class="columns">
+                                <div
+                                    v-for="(deviceIcon, deviceMode) in devices"
+                                    :key="deviceMode"
+                                    class="column"
+                                >
+                                    <div class="field has-addons has-addons-right">
+                                        <p class="control">
+                                            <biz-input
+                                                v-model="form.sizes[fontSize.key][deviceMode]"
+                                                maxlength="7"
+                                                @blur="updateFontSizeNumber(fontSize.key, deviceMode)"
+                                                @keypress="isNumber"
+                                            />
+                                        </p>
+                                        <p class="control">
+                                            <button
+                                                class="button"
+                                                tabindex="-1"
+                                                type="button"
+                                            >
+                                                px
+                                            </button>
+                                        </p>
+                                    </div>
+
+                                    <p v-if="form.errors?.default && form.errors.default[`sizes.` + fontSize.key + `.` + deviceMode]">
+                                        <biz-input-error
+                                            :message="error(`sizes.` + fontSize.key + `.` + deviceMode)"
+                                        />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </form>
         </div>
@@ -343,6 +417,7 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
@@ -353,10 +428,12 @@
     import BizInput from '@/Biz/Input.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizLabel from '@/Biz/Label.vue';
+    import BizIcon from '@/Biz/Icon.vue';
     import { Head as InertiaHead, useForm } from '@inertiajs/vue3';
-    import { concat, debounce, filter, isEmpty, replace } from 'lodash';
+    import { concat, debounce, filter, isEmpty, has, replace, mapValues, sortBy, forEach } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
+    import { desktop as desktopIcon, tablet as tabletIcon, mobile as mobileIcon } from '@/Libs/icon-class';
 
     export default {
         name: 'ThemeOptionFonts',
@@ -372,25 +449,29 @@
             BizInput,
             BizInputError,
             BizLabel,
+            BizIcon,
         },
 
         mixins: [
             MixinHasPageErrors,
+            MixinHasLoader,
         ],
 
         layout: AppLayout,
 
         props: {
             baseRouteName: {type: String, required: true},
-            title: {type: String, required: true},
-            errors: {type: Object, default: () => {}},
-            uppercaseText: {type: Object, required: true},
+            baseUrlGoogleFont: {type: String, required: true},
+            buttonsFont: {type: Object, required: true},
             contentParagraphWidth: {type: Number, required: true},
+            defaultFontSizes: {type: Object, default: () => {}},
+            errors: {type: Object, default: () => {}},
+            fontSizes: {type: Object, required: true},
             headingsFont: {type: Object, required: true},
             mainTextFont: {type: Object, required: true},
-            buttonsFont: {type: Object, required: true},
+            title: {type: String, required: true},
             uppercaseOptions: {type: Object, required: true},
-            baseUrlGoogleFont: {type: String, required: true},
+            uppercaseText: {type: Object, required: true},
             webfontsUrl: {type: String, required: true},
             i18n: { type: Object, default: () => ({
                 typography: 'Typography',
@@ -408,6 +489,26 @@
         },
 
         setup(props) {
+            const devices = {
+                desktop: desktopIcon,
+                tablet: tabletIcon,
+                mobile: mobileIcon,
+            };
+
+            const fontSizes = mapValues(props.fontSizes, (fontSize, key) => {
+                let fontSizeValue = props.fontSizes[key].value;
+
+                forEach(devices, function (device, deviceKey) {
+
+                    if (! fontSizeValue[deviceKey] && has(props.defaultFontSizes, key)) {
+                        fontSizeValue[deviceKey] = props.defaultFontSizes[key][deviceKey];
+                    }
+
+                });
+
+                return fontSizeValue;
+            });
+
             const form = {
                 buttons_font_family: props.buttonsFont.family,
                 buttons_font_style: props.buttonsFont.style,
@@ -420,17 +521,18 @@
                 main_text_font_style: props.mainTextFont.style,
                 main_text_font_weight: props.mainTextFont.weight,
                 uppercase_text: props.uppercaseText,
+                sizes: fontSizes,
             };
 
             return {
                 form: useForm(form),
+                devices,
             };
         },
 
         data() {
             return {
                 isProcessing: false,
-                loader: null,
                 fonts: [],
                 weightOptions: {
                     'has-text-weight-light': "Light",
@@ -462,22 +564,29 @@
                 }
                 return null;
             },
+
             mainTextFontHref() {
                 if (!isEmpty(this.form.main_text_font_family)) {
                     return this.generateFontUrl(this.form.main_text_font_family);
                 }
                 return null;
             },
+
             buttonsFontHref() {
                 if (!isEmpty(this.form.buttons_font_family)) {
                     return this.generateFontUrl(this.form.buttons_font_family);
                 }
                 return null;
             },
+
+            sortedFontSizes() {
+                return sortBy(this.fontSizes, ['order']);
+            },
         },
 
         mounted() {
             const self = this;
+
             this.getFonts().then(function () {
                 let initFilteredFonts = self.fonts.slice(0, 10);
                 self.filteredFonts.headings_font_family = initFilteredFonts;
@@ -493,30 +602,36 @@
                 this.form.post(route(this.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
+
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
                         self.form.isDirty = false;
+
                         successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
+
                         self.isProcessing = false;
                     }
                 });
             },
+
             getFonts() {
                 const self = this;
 
-                self.loader = self.$loading.show();
+                self.onStartLoadingOverlay();
 
                 return axios.get(this.webfontsUrl)
                     .then((response) => {
                         self.fonts = response.data.items;
-                        self.loader.hide();
+
+                        self.onEndLoadingOverlay();
                     });
             },
+
             generateFontUrl(fontFamily) {
                 const apiUrl = [ this.baseUrlGoogleFont + '?family=' ];
 
@@ -527,6 +642,7 @@
 
                 return apiUrl.join('');
             },
+
             previewStyles(fontFamily) {
                 let styles = {};
 
@@ -536,6 +652,7 @@
 
                 return styles;
             },
+
             previewClasses(fontWeight, fontStyle, additionalClasses) {
                 return concat(
                     [],
@@ -544,6 +661,7 @@
                     additionalClasses
                 ).filter(Boolean);
             },
+
             searchFont: debounce(function(term, key) {
                 if (!isEmpty(term) && term.length > 2) {
                     this.filteredFonts[ key ] = filter(this.fonts, function (font) {
@@ -553,6 +671,20 @@
                     this.filteredFonts[ key ] = this.fonts.slice(0, 10);
                 }
             }, debounceTime),
+
+            updateFontSizeNumber(fontSizeKey, device) {
+                if (! Number.isNaN(parseFloat(this.form.sizes[fontSizeKey][device]))) {
+                    this.form.sizes[fontSizeKey][device] = parseFloat(this.form.sizes[fontSizeKey][device]);
+                }
+            },
+
+            isNumber(event) {
+                let keyCode = (event.keyCode ? event.keyCode : event.which);
+
+                if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                    event.preventDefault();
+                }
+            },
         },
     };
 </script>

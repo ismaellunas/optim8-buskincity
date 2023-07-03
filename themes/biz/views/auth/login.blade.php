@@ -119,7 +119,7 @@
                 @endif
 
                 <div class="has-text-left">
-                    <form id="form-login" action="{{ route('login') }}" method="post">
+                    <form id="form-login" action="{{ route('login') }}" method="post" onsubmit="setLoader()">
                         @csrf
                         <div class="field">
                             <label class="label">{{ __('Email') }}</label>
