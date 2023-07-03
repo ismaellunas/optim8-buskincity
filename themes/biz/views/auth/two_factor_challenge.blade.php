@@ -48,7 +48,7 @@
                     </div>
                 @endif
 
-                <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post">
+                <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post" onsubmit="setLoader()">
                     @csrf
                     <div id="code" class="field mb-5 recovery">
                         <label class="label">Code</label>

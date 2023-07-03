@@ -351,12 +351,6 @@ class MenuService
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => Str::title(__('Font sizes')),
-                            'link' => route('admin.theme.font-size.edit'),
-                            'isActive' => $request->routeIs('admin.theme.font-size.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
                             'title' => __('Advanced'),
                             'link' => route('admin.theme.advance.edit'),
                             'isActive' => $request->routeIs('admin.theme.advance.*'),

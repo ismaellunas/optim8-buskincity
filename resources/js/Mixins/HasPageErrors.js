@@ -34,7 +34,7 @@ export default {
                     self.getErrorFromContainer(errorContainer, currentField, messages);
                 });
             } else {
-                this.getErrorFromContainer(errorContainer, field, messages);
+                self.getErrorFromContainer(errorContainer, field, messages);
             }
 
             return isBlank(messages.filter(Boolean)) ? null : messages;
@@ -46,6 +46,13 @@ export default {
                 && errorContainer[field].length == 1
             ) {
                 messages.push(errorContainer[field][0]);
+            } else if (
+                isArray(errorContainer[field])
+                && errorContainer[field].length > 1
+            ) {
+                errorContainer[field].forEach(function (error) {
+                    messages.push(error);
+                });
             } else if (errorContainer.hasOwnProperty(field)) {
                 messages.push(errorContainer[field])
             }

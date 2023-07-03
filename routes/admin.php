@@ -22,7 +22,6 @@ use App\Http\Controllers\{
     ThemeAdvanceController,
     ThemeColorController,
     ThemeFontController,
-    ThemeFontSizeController,
     ThemeFooterController,
     ThemeFooterMenuController,
     ThemeHeaderController,
@@ -99,8 +98,6 @@ Route::middleware(array_filter([
     Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
         Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
-        Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
-        Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
 
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');

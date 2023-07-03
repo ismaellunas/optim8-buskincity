@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\SettingService;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -48,6 +49,12 @@ class ThemeFontRequest extends BaseFormRequest
             'buttons_font_family' => $fontRule,
             'buttons_font_weight' => $fontRule,
             'buttons_font_style' => $fontRule,
+
+            'sizes.*.*' => [
+                'numeric',
+                'min:0',
+                'regex:/^\d+\.?\d*$/',
+            ],
         ];
     }
 
@@ -73,6 +80,14 @@ class ThemeFontRequest extends BaseFormRequest
             $attributes[$providedAttribute] = Str::title(
                 Str::replace('_', ' ', $providedAttribute)
             );
+        }
+
+        $fontSizes = (new SettingService())->getFontSizes();
+
+        foreach ($fontSizes as $key => $fontSize) {
+            foreach (array_keys($fontSize['value']) as $device) {
+                $attributes['sizes.'.$key.'.'.$device] = $fontSize['display_name'] . ' ' . $device;
+            }
         }
 
         return $attributes;

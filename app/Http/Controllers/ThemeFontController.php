@@ -23,6 +23,7 @@ class ThemeFontController extends CrudController
     public function edit()
     {
         $googleApiKey = $this->settingService->getGoogleApi();
+        $defaultFontSizes = config('constants.theme_font_sizes');
 
         return Inertia::render(
             'ThemeFonts',
@@ -35,6 +36,8 @@ class ThemeFontController extends CrudController
                 'buttonsFont' => $this->settingService->getFont('buttons_font'),
                 'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.$googleApiKey,
                 'baseUrlGoogleFont' => 'https://fonts.googleapis.com/css2',
+                'defaultFontSizes' => $defaultFontSizes,
+                'fontSizes' => $this->settingService->getFontSizes(),
                 'i18n' => $this->translations(),
             ])
         );
@@ -77,6 +80,12 @@ class ThemeFontController extends CrudController
             $font->save();
         }
 
+        foreach ($inputs['sizes'] as $key => $fontSize) {
+            $setting = Setting::firstOrNew(['key' => $key]);
+            $setting->value = $fontSize;
+            $setting->save();
+        }
+
         CompileThemeCss::dispatch();
 
         $this->generateFlashMessage('The :resource was updated!', [
@@ -100,6 +109,7 @@ class ThemeFontController extends CrudController
             'preview' => __('Preview'),
             'main_text_font' => __('Main text font'),
             'button_font' => __('Buttons font'),
+            'sizes' => __('Sizes'),
         ];
     }
 }
