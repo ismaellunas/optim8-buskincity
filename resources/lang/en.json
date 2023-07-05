@@ -1014,8 +1014,8 @@
     "Expiry": "Expiry",
     "Send": "Send",
     "User Password Reset": "User Password Reset",
-    "[1]:number hour|[2,*]:number hours": ":number hour|:number hours",
-    "[1]:number day|[2,*]:number days": ":number day|:number days",
-    "[1]:number week|[2,*]:number weeks": ":number week|:number weeks",
-    "[1]:number month|[2,*]:number months": ":number month|:number months"
+    ":number hour|:number hours": ":number hour|:number hours",
+    ":number day|:number days": ":number day|:number days",
+    ":number week|:number weeks": ":number week|:number weeks",
+    ":number month|:number months": ":number month|:number months"
 }

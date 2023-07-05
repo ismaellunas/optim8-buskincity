@@ -208,16 +208,16 @@ class UserService
         return collect([
             [
                 'id' => '1 hour',
-                'value' => trans_choice('[1]:number hour|[2,*]:number hours',1, ['number' => 1]),
+                'value' => trans_choice(':number hour|:number hours', 1, ['number' => 1]),
             ], [
                 'id' => '1 day',
-                'value' => trans_choice('[1]:number day|[2,*]:number days',1, ['number' => 1]),
+                'value' => trans_choice(':number day|:number days', 1, ['number' => 1]),
             ], [
                 'id' => '1 week',
-                'value' => trans_choice('[1]:number week|[2,*]:number weeks',1, ['number' => 1]),
+                'value' => trans_choice(':number week|:number weeks', 1, ['number' => 1]),
             ], [
                 'id' => '1 month',
-                'value' => trans_choice('[1]:number month|[2,*]:number months',1, ['number' => 1]),
+                'value' => trans_choice(':number month|:number months', 1, ['number' => 1]),
             ]
         ]);
     }
