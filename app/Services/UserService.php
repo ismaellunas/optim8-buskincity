@@ -48,6 +48,7 @@ class UserService
                 'email',
                 'is_suspended',
                 'unique_key',
+                'deleted_at',
             ]);
     }
 
@@ -137,12 +138,13 @@ class UserService
             ->all();
     }
 
-    private function transformRecords(AbstractPaginator $records, User $actor)
+    public function transformRecords(AbstractPaginator $records, User $actor)
     {
         $records->getCollection()->transform(function ($user) use ($actor) {
             $user->can = [
                 'delete_user' => $actor->can('delete', $user),
                 'public_profile' => $user->hasPublicPage,
+                'send_password_reset_email' => $actor->can('sendPasswordResetEmail', $user),
             ];
 
             $user->append('profile_page_url');
@@ -199,5 +201,36 @@ class UserService
         foreach ($posts as $post) {
             $post->delete();
         }
+    }
+
+    public function passwordResetExpiryOptions(): Collection
+    {
+        return collect([
+            [
+                'id' => '1 hour',
+                'value' => trans_choice('[1]:number hour|[2,*]:number hours',1, ['number' => 1]),
+            ], [
+                'id' => '1 day',
+                'value' => trans_choice('[1]:number day|[2,*]:number days',1, ['number' => 1]),
+            ], [
+                'id' => '1 week',
+                'value' => trans_choice('[1]:number week|[2,*]:number weeks',1, ['number' => 1]),
+            ], [
+                'id' => '1 month',
+                'value' => trans_choice('[1]:number month|[2,*]:number months',1, ['number' => 1]),
+            ]
+        ]);
+    }
+
+    public static function resetPasswordEmailTags(User $user = null): array
+    {
+        return [
+            'email' => $user->email ?? null,
+            'first_name' => $user->first_name ?? null,
+            'last_name' => $user->last_name ?? null,
+            'app_name' => config('app.name'),
+            'password_reset_button_link' => null,
+            'expired_on' => null,
+        ];
     }
 }

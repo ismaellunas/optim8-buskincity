@@ -74,14 +74,35 @@
                             :error-bag="errorBag"
                         />
 
-                        <div
-                            v-if="! record.isTrashed"
-                            class="field is-grouped is-grouped-right"
-                        >
-                            <div class="control">
-                                <biz-button class="is-link">
-                                    {{ i18n.update }}
-                                </biz-button>
+                        <div class="columns">
+                            <div class="column">
+                                <div
+                                    v-if="can.update_password"
+                                    class="field is-grouped is-grouped-left"
+                                >
+                                    <div class="control">
+                                        <biz-button
+                                            class="is-warning"
+                                            type="button"
+                                            @click="isResetPasswordModalOpen = true"
+                                        >
+                                            {{ i18n.send_password_reset_link }}
+                                        </biz-button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column">
+                                <div
+                                    v-if="! record.isTrashed"
+                                    class="field is-grouped is-grouped-right"
+                                >
+                                    <div class="control">
+                                        <biz-button class="is-link">
+                                            {{ i18n.update }}
+                                        </biz-button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -115,10 +136,17 @@
                 </div>
             </div>
         </div>
+
+        <modal-form-reset-password
+            v-if="isResetPasswordModalOpen"
+            @close="closeResetPasswordModal"
+            @send-email="sendPasswordResetLink"
+        />
     </div>
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
@@ -126,9 +154,11 @@
     import FormBuilder from '@/Form/Builder.vue';
     import FormUserPassword from '@/Pages/User/FormPassword.vue';
     import FormUserProfile from '@/Pages/User/FormProfile.vue';
+    import ModalFormResetPassword from '@/Pages/User/ModalFormResetPassword.vue';
+    import { capitalCase } from 'change-case';
+    import { ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
-    import { capitalCase } from 'change-case';
 
     export default {
         name: 'UserEdit',
@@ -140,7 +170,12 @@
             FormBuilder,
             FormUserPassword,
             FormUserProfile,
+            ModalFormResetPassword,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -192,6 +227,7 @@
                     password: null,
                     password_confirmation: null,
                 }),
+                isResetPasswordModalOpen: ref(false),
             };
         },
 
@@ -220,6 +256,8 @@
         },
 
         methods: {
+            capitalCase,
+
             onSubmit() {
                 const self = this;
                 self.profileForm.post(route(self.baseRouteName+'.update', self.record.id), {
@@ -266,7 +304,29 @@
                 });
             },
 
-            capitalCase,
+            closeResetPasswordModal() {
+                this.isResetPasswordModalOpen = false;
+            },
+
+            sendPasswordResetLink(form) {
+                form
+                    .transform((data) => ({
+                        ...data,
+                        users: [ this.record.id ],
+                    }))
+                    .post(
+                        route('admin.users.password-reset.send'),
+                        {
+                            onStart: this.onStartLoadingOverlay,
+                            onFinish: () => { this.onEndLoadingOverlay() },
+                            onError: (errors) => { this.onError(errors) },
+                            onSuccess: (page) => {
+                                successAlert(page.props.flash.message);
+                                this.closeResetPasswordModal();
+                            },
+                        }
+                    );
+            },
         },
     };
 </script>

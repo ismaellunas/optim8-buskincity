@@ -1010,5 +1010,12 @@
     "Please check the reCAPTCHA!": "Please check the reCAPTCHA!",
     "The process could not be completed due to a connection problem. Please try again.": "The process could not be completed due to a connection problem. Please try again.",
     "Recommended dimension: :dimension.": "Recommended dimension: :dimension.",
-    "Recommended ratio: :ratio.": "Recommended ratio: :ratio."
+    "Recommended ratio: :ratio.": "Recommended ratio: :ratio.",
+    "Expiry": "Expiry",
+    "Send": "Send",
+    "User Password Reset": "User Password Reset",
+    "[1]:number hour|[2,*]:number hours": ":number hour|:number hours",
+    "[1]:number day|[2,*]:number days": ":number day|:number days",
+    "[1]:number week|[2,*]:number weeks": ":number week|:number weeks",
+    "[1]:number month|[2,*]:number months": ":number month|:number months"
 }

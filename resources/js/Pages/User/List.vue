@@ -55,13 +55,43 @@
             </div>
         </div>
 
+        <biz-dropdown
+            v-if="can.managePasswordResetEmail"
+            class="mb-4"
+            :close-on-click="true"
+        >
+            <template #trigger>
+                <span>{{ i18n.actions }}</span>
+                <biz-icon :icon="icon.angleDown" />
+            </template>
+
+            <biz-dropdown-item
+                v-if="can.managePasswordResetEmail"
+                class="px-0"
+            >
+                <biz-button
+                    class="is-white is-fullwidth"
+                    type="button"
+                    :disabled="!isSendPasswordResetButtonEnabled"
+                    @click="isResetPasswordModalOpen = true"
+                >
+                    {{ i18n.send_password_reset_link }}
+                </biz-button>
+            </biz-dropdown-item>
+        </biz-dropdown>
+
         <biz-table-index
             :records="records"
             :query-params="queryParams"
         >
             <template #thead>
                 <tr>
-                    <th>#</th>
+                    <th>
+                        <biz-checkbox-toggle
+                            v-model="isAll"
+                            @click="selectAllToggle"
+                        />
+                    </th>
                     <th>{{ i18n.name }}</th>
                     <th>{{ i18n.email }}</th>
                     <th>{{ i18n.role }}</th>
@@ -78,6 +108,13 @@
                 :key="record.id"
                 :user="record"
             >
+                <template #checkbox>
+                    <biz-checkbox
+                        v-model:checked="rawSelectedEntries"
+                        :value="record.id"
+                    />
+                </template>
+
                 <template #actions>
                     <div class="level-right">
                         <a
@@ -132,8 +169,6 @@
             </user-list-item>
         </biz-table-index>
 
-
-
         <modal-form-delete
             v-if="isModalOpen"
             :get-candidates-route="baseRouteName+'.reassignment-candidates'"
@@ -141,21 +176,31 @@
             @close="closeModal"
             @delete-user="deleteUser"
         />
+
+        <modal-form-reset-password
+            v-if="isResetPasswordModalOpen"
+            @close="closeResetPasswordModal"
+            @send-email="sendPasswordResetLink"
+        />
     </div>
 </template>
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
+    import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizCheckboxToggle from '@/Biz/CheckboxToggle.vue';
     import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
     import BizIcon from '@/Biz/Icon.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete.vue';
+    import ModalFormResetPassword from '@/Pages/User/ModalFormResetPassword.vue';
     import UserListItem from '@/Pages/User/ListItem.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -166,15 +211,18 @@
         name: 'UserList',
 
         components: {
+            BizButton,
             BizButtonIcon,
             BizButtonLink,
             BizCheckbox,
+            BizCheckboxToggle,
             BizDropdown,
             BizDropdownItem,
             BizFilterSearch,
             BizIcon,
             BizTableIndex,
             ModalFormDelete,
+            ModalFormResetPassword,
             UserListItem,
         },
 
@@ -219,6 +267,9 @@
                 queryParams: ref(queryParams),
                 roles: ref(props.pageQueryParams?.roles ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
+                rawSelectedEntries: ref([]),
+                isAll: ref(false),
+                isResetPasswordModalOpen: ref(false),
             };
         },
 
@@ -227,6 +278,14 @@
                 icon,
                 seletectedUser: null,
             };
+        },
+
+        computed: {
+            isSendPasswordResetButtonEnabled() {
+                return this.records.data
+                    .filter((user) => this.rawSelectedEntries.includes(user.id))
+                    .some((user) => user.can.send_password_reset_email);
+            },
         },
 
         methods: {
@@ -319,6 +378,40 @@
                         );
                     }
                 });
+            },
+
+            selectAllToggle() {
+                if (!this.isAll) {
+                    this.rawSelectedEntries = this.records.data.map((entry) => entry.id);
+                    this.isAll = true;
+                } else {
+                    this.rawSelectedEntries = [];
+                    this.isAll = false;
+                }
+            },
+
+            closeResetPasswordModal() {
+                this.isResetPasswordModalOpen = false;
+            },
+
+            sendPasswordResetLink(form) {
+                form
+                    .transform((data) => ({
+                        ...data,
+                        users: this.rawSelectedEntries,
+                    }))
+                    .post(
+                        route('admin.users.password-reset.send'),
+                        {
+                            onStart: this.onStartLoadingOverlay,
+                            onFinish: () => { this.onEndLoadingOverlay() },
+                            onError: (errors) => { this.onError(errors) },
+                            onSuccess: (page) => {
+                                successAlert(page.props.flash.message);
+                                this.closeResetPasswordModal();
+                            },
+                        }
+                    );
             },
         },
     }
