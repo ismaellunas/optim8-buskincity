@@ -413,6 +413,10 @@
                         }
                     );
             },
+
+            onFinishRefreshWithQueryParams() {
+                this.rawSelectedEntries = [];
+            },
         },
     }
 </script>
