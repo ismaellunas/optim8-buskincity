@@ -102,4 +102,18 @@ class UserPolicy extends BasePermissionPolicy
     {
         return $user->isSuperAdministrator;
     }
+
+    public function managePasswordResetEmail(User $user)
+    {
+        return ($user->isAdministrator || $user->isSuperAdministrator);
+    }
+
+    public function sendPasswordResetEmail(User $user, Model $selectedUser)
+    {
+        return (
+            $this->managePasswordResetEmail($user)
+            && ! $selectedUser->is_suspended
+            && ! $selectedUser->deleted_at
+        );
+    }
 }

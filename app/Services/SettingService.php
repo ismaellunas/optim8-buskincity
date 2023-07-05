@@ -762,4 +762,22 @@ class SettingService
                 );
             });
     }
+
+    public function defaultPasswordResetEmailSubject(): string
+    {
+        $value = Setting::key('user_password_reset_link_subject')->value('value');
+
+        return $value ?? 'Reset Password Notification';
+    }
+
+    public function defaultPasswordResetEmailContent(): ?string
+    {
+        $value = Setting::key('user_password_reset_link_content')->value('value');
+
+        return $value ?? '<h1>Hello {first_name} {last_name}!</h1>'.
+            '<p>You are receiving this email because we received a password reset request for your account.</p>'.
+            '<p>{password_reset_button_link}</p>'.
+            '<p>This password reset link will expire on {expired_on}</p>'.
+            '<p>If you did not request a password reset, no further action is required.</p><br><p>Regards,</p><p>{app_name}</p>';
+    }
 }

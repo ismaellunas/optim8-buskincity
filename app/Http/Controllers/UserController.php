@@ -54,6 +54,7 @@ class UserController extends CrudController
                 'delete' => $user->can('user.delete'),
                 'edit' => $user->can('user.edit'),
                 'manageTrashed' => $user->isSuperAdministrator,
+                'managePasswordResetEmail' => $user->can('managePasswordResetEmail', User::class),
             ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'roles')),
@@ -337,6 +338,9 @@ class UserController extends CrudController
             'confirm_deletion' => __('Confirm deletion'),
             'suspend_user_confirmation' => __('The user will be suspended.'),
             'unsuspend_user_confirmation' => __('The user will be unsuspended.'),
+            'user_password_reset' => __('User Password Reset'),
+            'send_password_reset_link' => __('Send Password Reset Link'),
+            'send' => __('Send'),
         ];
     }
 
@@ -359,6 +363,9 @@ class UserController extends CrudController
             'profile' => __('Profile'),
             'profile_information' => __('Profile information'),
             'open_public_profile' => __('Open public profile'),
+            'user_password_reset' => __('User Password Reset'),
+            'send_password_reset_link' => __('Send Password Reset Link'),
+            'send' => __('Send'),
         ];
     }
 }

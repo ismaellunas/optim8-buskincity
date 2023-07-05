@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     PostController,
     RoleController,
+    SendUserPasswordResetEmailController,
     SettingKeyController,
     StripeController,
     SystemLogController,
@@ -86,6 +87,13 @@ Route::middleware(array_filter([
         ->name('users.trashed-records');
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
+
+    Route::get('users/password-reset/form-data', [SendUserPasswordResetEmailController::class, 'passwordResetFormData'])
+        ->middleware('can:managePasswordResetEmail,App\Models\User')
+        ->name('users.password-reset.form-data');
+
+    Route::post('users/password-reset/send', SendUserPasswordResetEmailController::class)
+        ->name('users.password-reset.send');
 
     Route::resource('/roles', RoleController::class);
 
