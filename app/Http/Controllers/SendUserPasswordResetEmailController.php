@@ -48,15 +48,13 @@ class SendUserPasswordResetEmailController extends Controller
             );
         }
 
-        if ($statuses->count() == 1 && $statuses[0] == PasswordBroker::RESET_THROTTLED) {
-            $this->generateFlashMessage('Password reset links sent to :number user(s)', [
-                'number' => $statuses->countBy()->all()[Password::RESET_LINK_SENT] ?? 0
-            ]);
-        } else {
-            $this->generateFlashMessage('Password reset links sent to :number user(s)', [
-                'number' => $statuses->countBy()->all()[Password::RESET_LINK_SENT] ?? 0
-            ]);
-        }
+        $sentNumber = $statuses->countBy()->all()[Password::RESET_LINK_SENT] ?? 0;
+
+        $this->generateFlashMessage(
+            'Password reset links sent to :number user|Password reset links sent to :number users',
+            ['number' => $sentNumber],
+            $sentNumber
+        );
     }
 
     public function passwordResetFormData()

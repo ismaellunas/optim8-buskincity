@@ -1014,6 +1014,7 @@
     "Expiry": "Expiry",
     "Send": "Send",
     "User Password Reset": "User Password Reset",
+    "Password reset links sent to :number user|Password reset links sent to :number users": "Password reset links sent to :number user|Password reset links sent to :number users",
     ":number hour|:number hours": ":number hour|:number hours",
     ":number day|:number days": ":number day|:number days",
     ":number week|:number weeks": ":number week|:number weeks",
