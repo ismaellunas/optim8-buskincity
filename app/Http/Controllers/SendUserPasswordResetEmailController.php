@@ -8,7 +8,6 @@ use App\Notifications\UserPasswordResetLink;
 use App\Services\SettingService;
 use App\Services\UserService;
 use App\Traits\FlashNotifiable;
-use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Support\Facades\Password;
 
 class SendUserPasswordResetEmailController extends Controller
@@ -69,15 +68,13 @@ class SendUserPasswordResetEmailController extends Controller
 
     public function sendResetLinkCallback($user, $token)
     {
-        app()->setLocale($user->languageCode);
-
-        $notification = new UserPasswordResetLink(
+        $notification = (new UserPasswordResetLink(
             $token,
             $user,
             $this->subject,
             $this->content,
             $this->expiry,
-        );
+        ));
 
         $user->notify($notification);
     }
