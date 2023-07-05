@@ -9,7 +9,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
 
@@ -34,7 +33,6 @@ class UserPasswordResetLink extends AuthResetPassword implements ShouldQueue
         Carbon $expiredAt
     ) {
         $this->userService = app(UserService::class);
-        Password::broker('users:bulk');
 
         $this->token = $token;
         $this->user = $user;

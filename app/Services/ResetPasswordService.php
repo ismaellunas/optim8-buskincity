@@ -2,21 +2,22 @@
 
 namespace App\Services;
 
+use App\Helpers\Url;
 use App\Models\User;
 
 class ResetPasswordService
 {
     public static function getResetUrl(User $user, string $token): string
     {
-        $currentRouteName = request()->route()->getName();
+        $url = url()->current();
+        $route = Url::getRoute($url);
+        $currentRouteName = $route ? $route->getName() : null;
+
         $routeName = "password.reset";
 
         if (
             $currentRouteName == config('fortify.routes.admin_forgot_password')
-            || (
-                $currentRouteName == 'admin.users.password-reset.send'
-                && $user->can('system.dashboard')
-            )
+            || $user->can('system.dashboard')
         ) {
             $routeName = "admin.password.reset";
         }
