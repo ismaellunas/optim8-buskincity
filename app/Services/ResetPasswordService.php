@@ -11,9 +11,14 @@ class ResetPasswordService
     {
         $url = url()->current();
         $route = Url::getRoute($url);
+        $currentRouteName = $route ? $route->getName() : null;
+
         $routeName = "password.reset";
 
-        if ($route->getName() == config('fortify.routes.admin_forgot_password')) {
+        if (
+            $currentRouteName == config('fortify.routes.admin_forgot_password')
+            || $user->can('system.dashboard')
+        ) {
             $routeName = "admin.password.reset";
         }
 

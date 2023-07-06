@@ -42,6 +42,8 @@ class Kernel extends ConsoleKernel
         }
 
         $schedule->job(new RemoveNotVerifiedUser())->daily();
+
+        $schedule->command('auth:clear-resets')->everyFifteenMinutes();
     }
 
     /**
