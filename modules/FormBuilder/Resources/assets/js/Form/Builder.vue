@@ -17,7 +17,6 @@
             <field-group
                 v-for="(group, index) in formSchema.fieldGroups"
                 :key="index"
-                :ref="'field_group__'+index"
                 v-model="form"
                 :group="group"
                 :errors="formErrors"
