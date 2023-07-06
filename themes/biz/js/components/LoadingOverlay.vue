@@ -21,10 +21,10 @@
         },
 
         props: {
-            color: { type: [Number, String], default: lodadingOptions.color },
-            loader: { type: String, default: lodadingOptions.loader },
-            opacity: { type: [Number, String], default: lodadingOptions.opacity },
-            zIndex: { type: [Number, String], default: lodadingOptions.zIndex },
+            color: { type: [Number, String], default: loadingOptions.color },
+            loader: { type: String, default: loadingOptions.loader },
+            opacity: { type: [Number, String], default: loadingOptions.opacity },
+            zIndex: { type: [Number, String], default: loadingOptions.zIndex },
         },
 
         data() {

@@ -46,7 +46,7 @@
                     </div>
                 @endif
 
-                <form id="form-forgot-password" method="post" action="{{ route('password.email') }}">
+                <form id="form-forgot-password" method="post" action="{{ route('password.email') }}" onsubmit="setLoader()">
                     <div class="mb-4">
                         @csrf
 
