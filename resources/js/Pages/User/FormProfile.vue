@@ -167,7 +167,7 @@
         props: {
             canSetRole: {type: Boolean, default: true},
             errorBag: {type: String, default: 'default'},
-            modelValue: {},
+            modelValue: { type: Object, required: true },
             photoUrl: {type: [String, null], default: null},
             profilePageUrl: {type: String, default: ''},
             roleOptions: {type: Array, default: () => []},
@@ -239,15 +239,12 @@
             },
 
             onDeleteImage() {
-                const self = this;
-
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
-                        self.form.photo = null;
-                        self.form.photo_url = null;
-                        self.form.is_photo_deleted = true;
+                        this.imageUrl = null;
 
-                        self.imageUrl = null;
+                        this.form.photo = null;
+                        this.form.is_photo_deleted = true;
                     }
                 })
             },
