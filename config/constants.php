@@ -292,7 +292,13 @@ return [
 
         'recaptcha' => [
             'score' => 0.6,
-        ]
+        ],
+
+        'generate_css' => [
+            'css_app' => 'app.css',
+            'css_app_backend' => 'app_backend.css',
+            'css_app_email' => 'app_email.css',
+        ],
     ],
 
     'reading_time_per_minute' => 200,
