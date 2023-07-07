@@ -56,6 +56,23 @@
   Header append Vary User-Agent
 </IfModule>
 
+<IfModule mod_expires.c>
+  ExpiresActive on
+  ExpiresDefault "access plus 7 days"
+  ExpiresByType application/javascript "access plus 3 months"
+  ExpiresByType application/x-shockwave-flash "access plus 3 months"
+  ExpiresByType image/gif "access plus 3 months"
+  ExpiresByType image/ico "access plus 3 months"
+  ExpiresByType image/jpeg "access plus 3 months"
+  ExpiresByType image/jpg "access plus 3 months"
+  ExpiresByType image/png "access plus 3 months"
+  ExpiresByType image/svg+xml "access 3 months"
+  ExpiresByType image/x-icon "access plus 3 months"
+  ExpiresByType text/css "access plus 3 months"
+  ExpiresByType text/html "access plus 600 seconds"
+  ExpiresByType text/javascript "access plus 3 months"
+</IfModule>
+
 <IfModule mod_gzip.c>
   mod_gzip_on Yes
   mod_gzip_dechunk Yes
@@ -65,19 +82,4 @@
   mod_gzip_item_include mime ^application/x-javascript.*
   mod_gzip_item_exclude mime ^image/.*
   mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
-</IfModule>
-
-<IfModule mod_headers.c>
-  <filesmatch "\.(ico|flv|jpg|jpeg|png|gif|css|swf)$">
-    Header set Cache-Control "max-age=2678400, public"
-  </filesmatch>
-  <filesmatch "\.(html|htm)$">
-    Header set Cache-Control "max-age=7200, private, must-revalidate"
-  </filesmatch>
-  <filesmatch "\.(pdf)$">
-    Header set Cache-Control "max-age=86400, public"
-  </filesmatch>
-  <filesmatch "\.(js)$">
-    Header set Cache-Control "max-age=2678400, private"
-  </filesmatch>
 </IfModule>
