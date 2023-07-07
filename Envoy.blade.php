@@ -58,6 +58,7 @@
     heroku:maintenance-on
     heroku:push
     heroku:migration
+    heroku:generate-css
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -73,6 +74,7 @@
     heroku:config-set
     heroku:push
     heroku:migration
+    heroku:generate-css
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -139,6 +141,10 @@
             heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
         @endif
     @endforeach
+@endtask
+
+@task('heroku:generate-css')
+    heroku run -a {{ $heroku_app }} php artisan generate:theme-css
 @endtask
 
 @task('heroku:push')
