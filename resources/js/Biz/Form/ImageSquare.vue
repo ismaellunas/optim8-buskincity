@@ -115,7 +115,7 @@
     import BizInputFile from '@/Biz/InputFile.vue';
     import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare.vue';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { confirmDelete, oops as oopsAlert } from '@/Libs/alert';
+    import { oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { includes, last, pull } from 'lodash';
 
@@ -319,15 +319,7 @@
             },
 
             deleteImage(event) {
-                const self = this;
-
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        self.computedPhotoUrl = null;
-
-                        self.$emit('on-delete-image', event);
-                    }
-                });
+                this.$emit('on-delete-image', event);
             },
         },
     };

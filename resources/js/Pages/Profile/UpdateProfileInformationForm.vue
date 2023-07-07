@@ -110,9 +110,9 @@
     import BizImage from '@/Biz/Image.vue';
     import FormSection from '@/Frontend/FormSection.vue';
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
-    import { computed } from 'vue';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
+    import { ref } from 'vue';
     import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
@@ -153,7 +153,7 @@
 
         setup() {
             return {
-                photoUrl: computed(() => usePage().props.optimizedProfilePhotoUrl),
+                photoUrl: ref(usePage().props.optimizedProfilePhotoUrl),
             };
         },
 
@@ -237,12 +237,12 @@
             },
 
             onDeleteImage() {
-                const self = this;
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
-                        self.photoUrl = null;
-                        self.form.photo = null;
-                        self.form.is_photo_deleted = true;
+                        this.photoUrl = null;
+
+                        this.form.photo = null;
+                        this.form.is_photo_deleted = true;
                     }
                 })
             },

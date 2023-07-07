@@ -1,5 +1,8 @@
 <template>
-    <div id="main-container-wrapper">
+    <div
+        id="main-container-wrapper"
+        class="mb-6 pb-4"
+    >
         <HeadTag :title="title ?? titleChild" />
 
         <biz-navbar-menu />

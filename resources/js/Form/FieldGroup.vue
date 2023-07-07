@@ -27,7 +27,6 @@
                         <component
                             :is="asyncComponents[field.type]"
                             v-if="!field.is_translated"
-                            :ref="'field__' + name"
                             v-model="form[ name ]"
                             :errors="formErrors"
                             :schema="field"
@@ -36,7 +35,6 @@
                         <component
                             :is="asyncComponents[field.type]"
                             v-else
-                            :ref="'field__' + name"
                             v-model="form[ name ][ selectedLocale ]"
                             :errors="formErrors"
                             :schema="field"
