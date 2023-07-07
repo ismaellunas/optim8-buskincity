@@ -15,6 +15,7 @@ use Illuminate\Support\{
     Collection,
     Str,
 };
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
@@ -28,38 +29,46 @@ class SettingService
         });
     }
 
-    public function saveKey(string $key, mixed $value): Setting
+    public function saveKey(string $key, mixed $value, string $group = null): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $value;
+        $setting->group = $group;
         $setting->save();
 
         return $setting;
     }
 
+    private function cssUrl($key, $fallbackUrl): string
+    {
+        $version = $this->getKey('version_'.$key);
+
+        $filePath = 'css/' . config('constants.settings.generate_css.'.$key);
+
+        return Storage::disk('public')->exists($filePath)
+            ? asset('storage/'.$filePath.'?ver='.$version)
+            : $fallbackUrl;
+    }
+
     public function getFrontendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css');
-
-        return empty($urlCss)
-            ? Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app',
+            Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
+        );
     }
 
     public function getBackendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css_backend');
-
-        return empty($urlCss)
-            ? Vite::asset('resources/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app_backend',
+            Vite::asset('resources/sass/app.sass')
+        );
     }
 
     public function getEmailCustomizedStyle(): string
     {
-        $style = $this->getKey('customized_style_email');
-
-        return $style;
+        return $this->getKey('css_app_email');
     }
 
     public static function getAdditionalCss(): string
@@ -486,21 +495,6 @@ class SettingService
         return $mediaId ? Media::find($mediaId) : null;
     }
 
-    public function saveCssUrlFrontend(string $url): Setting
-    {
-        return $this->saveKey('url_css', $url);
-    }
-
-    public function saveCssUrlBackend(string $url): Setting
-    {
-        return $this->saveKey('url_css_backend', $url);
-    }
-
-    public function saveCustomizedStyleEmail(string $style): Setting
-    {
-        return $this->saveKey('customized_style_email', $style);
-    }
-
     public function getSocialiteDrivers(): ?array
     {
         return app(SettingCache::class)
@@ -584,7 +578,7 @@ class SettingService
         });
     }
 
-    private function getKeysByGroup(string $group): array
+    public function getKeysByGroup(string $group): array
     {
         return Setting::select([
                 'key',
