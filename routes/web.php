@@ -179,7 +179,7 @@ Route::post('webhooks/stripe', WebhookStripeController::class);
 
 Route::get('css/pb-{uid_page_builder}.css', StylePageBuilderController::class)
     ->name('page.css')
-    ->withoutMiddleware(HandleInertiaRequests::class);
+    ->withoutMiddleware('web');
 
 Route::get('css/stored/{css_name}', StoredCssController::class)
     ->name('css.stored')
