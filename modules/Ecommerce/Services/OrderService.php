@@ -45,15 +45,16 @@ class OrderService
         $isUserProductManager = $user->isProductManager();
 
         return Order::when($term, function ($query) use ($term) {
-                $query
-                    ->where('reference', 'ILIKE', '%'.$term.'%')
-                    ->orWhere('status', 'ILIKE', '%'.$term.'%')
-                    ->orWhereHas('user', function (Builder $query) use ($term) {
-                        $query->search($term);
-                    })
-                    ->orWhereHas('firstEventLine.purchasable.product', function (Builder $query) use ($term) {
-                        $query->searchWithoutScout($term);
-                    });
+                $query->where(function ($query) use ($term) {
+                    $query
+                        ->where('reference', 'ILIKE', '%'.$term.'%')
+                        ->orWhereHas('user', function (Builder $query) use ($term) {
+                            $query->search($term);
+                        })
+                        ->orWhereHas('firstEventLine.purchasable.product', function (Builder $query) use ($term) {
+                            $query->searchWithoutScout($term);
+                        });
+                });
             })
             ->when($scopes, function ($query, $scopes) {
                 foreach ($scopes as $scopeName => $value) {
