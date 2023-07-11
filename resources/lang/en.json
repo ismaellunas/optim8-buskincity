@@ -1018,5 +1018,6 @@
     ":number hour|:number hours": ":number hour|:number hours",
     ":number day|:number days": ":number day|:number days",
     ":number week|:number weeks": ":number week|:number weeks",
-    ":number month|:number months": ":number month|:number months"
+    ":number month|:number months": ":number month|:number months",
+    "Seo": "Seo"
 }
