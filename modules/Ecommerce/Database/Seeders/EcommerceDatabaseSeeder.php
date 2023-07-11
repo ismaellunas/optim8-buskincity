@@ -2,22 +2,12 @@
 
 namespace Modules\Ecommerce\Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
-class EcommerceDatabaseSeeder extends Seeder
+class EcommerceDatabaseSeeder extends EcommerceDatabaseBasicSeeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        Model::unguard();
+        parent::run();
 
-        $this->call("Modules\Ecommerce\Database\Seeders\PermissionSeeder");
-        $this->call("Modules\Ecommerce\Database\Seeders\DefaultSeeder");
         $this->call("Modules\Ecommerce\Database\Seeders\ProductSeeder");
         $this->call("Modules\Ecommerce\Database\Seeders\ScheduleSeeder");
         $this->call("Modules\Ecommerce\Database\Seeders\OrderSeeder");
