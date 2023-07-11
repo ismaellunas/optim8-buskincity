@@ -205,3 +205,11 @@
     sail:init-npm
     sail:fresh
 @endstory
+
+@task('art:seed-basic')
+    php artisan db:seed --class=DatabaseBasicSeeder
+    php artisan module:seed --class=SpaceDatabaseBasicSeeder Space
+    php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce
+    php artisan module:seed Booking
+    php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder
+@endtask
