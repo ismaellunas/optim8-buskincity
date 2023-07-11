@@ -72,30 +72,6 @@
                         </div>
                         <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
-                                @if ($userProfile->getMeta('tiktok'))
-                                <a href="{{ $userProfile->getMeta('tiktok') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-tiktok" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('youtube'))
-                                <a href="{{ $userProfile->getMeta('youtube') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-youtube" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('instagram'))
-                                <a href="{{ $userProfile->getMeta('instagram') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-instagram" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('facebook'))
-                                <a href="{{ $userProfile->getMeta('facebook') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-facebook" is-small />
-                                </a>
-                                @endif
-
                                 @can ('receiveDonation', $user)
                                     <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
