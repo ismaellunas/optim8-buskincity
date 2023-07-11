@@ -774,4 +774,15 @@ class SettingService
             '<p>This password reset link will expire on {expired_on}</p>'.
             '<p>If you did not request a password reset, no further action is required.</p><br><p>Regards,</p><p>{app_name}</p>';
     }
+
+    public function getPostThumbnailMedia(): ?Media
+    {
+        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
+    }
 }
