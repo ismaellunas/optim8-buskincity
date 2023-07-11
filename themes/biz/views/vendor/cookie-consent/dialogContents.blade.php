@@ -6,7 +6,7 @@
     style="position: fixed; z-index: 9999; bottom: 0; width: 100%;"
 >
     <div class="column is-3-widescreen is-offset-9-widescreen is-4-desktop is-offset-8-desktop is-12-tablet is-12-mobile p-0">
-        <div class="notification is-primary">
+        <div class="notification is-primary m-2">
             {!! $settingService->getCookieConsentMessage() !!}
 
             <div class="buttons">
@@ -34,7 +34,7 @@
     style="position: fixed; z-index: 9999; bottom: 0; width: 100%;"
 >
     <div class="column is-3-widescreen is-offset-9-widescreen is-4-desktop is-offset-8-desktop is-12-tablet is-12-mobile p-0">
-        <div class="notification is-primary">
+        <div class="notification is-primary m-2">
             {!! $settingService->getCookieConsentMessageDecline() !!}
 
             <div class="buttons">

@@ -30,7 +30,7 @@
     .select select
       font-size: {{ $font_size_text['desktop'] }}em
     .control
-      .button
+      .button, .icon
         font-size: {{ $font_size_text['desktop'] }}em
 
   {{ $media }} screen and (min-width: {{ $tablet }}) and (max-width: {{ $desktop }} - 1px)
@@ -57,7 +57,7 @@
     .select select
       font-size: {{ $font_size_text['tablet'] }}em
     .control
-      .button
+      .button, .icon
         font-size: {{ $font_size_text['tablet'] }}em
 
   {{ $media }} screen and (max-width: {{ $tablet }} - 1px)
@@ -84,7 +84,7 @@
     .select select
       font-size: {{ $font_size_text['mobile'] }}em
     .control
-      .button
+      .button, .icon
         font-size: {{ $font_size_text['mobile'] }}em
 
 {!! nl2br('') !!}
