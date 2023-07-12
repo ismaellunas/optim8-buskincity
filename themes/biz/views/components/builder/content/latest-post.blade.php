@@ -9,7 +9,7 @@
                         <figure class="image">
                             <a href="{{ route('blog.show', $posts[$i]->slug) }}">
                                 <x-image
-                                    src="{{ $posts[$i]->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                                    src="{{ $posts[$i]->getOptimizedThumbnailImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
                                     width="480"
                                     height="320"
                                     is-lazyload

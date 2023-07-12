@@ -5,7 +5,7 @@
         <figure class="image">
             <a href="{{ $link }}">
                 <x-image
-                    src="{{ $post->getOptimizedCoverImageUrl(480, 320) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
+                    src="{{ $post->getOptimizedThumbnailImageUrl(480, 320) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
                     width="480"
                     height="320"
                     is-lazyload

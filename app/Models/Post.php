@@ -6,6 +6,7 @@ use App\Contracts\PublishableInterface;
 use App\Helpers\HtmlToText;
 use App\Models\Category;
 use App\Services\PostService;
+use App\Services\SettingService;
 use App\Traits\HasLocale;
 use App\Traits\Mediable;
 use Carbon\Carbon;
@@ -174,10 +175,16 @@ class Post extends BaseModel implements PublishableInterface
     }
 
     /* Custom Methods: */
-    public function getOptimizedCoverImageUrl(int $width, int $height): ?string
+    public function getOptimizedThumbnailImageUrl(int $width, int $height): ?string
     {
         if ($this->coverImage) {
             return $this->coverImage->getOptimizedImageUrl($width, $height);
+        }
+
+        $defaultImage = app(SettingService::class)->getPostThumbnailMedia();
+
+        if ($defaultImage) {
+            return $defaultImage->getOptimizedImageUrl($width, $height);
         }
 
         return  null;
