@@ -38,8 +38,6 @@ class GenerateThemeCss extends Command
 
             $themeService->storeCssToSettingTable();
 
-            $themeService->createCssFiles();
-
         } catch (Exception $e) {
 
             throw $e;
