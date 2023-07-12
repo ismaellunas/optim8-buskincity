@@ -71,30 +71,9 @@ class ThemeService
                 $disk->get($fileName),
                 'stored_css'
             );
-
-            $this->settingService->saveKey(
-                'version_'.$key,
-                date('YmdHis'),
-                'stored_css_version'
-            );
         }
-    }
 
-    public function createCssFiles()
-    {
-        $cssSettings = $this->settingService->getKeysByGroup('stored_css');
-
-        Storage::disk('public')->makeDirectory('css');
-
-        foreach ($cssSettings as $key => $value) {
-            if (! $value) {
-                continue;
-            }
-
-            $fileName = config('constants.settings.generate_css.'.$key);
-
-            Storage::disk('public')->put('css/'.$fileName, $value);
-        }
+        $this->settingService->saveGeneratedCssVersion();
     }
 
     public function clearStorageTheme(): bool

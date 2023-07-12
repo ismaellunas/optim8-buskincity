@@ -12,10 +12,10 @@ use App\Models\{
 };
 use App\Services\StorageService;
 use Illuminate\Support\{
+    Carbon,
     Collection,
     Str,
 };
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
@@ -41,13 +41,16 @@ class SettingService
 
     private function cssUrl($key, $fallbackUrl): string
     {
-        $version = $this->getKey('version_'.$key);
+        $version = $this->getStoredCssVersion();
 
-        $filePath = 'css/' . config('constants.settings.generate_css.'.$key);
+        if ($version) {
+            return route('css.stored', [
+                'css_name' => config('constants.settings.generate_css.'.$key),
+                'ver' => $version,
+            ]);
+        }
 
-        return Storage::disk('public')->exists($filePath)
-            ? asset('storage/'.$filePath.'?ver='.$version)
-            : $fallbackUrl;
+        return $fallbackUrl;
     }
 
     public function getFrontendCssUrl(): string
@@ -76,6 +79,35 @@ class SettingService
         return app(SettingCache::class)->remember('additional_css', function () {
             return MinifyCss::minify(Setting::key('additional_css')->value('value') ?? "");
         });
+    }
+
+    public function storedCss(string $fileName): ?array
+    {
+        $cssKeys = array_keys(config('constants.settings.generate_css'), $fileName);
+
+        if (! empty($cssKeys)) {
+
+            $key = $cssKeys[0];
+
+            $lastModified = Carbon::createFromFormat('YmdHis', $this->getStoredCssVersion());
+
+            return [
+                'content' => $this->getKey($key),
+                'lastModified' => $lastModified,
+            ];
+        }
+
+        return null;
+    }
+
+    public function saveGeneratedCssVersion()
+    {
+        $this->saveKey('version_css_app', date('YmdHis'), 'stored_css_version');
+    }
+
+    public function getStoredCssVersion(): string
+    {
+        return $this->getKey('version_css_app');
     }
 
     public function getAdditionalJavascript(): string
