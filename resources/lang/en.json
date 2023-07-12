@@ -1019,5 +1019,7 @@
     ":number day|:number days": ":number day|:number days",
     ":number week|:number weeks": ":number week|:number weeks",
     ":number month|:number months": ":number month|:number months",
-    "Seo": "Seo"
+    "Seo": "Seo",
+    "default_image": "Default image",
+    "post_thumbnail": "Post thumbnail"
 }
