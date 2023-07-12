@@ -9,7 +9,7 @@
         {{ $post->meta_description }}
     </x-slot>
 
-    <div class="b752-blog-post section is-medium">
+    <div class="b752-blog-post section is-medium pt-6">
         <div class="container">
             <div class="columns is-centered is-multiline is-mobile">
                 <div class="column is-7-desktop is-7-tablet is-12-mobile">
