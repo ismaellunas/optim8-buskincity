@@ -50,15 +50,13 @@
                             ! empty($post->coverImageWithDimension)
                             && $post->is_cover_displayed
                         )
-                            <figure class="image">
-                                <x-image
-                                    src="{{ $post->coverImageWithDimension['url'] }}"
-                                    alt="{{ $post->meta_description }}"
-                                    width="{{ $post->coverImageWithDimension['width'] }}"
-                                    height="{{ $post->coverImageWithDimension['height'] }}"
-                                    is-lazyload
-                                />
-                            </figure>
+                            <x-image
+                                src="{{ $post->coverImageWithDimension['url'] }}"
+                                alt="{{ $post->meta_description }}"
+                                width="{{ $post->coverImageWithDimension['width'] }}"
+                                height="{{ $post->coverImageWithDimension['height'] }}"
+                                is-lazyload
+                            />
                         @endif
 
                         {!! Shortcode::compile($content) !!}
