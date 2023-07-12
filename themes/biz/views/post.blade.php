@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="b752-blog-post section is-medium">
-        <div class="container">
+        <div class="container theme-font">
             <div class="columns is-centered is-multiline is-mobile">
                 <div class="column is-7-desktop is-7-tablet is-12-mobile">
                     <header>
@@ -129,7 +129,7 @@
 
     @if (!$relatedArticles->isEmpty())
         <div class="section is-medium has-background-light">
-            <div class="container">
+            <div class="container theme-font">
                 <div class="columns is-multiline is-mobile">
                     <div class="column is-12-desktop is-12-tablet is-12-mobile">
                         <h2 class="title is-2 mb-5">{{ __('Related Articles') }}</h2>
