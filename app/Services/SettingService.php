@@ -606,31 +606,36 @@ class SettingService
         return true;
     }
 
-    public function saveLogo(?int $mediaId): void
-    {
-        $setting = $this->saveKey('header_logo_media_id', $mediaId);
+    private function saveMedia(
+        string $key,
+        ?int $mediaId = null,
+        ?string $group = null
+    ): void {
+        $setting = $this->saveKey($key, $mediaId, $group);
 
         $setting->syncMedia([
             $mediaId
         ]);
     }
 
-    public function saveQrcodeLogo(?int $mediaId): void
+    public function saveLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
-
-        $setting->syncMedia([
-            $mediaId
-        ]);
+        $this->saveMedia('header_logo_media_id', $mediaId);
     }
 
-    public function saveFavicon(?int $mediaId): void
+    public function saveQrcodeLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('favicon_media_id', $mediaId);
+        $this->saveMedia('qrcode_public_page_logo_media_id', $mediaId);
+    }
 
-        $setting->syncMedia([
-            $mediaId
-        ]);
+    public function saveFavicon(?int $mediaId = null): void
+    {
+        $this->saveMedia('favicon_media_id', $mediaId);
+    }
+
+    public function savePostThumbnail(?int $mediaId = null): void
+    {
+        $this->saveMedia('post_thumbnail_media_id', $mediaId, 'theme_seo');
     }
 
     private function transformMedia(Media $media): void

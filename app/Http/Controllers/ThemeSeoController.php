@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeSeoRequest;
 use App\Services\MediaService;
 use App\Services\SettingService;
-use App\Services\ThemeService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -15,14 +14,11 @@ class ThemeSeoController extends CrudController
     protected $title = 'Seo';
 
     private $settingService;
-    private $themeService;
 
     public function __construct(
         SettingService $settingService,
-        ThemeService $themeService
     ) {
         $this->settingService = $settingService;
-        $this->themeService = $themeService;
     }
 
     public function edit()
@@ -46,15 +42,44 @@ class ThemeSeoController extends CrudController
                         ...MediaService::defaultMediaLibraryInstructions(),
                         ...[
                             __('Recommended dimension: :dimension.', [
-                                'dimension' => config('constants.recomended_dimensions.favicon')
+                                'dimension' => config('constants.recomended_dimensions.post_thumbnail')
                             ]),
                         ]
                     ],
                 ],
                 'i18n' => $this->translations(),
-                'title' => Str::upper(__($this->title)),
+                'title' => $this->title(),
             ])
         );
+    }
+
+    public function update(ThemeSeoRequest $request)
+    {
+        $inputs = $request->validated();
+
+        foreach ($inputs as $key => $code) {
+
+            switch ($key) {
+                case 'post_thumbnail':
+                    $this->settingService->savePostThumbnail($inputs[$key]);
+                break;
+
+                default:
+                    $this->settingService->saveKey($key, $code);
+                break;
+            }
+        }
+
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title(),
+        ]);
+
+        return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    protected function title(): string
+    {
+        return Str::upper(__($this->title));
     }
 
     private function translations(): array
