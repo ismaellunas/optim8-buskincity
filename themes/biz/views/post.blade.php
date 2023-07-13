@@ -9,7 +9,7 @@
         {{ $post->meta_description }}
     </x-slot>
 
-    <div class="b752-blog-post section is-medium">
+    <div class="b752-blog-post section is-medium pt-6">
         <div class="container">
             <div class="columns is-centered is-multiline is-mobile">
                 <div class="column is-7-desktop is-7-tablet is-12-mobile">
@@ -50,15 +50,13 @@
                             ! empty($post->coverImageWithDimension)
                             && $post->is_cover_displayed
                         )
-                            <figure class="image">
-                                <x-image
-                                    src="{{ $post->coverImageWithDimension['url'] }}"
-                                    alt="{{ $post->meta_description }}"
-                                    width="{{ $post->coverImageWithDimension['width'] }}"
-                                    height="{{ $post->coverImageWithDimension['height'] }}"
-                                    is-lazyload
-                                />
-                            </figure>
+                            <x-image
+                                src="{{ $post->coverImageWithDimension['url'] }}"
+                                alt="{{ $post->meta_description }}"
+                                width="{{ $post->coverImageWithDimension['width'] }}"
+                                height="{{ $post->coverImageWithDimension['height'] }}"
+                                is-lazyload
+                            />
                         @endif
 
                         {!! Shortcode::compile($content) !!}
