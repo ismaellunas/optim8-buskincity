@@ -338,7 +338,7 @@ return [
         'profile_picture' => '600 x 600px',
         'cover' => '2560 x 576px',
         'gallery' => '1280 x 720px',
-        'post_thumbnail' => '480 x 320px',
+        'post_thumbnail' => '600 x 400px',
     ],
 
     'dimensions' => [
