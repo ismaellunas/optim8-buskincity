@@ -133,7 +133,8 @@ class FixTranslationSource extends Command
                             $locale,
                             $key,
                             $source,
-                            null
+                            null,
+                            $value,
                         );
                     }
                 }
