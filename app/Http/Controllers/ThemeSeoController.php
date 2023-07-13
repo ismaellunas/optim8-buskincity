@@ -62,11 +62,11 @@ class ThemeSeoController extends CrudController
             switch ($key) {
                 case 'post_thumbnail':
                     $this->settingService->savePostThumbnail($inputs[$key]);
-                break;
+                    break;
 
                 default:
                     $this->settingService->saveKey($key, $code);
-                break;
+                    break;
             }
         }
 
