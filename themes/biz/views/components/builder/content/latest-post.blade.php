@@ -1,5 +1,3 @@
-@inject('storageService', 'App\Services\StorageService')
-
 <div @class([$uniqueClass, 'pb-latest-post columns is-multiline'])>
     @if (!$posts->isEmpty())
         @for ($i = 0; $i < $limit; $i++)
@@ -9,9 +7,9 @@
                         <figure class="image">
                             <a href="{{ route('blog.show', $posts[$i]->slug) }}">
                                 <x-image
-                                    src="{{ $posts[$i]->getOptimizedThumbnailImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                                    width="480"
-                                    height="320"
+                                    src="{{ $posts[$i]->getOptimizedThumbnailOrDefaultUrl() }}"
+                                    width="{{ config('constants.dimensions.post_thumbnail.width') }}"
+                                    height="{{ config('constants.dimensions.post_thumbnail.height') }}"
                                     is-lazyload
                                 />
                             </a>

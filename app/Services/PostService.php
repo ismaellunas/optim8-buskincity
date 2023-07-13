@@ -119,7 +119,7 @@ class PostService
     public function transformRecords($records)
     {
         $records->getCollection()->transform(function ($record) {
-            $record->thumbnail_url = $record->getOptimizedThumbnailImageUrl(480, 320);
+            $record->thumbnail_url = $record->getOptimizedThumbnailOrDefaultUrl();
 
             $record->categories->transform(function ($category) {
                 $category->name = $category->name ?? $category->translations[0]->name;

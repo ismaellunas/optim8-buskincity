@@ -1,13 +1,11 @@
-@inject('storageService', 'App\Services\StorageService')
-
 <div class="column is-4-desktop is-6-tablet is-12-mobile">
     <article class="b752-blog-item box is-clipped p-0">
         <figure class="image">
             <a href="{{ $link }}">
                 <x-image
-                    src="{{ $post->getOptimizedThumbnailImageUrl(480, 320) ?? $storageService->getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                    width="480"
-                    height="320"
+                    src="{{ $post->getOptimizedThumbnailOrDefaultUrl() }}"
+                    width="{{ config('constants.dimensions.post_thumbnail.width') }}"
+                    height="{{ config('constants.dimensions.post_thumbnail.height') }}"
                     is-lazyload
                 />
             </a>
