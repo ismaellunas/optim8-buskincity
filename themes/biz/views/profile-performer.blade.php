@@ -12,7 +12,7 @@
 
 <x-layouts.master>
     <x-slot name="title">
-        {{ $user->fullName }}
+        {{ $user->fullName . ' | ' .config('app.name') }}
     </x-slot>
 
     <x-slot name="metaDescription">

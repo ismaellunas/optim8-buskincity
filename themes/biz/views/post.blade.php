@@ -7,6 +7,18 @@
         {{ $post->meta_description }}
     </x-slot>
 
+    @push('metas')
+        @php
+            $ogImageUrl = $post->getOptimizedThumbnailOrDefaultUrl(
+                config('constants.dimensions.open_graph.width'),
+                config('constants.dimensions.open_graph.height'),
+            );
+        @endphp
+
+        <meta property="og:image" content="{{ $ogImageUrl }}">
+        <meta name="twitter:image" content="{{ $ogImageUrl }}">
+    @endpush
+
     <div class="b752-blog-post section is-medium">
         <div class="container">
             <div class="columns is-centered is-multiline is-mobile">

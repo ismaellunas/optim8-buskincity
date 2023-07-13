@@ -839,4 +839,19 @@ class SettingService
         return $media;
     }
 
+    public function getOpenGraphImageUrl(int $width, int $height): string
+    {
+        return app(SettingCache::class)->remember(
+            'open_graph_image_url',
+            function () use ($width, $height) {
+                $media = $this->getOpenGraphMedia();
+
+                if ($media) {
+                    return $media->getOptimizedImageUrl($width, $height);
+                }
+
+                return "";
+            }
+        );
+    }
 }
