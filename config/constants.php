@@ -354,6 +354,10 @@ return [
             'width' => 1200,
             'height' => 800,
         ],
+        'post_thumbnail' => [
+            'width' => 480,
+            'height' => 320,
+        ],
     ],
 
     'icon' => [
