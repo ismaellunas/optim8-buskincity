@@ -1020,6 +1020,7 @@
     ":number week|:number weeks": ":number week|:number weeks",
     ":number month|:number months": ":number month|:number months",
     "Seo": "Seo",
-    "default_image": "Default image",
-    "post_thumbnail": "Post thumbnail"
+    "Default image": "Default image",
+    "Post thumbnail": "Post thumbnail",
+    "Open graph": "Open graph"
 }
