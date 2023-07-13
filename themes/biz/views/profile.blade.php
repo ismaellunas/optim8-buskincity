@@ -4,7 +4,7 @@
     $flagUrl = $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null;
 @endphp
 
-<x-layouts.master-basic>
+<x-layouts.master>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -27,11 +27,25 @@
 
                 <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <x-image
+                            src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}"
+                            alt="{{ $user->fullName }}"
+                            width="250"
+                            height="250"
+                            rounded="is-rounded"
+                            is-lazyload
+                        />
 
                         @if ($flagUrl)
                         <span class="flag">
-                            <img src="{{ $flagUrl }}" alt="Portugal" class="is-rounded">
+                            <x-image
+                                src="{{ $flagUrl }}"
+                                alt=""
+                                width="60"
+                                height="60"
+                                rounded="is-rounded"
+                                is-lazyload
+                            />
                         </span>
                         @endif
                     </figure>
@@ -51,4 +65,8 @@
             </div>
         </div>
     </div>
-</x-layouts.master-basic>
+
+    @push('scripts')
+        @vite('themes/'.config('theme.parent').'/js/basic.js')
+    @endpush
+</x-layouts.master>

@@ -59,7 +59,13 @@
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-3by4">
-                                        <img src="{{ $storageService::getImageUrl(config('constants.default_images.user_auth_card')) }}">
+                                        <x-image
+                                            src="{{ $storageService::getImageUrl(config('constants.default_images.user_auth_card')) }}"
+                                            class="is-radius"
+                                            width="470"
+                                            height="600"
+                                            is-lazyload
+                                        />
                                     </figure>
                                 </div>
                             </div>

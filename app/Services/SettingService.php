@@ -6,15 +6,18 @@ use App\Entities\Caches\SettingCache;
 use App\Helpers\CssUnitConverter;
 use App\Helpers\MinifyCss;
 use App\Models\{
+    Page,
     Media,
     Setting,
 };
 use App\Services\StorageService;
 use Illuminate\Support\{
+    Carbon,
     Collection,
     Str,
 };
 use Illuminate\Support\Facades\Vite;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
 
 class SettingService
@@ -26,38 +29,49 @@ class SettingService
         });
     }
 
-    public function saveKey(string $key, mixed $value): Setting
+    public function saveKey(string $key, mixed $value, string $group = null): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $value;
+        $setting->group = $group;
         $setting->save();
 
         return $setting;
     }
 
+    private function cssUrl($key, $fallbackUrl): string
+    {
+        $version = $this->getStoredCssVersion();
+
+        if ($version) {
+            return route('css.stored', [
+                'css_name' => config('constants.settings.generate_css.'.$key),
+                'ver' => $version,
+            ]);
+        }
+
+        return $fallbackUrl;
+    }
+
     public function getFrontendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css');
-
-        return empty($urlCss)
-            ? Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app',
+            Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
+        );
     }
 
     public function getBackendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css_backend');
-
-        return empty($urlCss)
-            ? Vite::asset('resources/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app_backend',
+            Vite::asset('resources/sass/app.sass')
+        );
     }
 
     public function getEmailCustomizedStyle(): string
     {
-        $style = $this->getKey('customized_style_email');
-
-        return $style;
+        return $this->getKey('css_app_email');
     }
 
     public static function getAdditionalCss(): string
@@ -65,6 +79,35 @@ class SettingService
         return app(SettingCache::class)->remember('additional_css', function () {
             return MinifyCss::minify(Setting::key('additional_css')->value('value') ?? "");
         });
+    }
+
+    public function storedCss(string $fileName): ?array
+    {
+        $cssKeys = array_keys(config('constants.settings.generate_css'), $fileName);
+
+        if (! empty($cssKeys)) {
+
+            $key = $cssKeys[0];
+
+            $lastModified = Carbon::createFromFormat('YmdHis', $this->getStoredCssVersion());
+
+            return [
+                'content' => $this->getKey($key),
+                'lastModified' => $lastModified,
+            ];
+        }
+
+        return null;
+    }
+
+    public function saveGeneratedCssVersion()
+    {
+        $this->saveKey('version_css_app', date('YmdHis'), 'stored_css_version');
+    }
+
+    public function getStoredCssVersion(): string
+    {
+        return $this->getKey('version_css_app');
     }
 
     public function getAdditionalJavascript(): string
@@ -126,7 +169,14 @@ class SettingService
 
     public function getFontSizes(): array
     {
-        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
+        return $this->getSettingsByGroup('font_size')
+            ->transform(function ($setting) {
+                $setting->value = json_decode($setting->value, TRUE);
+
+                return $setting;
+            })
+            ->keyBy('key')
+            ->all();
     }
 
     public function getKeys()
@@ -192,6 +242,35 @@ class SettingService
     {
         return $this->getLogoUrl()
             ?? StorageService::getImageUrl(config('constants.default_images.logo'));
+    }
+
+    public function getLogoWithDimensionOrDefault()
+    {
+        return app(SettingCache::class)->remember('logo_media', function () {
+            $media = $this->getLogoMedia();
+
+            $dimensions = config('constants.dimensions.logo');
+
+            if ($media) {
+
+                return [
+                    'width' => $dimensions['width'],
+                    'height' => $dimensions['height'],
+                    'url' => $media->getOptimizedImageUrl(
+                        $dimensions['width'],
+                        $dimensions['height'],
+                        'limitFit'
+                    ),
+                ];
+            }
+
+            return [
+                'width' => $dimensions['width'],
+                'height' => $dimensions['height'],
+                'url' => StorageService::getImageUrl(config('constants.default_images.logo')),
+            ];
+
+        });
     }
 
     public function getLogoMedia(): ?Media
@@ -328,7 +407,15 @@ class SettingService
             Setting::where('group', 'font_size')
                 ->get(['key', 'value'])
                 ->mapWithKeys(function ($setting) {
-                    return [$setting->key => CssUnitConverter::pxToEm($setting->value ?? 0)];
+                    $value = json_decode($setting->value, TRUE);
+
+                    foreach (array_keys($value) as $device) {
+                        $value[$device] = CssUnitConverter::pxToEm($value[$device] ?? 0);
+                    }
+
+                    return [
+                        $setting->key => $value
+                    ];
                 })
                 ->all()
         );
@@ -440,21 +527,6 @@ class SettingService
         return $mediaId ? Media::find($mediaId) : null;
     }
 
-    public function saveCssUrlFrontend(string $url): Setting
-    {
-        return $this->saveKey('url_css', $url);
-    }
-
-    public function saveCssUrlBackend(string $url): Setting
-    {
-        return $this->saveKey('url_css_backend', $url);
-    }
-
-    public function saveCustomizedStyleEmail(string $style): Setting
-    {
-        return $this->saveKey('customized_style_email', $style);
-    }
-
     public function getSocialiteDrivers(): ?array
     {
         return app(SettingCache::class)
@@ -538,7 +610,7 @@ class SettingService
         });
     }
 
-    private function getKeysByGroup(string $group): array
+    public function getKeysByGroup(string $group): array
     {
         return Setting::select([
                 'key',
@@ -566,31 +638,36 @@ class SettingService
         return true;
     }
 
-    public function saveLogo(?int $mediaId): void
-    {
-        $setting = $this->saveKey('header_logo_media_id', $mediaId);
+    private function saveMedia(
+        string $key,
+        ?int $mediaId = null,
+        ?string $group = null
+    ): void {
+        $setting = $this->saveKey($key, $mediaId, $group);
 
         $setting->syncMedia([
             $mediaId
         ]);
     }
 
-    public function saveQrcodeLogo(?int $mediaId): void
+    public function saveLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
-
-        $setting->syncMedia([
-            $mediaId
-        ]);
+        $this->saveMedia('header_logo_media_id', $mediaId);
     }
 
-    public function saveFavicon(?int $mediaId): void
+    public function saveQrcodeLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('favicon_media_id', $mediaId);
+        $this->saveMedia('qrcode_public_page_logo_media_id', $mediaId);
+    }
 
-        $setting->syncMedia([
-            $mediaId
-        ]);
+    public function saveFavicon(?int $mediaId = null): void
+    {
+        $this->saveMedia('favicon_media_id', $mediaId);
+    }
+
+    public function savePostThumbnail(?int $mediaId = null): void
+    {
+        $this->saveMedia('post_thumbnail_media_id', $mediaId, 'theme_seo');
     }
 
     private function transformMedia(Media $media): void
@@ -678,5 +755,71 @@ class SettingService
             $this->getKey('cookie_consent_message_decline'),
             'tinymce'
         );
+    }
+
+    public function getCookieConsentRedirectDeclineUrl(): string
+    {
+        $currentLocale = currentLocale();
+        $key = 'cookie_consent_redirect_decline_page_id';
+
+        return app(SettingCache::class)
+            ->remember($key . ':' . $currentLocale, function () use ($key, $currentLocale) {
+                $value = Setting::key($key)->value('value');
+
+                try {
+                    $pageTranslation = Page::with([
+                            'translations' => function ($query) {
+                                $query->select([
+                                    'id',
+                                    'page_id',
+                                    'locale',
+                                    'slug',
+                                ]);
+                            },
+                        ])
+                        ->find($value)
+                        ->translateOrDefault($currentLocale);
+                } catch (\Throwable $th) {
+
+                    return "";
+
+                }
+
+                return LaravelLocalization::localizeURL(
+                    route('frontend.pages.show', [
+                        'page_translation' => $pageTranslation->slug,
+                    ]),
+                    $currentLocale
+                );
+            });
+    }
+
+    public function defaultPasswordResetEmailSubject(): string
+    {
+        $value = Setting::key('user_password_reset_link_subject')->value('value');
+
+        return $value ?? 'Reset Password Notification';
+    }
+
+    public function defaultPasswordResetEmailContent(): ?string
+    {
+        $value = Setting::key('user_password_reset_link_content')->value('value');
+
+        return $value ?? '<h1>Hello {first_name} {last_name}!</h1>'.
+            '<p>You are receiving this email because we received a password reset request for your account.</p>'.
+            '<p>{password_reset_button_link}</p>'.
+            '<p>This password reset link will expire on {expired_on}</p>'.
+            '<p>If you did not request a password reset, no further action is required.</p><br><p>Regards,</p><p>{app_name}</p>';
+    }
+
+    public function getPostThumbnailMedia(): ?Media
+    {
+        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 }

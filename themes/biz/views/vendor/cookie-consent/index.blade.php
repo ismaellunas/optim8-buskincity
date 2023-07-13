@@ -10,6 +10,7 @@
 
             const COOKIE_VALUE = 1;
             const COOKIE_DOMAIN = '{{ config('session.domain') ?? request()->getHost() }}';
+            const redirectDeclineUrl = '{{ $settingService->getCookieConsentRedirectDeclineUrl() }}';
 
             function consentWithCookies() {
                 setCookie('{{ $cookieConsentConfig['cookie_name'] }}', COOKIE_VALUE, {{ $cookieConsentConfig['cookie_lifetime'] }});
@@ -24,6 +25,14 @@
                 const dialog = document.getElementById('js-cookie-consent-dialog');
 
                 dialog.classList.add('is-hidden');
+            }
+
+            function handleCookieConsentDecline() {
+                if (redirectDeclineUrl && redirectDeclineUrl !== '') {
+                    window.location.href = redirectDeclineUrl;
+                } else {
+                    showCookieDialogDecline();
+                }
             }
 
             function showCookieDialogDecline() {
@@ -59,7 +68,7 @@
                 .addEventListener('click', consentWithCookies);
 
             document.getElementById('js-cookie-consent-decline')
-                .addEventListener('click', showCookieDialogDecline);
+                .addEventListener('click', handleCookieConsentDecline);
 
             document.getElementById('js-cookie-consent-close')
                 .addEventListener('click', hideCookieDialogDecline);

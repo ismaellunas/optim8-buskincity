@@ -5,8 +5,9 @@ namespace App\Models;
 use App\Contracts\PublishableInterface;
 use App\Helpers\HtmlToText;
 use App\Models\Category;
-use App\Models\Media;
 use App\Services\PostService;
+use App\Services\SettingService;
+use App\Services\StorageService;
 use App\Traits\HasLocale;
 use App\Traits\Mediable;
 use Carbon\Carbon;
@@ -143,9 +144,25 @@ class Post extends BaseModel implements PublishableInterface
         );
     }
 
-    public function getCoverImageUrlAttribute(): ?string
+    public function getCoverImageWithDimensionAttribute(): array
     {
-        return $this->coverImage->optimizedImageUrl ?? null;
+        if ($this->coverImage) {
+            $width = $this->coverImage['width'];
+            $height = $this->coverImage['height'];
+
+            if ($width > 700) {
+                $height = $height * (700 / $width);
+                $width = 700;
+            }
+
+            return [
+                'url' => $this->coverImage->optimizedImageUrl,
+                'width' => $width,
+                'height' => $height,
+            ];
+        }
+
+        return [];
     }
 
     public function getPurifiedContentAttribute(): string
@@ -159,13 +176,23 @@ class Post extends BaseModel implements PublishableInterface
     }
 
     /* Custom Methods: */
-    public function getOptimizedCoverImageUrl(int $width, int $height): ?string
+    public function getOptimizedThumbnailOrDefaultUrl(?int $width = null, ?int $height = null): string
     {
+        $defaultDimensions = config('constants.dimensions.post_thumbnail');
+        $width = $width ?? $defaultDimensions['width'];
+        $height = $height ?? $defaultDimensions['height'];
+
         if ($this->coverImage) {
             return $this->coverImage->getOptimizedImageUrl($width, $height);
         }
 
-        return  null;
+        $seoPostThumbnail = app(SettingService::class)->getPostThumbnailMedia();
+
+        if ($seoPostThumbnail) {
+            return $seoPostThumbnail->getOptimizedImageUrl($width, $height);
+        }
+
+        return  StorageService::getImageUrl(config('constants.default_images.post_thumbnail'));
     }
 
     public static function getStatusOptions(): array

@@ -66,14 +66,46 @@ return [
         ],
     ],
     'theme_font_sizes' => [
-        'font_size_heading_1' => 48,
-        'font_size_heading_2' => 32,
-        'font_size_heading_3' => 28,
-        'font_size_heading_4' => 24,
-        'font_size_heading_5' => 20,
-        'font_size_heading_6' => 16,
-        'font_size_text' => 16,
-        'font_size_small' => 12,
+        'font_size_heading_1' => [
+            'desktop' => 48,
+            'tablet' => 42,
+            'mobile' => 28,
+        ],
+        'font_size_heading_2' => [
+            'desktop' => 40,
+            'tablet' => 36,
+            'mobile' => 24,
+        ],
+        'font_size_heading_3' => [
+            'desktop' => 32,
+            'tablet' => 29,
+            'mobile' => 22,
+        ],
+        'font_size_heading_4' => [
+            'desktop' => 24,
+            'tablet' => 22,
+            'mobile' => 20,
+        ],
+        'font_size_heading_5' => [
+            'desktop' => 20,
+            'tablet' => 18,
+            'mobile' => 18,
+        ],
+        'font_size_heading_6' => [
+            'desktop' => 16,
+            'tablet' => 16,
+            'mobile' => 16,
+        ],
+        'font_size_text' => [
+            'desktop' => 16,
+            'tablet' => 14,
+            'mobile' => 14,
+        ],
+        'font_size_small' => [
+            'desktop' => 12,
+            'tablet' => 12,
+            'mobile' => 12,
+        ],
     ],
     'theme_uppercases' => [
         'site_title',
@@ -260,7 +292,13 @@ return [
 
         'recaptcha' => [
             'score' => 0.6,
-        ]
+        ],
+
+        'generate_css' => [
+            'css_app' => 'app.css',
+            'css_app_backend' => 'app_backend.css',
+            'css_app_email' => 'app_email.css',
+        ],
     ],
 
     'reading_time_per_minute' => 200,
@@ -300,6 +338,7 @@ return [
         'profile_picture' => '600 x 600px',
         'cover' => '2560 x 576px',
         'gallery' => '1280 x 720px',
+        'post_thumbnail' => '600 x 400px',
     ],
 
     'dimensions' => [
@@ -308,12 +347,16 @@ return [
             'height' => 300,
         ],
         'logo' => [
-            'width' => 300,
-            'height' => 300,
+            'width' => 250,
+            'height' => 250,
         ],
         'gallery' => [
             'width' => 1200,
             'height' => 800,
+        ],
+        'post_thumbnail' => [
+            'width' => 480,
+            'height' => 320,
         ],
     ],
 

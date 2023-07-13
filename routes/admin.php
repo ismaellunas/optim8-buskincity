@@ -16,17 +16,18 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     PostController,
     RoleController,
+    SendUserPasswordResetEmailController,
     SettingKeyController,
     StripeController,
     SystemLogController,
     ThemeAdvanceController,
     ThemeColorController,
     ThemeFontController,
-    ThemeFontSizeController,
     ThemeFooterController,
     ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
+    ThemeSeoController,
     TranslationManagerController,
     TwoFactorAuthenticatedSessionController,
     UserController,
@@ -88,6 +89,13 @@ Route::middleware(array_filter([
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
 
+    Route::get('users/password-reset/form-data', [SendUserPasswordResetEmailController::class, 'passwordResetFormData'])
+        ->middleware('can:managePasswordResetEmail,App\Models\User')
+        ->name('users.password-reset.form-data');
+
+    Route::post('users/password-reset/send', SendUserPasswordResetEmailController::class)
+        ->name('users.password-reset.send');
+
     Route::resource('/roles', RoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
@@ -99,8 +107,6 @@ Route::middleware(array_filter([
     Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
         Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
-        Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
-        Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
 
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
@@ -116,8 +122,12 @@ Route::middleware(array_filter([
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
+
         Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
         Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
+
+        Route::get('/seo', [ThemeSeoController::class, 'edit'])->name('seo.edit');
+        Route::post('/seo', [ThemeSeoController::class, 'update'])->name('seo.update');
     });
 
     Route::name('settings.')->prefix('settings')->group(function () {

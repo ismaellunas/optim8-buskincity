@@ -1,11 +1,10 @@
-<figure
-    {{ $attributes->merge(['class' => "image is-clipped ".implode(' ', $figureClasses)]) }}
+<img
+    @class($imageClasses)
+    @if ($alt) alt="{{ $alt }}" @endif
+    @if ($src)
+        @if (! $isLazyload) src="{{ $src }}" @else data-src="{{ $src }}" @endif
+    @endif
+    @if ($width) width="{{ $width }}" @endif
+    @if ($height) height="{{ $height }}" @endif
+    @if ($style) style="{{ $style }}" @endif
 >
-    <img
-        @class($imageClasses)
-        @if ($alt) alt="{{ $alt }}" @endif
-        @if ($src) src="{{ $src }}" @endif
-        @if ($style) style="{{ $style }}" @endif
-    >
-    {{ $slot }}
-</figure>

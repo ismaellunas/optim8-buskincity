@@ -2,22 +2,12 @@
 
 namespace Modules\FormBuilder\Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-
-class FormBuilderDatabaseSeeder extends Seeder
+class FormBuilderDatabaseSeeder extends FormBuilderDatabaseBasicSeeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        Model::unguard();
+        parent::run();
 
-        $this->call(PermissionSeeder::class);
-        $this->call(AutomateUserCreationSettingSeeder::class);
         $this->call(FormSeeder::class);
     }
 }

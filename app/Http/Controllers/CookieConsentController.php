@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PageService;
 use App\Http\Requests\CookieConsentSettingRequest;
 use App\Models\Setting;
 use App\Traits\FlashNotifiable;
@@ -13,6 +14,12 @@ class CookieConsentController extends Controller
 
     private $title = 'Cookie Consent';
     private $baseRouteName = 'admin.settings.cookie-consent';
+    private $pageService;
+
+    public function __construct(PageService $pageService)
+    {
+        $this->pageService = $pageService;
+    }
 
     public function edit()
     {
@@ -20,6 +27,7 @@ class CookieConsentController extends Controller
             'title' => __($this->title),
             'baseRouteName' => $this->baseRouteName,
             'settings' => $this->getSettings(),
+            'pageOptions' => $this->pageService->getPageOptions(__('None')),
             'i18n' => $this->translations(),
         ]);
     }
@@ -52,6 +60,14 @@ class CookieConsentController extends Controller
             ['value' => $inputs['message_decline']]
         );
 
+        Setting::updateOrCreate(
+            [
+                'key' => 'cookie_consent_redirect_decline_page_id',
+                'group' => 'cookie_consent'
+            ],
+            ['value' => $inputs['redirect_decline_page_id']]
+        );
+
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __($this->title),
         ]);
@@ -65,6 +81,7 @@ class CookieConsentController extends Controller
             'cookie_consent_is_enabled',
             'cookie_consent_message',
             'cookie_consent_message_decline',
+            'cookie_consent_redirect_decline_page_id',
         ])->get()->pluck('value', 'key')->all();
 
         $settings['cookie_consent_is_enabled'] = boolval($settings['cookie_consent_is_enabled'] ?? false);
@@ -83,6 +100,9 @@ class CookieConsentController extends Controller
             'message_templates' => __('Message templates'),
             'message' => __('Message'),
             'message_decline' => __('Message decline'),
+            'redirection' => __('Redirection'),
+            'redirect_after_decline' => __('Redirect page ID'),
+            'redirect_after_decline_note' => __('Redirect to the page after clicking the decline button.'),
         ];
     }
 }

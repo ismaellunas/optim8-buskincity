@@ -4,10 +4,12 @@
         :class="composedFigureClass"
     >
         <img
+            v-bind="$attrs"
             :alt="alt"
             :description="description"
             :class="composedImgClass"
             :src="src"
+            :data-src="dataSrc"
             :style="imgStyle"
         >
 
@@ -25,6 +27,7 @@
             rounded: String,
             square: String,
             src: String,
+            dataSrc: { type: String, default: null },
             hasPosition: { type: Boolean, default: false },
         },
         computed: {

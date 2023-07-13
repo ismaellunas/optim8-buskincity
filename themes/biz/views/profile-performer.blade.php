@@ -10,7 +10,7 @@
     $hasUploadedGallery = !empty($userProfile->getMeta('gallery'));
 @endphp
 
-<x-layouts.master-basic>
+<x-layouts.master>
     <x-slot name="title">
         {{ $user->fullName }}
     </x-slot>
@@ -32,11 +32,25 @@
                 </div>
                 <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <x-image
+                            src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}"
+                            alt="{{ $user->fullName }}"
+                            width="250"
+                            height="250"
+                            rounded="is-rounded"
+                            is-lazyload
+                        />
 
                         @if ($flagUrl)
                         <span class="flag">
-                            <img src="{{ $flagUrl }}" alt="Portugal" class="is-rounded">
+                            <x-image
+                                src="{{ $flagUrl }}"
+                                alt=""
+                                width="60"
+                                height="60"
+                                rounded="is-rounded"
+                                is-lazyload
+                            />
                         </span>
                         @endif
                     </figure>
@@ -58,30 +72,6 @@
                         </div>
                         <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
-                                @if ($userProfile->getMeta('tiktok'))
-                                <a href="{{ $userProfile->getMeta('tiktok') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-tiktok" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('youtube'))
-                                <a href="{{ $userProfile->getMeta('youtube') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-youtube" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('instagram'))
-                                <a href="{{ $userProfile->getMeta('instagram') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-instagram" is-small />
-                                </a>
-                                @endif
-
-                                @if ($userProfile->getMeta('facebook'))
-                                <a href="{{ $userProfile->getMeta('facebook') }}" target="_blank" class="button">
-                                    <x-icon icon="fa-brands fa-facebook" is-small />
-                                </a>
-                                @endif
-
                                 @can ('receiveDonation', $user)
                                     <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
@@ -134,7 +124,13 @@
                                                     <div class="card" @click.prevent="openModal(index)">
                                                         <div class="card-image">
                                                             <figure class="image is-3by2">
-                                                                <img :src="thumbnailUrl" alt="" >
+                                                                <img
+                                                                    :data-src="thumbnailUrl"
+                                                                    alt=""
+                                                                    class="lazyload"
+                                                                    width="480"
+                                                                    height="320"
+                                                                >
                                                             </figure>
                                                         </div>
                                                     </div>
@@ -173,7 +169,14 @@
                 <div class="card-content">
                     <div class="is-flex">
                         <figure class="profile-picture image is-48x48 mr-3">
-                            <img src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}" alt="{{ $user->fullName }}" class="is-rounded">
+                            <x-image
+                                src="{{ $user->optimizedProfilePhotoOrDefaultUrl }}"
+                                alt="{{ $user->fullName }}"
+                                width="48"
+                                height="48"
+                                rounded="is-rounded"
+                                is-lazyload
+                            />
                         </figure>
                         <div>
                             <h2 class="title is-5 m-0">{{ __('Donate to') }} {{ $userProfile->getMeta('stage_name') }}</h2>
@@ -193,4 +196,4 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
-</x-layouts.master-basic>
+</x-layouts.master>

@@ -17,7 +17,6 @@
             <field-group
                 v-for="(group, index) in formSchema.fieldGroups"
                 :key="index"
-                :ref="'field_group__'+index"
                 v-model="form"
                 :group="group"
                 :errors="formErrors"
@@ -47,25 +46,30 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button.vue';
-    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
-    import BizNotifications from '@/Biz/Notifications.vue';
-    import BizRecaptcha from '@/Biz/Recaptcha.vue';
-    import FieldGroup from '@/Form/FieldGroup.vue';
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { reactive } from 'vue';
+    import { reactive, defineAsyncComponent } from 'vue';
     import { serialize } from 'object-to-formdata';
 
     export default {
         name: 'FormBuilder',
 
         components: {
-            BizButton,
-            BizFlashNotifications,
-            BizNotifications,
-            BizRecaptcha,
-            FieldGroup,
+            BizButton: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Button.vue')
+            ),
+            BizFlashNotifications: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/FlashNotifications.vue')
+            ),
+            BizNotifications: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Notifications.vue')
+            ),
+            BizRecaptcha: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Recaptcha.vue')
+            ),
+            FieldGroup: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Form/FieldGroup.vue')
+            ),
         },
 
         mixins: [

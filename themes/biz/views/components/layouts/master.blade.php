@@ -40,9 +40,9 @@
             @endif
         @endenv
 
-        @stack('scripts')
+        @vite('resources/js/bulma-misc.js')
 
-        @vite(['themes/'.config('theme.active').'/js/app.js', 'resources/js/bulma-misc.js'])
+        @stack('scripts')
 
         @if ($additionalCss)
             <style type="text/css">
@@ -67,7 +67,7 @@
 
         @if ($hasHeader)
             <x-headers.header
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
@@ -77,7 +77,7 @@
 
         @if ($hasFooter)
             <x-footer
-                :logoUrl="$logoUrl"
+                :logo="$logo"
             />
         @endif
 
@@ -93,6 +93,6 @@
 
         {!! $trackingCodeBeforeBody !!}
 
-        @include('cookie-consent::index')
+        @stack('bottom_inject')
     </body>
 </html>

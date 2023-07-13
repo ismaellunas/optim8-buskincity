@@ -1,12 +1,19 @@
 <footer class="has-background-light">
     <section class="section">
-        <div class="container">
+        <div class="container theme-font">
             <div class="columns is-multiline is-mobile">
                 <div class="column is-3-desktop is-3-tablet is-12-mobile">
-                    <img
-                        src="{{ $logoUrl }}"
+                    <figure
+                        class="image"
                         style="max-width:160px"
                     >
+                        <x-image
+                            src="{{ $logo['url'] }}"
+                            width="{{ $logo['width'] }}"
+                            height="{{ $logo['height'] }}"
+                            is-lazyload
+                        />
+                    </figure>
                 </div>
                 <div class="column is-9-desktop is-9-tablet is-12-mobile">
                     <div class="columns is-multiline is-mobile">

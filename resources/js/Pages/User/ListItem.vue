@@ -1,6 +1,8 @@
 <template>
     <tr>
-        <th>{{ user.id }}</th>
+        <td v-if="hasCheckbox">
+            <slot name="checkbox" />
+        </td>
         <td>
             {{ user.full_name }}<br>
             <biz-tag
@@ -36,6 +38,10 @@
         computed: {
             hasActions() {
                 return !!this.$slots.actions;
+            },
+
+            hasCheckbox() {
+                return !!this.$slots.checkbox;
             },
 
             roleName() {

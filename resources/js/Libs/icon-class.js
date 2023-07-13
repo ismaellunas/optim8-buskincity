@@ -12,6 +12,7 @@ export const checkCircle = iconFormatter('fa-check-circle');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
+export const desktop = iconFormatter('fa-desktop');
 export const download = iconFormatter('fa-download');
 export const edit = iconFormatter('fa-pen');
 export const ellipsis = iconFormatter('fa-ellipsis-h');
@@ -31,6 +32,7 @@ export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
 export const list = iconFormatter('fa-th-list');
 export const locationMark = iconFormatter('fa-location-dot');
+export const mobile = iconFormatter('fa-mobile');
 export const move = iconFormatter('fa-arrows-alt');
 export const plusCircle = iconFormatter('fa-plus-circle');
 export const preview = iconFormatter('fa-arrow-up-right-from-square');
@@ -44,6 +46,7 @@ export const sort = iconFormatter('fa-sort');
 export const sortDown = iconFormatter('fa-sort-down');
 export const sortUp = iconFormatter('fa-sort-up');
 export const suspend = iconFormatter('fa-ban');
+export const tablet = iconFormatter('fa-tablet');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
 export const user = iconFormatter('fa-user');
@@ -65,6 +68,7 @@ export default {
     clear,
     close,
     copy,
+    desktop,
     download,
     edit,
     ellipsis,
@@ -84,6 +88,7 @@ export default {
     image,
     list,
     locationMark,
+    mobile,
     move,
     plusCircle,
     preview,
@@ -97,6 +102,7 @@ export default {
     sortDown,
     sortUp,
     suspend,
+    tablet,
     unsuspend,
     upload,
     user,

@@ -2,49 +2,18 @@
 
 namespace App\Jobs;
 
-use App\Services\SettingService;
-use App\Services\ThemeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use \Exception;
+use Illuminate\Support\Facades\Artisan;
 
 class CompileThemeCss implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle(
-        ThemeService $themeService,
-        SettingService $settingService
-    ) {
-        try {
-            $themeService->generateVariablesSass();
-
-            $themeService->generateCss();
-
-            $uploadedCssFrontend = $themeService->uploadCssFrontend();
-            $uploadedCssBackend = $themeService->uploadCssBackend();
-
-            $settingService->saveCssUrlFrontend($uploadedCssFrontend->fileUrl);
-            $settingService->saveCssUrlBackend($uploadedCssBackend->fileUrl);
-
-            $customizedStyleEmail = $themeService->getCustomizedStyleEmail();
-            $settingService->saveCustomizedStyleEmail($customizedStyleEmail);
-
-        } catch (Exception $e) {
-
-            throw $e;
-
-        } finally {
-
-            $themeService->clearStorageTheme();
-        }
+    public function handle()
+    {
+        Artisan::call('generate:theme-css');
     }
 }
