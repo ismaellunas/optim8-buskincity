@@ -4,7 +4,7 @@
             class="card-image has-text-centered"
         >
             <biz-image
-                v-if="hasCover"
+                v-if="hasThumbnail"
                 :src="record.thumbnail_url"
             />
             <span

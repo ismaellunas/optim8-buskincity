@@ -79,7 +79,6 @@ class ThemeAdvanceController extends CrudController
     {
         $inputs = $request->validated();
 
-
         foreach ($inputs as $key => $code) {
 
             switch ($key) {
