@@ -3,7 +3,7 @@
         <td>
             <article class="media">
                 <biz-image
-                    v-if="record.thumbnail_url"
+                    v-if="hasThumbnail"
                     class="media-left"
                     ratio="is-64x64"
                     :src="record.thumbnail_url"

@@ -1,5 +1,3 @@
-@inject('storageService', 'App\Services\StorageService')
-
 <x-layouts.post>
     <x-slot name="title">
         {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
@@ -139,9 +137,9 @@
                                 <figure class="image">
                                     <a href="{{ route('blog.show', $article->slug) }}">
                                         <x-image
-                                            src="{{ $article->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                                            width="480"
-                                            height="320"
+                                            src="{{ $article->getOptimizedThumbnailOrDefaultUrl() }}"
+                                            width="{{ config('constants.dimensions.post_thumbnail.width') }}"
+                                            height="{{ config('constants.dimensions.post_thumbnail.height') }}"
                                             is-lazyload
                                         />
                                     </a>

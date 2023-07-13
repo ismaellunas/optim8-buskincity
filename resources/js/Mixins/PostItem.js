@@ -5,9 +5,10 @@ export default {
         record: Object,
     },
     computed: {
-        hasCover() {
+        hasThumbnail() {
             return !isEmpty(this.record.thumbnail_url);
         },
+
         hasCategory() {
             if (this.record?.categories) {
                 return this.record.categories.length > 0;
