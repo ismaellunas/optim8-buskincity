@@ -356,6 +356,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.theme.advance.*'),
                             'isEnabled' => true,
                         ],
+                        [
+                            'title' => Str::upper(__('Seo')),
+                            'link' => route('admin.theme.seo.edit'),
+                            'isActive' => $request->routeIs('admin.theme.seo.*'),
+                            'isEnabled' => true,
+                        ],
                     ],
                 ],
                 [

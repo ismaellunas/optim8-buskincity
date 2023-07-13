@@ -27,6 +27,7 @@ use App\Http\Controllers\{
     ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
+    ThemeSeoController,
     TranslationManagerController,
     TwoFactorAuthenticatedSessionController,
     UserController,
@@ -121,8 +122,12 @@ Route::middleware(array_filter([
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
+
         Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
         Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
+
+        Route::get('/seo', [ThemeSeoController::class, 'edit'])->name('seo.edit');
+        Route::post('/seo', [ThemeSeoController::class, 'update'])->name('seo.update');
     });
 
     Route::name('settings.')->prefix('settings')->group(function () {

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class DatabaseSeeder extends Seeder
+class DatabaseBasicSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -22,18 +22,8 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             LanguageSeeder::class,
             TranslationSeeder::class,
-            FormSeeder::class,
-            CategorySeeder::class,
             UserAndPermissionSeeder::class,
-            PerformerSeeder::class,
             LanguageSettingSeeder::class,
-            PageSeeder::class,
-            PostSeeder::class,
-            MenuSeeder::class,
-            MenuItemSeeder::class,
-            StripeSeeder::class,
-            StripeSettingSeeder::class,
-            DashboardWidgetSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();

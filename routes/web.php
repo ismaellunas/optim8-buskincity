@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     RegisteredUserController,
     SitemapController,
+    StoredCssController,
     TwoFactorAuthenticatedSessionController,
     UserPasswordController,
     UserProfileController,
@@ -178,7 +179,12 @@ Route::post('webhooks/stripe', WebhookStripeController::class);
 
 Route::get('css/pb-{uid_page_builder}.css', StylePageBuilderController::class)
     ->name('page.css')
-    ->withoutMiddleware(HandleInertiaRequests::class);
+    ->withoutMiddleware('web');
+
+Route::get('css/stored/{css_name}', StoredCssController::class)
+    ->name('css.stored')
+    ->whereIn('css_name', array_values(config('constants.settings.generate_css')))
+    ->withoutMiddleware('web');
 
 if (App::environment('production')) {
     Route::group(
