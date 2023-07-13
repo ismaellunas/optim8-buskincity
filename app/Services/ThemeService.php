@@ -2,31 +2,16 @@
 
 namespace App\Services;
 
-use \finfo;
-use App\Entities\CloudinaryStorage;
-use App\Entities\MediaAsset;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Qirolab\Theme\Theme;
 
 class ThemeService
 {
-    private $settingService;
-    private $mediaService;
-
-    private $cssFilenameFrontend = 'app';
-    private $cssFilenameBackend  = 'app_backend';
-    private $cssFilenameEmail  = 'app_email';
-
     public function __construct(
-        SettingService $settingService,
-        MediaService $mediaService
-    ) {
-        $this->settingService = $settingService;
-        $this->mediaService = $mediaService;
-    }
+        private SettingService $settingService
+    ) {}
 
     private function renderFontSizes(): string
     {
@@ -68,50 +53,27 @@ class ThemeService
         ]);
     }
 
-    private function uploadCssToCloudStorage(string $cssFileName): MediaAsset
+    public function storeCssToSettingTable()
     {
-        $fileName = "theme/css/$cssFileName.css";
-        $filePath = storage_path($fileName);
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/css')
+        ]);
 
-        $file = new UploadedFile(
-            $filePath,
-            $fileName,
-            $finfo->file($filePath),
-            filesize($filePath),
-            0,
-            false
-        );
+        foreach (config('constants.settings.generate_css') as $key => $fileName) {
 
-        $storage = new CloudinaryStorage();
+            if (! $disk->exists($fileName)) {
+                continue;
+            }
 
-        $folder = $this->mediaService->getFolderPrefix()."assets";
+            $this->settingService->saveKey(
+                $key,
+                $disk->get($fileName),
+                'stored_css'
+            );
+        }
 
-        return $storage->upload(
-            $file,
-            "$cssFileName.css",
-            "css",
-            $folder
-        );
-    }
-
-    public function uploadCssFrontend(): MediaAsset
-    {
-        return $this->uploadCssToCloudStorage($this->cssFilenameFrontend);
-    }
-
-    public function uploadCssBackend(): MediaAsset
-    {
-        return $this->uploadCssToCloudStorage($this->cssFilenameBackend);
-    }
-
-    public function getCustomizedStyleEmail(): string
-    {
-        $fileName = "theme/css/$this->cssFilenameEmail.css";
-        $filePath = storage_path($fileName);
-        $fileContent = file_get_contents($filePath);
-
-        return $fileContent;
+        $this->settingService->saveGeneratedCssVersion();
     }
 
     public function clearStorageTheme(): bool

@@ -18,11 +18,11 @@
             >
                 <figure class="b752-profile-picture image is-128x128 is-inline-block">
                     <img
-                        :data-src="user.profile_photo_url"
+                        :src="user.profile_photo_url"
                         :alt="user.full_name"
                         width="128"
                         height="128"
-                        class="is-rounded lazyload"
+                        class="is-rounded"
                     >
                     <span
                         v-if="user.country"

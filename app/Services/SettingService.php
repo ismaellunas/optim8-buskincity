@@ -12,6 +12,7 @@ use App\Models\{
 };
 use App\Services\StorageService;
 use Illuminate\Support\{
+    Carbon,
     Collection,
     Str,
 };
@@ -28,38 +29,49 @@ class SettingService
         });
     }
 
-    public function saveKey(string $key, mixed $value): Setting
+    public function saveKey(string $key, mixed $value, string $group = null): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $value;
+        $setting->group = $group;
         $setting->save();
 
         return $setting;
     }
 
+    private function cssUrl($key, $fallbackUrl): string
+    {
+        $version = $this->getStoredCssVersion();
+
+        if ($version) {
+            return route('css.stored', [
+                'css_name' => config('constants.settings.generate_css.'.$key),
+                'ver' => $version,
+            ]);
+        }
+
+        return $fallbackUrl;
+    }
+
     public function getFrontendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css');
-
-        return empty($urlCss)
-            ? Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app',
+            Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
+        );
     }
 
     public function getBackendCssUrl(): string
     {
-        $urlCss = $this->getKey('url_css_backend');
-
-        return empty($urlCss)
-            ? Vite::asset('resources/sass/app.sass')
-            : $urlCss;
+        return $this->cssUrl(
+            'css_app_backend',
+            Vite::asset('resources/sass/app.sass')
+        );
     }
 
     public function getEmailCustomizedStyle(): string
     {
-        $style = $this->getKey('customized_style_email');
-
-        return $style;
+        return $this->getKey('css_app_email');
     }
 
     public static function getAdditionalCss(): string
@@ -67,6 +79,35 @@ class SettingService
         return app(SettingCache::class)->remember('additional_css', function () {
             return MinifyCss::minify(Setting::key('additional_css')->value('value') ?? "");
         });
+    }
+
+    public function storedCss(string $fileName): ?array
+    {
+        $cssKeys = array_keys(config('constants.settings.generate_css'), $fileName);
+
+        if (! empty($cssKeys)) {
+
+            $key = $cssKeys[0];
+
+            $lastModified = Carbon::createFromFormat('YmdHis', $this->getStoredCssVersion());
+
+            return [
+                'content' => $this->getKey($key),
+                'lastModified' => $lastModified,
+            ];
+        }
+
+        return null;
+    }
+
+    public function saveGeneratedCssVersion()
+    {
+        $this->saveKey('version_css_app', date('YmdHis'), 'stored_css_version');
+    }
+
+    public function getStoredCssVersion(): string
+    {
+        return $this->getKey('version_css_app');
     }
 
     public function getAdditionalJavascript(): string
@@ -486,21 +527,6 @@ class SettingService
         return $mediaId ? Media::find($mediaId) : null;
     }
 
-    public function saveCssUrlFrontend(string $url): Setting
-    {
-        return $this->saveKey('url_css', $url);
-    }
-
-    public function saveCssUrlBackend(string $url): Setting
-    {
-        return $this->saveKey('url_css_backend', $url);
-    }
-
-    public function saveCustomizedStyleEmail(string $style): Setting
-    {
-        return $this->saveKey('customized_style_email', $style);
-    }
-
     public function getSocialiteDrivers(): ?array
     {
         return app(SettingCache::class)
@@ -584,7 +610,7 @@ class SettingService
         });
     }
 
-    private function getKeysByGroup(string $group): array
+    public function getKeysByGroup(string $group): array
     {
         return Setting::select([
                 'key',
@@ -612,31 +638,36 @@ class SettingService
         return true;
     }
 
-    public function saveLogo(?int $mediaId): void
-    {
-        $setting = $this->saveKey('header_logo_media_id', $mediaId);
+    private function saveMedia(
+        string $key,
+        ?int $mediaId = null,
+        ?string $group = null
+    ): void {
+        $setting = $this->saveKey($key, $mediaId, $group);
 
         $setting->syncMedia([
             $mediaId
         ]);
     }
 
-    public function saveQrcodeLogo(?int $mediaId): void
+    public function saveLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
-
-        $setting->syncMedia([
-            $mediaId
-        ]);
+        $this->saveMedia('header_logo_media_id', $mediaId);
     }
 
-    public function saveFavicon(?int $mediaId): void
+    public function saveQrcodeLogo(?int $mediaId = null): void
     {
-        $setting = $this->saveKey('favicon_media_id', $mediaId);
+        $this->saveMedia('qrcode_public_page_logo_media_id', $mediaId);
+    }
 
-        $setting->syncMedia([
-            $mediaId
-        ]);
+    public function saveFavicon(?int $mediaId = null): void
+    {
+        $this->saveMedia('favicon_media_id', $mediaId);
+    }
+
+    public function savePostThumbnail(?int $mediaId = null): void
+    {
+        $this->saveMedia('post_thumbnail_media_id', $mediaId, 'theme_seo');
     }
 
     private function transformMedia(Media $media): void
@@ -779,5 +810,16 @@ class SettingService
             '<p>{password_reset_button_link}</p>'.
             '<p>This password reset link will expire on {expired_on}</p>'.
             '<p>If you did not request a password reset, no further action is required.</p><br><p>Regards,</p><p>{app_name}</p>';
+    }
+
+    public function getPostThumbnailMedia(): ?Media
+    {
+        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 }

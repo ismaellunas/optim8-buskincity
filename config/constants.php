@@ -292,7 +292,13 @@ return [
 
         'recaptcha' => [
             'score' => 0.6,
-        ]
+        ],
+
+        'generate_css' => [
+            'css_app' => 'app.css',
+            'css_app_backend' => 'app_backend.css',
+            'css_app_email' => 'app_email.css',
+        ],
     ],
 
     'reading_time_per_minute' => 200,
@@ -332,6 +338,7 @@ return [
         'profile_picture' => '600 x 600px',
         'cover' => '2560 x 576px',
         'gallery' => '1280 x 720px',
+        'post_thumbnail' => '600 x 400px',
     ],
 
     'dimensions' => [
@@ -346,6 +353,10 @@ return [
         'gallery' => [
             'width' => 1200,
             'height' => 800,
+        ],
+        'post_thumbnail' => [
+            'width' => 480,
+            'height' => 320,
         ],
     ],
 

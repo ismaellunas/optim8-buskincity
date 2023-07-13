@@ -1,5 +1,3 @@
-@inject('storageService', 'App\Services\StorageService')
-
 <x-layouts.post>
     <x-slot name="title">
         {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
@@ -9,8 +7,8 @@
         {{ $post->meta_description }}
     </x-slot>
 
-    <div class="b752-blog-post section is-medium">
-        <div class="container">
+    <div class="b752-blog-post section is-medium pt-6">
+        <div class="container theme-font">
             <div class="columns is-centered is-multiline is-mobile">
                 <div class="column is-7-desktop is-7-tablet is-12-mobile">
                     <header>
@@ -50,15 +48,13 @@
                             ! empty($post->coverImageWithDimension)
                             && $post->is_cover_displayed
                         )
-                            <figure class="image">
-                                <x-image
-                                    src="{{ $post->coverImageWithDimension['url'] }}"
-                                    alt="{{ $post->meta_description }}"
-                                    width="{{ $post->coverImageWithDimension['width'] }}"
-                                    height="{{ $post->coverImageWithDimension['height'] }}"
-                                    is-lazyload
-                                />
-                            </figure>
+                            <x-image
+                                src="{{ $post->coverImageWithDimension['url'] }}"
+                                alt="{{ $post->meta_description }}"
+                                width="{{ $post->coverImageWithDimension['width'] }}"
+                                height="{{ $post->coverImageWithDimension['height'] }}"
+                                is-lazyload
+                            />
                         @endif
 
                         {!! Shortcode::compile($content) !!}
@@ -129,7 +125,7 @@
 
     @if (!$relatedArticles->isEmpty())
         <div class="section is-medium has-background-light">
-            <div class="container">
+            <div class="container theme-font">
                 <div class="columns is-multiline is-mobile">
                     <div class="column is-12-desktop is-12-tablet is-12-mobile">
                         <h2 class="title is-2 mb-5">{{ __('Related Articles') }}</h2>
@@ -141,9 +137,9 @@
                                 <figure class="image">
                                     <a href="{{ route('blog.show', $article->slug) }}">
                                         <x-image
-                                            src="{{ $article->getOptimizedCoverImageUrl(480, 320) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}"
-                                            width="480"
-                                            height="320"
+                                            src="{{ $article->getOptimizedThumbnailOrDefaultUrl() }}"
+                                            width="{{ config('constants.dimensions.post_thumbnail.width') }}"
+                                            height="{{ config('constants.dimensions.post_thumbnail.height') }}"
                                             is-lazyload
                                         />
                                     </a>

@@ -58,6 +58,7 @@
     heroku:maintenance-on
     heroku:push
     heroku:migration
+    heroku:generate-css
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -73,6 +74,7 @@
     heroku:config-set
     heroku:push
     heroku:migration
+    heroku:generate-css
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -138,6 +140,10 @@
     @endforeach
 @endtask
 
+@task('heroku:generate-css')
+    heroku run -a {{ $heroku_app }} php artisan generate:theme-css
+@endtask
+
 @task('heroku:push')
     git push {{ $git_remote }} {{ $branch }}
 @endtask
@@ -196,3 +202,11 @@
     sail:init-npm
     sail:fresh
 @endstory
+
+@task('art:seed-basic')
+    php artisan db:seed --class=DatabaseBasicSeeder
+    php artisan module:seed --class=SpaceDatabaseBasicSeeder Space
+    php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce
+    php artisan module:seed Booking
+    php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder
+@endtask
