@@ -198,9 +198,13 @@
             async onSubmit() {
                 this.submitLoader = this.$loading.show();
 
-                await this.$refs.recaptcha.execute();
-
-                this.submitLoader.hide();
+                try {
+                    await this.$refs.recaptcha.execute();
+                } catch (e) {
+                    console.error("Invalid Recaptcha key");
+                } finally {
+                    this.submitLoader.hide();
+                }
             },
 
             recaptchaVerify(response = null) {
