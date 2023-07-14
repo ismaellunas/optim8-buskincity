@@ -57,7 +57,7 @@
                         </div>
                     @endif
 
-                    <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post" class="mt-6">
+                    <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post" class="mt-6" onsubmit="setLoader()">
                         <fieldset id="fieldset">
 
                         @csrf
