@@ -103,6 +103,7 @@
                     save: '/form-builders/save',
                 },
                 formKey: 0,
+                submitLoader: null,
             };
         },
 
@@ -194,8 +195,16 @@
                 return reactive(form);
             },
 
-            onSubmit() {
-                this.$refs.recaptcha.execute();
+            async onSubmit() {
+                this.submitLoader = this.$loading.show();
+
+                try {
+                    await this.$refs.recaptcha.execute();
+                } catch (e) {
+                    console.error("Invalid Recaptcha key");
+                } finally {
+                    this.submitLoader.hide();
+                }
             },
 
             recaptchaVerify(response = null) {
