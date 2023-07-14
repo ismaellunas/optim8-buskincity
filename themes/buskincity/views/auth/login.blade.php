@@ -38,6 +38,12 @@
                 <div class="columns is-mobile is-vcentered is-flex-grow-1">
                     <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                         <div class="notification is-info">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
                             {{ session('message') }}
                         </div>
                     </div>
@@ -48,6 +54,12 @@
                 <div class="columns is-mobile is-vcentered is-flex-grow-1">
                     <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                         <div class="notification is-danger">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
                             {{ session('failed') }}
                         </div>
                     </div>
@@ -101,7 +113,7 @@
 
                     <p>Fill in your email and password to login.</p>
 
-                    <form id="form-login" action="{{ route('login') }}" method="post" class="mt-6">
+                    <form id="form-login" action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
                         <fieldset id="fieldset">
 
                         @csrf
@@ -180,7 +192,7 @@
         @endif
 
         <script>
-            function removeErrorMessage(element) { element.parentElement.remove(); }
+            function removeErrorMessage(element) { element.parentElement.parentElement.parentElement.remove(); }
         </script>
     @endpush
 </x-layouts.auth>
