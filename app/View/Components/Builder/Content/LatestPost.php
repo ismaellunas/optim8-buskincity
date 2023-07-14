@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Builder\Content;
 
-use App\Services\CategoryService;
 use App\Services\PostService;
 
 class LatestPost extends BaseContent
@@ -20,6 +19,7 @@ class LatestPost extends BaseContent
 
         $this->limit = $this->getLimit();
         $this->posts = $this->getPosts();
+
     }
 
     private function getPosts()
