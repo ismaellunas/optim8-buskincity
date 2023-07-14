@@ -34,8 +34,14 @@
             },
         },
 
-        mounted() {
-            if (this.isRecaptchaAvailable) {
+        unmounted() {
+            if (this.isRecaptchaAvailable && this.recaptchaScript) {
+                this.removeRecaptchaScript();
+            }
+        },
+
+        methods: {
+            addRecaptchaScript() {
                 this.recaptchaScript = document.createElement('script')
 
                 this.recaptchaScript.setAttribute(
@@ -43,33 +49,41 @@
                     'https://www.google.com/recaptcha/api.js?render=' + this.siteKey
                 );
                 document.head.appendChild(this.recaptchaScript);
-            }
-        },
+            },
 
-        unmounted() {
-            if (this.isRecaptchaAvailable && this.recaptchaScript) {
-                document.head.removeChild(this.recaptchaScript);
-            }
-        },
+            removeRecaptchaScript() {
+                this.recaptchaScript = document.createElement('script')
 
-        methods: {
+                this.recaptchaScript.setAttribute(
+                    'src',
+                    'https://www.google.com/recaptcha/api.js?render=' + this.siteKey
+                );
+                document.head.appendChild(this.recaptchaScript);
+            },
+
             execute() {
                 const self = this;
 
                 if (self.isRecaptchaAvailable) {
-                    grecaptcha.ready(function() {
-                        try {
-                            grecaptcha.execute(self.siteKey, {
-                                action: self.action
-                            })
-                                .then((response) => {
-                                    self.$emit('on-verify', response);
-                                });
-                        } catch (error) {
-                            self.isRecaptchaError = true;
-                            self.$emit('on-verify');
-                        }
-                    });
+                    if (! self.recaptchaScript) {
+                        this.addRecaptchaScript();
+                    }
+
+                    setTimeout(() => {
+                        grecaptcha.ready(function() {
+                            try {
+                                grecaptcha.execute(self.siteKey, {
+                                    action: self.action
+                                })
+                                    .then((response) => {
+                                        self.$emit('on-verify', response);
+                                    });
+                            } catch (error) {
+                                self.isRecaptchaError = true;
+                                self.$emit('on-verify');
+                            }
+                        });
+                    }, 200);
                 } else {
                     self.$emit('on-verify');
                 }
