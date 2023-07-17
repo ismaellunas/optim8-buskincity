@@ -40,13 +40,13 @@
                                         </ul>
                                     </nav>
                                     <div class="content is-hidden-mobile">
-                                        <span class="mr-1">•</span> {{ $readingTime }} {{ __('Minute Read') }}
+                                        <span class="mr-1">•</span> {{ __(':minute Minute Read', ['minute' => $readingTime]) }}
                                     </div>
                                 </div>
                             </div>
 
                             <div class="column is-12-mobile content is-hidden-tablet pt-0">
-                                {{ $readingTime }} {{ __('Minute Read') }}
+                                {{ __(':minute Minute Read', ['minute' => $readingTime]) }}
                             </div>
                         </div>
                     </header>
