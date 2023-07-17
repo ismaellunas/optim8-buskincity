@@ -89,8 +89,8 @@
             </div>
 
             <template
-                v-for="user in users.data"
-                :key="user.unique_key"
+                v-for="(user, index) in users.data"
+                :key="userKey + '-' + index"
             >
                 <slot :user="user" />
             </template>
@@ -180,6 +180,7 @@
                 options: {
                     countries: [],
                 },
+                userKey: 1,
             };
         },
 
@@ -283,6 +284,8 @@
                     })
                     .then(function () {
                         self.onEndLoadingOverlay();
+
+                        self.userKey += 1;
                     });
             },
 
