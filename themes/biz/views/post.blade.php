@@ -1,6 +1,10 @@
 <x-layouts.post>
+    @php
+        $postTitle = trim($post->meta_title ?? $post->title). ' | ' .config('app.name');
+    @endphp
+
     <x-slot name="title">
-        {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
+        {{ $postTitle }}
     </x-slot>
 
     <x-slot name="metaDescription">
@@ -15,8 +19,11 @@
             );
         @endphp
 
-        <meta property="og:image" content="{{ $ogImageUrl }}">
-        <meta name="twitter:image" content="{{ $ogImageUrl }}">
+        <x-og-meta
+            title="{{ $postTitle }}"
+            image-url="{{ $ogImageUrl }}"
+            description="{{ $metaDescription ?? '' }}"
+        />
     @endpush
 
     <div class="b752-blog-post section is-medium pt-6">

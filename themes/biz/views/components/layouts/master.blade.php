@@ -14,7 +14,10 @@
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 
-        @include('og-meta')
+        <x-og-meta
+            title="{{ $title }}"
+            description="{{ $metaDescription ?? '' }}"
+        />
 
         @stack('metas')
 

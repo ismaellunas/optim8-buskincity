@@ -14,8 +14,6 @@
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 
-        @include('og-meta')
-
         @stack('metas')
 
         <title>{{ $title ?? config('app.name') }}</title>
