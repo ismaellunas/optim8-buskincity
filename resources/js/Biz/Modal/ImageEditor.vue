@@ -5,7 +5,7 @@
     >
         <template #header>
             <p class="modal-card-title mb-1">
-                Image Editor : {{ fileName ?? ''}}
+                Image Editor : {{ fileName ?? '' }}
             </p>
             <biz-button
                 aria-label="close"
@@ -78,7 +78,8 @@
                             Done
                         </biz-button>
                     </div>
-                    <div class="is-clearfix"></div>
+
+                    <div class="is-clearfix" />
                 </div>
             </template>
 
@@ -253,11 +254,10 @@
                 },
             },
             cropper: {},
-            fileName: String,
-            isDebugMode: {type: Boolean, default: false},
-            isProcessing: {Boolean, default: false},
-            modelValue: {},
-            updateImage: {},
+            fileName: { type: [String, null], default: "" },
+            isDebugMode: { type: Boolean, default: false },
+            isProcessing: { type: Boolean, default: false },
+            modelValue: { type: [String, null], default: "" },
         },
         emits: [
             'close',

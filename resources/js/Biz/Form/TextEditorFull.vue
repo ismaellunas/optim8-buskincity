@@ -1,19 +1,28 @@
 <template>
-    <div>
-        <div class="field">
-            <biz-label>{{ label }}</biz-label>
+    <biz-form-field
+        :class="fieldClass"
+    >
+        <template
+            v-if="label"
+            #label
+        >
+            {{ label }}
+        </template>
 
-            <div class="control">
-                <biz-text-editor
-                    v-model="editorValue"
-                    :disabled="disabled"
-                    :placeholder="placeholder"
-                    :config="editorConfig"
-                />
-            </div>
-
-            <biz-input-error :message="message" />
+        <div class="control">
+            <biz-text-editor
+                v-model="editorValue"
+                :disabled="disabled"
+                :placeholder="placeholder"
+                :config="editorConfig"
+            />
         </div>
+
+        <slot name="note" />
+
+        <template #error>
+            <biz-input-error :message="message" />
+        </template>
 
         <biz-modal-media-browser
             v-if="isModalOpen"
@@ -32,15 +41,15 @@
             @on-media-submitted="onMediaSubmitted"
             @on-view-changed="setView"
         />
-    </div>
+    </biz-form-field>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinMediaLibrary from '@/Mixins/MediaLibrary';
     import MixinMediaTextEditor from '@/Mixins/MediaTextEditor';
+    import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
-    import BizLabel from '@/Biz/Label.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizTextEditor from '@/Biz/EditorTinymce.vue';
     import { fullConfig } from '@/Libs/tinymce-configs';
@@ -50,8 +59,8 @@
         name: 'BizFormTextEditorFull',
 
         components: {
+            BizFormField,
             BizInputError,
-            BizLabel,
             BizModalMediaBrowser,
             BizTextEditor,
         },
@@ -65,15 +74,16 @@
         props: {
             config: {type: Object, default: () => {}},
             disabled: {type: Boolean, default: false},
+            fieldClass: { type: [Object, Array, String], default: undefined },
+            height: {type: Number, default: 500},
+            isConfigCombined: {type: Boolean, default: false},
             isDownloadEnabled: {type: Boolean, default: true},
             isMediaEnabled: {type: Boolean, default: true},
             isUploadEnabled: {type: Boolean, default: true},
-            label: String,
-            message: {},
-            modelValue: {},
-            placeholder: String,
-            height: {type: Number, default: 500},
-            isConfigCombined: {type: Boolean, default: false},
+            label: { type: String, default: null },
+            message: { type: [String, Array], default: undefined },
+            modelValue: { type: [String, null], required: true },
+            placeholder: { type: String, default: null },
         },
 
         emits: ['update:modelValue'],

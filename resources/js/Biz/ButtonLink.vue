@@ -8,6 +8,8 @@
     import BizLink from '@/Biz/Link.vue';
 
     export default {
+        name: 'BizButtonLink',
+
         components: {
             BizLink,
         }

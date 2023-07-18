@@ -23,7 +23,14 @@
 
     export default {
         name: 'BizSelect',
-        props: ['modelValue', 'disabled', 'placeholder', 'name'],
+
+        props: {
+            disabled: { type: Boolean, default: false },
+            modelValue: { type: [String, Number, Boolean, null], required: true },
+            name: { type: [String, null], default: null },
+            placeholder: { type: [String, null], default: null },
+        },
+
         emits: ['change', 'update:modelValue'],
 
         setup(props, { emit }) {

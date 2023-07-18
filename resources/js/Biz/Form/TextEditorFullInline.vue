@@ -45,8 +45,8 @@
             MixinMediaTextEditor,
         ],
         props: {
-            config: Object,
-            modelValue: {},
+            config: { type: Object, default: () => {} },
+            modelValue: { type: [String, null], required: true },
         },
         emits: ['update:modelValue'],
         setup(props, { emit }) {

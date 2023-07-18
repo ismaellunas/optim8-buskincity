@@ -15,7 +15,9 @@
                 </span>
             </span>
         </td>
-        <td><b>{{ medium.file_name }}</b></td>
+        <td class="has-text-weight-bold">
+            {{ medium.file_name }}
+        </td>
         <td>{{ medium.date_modified }}</td>
         <td>{{ type }}</td>
         <td>{{ medium.readable_size }}</td>

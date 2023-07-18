@@ -21,7 +21,7 @@
 
 <script>
     export default {
-        name: 'SocialMediaShare',
+        name: 'BizSocialMediaShare',
 
         props: {
             data: {type: Object, default:() => {}},

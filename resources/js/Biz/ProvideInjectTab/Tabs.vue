@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div class="tabs" :class="class">
+        <div
+            class="tabs"
+            :class="tabClass"
+        >
             <ul>
                 <template
                     v-for="(tab, i) of tabs"
@@ -29,11 +32,14 @@
 
     export default {
         name: 'TabsProvideInjectTab',
+
         props: {
             modelValue: { type: [String, Number], default: "" },
             class: { type: [String, Object, Array], default: "" },
         },
+
         emits: ["update:modelValue"],
+
         setup(props, { slots, emit }) {
             const active = computed(() => props.modelValue);
             const tabs = ref([]);
@@ -52,6 +58,12 @@
                 active,
                 selectTab,
             };
+        },
+
+        computed: {
+            tabClass() {
+                return this.class;
+            },
         },
     }
 </script>

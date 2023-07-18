@@ -41,35 +41,27 @@
 
     export default {
         name: 'BizFormInputAddons',
+
         components: {
             BizField,
             BizInput,
             BizInputError,
             BizLabel,
         },
+
         inheritAttrs: false,
+
         props: {
-            disabled: {
-                type: Boolean,
-                default: false
-            },
-            label: String,
+            disabled: { type: Boolean, default: false },
+            label: { type: String, default: null },
             message: { type: [String, Array], default: undefined },
-            modelValue: {},
-            placeholder: String,
-            required: {
-                type: Boolean,
-                default: false
-            },
-            wrapperClass: {
-                type: [String, Array, Object],
-                default: () => [],
-            },
-            isSmall: {
-                type: Boolean,
-                default: false
-            },
+            modelValue: { type: [String, Number, null], required: true },
+            placeholder: { type: String, default: null },
+            required: { type: Boolean, default: false },
+            wrapperClass: { type: [String, Array, Object], default: () => [] },
+            isSmall: { type: Boolean, default: false },
         },
+
         emits: [
             'on-blur',
             'on-keypress',
