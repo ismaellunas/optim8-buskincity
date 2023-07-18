@@ -55,7 +55,7 @@
             disabled: { type: Boolean, default: false },
             label: { type: String, default: null },
             message: { type: [String, Array], default: undefined },
-            modelValue: { type: [String, Number, null], required: true },
+            modelValue: { type: [String, Number, null,], default: null },
             placeholder: { type: String, default: null },
             required: { type: Boolean, default: false },
             wrapperClass: { type: [String, Array, Object], default: () => [] },
