@@ -33,7 +33,11 @@ class SettingService
     {
         $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $value;
-        $setting->group = $group;
+
+        if ($group) {
+            $setting->group = $group;
+        }
+
         $setting->save();
 
         return $setting;
