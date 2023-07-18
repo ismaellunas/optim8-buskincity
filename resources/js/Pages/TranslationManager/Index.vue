@@ -514,14 +514,14 @@
                 self.form.post(route(self.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form = self.getUseForm();
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                     }
                 });
             },
@@ -604,7 +604,7 @@
                         preserveState: true,
                         replace: true,
                         onStart: () => {
-                            self.loader = self.$loading.show();
+                            self.onStartLoadingOverlay();
                             self.isProcessing = true;
                         },
                         onSuccess: (page) => {
@@ -625,7 +625,7 @@
                             }
                         },
                         onFinish: () => {
-                            self.loader.hide();
+                            self.onEndLoadingOverlay();
                             self.isProcessing = false;
                         },
                     }

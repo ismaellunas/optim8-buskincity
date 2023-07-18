@@ -192,6 +192,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
@@ -218,6 +219,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -298,7 +300,6 @@
         data() {
             return {
                 isProcessing: false,
-                loader: null,
                 imageTypes: acceptedImageTypes,
             };
         },
@@ -316,10 +317,11 @@
         methods: {
             onSubmit() {
                 const self = this;
+
                 this.form.post(route(this.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -329,7 +331,7 @@
                         location.reload();
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });

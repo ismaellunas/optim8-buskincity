@@ -311,7 +311,6 @@
 
             return {
                 createStripeForm: useForm(createStripeForm),
-                loader: ref(null),
                 settingForm: useForm(settingForm),
                 queryParams: ref(merge({}, props.pageQueryParams)),
             }
@@ -427,7 +426,7 @@
             submit() {
                 this.settingForm.post(route('payments.stripe.update-setting'), {
                     onStart: () => {
-                        this.loader = this.$loading.show();
+                        this.onStartLoadingOverlay();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
@@ -436,7 +435,7 @@
                         oopsAlert();
                     },
                     onFinish: () => {
-                        this.loader.hide();
+                        this.onEndLoadingOverlay();
                     }
                 });
             },
@@ -445,43 +444,43 @@
                 this.$inertia.get(url, {}, {
                     preserveScroll: true,
                     onStart: () => {
-                        this.loader = this.$loading.show();
+                        this.onStartLoadingOverlay();
                     },
                     onFinish: () => {
-                        this.loader.hide();
+                        this.onEndLoadingOverlay();
                     }
                 });
             },
 
             getStatusTagClass(category) {
                 switch (category) {
-                    case 'dispute':
-                        return 'is-danger';
-                        break;
+                case 'dispute':
+                    return 'is-danger';
+                    break;
 
-                    case 'charge':
-                        return 'is-success';
-                        break;
+                case 'charge':
+                    return 'is-success';
+                    break;
 
-                    default:
-                        return 'is-secondary';
-                        break;
+                default:
+                    return 'is-secondary';
+                    break;
                 }
             },
 
             getStatusTagText(text) {
                 switch (text) {
-                    case 'dispute':
-                        return 'Disputed';
-                        break;
+                case 'dispute':
+                    return 'Disputed';
+                    break;
 
-                    case 'charge':
-                        return 'Succeeded';
-                        break;
+                case 'charge':
+                    return 'Succeeded';
+                    break;
 
-                    default:
-                        return startCase(text);
-                        break;
+                default:
+                    return startCase(text);
+                    break;
                 }
             },
 

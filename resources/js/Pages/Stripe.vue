@@ -239,6 +239,8 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
@@ -253,7 +255,6 @@
     import BizSelect from '@/Biz/Select.vue';
     import BizTable from '@/Biz/Table.vue';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import icon from '@/Libs/icon-class';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
@@ -280,6 +281,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -388,7 +390,6 @@
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
                 icon,
-                loader: null,
                 tempAmountOptions: {},
             }
         },
@@ -473,7 +474,7 @@
                 this.form.post(this.route('admin.settings.stripe.update'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
@@ -482,7 +483,7 @@
                         oopsAlert();
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                     }
                 });
             },

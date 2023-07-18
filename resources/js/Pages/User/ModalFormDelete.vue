@@ -90,6 +90,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
@@ -108,6 +109,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -155,7 +157,6 @@
         data() {
             return {
                 candidates: [],
-                loader: null,
             };
         },
 
@@ -171,7 +172,7 @@
             loadCandidates() {
                 const self = this;
 
-                self.loader = self.$loading.show();
+                self.onStartLoadingOverlay();
 
                 const url = route(
                     self.getCandidatesRoute,
@@ -184,7 +185,7 @@
                         self.candidates = response.data;
                     })
                     .then(() => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                     });
             },
         },
