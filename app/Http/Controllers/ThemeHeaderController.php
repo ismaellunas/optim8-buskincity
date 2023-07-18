@@ -68,7 +68,10 @@ class ThemeHeaderController extends CrudController
     {
         $inputs = $request->validated();
 
-        $setting = Setting::firstOrNew(['key' => 'header_layout']);
+        $setting = Setting::firstOrNew(
+            ['key' => 'header_layout'],
+            ['group' => 'header'],
+        );
         $setting->value = $inputs['layout'];
         $setting->save();
 
