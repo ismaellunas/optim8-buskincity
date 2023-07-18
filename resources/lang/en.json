@@ -1021,5 +1021,6 @@
     ":number month|:number months": ":number month|:number months",
     "Seo": "Seo",
     "default_image": "Default image",
-    "post_thumbnail": "Post thumbnail"
+    "post_thumbnail": "Post thumbnail",
+    ":minute Minute Read": ":minute Minute Read"
 }
