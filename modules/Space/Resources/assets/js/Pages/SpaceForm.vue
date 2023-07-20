@@ -94,6 +94,7 @@
                         :label="i18n.cover"
                         image-preview-size="6"
                         :is-download-enabled="true"
+                        :is-image-preview-thumbnail="false"
                         :is-upload-enabled="true"
                         :medium="coverMedia"
                         :instructions="instructions.coverMediaLibrary"
