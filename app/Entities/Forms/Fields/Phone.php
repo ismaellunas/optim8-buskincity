@@ -11,6 +11,8 @@ class Phone extends BaseField
     protected $type = "Phone";
 
     public $defaultCountry;
+    public $maxlength;
+    public $placeholder;
 
     public $defaultValue = [
         'country' => null,
