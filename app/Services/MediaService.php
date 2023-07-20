@@ -19,7 +19,8 @@ use Illuminate\Support\Str;
 
 class MediaService
 {
-    public static $profilePictureFolder = 'profiles';
+    public static $userAssetsFolder = 'user_assets/';
+    public static $profilePictureFolder = 'profiles/';
 
     public static function isFileNameExists(
         string $fileName,
@@ -156,6 +157,11 @@ class MediaService
         );
     }
 
+    protected function folderPath(string $sufix = null): ?string
+    {
+        return config('filesystems.folder_prefix').$sufix;
+    }
+
     public function upload(
         UploadedFile $file,
         string $fileName,
@@ -172,11 +178,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        if (! is_null($folder)) {
-            $folder = $this->getFolderPrefix().$folder;
-        } else {
-            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
-        }
+        $folder = $this->folderPath($folder);
 
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
@@ -218,11 +220,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        if (! is_null($folder)) {
-            $folder = $this->getFolderPrefix().$folder;
-        } else {
-            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
-        }
+        $folder = $this->folderPath($folder);
 
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
@@ -373,7 +371,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
+        $folder = $this->folderPath(self::$userAssetsFolder.$user->id);
 
         $fileName = $this->getUniqueFileName(
             $fileName,
@@ -410,7 +408,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
+        $folder = $this->folderPath(self::$userAssetsFolder.$user->id);
 
         $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
 
@@ -446,7 +444,7 @@ class MediaService
     ): Media {
         $fileName = $user->generateProfilePhotoFileName();
 
-        $folder = $this->getFolderPrefix() . self::$profilePictureFolder;
+        $folder = $this->folderPath(self::$profilePictureFolder);
 
         $fileName = $this->getUniqueFileName($fileName, [], null, $folder);
 
@@ -487,17 +485,6 @@ class MediaService
             $medium->medially()->associate($relatedModel);
             $medium->save();
         }
-    }
-
-    public function getFolderPrefix(): ?string
-    {
-        $folderPrefix = config('filesystems.folder_prefix');
-
-        if ($folderPrefix) {
-            $folderPrefix = $folderPrefix . '_';
-        }
-
-        return $folderPrefix;
     }
 
     public static function defaultMediaLibraryInstructions(): array
