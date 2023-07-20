@@ -14,6 +14,11 @@
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 
+        <x-og-meta
+            title="{{ $title }}"
+            description="{{ $metaDescription ?? '' }}"
+        />
+
         @stack('metas')
 
         <title>{{ $title ?? config('app.name') }}</title>

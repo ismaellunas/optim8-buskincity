@@ -339,6 +339,7 @@ return [
         'cover' => '2560 x 576px',
         'gallery' => '1280 x 720px',
         'post_thumbnail' => '600 x 400px',
+        'open_graph' => '1200 x 630px',
     ],
 
     'dimensions' => [
@@ -357,6 +358,10 @@ return [
         'post_thumbnail' => [
             'width' => 480,
             'height' => 320,
+        ],
+        'open_graph' => [
+            'width' => 1200,
+            'height' => 630,
         ],
     ],
 

@@ -670,6 +670,11 @@ class SettingService
         $this->saveMedia('post_thumbnail_media_id', $mediaId, 'theme_seo');
     }
 
+    public function saveOpenGraph(?int $mediaId = null): void
+    {
+        $this->saveMedia('open_graph_media_id', $mediaId, 'theme_seo');
+    }
+
     private function transformMedia(Media $media): void
     {
         $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
@@ -821,5 +826,32 @@ class SettingService
         }
 
         return $media;
+    }
+
+    public function getOpenGraphMedia(): ?Media
+    {
+        $media = $this->getMediaFromSetting('open_graph_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
+    }
+
+    public function getOpenGraphImageUrl(int $width, int $height): string
+    {
+        return app(SettingCache::class)->remember(
+            'open_graph_image_url',
+            function () use ($width, $height) {
+                $media = $this->getOpenGraphMedia();
+
+                if ($media) {
+                    return $media->getOptimizedImageUrl($width, $height);
+                }
+
+                return "";
+            }
+        );
     }
 }

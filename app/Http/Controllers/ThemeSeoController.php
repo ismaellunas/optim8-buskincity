@@ -25,8 +25,6 @@ class ThemeSeoController extends CrudController
     {
         $user = auth()->user();
 
-        $postThumbnailMedia = $this->settingService->getPostThumbnailMedia();
-
         return Inertia::render(
             'ThemeSeo',
             $this->getData([
@@ -36,13 +34,22 @@ class ThemeSeoController extends CrudController
                         'add' => $user->can('media.add'),
                     ]
                 ],
-                'postThumbnailMedia' => $postThumbnailMedia,
+                'postThumbnailMedia' => $this->settingService->getPostThumbnailMedia(),
+                'openGraphMedia' => $this->settingService->getOpenGraphMedia(),
                 'instructions' => [
                     'postThumbnailMediaLibrary' => [
                         ...MediaService::defaultMediaLibraryInstructions(),
                         ...[
                             __('Recommended dimension: :dimension.', [
                                 'dimension' => config('constants.recomended_dimensions.post_thumbnail')
+                            ]),
+                        ]
+                    ],
+                    'openGraphMediaLibrary' => [
+                        ...MediaService::defaultMediaLibraryInstructions(),
+                        ...[
+                            __('Recommended dimension: :dimension.', [
+                                'dimension' => config('constants.recomended_dimensions.open_graph')
                             ]),
                         ]
                     ],
@@ -62,6 +69,10 @@ class ThemeSeoController extends CrudController
             switch ($key) {
                 case 'post_thumbnail':
                     $this->settingService->savePostThumbnail($inputs[$key]);
+                    break;
+
+                case 'open_graph':
+                    $this->settingService->saveOpenGraph($inputs[$key]);
                     break;
 
                 default:
@@ -89,6 +100,7 @@ class ThemeSeoController extends CrudController
                 'save' => __('Save'),
                 'default_image' => __('Default image'),
                 'post_thumbnail' => __('Post thumbnail'),
+                'open_graph' => __('Open graph'),
                 'open_media_library' => __('Open media library'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
