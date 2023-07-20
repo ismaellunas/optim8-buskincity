@@ -75,5 +75,5 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
-    'folder_prefix' => env('FOLDER_PREFIX'),
+    'folder_prefix' => env('FOLDER_PREFIX', null),
 ];
