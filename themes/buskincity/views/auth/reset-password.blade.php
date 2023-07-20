@@ -50,7 +50,7 @@
                         </div>
                     @endif
 
-                    <form method="post" action="{{ route('password.update') }}" class="mt-6">
+                    <form method="post" action="{{ route('password.update') }}" class="mt-6" onsubmit="setLoader()">
                         <fieldset id="fieldset">
 
                             @csrf

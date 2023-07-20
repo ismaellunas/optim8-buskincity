@@ -48,6 +48,8 @@
         {!! $trackingCodeAfterBody !!}
 
         <div id="app">
+            <loading-overlay id="loader" class="is-hidden"></loading-overlay>
+
             <section class="section">
                 <div class="container">
                     {{ $slot }}
@@ -72,7 +74,6 @@
                 document.getElementById('socialMediaForm').classList.remove('is-hidden');
             }
 
-
             function showHidePassword(identifier) {
                 let target = identifier.getAttribute('data-target');
                 let inputPassword = document.getElementById(target);
@@ -93,15 +94,13 @@
                 });
             }
 
-            function disableFieldset() {
-                const fieldset = document.getElementById('fieldset');
+            function setLoader() {
+                const loaderElement = document.getElementById('loader')
 
-                if (fieldset) {
-                    fieldset.setAttribute('disabled','disabled');
+                if (loaderElement) {
+                    loaderElement.classList.remove('is-hidden');
                 }
-
-                return true;
-            };
+            }
         </script>
 
         @stack('bottom_scripts')

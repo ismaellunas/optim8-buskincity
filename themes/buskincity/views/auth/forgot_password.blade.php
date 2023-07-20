@@ -78,7 +78,7 @@
                             </div>
                         @endif
 
-                        <form id="form-forgot-password" action="{{ route('password.email') }}" method="post" class="mt-6">
+                        <form id="form-forgot-password" action="{{ route('password.email') }}" method="post" class="mt-6" onsubmit="setLoader()">
                             <fieldset id="fieldset">
 
                             @csrf
