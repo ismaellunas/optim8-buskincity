@@ -1,11 +1,30 @@
 <x-layouts.post>
+    @php
+        $postTitle = trim($post->meta_title ?? $post->title). ' | ' .config('app.name');
+    @endphp
+
     <x-slot name="title">
-        {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
+        {{ $postTitle }}
     </x-slot>
 
     <x-slot name="metaDescription">
         {{ $post->meta_description }}
     </x-slot>
+
+    @push('metas')
+        @php
+            $ogImageUrl = $post->getOptimizedThumbnailOrDefaultUrl(
+                config('constants.dimensions.open_graph.width'),
+                config('constants.dimensions.open_graph.height'),
+            );
+        @endphp
+
+        <x-og-meta
+            title="{{ $postTitle }}"
+            image-url="{{ $ogImageUrl }}"
+            description="{{ $metaDescription ?? '' }}"
+        />
+    @endpush
 
     <div class="b752-blog-post section is-medium pt-6">
         <div class="container theme-font">
@@ -15,30 +34,38 @@
                         <h1 class="title is-1 is-hidden-mobile">{{ $post->title }}</h1>
                         <h1 class="title is-2 is-hidden-tablet">{{ $post->title }}</h1>
 
-                        <div class="is-flex">
-                            <nav class="breadcrumb">
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('homepage') }}">
-                                            {{ __('Home') }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('blog.index') }}">
-                                            {{ __('Blog') }}
-                                        </a>
-                                    </li>
-                                    @if ($post->category)
-                                        <li class="is-active">
-                                            <a href="#">
-                                                {{ $post->category->name }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </nav>
-                            <div>
-                                <span class="mr-1">•</span> {{ $readingTime }} {{ __('Minute Read') }}
+                        <div class="columns is-multiline is-mobile">
+                            <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                                <div class="is-flex">
+                                    <nav class="breadcrumb mb-0">
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('homepage') }}">
+                                                    {{ __('Home') }}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('blog.index') }}">
+                                                    {{ __('Blog') }}
+                                                </a>
+                                            </li>
+                                            @if ($post->category)
+                                                <li class="is-active">
+                                                    <a href="#">
+                                                        {{ $post->category->name }}
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </nav>
+                                    <div class="content is-hidden-mobile">
+                                        <span class="mr-1">•</span> {{ __(':minute Minute Read', ['minute' => $readingTime]) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-12-mobile content is-hidden-tablet pt-0">
+                                {{ __(':minute Minute Read', ['minute' => $readingTime]) }}
                             </div>
                         </div>
                     </header>
