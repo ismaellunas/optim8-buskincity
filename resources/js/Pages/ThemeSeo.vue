@@ -35,9 +35,10 @@
                     <div class="column is-6">
                         <biz-form-media-library
                             v-model="form.post_thumbnail"
-                            image-preview-size="6"
+                            image-preview-size="8"
                             :placeholder="i18n.open_media_library"
                             :is-download-enabled="can?.media?.read ?? false"
+                            :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="postThumbnailMedia"
                             :instructions="instructions.postThumbnailMediaLibrary"
@@ -52,9 +53,10 @@
                     <div class="column is-6">
                         <biz-form-media-library
                             v-model="form.open_graph"
-                            image-preview-size="6"
+                            image-preview-size="8"
                             :placeholder="i18n.open_media_library"
                             :is-download-enabled="can?.media?.read ?? false"
+                            :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="openGraphMedia"
                             :instructions="instructions.openGraphMediaLibrary"

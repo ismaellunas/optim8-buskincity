@@ -23,6 +23,7 @@
                         :medium="mediumPreview"
                         :is-edit-enabled="false"
                         :is-download-enabled="isDownloadEnabled"
+                        :is-image-preview-thumbnail="isImagePreviewThumbnail"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
                     />
@@ -130,6 +131,7 @@
                     return (value >= 1 && value <= 12);
                 }
             },
+            isImagePreviewThumbnail: { type:Boolean, default: true },
         },
 
         emits: [
