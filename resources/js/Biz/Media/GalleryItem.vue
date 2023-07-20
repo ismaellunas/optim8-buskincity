@@ -7,7 +7,7 @@
             <biz-image
                 v-if="isImage"
                 :alt="medium.display_file_name"
-                :src="medium.thumbnail_url ?? medium.file_url"
+                :src="imgSrc"
             />
             <span
                 v-else
@@ -100,6 +100,7 @@
             isPreviewEnabled: { type: Boolean, default: true },
             isSelectEnabled: { type: Boolean, default: true },
             medium: { type: Object, default: () => {}},
+            isImagePreviewThumbnail: { type:Boolean, default: true },
         },
 
         emits: [
@@ -126,6 +127,14 @@
                 }
 
                 return {};
+            },
+
+            imgSrc() {
+                if (this.isImagePreviewThumbnail) {
+                    return this.medium.thumbnail_url ?? this.medium.file_url;
+                }
+
+                return this.medium.optimized_image_url ?? this.medium.file_url;
             },
         },
     }

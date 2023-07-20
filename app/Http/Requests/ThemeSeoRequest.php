@@ -28,6 +28,10 @@ class ThemeSeoRequest extends FormRequest
                 'nullable',
                 'exists:media,id',
             ],
+            'open_graph' => [
+                'nullable',
+                'exists:media,id',
+            ],
         ];
     }
 }

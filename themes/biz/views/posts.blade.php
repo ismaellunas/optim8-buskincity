@@ -1,6 +1,6 @@
 <x-layouts.master>
     <x-slot name="title">
-        {{ $metaTitle }}
+        {{ $metaTitle . ' | ' .config('app.name') }}
     </x-slot>
 
     @if ($metaDescription)
