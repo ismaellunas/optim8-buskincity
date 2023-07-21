@@ -95,12 +95,14 @@
                 <div id="formFields" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile is-hidden">
                     <h1 class="title is-2 mb-4">Welcome Back</h1>
 
+                    <p>Fill in your email and password to login.</p>
+
                     @if ($errors->any())
-                        <div class="notification is-danger mb-4">
+                        <div class="notification is-danger mt-4">
                             <button
                                 class="delete"
                                 type="button"
-                                onclick="removeErrorMessage(this)"
+                                onclick="removeLoginErrorMessage(this)"
                             ></button>
 
                             <ul class="alert alert-danger">
@@ -111,72 +113,68 @@
                         </div>
                     @endif
 
-                    <p>Fill in your email and password to login.</p>
-
                     <form id="form-login" action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
                         <fieldset id="fieldset">
-
-                        @csrf
-                        <div class="field mb-5">
-                            <label class="label">Email</label>
-                            <div class="control">
-                                <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
-                            </div>
-                            @error('email')
-                                <p class="help is-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="field mb-5">
-                            <label class="label">Password</label>
-                            <div class="field has-addons">
-                                <div class="control is-expanded">
-                                    <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
+                            @csrf
+                            <div class="field mb-5">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
                                 </div>
-                                <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
-                                    <button type="button" class="button" tabindex="-1">
-                                        <span class="icon">
-                                            <x-icon icon="fa-eye" />
-                                        </span>
-                                    </button>
-                                    <button type="button" class="button is-hidden" tabindex="-1">
-                                        <span class="icon">
-                                            <x-icon icon="fa-eye-slash" />
-                                        </span>
-                                    </button>
-                                </div>
+                                @error('email')
+                                    <p class="help is-danger">{{ $message }}</p>
+                                @enderror
                             </div>
-                            @error('password')
-                                <p class="help is-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
 
-                        <div class="field is-horizontal mb-5">
-                            <div class="field-body">
-                                <div class="field">
-                                    <div class="control">
-                                        <label class="checkbox">
-                                            <input type="checkbox" class="mr-3" name="remember">
-                                            Remember me
-                                        </label>
+                            <div class="field mb-5">
+                                <label class="label">Password</label>
+                                <div class="field has-addons">
+                                    <div class="control is-expanded">
+                                        <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
+                                    </div>
+                                    <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
+                                        <button type="button" class="button" tabindex="-1">
+                                            <span class="icon">
+                                                <x-icon icon="fa-eye" />
+                                            </span>
+                                        </button>
+                                        <button type="button" class="button is-hidden" tabindex="-1">
+                                            <span class="icon">
+                                                <x-icon icon="fa-eye-slash" />
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
+                                @error('password')
+                                    <p class="help is-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                                <div class="field has-text-right">
-                                    <a href="{{ route('password.request') }}" class="has-text-primary">Forgot password?</a>
+                            <div class="field is-horizontal mb-5">
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control">
+                                            <label class="checkbox">
+                                                <input type="checkbox" class="mr-3" name="remember">
+                                                Remember me
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="field has-text-right">
+                                        <a href="{{ route('password.request') }}" class="has-text-primary">Forgot password?</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <x-recaptcha
-                            action="login"
-                            form-id="form-login"
-                        />
+                            <x-recaptcha
+                                action="login"
+                                form-id="form-login"
+                            />
 
-                        <button class="button is-medium is-primary is-fullwidth">
-                            <span class="has-text-weight-bold">Log In</span>
-                        </button>
-
+                            <button class="button is-medium is-primary is-fullwidth">
+                                <span class="has-text-weight-bold">Log In</span>
+                            </button>
                         </fieldset>
                     </form>
                 </div>
@@ -193,6 +191,7 @@
 
         <script>
             function removeErrorMessage(element) { element.parentElement.parentElement.parentElement.remove(); }
+            function removeLoginErrorMessage(element) { element.parentElement.remove(); }
         </script>
     @endpush
 </x-layouts.auth>
