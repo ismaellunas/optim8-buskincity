@@ -15,7 +15,8 @@
                     </template>
                 </div>
 
-                <biz-widget-columns-admin
+                <component
+                    :is="asyncComponents['BizWidgetColumnsAdmin']"
                     :widgets="widgets"
                     :module-widgets="moduleWidgets"
                 />
@@ -26,15 +27,10 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import BizWidgetColumnsAdmin from '@/Biz/Widget/WidgetColumnsAdmin.vue';
     import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'DashboardAdmin',
-
-        components: {
-            BizWidgetColumnsAdmin,
-        },
 
         layout: AppLayout,
 
@@ -68,6 +64,10 @@
                     componentName,
                 });
             });
+
+            asyncComponents['BizWidgetColumnsAdmin'] = defineAsyncComponent(() => import(
+                '@/Biz/Widget/WidgetColumnsAdmin.vue'
+            ));
 
             return {
                 asyncComponents,
