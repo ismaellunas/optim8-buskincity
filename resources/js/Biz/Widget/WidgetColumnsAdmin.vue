@@ -17,35 +17,17 @@
                         :i18n="widget.i18n"
                     />
                 </template>
-
-                <template
-                    v-else
-                >
-                    <component
-                        :is="widget.componentName"
-                        :columns="widget.columns"
-                        :data="widget.data"
-                        :order="order"
-                        :title="widget.title"
-                        :i18n="widget.i18n"
-                    />
-                </template>
             </template>
         </div>
     </div>
 </template>
 
 <script>
-    import LatestRegistration from '@/Biz/Widget/LatestRegistration.vue';
     import { defineAsyncComponent } from 'vue';
     import { sortBy } from 'lodash';
 
     export default {
         name: 'BizWidgetColumnsAdmin',
-
-        components: {
-            LatestRegistration,
-        },
 
         props: {
             widgets: { type: Array, default:() => [] },
@@ -69,6 +51,10 @@
                     ));
                 }
             });
+
+            asyncComponents['LatestRegistration'] = defineAsyncComponent(() => import(
+                '@/Biz/Widget/LatestRegistration.vue'
+            ));
 
             return {
                 asyncComponents,

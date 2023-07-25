@@ -52,7 +52,6 @@
         >
             <template #thead>
                 <tr>
-                    <th>#</th>
                     <th>{{ i18n.name }}</th>
                     <th>{{ i18n.email }}</th>
                     <th>{{ i18n.role }}</th>
