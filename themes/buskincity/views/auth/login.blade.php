@@ -35,13 +35,13 @@
             </nav>
 
             @if (session('message'))
-                <div class="columns is-mobile is-vcentered is-flex-grow-1">
+                <div class="columns is-mobile is-vcentered is-flex-grow-1 error-message">
                     <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                         <div class="notification is-info">
                             <button
                                 class="delete"
                                 type="button"
-                                onclick="removeErrorMessage(this)"
+                                onclick="removeErrorMessage()"
                             ></button>
 
                             {{ session('message') }}
@@ -51,13 +51,13 @@
             @endif
 
             @if (session('failed'))
-                <div class="columns is-mobile is-vcentered is-flex-grow-1">
+                <div class="columns is-mobile is-vcentered is-flex-grow-1 error-message">
                     <div class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
                         <div class="notification is-danger">
                             <button
                                 class="delete"
                                 type="button"
-                                onclick="removeErrorMessage(this)"
+                                onclick="removeErrorMessage()"
                             ></button>
 
                             {{ session('failed') }}
@@ -98,11 +98,11 @@
                     <p>Fill in your email and password to login.</p>
 
                     @if ($errors->any())
-                        <div class="notification is-danger mt-4">
+                        <div class="notification is-danger mt-4 error-message">
                             <button
                                 class="delete"
                                 type="button"
-                                onclick="removeLoginErrorMessage(this)"
+                                onclick="removeErrorMessage()"
                             ></button>
 
                             <ul class="alert alert-danger">
@@ -190,8 +190,13 @@
         @endif
 
         <script>
-            function removeErrorMessage(element) { element.parentElement.parentElement.parentElement.remove(); }
-            function removeLoginErrorMessage(element) { element.parentElement.remove(); }
+            function removeErrorMessage() {
+                const errorMessageElement = document.getElementsByClassName('error-message');
+
+                for (let i = 0; i < errorMessageElement.length; i++) {
+                    errorMessageElement[i].remove();
+                }
+            }
         </script>
     @endpush
 </x-layouts.auth>
