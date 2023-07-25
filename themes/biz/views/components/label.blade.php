@@ -7,6 +7,6 @@
     @if ($slot->isNotEmpty())
         {{ $slot }}
     @else
-        {{ $label }} @if ($required) <span class="has-text-danger">*</span> @endif
+        {{ $label }} @if ($required) <sup class="has-text-danger">*</sup> @endif
     @endif
 </label>
