@@ -108,6 +108,8 @@ class FixMediaStructure extends Command
                 $newPublicId = $prefix . $publicId;
             }
 
+            $newPublicId = Str::replace(" ", "_", $newPublicId);
+
             $asset = $cloudinaryAssets->where('public_id', $newPublicId)->first();
 
             if (! Str::startsWith($publicId, $prefix)) {
@@ -161,7 +163,7 @@ class FixMediaStructure extends Command
     {
         $this->table(
             ['Unused Asset ID'],
-            $unusedMedia->map(fn ($media) => ['id' => $media->file_name])
+            $unusedMedia->map(fn ($media) => ['id' => $media->file_name])->sortBy('id')
         );
 
         $this->info('Unused assets:'.$unusedMedia->count());
