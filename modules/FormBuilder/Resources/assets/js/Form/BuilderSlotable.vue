@@ -169,10 +169,26 @@
 
                         this.formErrors = error.response.data.errors;
                         this.errorMessage = error.response.data.message;
+
+                        this.showErrorFields();
                     })
                     .then(() => {
                         this.onEndLoadingOverlay();
                     });
+            },
+
+            showErrorFields() {
+                Object.keys(this.formErrors).forEach((key) => {
+                    const index = key.indexOf(".");
+
+                    const suffix = (index === -1) ? key : key.substring(0, index);
+
+                    const element = this.$el.querySelector('.form-input-'+suffix)
+
+                    if (element) {
+                        element.classList.add('is-danger');
+                    }
+                });
             },
         },
     };

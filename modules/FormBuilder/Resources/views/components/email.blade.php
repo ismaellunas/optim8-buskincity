@@ -6,6 +6,7 @@
 <x-form.input
     v-model="form.{{ $fieldName }}"
     type="email"
+    form-input-class="form-input-{{ $fieldName }}"
     :label="$field['label']"
     :name="$field['name']"
     :maxlength="$field['maxlength']"

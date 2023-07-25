@@ -2,13 +2,14 @@
     'label' => '',
     'type' => 'text',
     'required' => false,
+    'formInputClass' => 'form-input'
 ])
 
 <x-field>
     <x-label :label="$label" :required="$required" />
 
     <div class="control">
-        <input class="input" type="{{ $type }}" {{ $attributes }} @required($required) />
+        <input type="{{ $type }}" {{ $attributes->class(['input', $formInputClass]) }} @required($required) />
     </div>
 
     {{ $slot }}

@@ -126,7 +126,7 @@
             <div class="control has-icons-left is-expanded">
                 <input
                     v-model="computedValue['number']"
-                    class="input"
+                    class="input form-input-{{ $fieldName }}"
                     type="text"
                     placeholder="{{ $field['placeholder'] ?? '' }}"
                     maxlength="24"

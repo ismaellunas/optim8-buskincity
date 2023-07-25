@@ -6,6 +6,7 @@
 <x-form.select
     v-model="form.{{ $fieldName }}"
     is-fullwidth
+    form-input-class="form-input-{{ $fieldName }}"
     :label="$field['label']"
     :name="$field['name']"
     :placeholder="$field['placeholder']"
