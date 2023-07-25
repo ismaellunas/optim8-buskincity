@@ -3,44 +3,6 @@
     'fieldName' => 'name',
     'dropdownId' => uniqid(),
 ])
-{{--
-    :label="schema.label"
-    :maxlength="schema.maxlength"
-    :placeholder="schema.placeholder"
-    :disabled="schema.is_disabled"
-    :readonly="schema.is_readonly"
-    :required="schema.is_required"
-    :message="message"
-    :country-options="schema.countryOptions"
-    :default-country="schema.defaultCountry"
---}}
-
-{{--
-<x-form.phone
-    v-model="form.{{ $fieldName }}"
-    :label="$field['label']"
->
-    <x-slot:notes>
-        <div>
-            <ul class="help ml-0 is-info" style="list-style-type: none">
-            @foreach ($field['notes'] as $note)
-                <li>{{ $note }}</li>
-            @endforeach
-            </ul>
-        </div>
-
-        <div v-show="getError('{{ $fieldName }}', null, formErrors)">
-            <p
-                v-for="(msg, index) in getError('{{ $fieldName }}', null, formErrors)"
-                :key="index"
-                class="help is-danger"
-            >
-                @{{ msg }}
-            </p>
-        </div>
-    </x-slot>
-</x-form>
---}}
 
 <x-field>
     <x-label :label="$field['label']" :required="$field['is_required']" />
@@ -157,21 +119,3 @@
         </p>
     </div>
 </x-field>
-
-{{--
-<form-phone
-    v-model="form.{{ $fieldName }}"
-    :errors="formErrors"
-    :schema="{{ Illuminate\Support\Js::from($field) }}"
->
-    <template #note>
-        <div>
-            <ul class="help ml-0 is-info" style="list-style-type: none">
-            @foreach ($field['notes'] as $note)
-                <li>{{ $note }}</li>
-            @endforeach
-            </ul>
-        </div>
-    </template>
-</form-phone>
---}}
