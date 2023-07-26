@@ -10,7 +10,7 @@
 >
     @foreach ($components as $pageComponent)
         <x-dynamic-component
-            :component="$componentName($pageComponent['componentName'])"
+            :component="$componentName($pageComponent)"
             :entity="$entities[$pageComponent['id']]"
             :images="$images"
             :locale="$locale"

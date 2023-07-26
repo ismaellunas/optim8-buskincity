@@ -338,10 +338,16 @@
 
                 this.data.entities[this.clonedComponent.id] = this.clonedComponent;
 
-                return {
+                const structureComponent = {
                     id: this.clonedComponent.id,
                     componentName: this.clonedComponent.componentName,
                 };
+
+                if (! isBlank(this.clonedComponent.module)) {
+                    structureComponent.module = this.clonedComponent.module;
+                }
+
+                return structureComponent;
             },
             deleteBlock(id) {
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);

@@ -2,7 +2,7 @@
 
 namespace Modules\FormBuilder\Providers;
 
-//use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
 use Modules\FormBuilder\Services\FormBuilderService;
@@ -35,6 +35,8 @@ class FormBuilderServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        Blade::componentNamespace('\\Modules\\FormBuilder\\View\\Components', 'formbuilder');
     }
 
     /**

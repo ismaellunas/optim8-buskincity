@@ -33,10 +33,16 @@ class Column extends Component
         return view('components.builder.column');
     }
 
-    public function componentName($componentName): string
+    public function componentName($component): string
     {
-        return $this->componentPrefix . strtolower(
-            preg_replace('/(?<!^)[A-Z]/', '_$0', $componentName)
+        $componentName = strtolower(
+            preg_replace('/(?<!^)[A-Z]/', '_$0', $component['componentName'])
         );
+
+        if (! empty($component['module'])) {
+            return strtolower($component['module']).'::'.$this->componentPrefix.$componentName;
+        }
+
+        return $this->componentPrefix . $componentName;
     }
 }
