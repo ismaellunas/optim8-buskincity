@@ -84,7 +84,7 @@ class ProductController extends CrudController
             ],
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
                 ],
             ],
@@ -221,7 +221,7 @@ class ProductController extends CrudController
                     'edit' => $canManageManager,
                 ],
                 'media' => [
-                    'read' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
                 ],
             ],

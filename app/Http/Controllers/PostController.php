@@ -75,7 +75,7 @@ class PostController extends CrudController
                     'can' => [
                         'media' => [
                             'browse' => $user->can('media.browse'),
-                            'read' => $user->can('media.edit'),
+                            'read' => $user->can('media.read'),
                             'edit' => $user->can('media.edit'),
                             'add' => $user->can('media.add'),
                             'delete' => $user->can('media.delete'),
@@ -155,7 +155,7 @@ class PostController extends CrudController
                     'can' => [
                         'media' => [
                             'browse' => $user->can('media.browse'),
-                            'read' => $user->can('media.edit'),
+                            'read' => $user->can('media.read'),
                             'edit' => $user->can('media.edit'),
                             'add' => $user->can('media.add'),
                             'delete' => $user->can('media.delete'),
