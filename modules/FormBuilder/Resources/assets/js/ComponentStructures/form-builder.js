@@ -5,6 +5,7 @@ import {
 export default {
     title: 'Form Builder',
     componentName: 'FormBuilder',
+    module: 'FormBuilder',
     content: {},
     config: {
         form: {
