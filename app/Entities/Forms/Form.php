@@ -20,6 +20,7 @@ class Form
 
     public ?User $author = null;
     public $formLocation;
+    public $model;
 
     protected $originLanguage = null;
 

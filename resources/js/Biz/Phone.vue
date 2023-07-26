@@ -24,7 +24,7 @@
                         :key="country.id"
                         tag="a"
                         :is-active="(country.id == selectedCountry.id)"
-                        @click="computedValue.country = country.id"
+                        @click.prevent="selectCountry(country)"
                     >
                         {{ country.value }} (+{{ country.dial }})
                     </biz-dropdown-item>
@@ -57,6 +57,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, find, isEmpty } from 'lodash';
+    import { ref, computed } from 'vue';
 
     export default {
         name: 'BizPhone',
@@ -81,9 +82,10 @@
             required: { type: Boolean, default: false },
         },
 
-        setup(props, {emit}) {
+        setup(props, { emit }) {
             return {
                 computedValue: useModelWrapper(props, emit),
+                selectedOption: ref(props.defaultCountry),
             }
         },
 
@@ -98,7 +100,7 @@
             selectedCountry() {
                 return find(
                     this.countryOptions,
-                    (option) => option.id == (this.computedValue.country ?? this.defaultCountry)
+                    (option) => option.id == (this.selectedOption ?? this.defaultCountry)
                 );
             },
 
@@ -158,6 +160,11 @@
                 ) {
                     this.latestIndex += this.optionsIncreaseNumber;
                 }
+            },
+
+            selectCountry(country) {
+                this.computedValue.country = country.id;
+                this.selectedOption = country.id;
             },
         },
     };
