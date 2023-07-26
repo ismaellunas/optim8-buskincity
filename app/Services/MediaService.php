@@ -157,9 +157,9 @@ class MediaService
         );
     }
 
-    protected function folderPath(string $sufix = null): ?string
+    protected function folderPath(string $suffix = null): ?string
     {
-        return config('filesystems.folder_prefix').$sufix;
+        return config('filesystems.folder_prefix').$suffix;
     }
 
     public function upload(
