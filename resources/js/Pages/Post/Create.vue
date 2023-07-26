@@ -21,6 +21,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import PostForm from '@/Pages/Post/Form.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
@@ -34,6 +35,10 @@
             PostForm,
             BizErrorNotifications,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -79,7 +84,6 @@
             return {
                 defaultLocale,
                 form: useForm(postForm),
-                loader: null,
                 localeOptions: props.languageOptions,
             };
         },
@@ -97,14 +101,14 @@
 
                 this.form.post(route(this.baseRouteName+'.store'), {
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });

@@ -16,11 +16,13 @@
 
     export default {
         name: 'PostList',
+
         components: {
             BizTable,
         },
-        props: [
-           'records',
-        ],
+
+        props: {
+            records: { type: Array, required: true },
+        },
     };
 </script>

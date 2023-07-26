@@ -15,6 +15,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import HeaderLayout from './HeaderLayout.vue';
     import HeaderLogo from './HeaderLogo.vue';
     import { success as successAlert  } from '@/Libs/alert';
@@ -27,6 +28,10 @@
             HeaderLayout,
             HeaderLogo,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             logoMedia: { type: Object, default: () => {} },
@@ -43,12 +48,6 @@
             };
         },
 
-        data() {
-            return {
-                loader: null,
-            };
-        },
-
         methods: {
             isFormDirty() {
                 return this.form?.isDirty;
@@ -56,7 +55,8 @@
 
             onSubmit() {
                 const self = this;
-                self.loader = self.$loading.show({});
+
+                self.onStartLoadingOverlay();
 
                 self.form.post(
                     route(self.baseRouteName+".layout.update"), {
@@ -64,7 +64,7 @@
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {
-                            self.loader.hide();
+                            self.onEndLoadingOverlay();
                         },
                     }
                 );
