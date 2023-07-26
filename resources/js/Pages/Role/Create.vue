@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
@@ -59,6 +60,10 @@
             BizErrorNotifications,
             FormRole,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -95,7 +100,6 @@
         data() {
             return {
                 isProcessing: false,
-                loader: null,
             };
         },
 
@@ -107,7 +111,7 @@
                 form.post(route(this.baseRouteName+'.store'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -115,7 +119,7 @@
                         form.isDirty = false;
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });

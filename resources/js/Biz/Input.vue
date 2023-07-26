@@ -10,9 +10,11 @@
 
 <script>
     export default {
+        name: 'BizInput',
+
         props: {
             hasError: {type: Boolean, default: false},
-            modelValue: {},
+            modelValue: { type: [String, Number, null], default: null },
         },
 
         emits: ['update:modelValue'],

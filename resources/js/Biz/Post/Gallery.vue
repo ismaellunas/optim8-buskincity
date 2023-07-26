@@ -3,7 +3,7 @@
         <div
             v-for="record in records"
             :key="record.id"
-            :class="class"
+            :class="recordClass"
         >
             <slot :record="record" />
         </div>
@@ -16,7 +16,16 @@
 
         props: {
             records: { type: Array, required: true },
-            class: { type: [Array, String, Object], default: () => ['column','is-3']},
+            class: { type: [Array, String, Object], default: () => [
+                'column',
+                'is-3'
+            ] },
+        },
+
+        computed: {
+            recordClass() {
+                return this.class;
+            },
         },
     };
 </script>

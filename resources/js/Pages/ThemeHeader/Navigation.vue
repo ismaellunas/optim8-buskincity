@@ -58,6 +58,7 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
     import NavigationFormMenu from './NavigationFormMenuItem.vue';
@@ -78,6 +79,7 @@
 
         mixins: [
             MixinHasModal,
+            MixinHasLoader,
         ],
 
         inject: {
@@ -118,7 +120,6 @@
                 activeTab: 'navigation',
                 isModalDuplicateOpen: false,
                 lastDataMenuItems: [],
-                loader: null,
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
                 selectedMenuItem: {},
@@ -255,14 +256,14 @@
                 this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
                     onStart: visit => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         this.updateLastDataMenuItems();
                     },
                     onFinish: visit => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                     }
                 });
             },

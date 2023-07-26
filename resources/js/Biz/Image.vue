@@ -19,27 +19,32 @@
 
 <script>
     export default {
+        name: 'BizImage',
+
         props: {
-            alt: String,
-            description: String,
-            imgStyle: {},
-            ratio: String,
-            rounded: String,
-            square: String,
-            src: String,
+            alt: { type: [String, null], default: null },
+            description: { type: [String, null], default: null },
+            imgStyle: { type: [String, Object], default: "" },
+            ratio: { type: [String, null], default: null },
+            rounded: { type: [String, null], default: null },
+            square: { type: [String, null], default: null },
+            src: { type: [String, null], default: null },
             dataSrc: { type: String, default: null },
             hasPosition: { type: Boolean, default: false },
         },
         computed: {
             composedImgClass() {
                 const classes = [];
+
                 if (this.rounded) {
                     classes.push(this.rounded);
                 }
+
                 return classes;
             },
             composedFigureClass() {
                 const classes = [];
+
                 if (this.ratio) {
                     classes.push(this.ratio);
                 }
@@ -49,6 +54,7 @@
                 if (this.hasPosition && !this.ratio) {
                     classes.push('is-inline-block');
                 }
+
                 return classes;
             },
         },

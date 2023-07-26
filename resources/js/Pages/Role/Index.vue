@@ -124,7 +124,6 @@
         data() {
             return {
                 icon,
-                loader: null,
             };
         },
 
@@ -155,14 +154,6 @@
 
             onSuccess(page) {
                 successAlert(page.props.flash.message);
-            },
-
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-
-            onEndLoadingOverlay() {
-                this.loader.hide();
             },
         },
     };
