@@ -165,9 +165,17 @@ class Post extends BaseModel implements PublishableInterface
         return [];
     }
 
+    private function removeWrappedParagraphFromShortcode(string $content): string
+    {
+        return preg_replace('/<p>\\s*?(\[form-builder.*?\])?\\s*<\\/p>/s', '\1', $content);
+    }
+
     public function getPurifiedContentAttribute(): string
     {
-        return Purifier::clean($this->content, 'tinymce');
+        $content = Purifier::clean($this->content, 'tinymce');
+        $content = $this->removeWrappedParagraphFromShortcode($content);
+
+        return $content;
     }
 
     public function getCoverImageAttribute()
