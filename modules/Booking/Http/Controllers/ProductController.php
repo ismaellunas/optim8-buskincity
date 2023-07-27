@@ -70,6 +70,8 @@ class ProductController extends CrudController
 
     public function create()
     {
+        $user = auth()->user();
+
         return Inertia::render('Booking::ProductCreate', $this->getData([
             'breadcrumbs' => [
                 [
@@ -78,6 +80,12 @@ class ProductController extends CrudController
                 ],
                 [
                     'title' => $this->getCreateTitle(),
+                ],
+            ],
+            'can' => [
+                'media' => [
+                    'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
                 ],
             ],
             'title' => $this->getCreateTitle(),
@@ -167,7 +175,9 @@ class ProductController extends CrudController
 
     public function edit(Product $product)
     {
-        $canManageManager = auth()->user()->can('manageManager', Product::class);
+        $user = auth()->user();
+
+        $canManageManager = $user->can('manageManager', Product::class);
 
         $product->load('eventSchedule.weeklyHours.times');
 
@@ -209,7 +219,11 @@ class ProductController extends CrudController
             'can' => [
                 'productManager' => [
                     'edit' => $canManageManager,
-                ]
+                ],
+                'media' => [
+                    'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
+                ],
             ],
             'instructions' => $this->getInstructions(),
             'i18n' => $this->translationCreateEditPage(),

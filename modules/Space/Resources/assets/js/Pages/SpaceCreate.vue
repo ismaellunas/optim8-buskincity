@@ -52,6 +52,7 @@
 
         provide() {
             return {
+                can: this.can,
                 i18n: this.i18n,
             };
         },
@@ -59,8 +60,9 @@
         layout: AppLayout,
 
         props: {
-            breadcrumbs: { type: Object, required: true },
             baseRouteName: { type: String, default: '' },
+            breadcrumbs: { type: Object, required: true },
+            can: { type: Object, required: true },
             defaultCountry: { type: String, required: true },
             instructions: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
