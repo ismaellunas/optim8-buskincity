@@ -42,6 +42,12 @@
                         :value="$page.props.csrfToken"
                     >
 
+                    <input
+                        v-model="form['g-recaptcha-response']"
+                        type="hidden"
+                        name="g-recaptcha-response"
+                    >
+
                     <biz-form-input
                         v-model="form.email"
                         name="email"
@@ -110,6 +116,7 @@
             return {
                 form: useForm({
                     email: '',
+                    'g-recaptcha-response': null,
                 }),
                 iconBack,
             };
@@ -122,8 +129,12 @@
                 this.$refs.recaptcha.execute();
             },
 
-            recaptchaVerify() {
-                this.$refs.formForgotPassword.submit();
+            recaptchaVerify(response) {
+                this.form['g-recaptcha-response'] = response;
+
+                this.$nextTick(() => {
+                    this.$refs.formForgotPassword.submit();
+                });
             },
         }
     }
