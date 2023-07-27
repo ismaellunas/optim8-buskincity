@@ -55,6 +55,7 @@
                         required
                         type="email"
                         placeholder="Enter your email"
+                        :message="error('email')"
                     />
                 </div>
 
@@ -81,6 +82,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
@@ -104,6 +106,7 @@
 
         mixins: [
             MixinHasLoader,
+            MixinHasPageErrors,
         ],
 
         props: {
