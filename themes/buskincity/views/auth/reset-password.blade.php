@@ -1,6 +1,6 @@
 <x-layouts.auth>
     <x-slot name="title">
-        {{ __('Reset Password') }} | {{ config('app.name') }}
+        {{ __('Reset Password | :appName', ['appName' => config('app.name')]) }}
     </x-slot>
 
     <div class="columns is-mobile">
@@ -58,13 +58,15 @@
                             <input type="hidden" name="email" value="{{ $email }}">
 
                             <div class="field mb-5">
-                                <label class="label">Email</label>
+                                <label class="label">
+                                    {{ __('Email') }}
+                                </label>
                                 <div class="control">
                                     <input
                                         type="email"
                                         name="email"
                                         value="{{ $email }}"
-                                        class="input"
+                                        class="input @error('email') is-danger @enderror"
                                         placeholder="Enter your email"
                                         required
                                         disabled
@@ -76,7 +78,9 @@
                             </div>
 
                             <div class="field mb-5">
-                                <label class="label">Password</label>
+                                <label class="label">
+                                    {{ __('Password') }}
+                                </label>
                                 <div class="control">
                                     <div class="field has-addons mb-0">
                                         <div class="control is-expanded">
@@ -84,8 +88,8 @@
                                                 type="password"
                                                 name="password"
                                                 id="input-password"
-                                                class="input"
-                                                placeholder="Enter new password"
+                                                class="input @error('password') is-danger @enderror"
+                                                placeholder="{{ __('Enter new password') }}"
                                                 required
                                             >
                                         </div>
@@ -105,7 +109,9 @@
                             </div>
 
                             <div class="field mb-5">
-                                <label class="label">Confirm Password</label>
+                                <label class="label">
+                                    {{ __('Confirm Password') }}
+                                </label>
                                 <div class="control">
                                     <div class="field has-addons mb-0">
                                         <div class="control is-expanded">
@@ -113,8 +119,8 @@
                                                 type="password"
                                                 name="password_confirmation"
                                                 id="input-password-confirmation"
-                                                class="input"
-                                                placeholder="Enter password confirmation"
+                                                class="input @error('password_confirmation') is-danger @enderror"
+                                                placeholder="{{ __('Enter password confirmation') }}"
                                                 required
                                             >
                                         </div>
