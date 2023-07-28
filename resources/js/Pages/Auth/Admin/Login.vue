@@ -30,6 +30,7 @@
                         placeholder="Enter your email"
                         required
                         autofocus
+                        :message="error('email')"
                     />
 
                     <biz-form-password
@@ -39,6 +40,7 @@
                         name="password"
                         placeholder="Enter your password"
                         :required="true"
+                        :message="error('password')"
                     />
 
                     <div class="field columns">
@@ -81,6 +83,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
@@ -112,6 +115,7 @@
 
         mixins: [
             MixinHasLoader,
+            MixinHasPageErrors,
         ],
 
         props: {

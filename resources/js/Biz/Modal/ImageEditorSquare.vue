@@ -85,7 +85,7 @@
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
-    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import { merge } from 'lodash';
 
     import VueCropper from 'vue-cropperjs';
@@ -107,7 +107,7 @@
             isDebugMode: { type: Boolean, default: false },
             isHuge: { type: Boolean, default: true },
             isProcessing: { type: Boolean, default: false },
-            modelValue: {},
+            modelValue: { type: [String, null], default: "" },
         },
 
         emits: [

@@ -15,6 +15,7 @@
                     </th>
                 </tr>
             </thead>
+
             <tbody>
                 <template
                     v-for="medium in media"

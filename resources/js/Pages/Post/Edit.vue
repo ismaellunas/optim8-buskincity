@@ -22,6 +22,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import PostForm from '@/Pages/Post/Form.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
@@ -36,6 +37,10 @@
             PostForm,
             BizErrorNotifications,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -96,7 +101,6 @@
             return {
                 baseRouteName: 'admin.posts',
                 isProcessing: false,
-                loader: null,
             };
         },
 
@@ -107,7 +111,7 @@
                 this.form.put(route(this.baseRouteName+'.update', this.post.id), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -116,7 +120,7 @@
                         self.form.isDirty = false;
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });
