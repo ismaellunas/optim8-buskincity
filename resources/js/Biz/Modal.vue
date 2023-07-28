@@ -20,10 +20,12 @@
 </template>
 
 <script>
-    import { ref, onMounted, onUnmounted } from 'vue';
+    import { onMounted, onUnmounted } from 'vue';
     import { isEmpty } from 'lodash';
 
     export default {
+        name: 'BizModal',
+
         props: {
             contentClass: { type: [Array, Object, String], default: null },
             isActive: { type: Boolean, default: true },

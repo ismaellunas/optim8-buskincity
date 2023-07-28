@@ -111,9 +111,19 @@
                         @csrf
 
                         <div class="field">
-                            <label class="label">First Name*</label>
+                            <label class="label">
+                                {{ __('First Name') }}
+                                <sup class="has-text-danger">*</sup>
+                            </label>
                             <div class="control">
-                                <input type="text" name="first_name" value="{{ old('first_name') }}" class="input" placeholder="Enter your first name" required>
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    value="{{ old('first_name') }}"
+                                    class="input @error('first_name') is-danger @enderror"
+                                    placeholder="{{ __('Enter your first name') }}"
+                                    required
+                                >
                             </div>
                             @error('first_name')
                                 <p class="help is-danger">{{ $message }}</p>
@@ -121,9 +131,19 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Last Name*</label>
+                            <label class="label">
+                                {{ __('Last Name') }}
+                                <sup class="has-text-danger">*</sup>
+                            </label>
                             <div class="control">
-                                <input type="text" name="last_name" value="{{ old('last_name') }}" class="input" placeholder="Enter your last name" required>
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    value="{{ old('last_name') }}"
+                                    class="input @error('last_name') is-danger @enderror"
+                                    placeholder="{{ __('Enter your last name') }}"
+                                    required
+                                >
                             </div>
                             @error('last_name')
                                 <p class="help is-danger">{{ $message }}</p>
@@ -131,9 +151,19 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Email*</label>
+                            <label class="label">
+                                {{ __('Email') }}
+                                <sup class="has-text-danger">*</sup>
+                            </label>
                             <div class="control">
-                                <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    class="input @error('email') is-danger @enderror"
+                                    placeholder="{{ __('Enter your email') }}"
+                                    required
+                                >
                             </div>
                             @error('email')
                                 <p class="help is-danger">{{ $message }}</p>
@@ -141,11 +171,21 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Password*</label>
+                            <label class="label">
+                                {{ __('Password') }}
+                                <sup class="has-text-danger">*</sup>
+                            </label>
                             <div class="control">
                                 <div class="field has-addons mb-0">
                                     <div class="control is-expanded">
-                                        <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            id="input-password"
+                                            class="input @error('password') is-danger @enderror"
+                                            placeholder="{{ __('Enter your password') }}"
+                                            required
+                                        >
                                     </div>
                                     <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                         <button type="button" class="button" tabindex="-1">
@@ -168,7 +208,7 @@
                         />
 
                         <p>
-                            By clicking on <span class="has-text-weight-bold">Create Account</span> you agree with our Terms and Conditions
+                            {!! __('By clicking on :button you agree with our Terms and Conditions', ['button' => '<span class="has-text-weight-bold">Create Account</span>']) !!}
                         </p>
 
                         <div class="field mt-4">

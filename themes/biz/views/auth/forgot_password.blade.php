@@ -51,9 +51,18 @@
                         @csrf
 
                         <div class="field">
-                            <label class="label">Email</label>
+                            <label class="label">
+                                {{ __('Email') }}
+                            </label>
                             <div class="control">
-                                <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    class="input @error('email') is-danger @enderror"
+                                    placeholder="{{ __('Enter your email') }}"
+                                    required
+                                >
                             </div>
                             @error('email')
                                 <p class="help is-danger">{{ $message }}</p>
@@ -68,7 +77,7 @@
 
                     <div class="mt-4">
                         <button type="submit" class="button is-info">
-                            Email Password Reset Link
+                            {{ __('Email Password Reset Link') }}
                         </button>
                     </div>
                 </form>

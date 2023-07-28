@@ -144,7 +144,7 @@
             BizLink,
             BizNavbarItem,
         },
-        setup(props) {
+        setup() {
             const navMenus = computed(() => usePage().props.menus.nav);
             const navLogo = computed(() => usePage().props.menus.navLogo);
             const navProfile = computed(() => usePage().props.menus.navProfile);

@@ -35,14 +35,16 @@
                         <input type="hidden" name="email" value="{{ $email }}">
 
                         <div class="field">
-                            <label class="label">Email</label>
+                            <label class="label">
+                                {{ __('Email') }}
+                            </label>
                             <div class="control">
                                 <input
                                     type="email"
                                     name="email"
                                     value="{{ $email }}"
-                                    class="input"
-                                    placeholder="Enter your email"
+                                    class="input @error('email') is-danger @enderror"
+                                    placeholder="{{ __('Enter your email') }}"
                                     required
                                     disabled
                                 >
@@ -53,7 +55,9 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Password</label>
+                            <label class="label">
+                                {{ __('Password') }}
+                            </label>
                             <div class="control">
                                 <div class="field has-addons mb-0">
                                     <div class="control is-expanded">
@@ -61,8 +65,8 @@
                                             type="password"
                                             name="password"
                                             id="input-password"
-                                            class="input"
-                                            placeholder="Enter new password"
+                                            class="input @error('password') is-danger @enderror"
+                                            placeholder="{{ __('Enter new password') }}"
                                             required
                                         >
                                     </div>
@@ -82,7 +86,9 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Confirm Password</label>
+                            <label class="label">
+                                {{ __('Confirm Password') }}
+                            </label>
                             <div class="control">
                                 <div class="field has-addons mb-0">
                                     <div class="control is-expanded">
@@ -90,8 +96,8 @@
                                             type="password"
                                             name="password_confirmation"
                                             id="input-password-confirmation"
-                                            class="input"
-                                            placeholder="Enter password confirmation"
+                                            class="input @error('password_confirmation') is-danger @enderror"
+                                            placeholder="{{ __('Enter password confirmation') }}"
                                             required
                                         >
                                     </div>
@@ -113,7 +119,7 @@
 
                     <div class="mt-4">
                         <button type="submit" class="button is-info">
-                            Reset Password
+                            {{ __('Reset Password') }}
                         </button>
                     </div>
                 </form>

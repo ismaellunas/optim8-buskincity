@@ -23,6 +23,8 @@ abstract class BaseField
     public $notes = [];
     public $column;
 
+    public $model;
+
     public function __construct(string $name, array $data = [])
     {
         $this->data = $data;

@@ -1,26 +1,27 @@
 <template>
-    <div>
-        <div class="tabs" :class="class">
-            <ul>
-                <template
-                    v-for="(tab, i) of tabs"
-                    :key="i"
+    <div
+        v-bind="$attrs"
+        class="tabs"
+    >
+        <ul>
+            <template
+                v-for="(tab, i) of tabs"
+                :key="i"
+            >
+                <li
+                    v-if="tab.props.isRendered"
+                    :id="tab.props.tabId"
+                    :class="active === i ? 'is-active' : ''"
+                    @click="selectTab(i)"
                 >
-                    <li
-                        v-if="tab.props.isRendered"
-                        :id="tab.props.tabId"
-                        :class="active === i ? 'is-active' : ''"
-                        @click="selectTab(i)"
-                    >
-                        <a><span>{{ tab.props.title }}</span></a>
-                    </li>
-                </template>
-            </ul>
-        </div>
+                    <a><span>{{ tab.props.title }}</span></a>
+                </li>
+            </template>
+        </ul>
+    </div>
 
-        <div class="mt-3">
-            <slot />
-        </div>
+    <div class="mt-3">
+        <slot />
     </div>
 </template>
 
@@ -29,12 +30,14 @@
 
     export default {
         name: 'TabsProvideInjectTab',
+
         props: {
             modelValue: { type: [String, Number], default: "" },
-            class: { type: [String, Object, Array], default: "" },
         },
+
         emits: ["update:modelValue"],
-        setup(props, { slots, emit }) {
+
+        setup(props, { emit }) {
             const active = computed(() => props.modelValue);
             const tabs = ref([]);
 

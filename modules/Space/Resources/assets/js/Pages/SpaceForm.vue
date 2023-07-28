@@ -79,8 +79,8 @@
                         v-model="space.logo"
                         :label="i18n.logo"
                         image-preview-size="6"
-                        :is-download-enabled="true"
-                        :is-upload-enabled="true"
+                        :is-download-enabled="can?.media?.read ?? false"
+                        :is-upload-enabled="can?.media?.add ?? false"
                         :medium="logoMedia"
                         :instructions="instructions.logoMediaLibrary"
                         :message="error('logo')"
@@ -93,9 +93,9 @@
                         v-model="space.cover"
                         :label="i18n.cover"
                         image-preview-size="8"
-                        :is-download-enabled="true"
+                        :is-download-enabled="can?.media?.read ?? false"
                         :is-image-preview-thumbnail="false"
-                        :is-upload-enabled="true"
+                        :is-upload-enabled="can?.media?.add ?? false"
                         :medium="coverMedia"
                         :instructions="instructions.coverMediaLibrary"
                         :message="error('cover')"
@@ -193,6 +193,7 @@
         ],
 
         inject: {
+            can: {},
             i18n: { default: () => ({
                 name: 'Name',
                 parent: 'Parent',

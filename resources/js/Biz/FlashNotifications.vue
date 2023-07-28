@@ -17,6 +17,7 @@
     import { isBlank } from '@/Libs/utils';
 
     export default {
+        name: 'BizFlashNotifications',
         props: {
             flash: { type: Object, required: true },
         },

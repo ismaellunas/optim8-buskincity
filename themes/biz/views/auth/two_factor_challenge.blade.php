@@ -51,9 +51,16 @@
                 <form id="form-tfa" action="{{ route('two-factor.login') }}" method="post" onsubmit="setLoader()">
                     @csrf
                     <div id="code" class="field mb-5 recovery">
-                        <label class="label">Code</label>
+                        <label class="label">
+                            {{ __('Code') }}
+                        </label>
                         <div class="control">
-                            <input type="text" name="code" value="{{ old('code') }}" class="input">
+                            <input
+                                type="text"
+                                name="code"
+                                value="{{ old('code') }}"
+                                class="input @error('code') is-danger @enderror"
+                            >
                         </div>
                         @error('code')
                             <p class="help is-danger">{{ $message }}</p>
@@ -61,9 +68,16 @@
                     </div>
 
                     <div id="recovery-code" class="field mb-5 recovery is-hidden">
-                        <label class="label">Recovery Code</label>
+                        <label class="label">
+                            {{ __('Recovery Code') }}
+                        </label>
                         <div class="control">
-                            <input type="text" name="recovery_code" value="{{ old('recovery_code') }}" class="input">
+                            <input
+                                type="text"
+                                name="recovery_code"
+                                value="{{ old('recovery_code') }}"
+                                class="input @error('recovery_code') is-danger @enderror"
+                            >
                         </div>
                         @error('recovery_code')
                             <p class="help is-danger">{{ $message }}</p>

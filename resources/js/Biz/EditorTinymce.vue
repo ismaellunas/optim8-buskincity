@@ -21,7 +21,7 @@
         },
 
         props: {
-            modelValue: {},
+            modelValue: { type: [String, null], required: true },
             config: { type: Object, default: () => {} },
             disabled: {
                 type: Boolean,
