@@ -1,6 +1,6 @@
 <x-layouts.auth>
     <x-slot name="title">
-        {{ __('Forgot Password') }} | {{ config('app.name') }}
+        {{ __('Forgot Password | :appName', ['appName' => config('app.name')]) }}
     </x-slot>
 
     <div class="columns is-mobile">
@@ -83,9 +83,18 @@
 
                             @csrf
                             <div class="field mb-5">
-                                <label class="label">Email</label>
+                                <label class="label">
+                                    {{ __('Email') }}
+                                </label>
                                 <div class="control">
-                                    <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="{{ __('Enter your email') }}" required>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value="{{ old('email') }}"
+                                        class="input @error('email') is-danger @enderror"
+                                        placeholder="{{ __('Enter your email') }}"
+                                        required
+                                    >
                                 </div>
                                 @error('email')
                                     <p class="help is-danger">{{ $message }}</p>
