@@ -48,7 +48,7 @@
             disabled: {type: Boolean, default: false},
             label: {type: String, default: null},
             message: { type: [String, Array], default: undefined },
-            modelValue: {required: true},
+            modelValue: { type: [String, null], required: true },
             required: {type: Boolean, default: true},
         },
 

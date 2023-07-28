@@ -239,7 +239,6 @@
                 photoUrl: this.record.optimizedProfilePhotoUrl,
                 isFormBuilderShown: false,
                 isProcessing: false,
-                loader: null,
             };
         },
 
@@ -263,7 +262,7 @@
                 self.profileForm.post(route(self.baseRouteName+'.update', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -276,7 +275,7 @@
                         self.biodataFormKey += 1;
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });
@@ -289,7 +288,7 @@
                 form.put(route(self.baseRouteName+'.password', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -298,7 +297,7 @@
                         form.reset();
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });

@@ -26,8 +26,15 @@ const appPage = createApp({
         EventsCalendar: defineAsyncComponent(() =>
             import('./../../../modules/Booking/Resources/assets/js/PageBuilderComponents/EventsCalendar.vue')
         ),
-        FormBuilder: defineAsyncComponent(() =>
-            import('./../../../modules/FormBuilder/Resources/assets/js/Form/Builder.vue')
+        FormBuilderSlotable: defineAsyncComponent(() =>
+            import('./../../../modules/FormBuilder/Resources/assets/js/Form/BuilderSlotable.vue')
+        ),
+
+        FormFileDragDrop: defineAsyncComponent(() =>
+            import('./../../../resources/js/Form/FileDragDrop.vue')
+        ),
+        FormPhone: defineAsyncComponent(() =>
+            import('./../../../modules/FormBuilder/Resources/assets/js/Form/Phone.vue')
         ),
     },
 });

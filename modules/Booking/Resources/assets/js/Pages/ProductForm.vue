@@ -71,8 +71,8 @@
         <biz-form-multiple-media-library
             v-model="form.gallery"
             :label="i18n.upload"
-            :is-download-enabled="true"
-            :is-upload-enabled="true"
+            :is-download-enabled="can?.media?.read ?? false"
+            :is-upload-enabled="can?.media?.add ?? false"
             :mediums="gallery"
             :allow-multiple="true"
             :max-files="rules.maxProductFileNumber"
@@ -105,6 +105,7 @@
         ],
 
         inject: {
+            can: {},
             i18n: { default: () => ({
                 details : 'Details',
                 name : 'Name',

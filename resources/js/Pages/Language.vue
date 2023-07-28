@@ -76,6 +76,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
@@ -102,6 +103,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -135,7 +137,6 @@
         data() {
             return {
                 isProcessing: false,
-                loader: null,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 supportedLanguageOptions: this.initSupportedLanguageOptions(),
             };
@@ -180,7 +181,7 @@
                 this.form.post(route(this.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
-                        self.loader = self.$loading.show();
+                        self.onStartLoadingOverlay();
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
@@ -189,7 +190,7 @@
                         successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
-                        self.loader.hide();
+                        self.onEndLoadingOverlay();
                         self.isProcessing = false;
                     }
                 });
