@@ -128,7 +128,7 @@
                                     type="email"
                                     name="email"
                                     value="{{ old('email') }}"
-                                    class="input"
+                                    class="input @error('email') is-danger @enderror"
                                     placeholder="{{ __('Enter your email') }}"
                                     required
                                 >
@@ -148,7 +148,7 @@
                                             id="input-password"
                                             type="password"
                                             name="password"
-                                            class="input"
+                                            class="input @error('password') is-danger @enderror"
                                             placeholder="{{ __('Enter your password') }}"
                                             required
                                         >

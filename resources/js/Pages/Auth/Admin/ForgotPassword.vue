@@ -42,6 +42,12 @@
                         :value="$page.props.csrfToken"
                     >
 
+                    <input
+                        v-model="form['g-recaptcha-response']"
+                        type="hidden"
+                        name="g-recaptcha-response"
+                    >
+
                     <biz-form-input
                         v-model="form.email"
                         name="email"
@@ -49,6 +55,7 @@
                         required
                         type="email"
                         placeholder="Enter your email"
+                        :message="error('email')"
                     />
                 </div>
 
@@ -75,6 +82,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
@@ -98,6 +106,7 @@
 
         mixins: [
             MixinHasLoader,
+            MixinHasPageErrors,
         ],
 
         props: {
@@ -110,6 +119,7 @@
             return {
                 form: useForm({
                     email: '',
+                    'g-recaptcha-response': null,
                 }),
                 iconBack,
             };
@@ -122,8 +132,12 @@
                 this.$refs.recaptcha.execute();
             },
 
-            recaptchaVerify() {
-                this.$refs.formForgotPassword.submit();
+            recaptchaVerify(response) {
+                this.form['g-recaptcha-response'] = response;
+
+                this.$nextTick(() => {
+                    this.$refs.formForgotPassword.submit();
+                });
             },
         }
     }
