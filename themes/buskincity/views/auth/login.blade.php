@@ -1,6 +1,6 @@
 <x-layouts.auth>
     <x-slot name="title">
-        Login | {{ config('app.name') }}
+        {{ __('Login | :appName', ['appName' => config('app.name')]) }}
     </x-slot>
 
     <div class="columns is-mobile">
@@ -21,15 +21,21 @@
                 <div class="level-left">
                     <a class="button is-white" onclick="backOrOpenSocialMediaForm()">
                         <x-icon icon="fa-arrow-left" is-small />
-                        <span class="has-text-weight-bold">Back</span>
+                        <span class="has-text-weight-bold">
+                            {{ __('Back') }}
+                        </span>
                     </a>
                 </div>
 
                 <!-- Right side -->
                 <div class="level-right">
-                    <span>Don’t have an account?</span>
+                    <span>
+                        {{ __("Don’t have an account?") }}
+                    </span>
                     <a href="{{ route('register') }}" class="button is-primary is-outlined is-responsive ml-4">
-                        <span class="has-text-weight-bold">Sign Up</span>
+                        <span class="has-text-weight-bold">
+                            {{ __('Sign Up') }}
+                        </span>
                     </a>
                 </div>
             </nav>
@@ -68,8 +74,12 @@
 
             <div class="columns is-mobile is-vcentered is-flex-grow-1">
                 <div id="socialMediaForm" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
-                    <h1 class="title is-2 mb-4">Log In</h1>
-                    <p>Please log in to continue.</p>
+                    <h1 class="title is-2 mb-4">
+                        {{ __('Log In') }}
+                    </h1>
+                    <p>
+                        {{ __('Please log in to continue.') }}
+                    </p>
 
                     @if (!empty($availableSocialiteDrivers))
                         @foreach ($availableSocialiteDrivers as $driver)
@@ -79,7 +89,9 @@
                                 "mt-4" => !$loop->first,
                             ])>
                                 <x-icon icon="fa-brands fa-{{ $driver }}" is-small/>
-                                <span>Continue with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span></span>
+                                <span>
+                                    {!! __('Continue with :driver', ['driver' => '<span class="has-text-weight-bold">'.Str::title($driver).'</span>']) !!}
+                                </span>
                             </a>
                         @endforeach
 
@@ -88,14 +100,20 @@
 
                     <a class="button is-medium is-light is-fullwidth mt-4" onclick="showForm()">
                         <x-icon icon="fa-envelope is-small" />
-                        <span>Continue with <span class="has-text-weight-bold">Email</span></span>
+                        <span>
+                            {!! __('Continue with :driver', ['driver' => '<span class="has-text-weight-bold">Email</span>']) !!}
+                        </span>
                     </a>
                 </div>
 
                 <div id="formFields" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile is-hidden">
-                    <h1 class="title is-2 mb-4">Welcome Back</h1>
+                    <h1 class="title is-2 mb-4">
+                        {{ __('Welcome Back') }}
+                    </h1>
 
-                    <p>Fill in your email and password to login.</p>
+                    <p>
+                        {{ __('Fill in your email and password to login.') }}
+                    </p>
 
                     @if ($errors->any())
                         <div class="notification is-danger mt-4 error-message">
@@ -117,9 +135,18 @@
                         <fieldset id="fieldset">
                             @csrf
                             <div class="field mb-5">
-                                <label class="label">Email</label>
+                                <label class="label">
+                                    {{ __('Email') }}
+                                </label>
                                 <div class="control">
-                                    <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value="{{ old('email') }}"
+                                        class="input @error('email') is-danger @enderror"
+                                        placeholder="{{ __('Enter your email') }}"
+                                        required
+                                    >
                                 </div>
                                 @error('email')
                                     <p class="help is-danger">{{ $message }}</p>
@@ -127,10 +154,19 @@
                             </div>
 
                             <div class="field mb-5">
-                                <label class="label">Password</label>
+                                <label class="label">
+                                    {{ __('Password') }}
+                                </label>
                                 <div class="field has-addons">
                                     <div class="control is-expanded">
-                                        <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            id="input-password"
+                                            class="input @error('password') is-danger @enderror"
+                                            placeholder="{{ __('Enter your password') }}"
+                                            required
+                                        >
                                     </div>
                                     <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                         <button type="button" class="button" tabindex="-1">
@@ -156,13 +192,15 @@
                                         <div class="control">
                                             <label class="checkbox">
                                                 <input type="checkbox" class="mr-3" name="remember">
-                                                Remember me
+                                                {{ __('Remember me') }}
                                             </label>
                                         </div>
                                     </div>
 
                                     <div class="field has-text-right">
-                                        <a href="{{ route('password.request') }}" class="has-text-primary">Forgot password?</a>
+                                        <a href="{{ route('password.request') }}" class="has-text-primary">
+                                            {{ __('Forgot password?') }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +211,9 @@
                             />
 
                             <button class="button is-medium is-primary is-fullwidth">
-                                <span class="has-text-weight-bold">Log In</span>
+                                <span class="has-text-weight-bold">
+                                    {{ __('Log In') }}
+                                </span>
                             </button>
                         </fieldset>
                     </form>
