@@ -482,6 +482,7 @@
 
         provide() {
             return {
+                can: this.can,
                 i18n: this.i18n,
             };
         },

@@ -66,6 +66,7 @@
 
         provide() {
             return {
+                can: this.can,
                 i18n: this.i18n,
             };
         },
@@ -74,6 +75,7 @@
 
         props: {
             baseRouteName: {type: String, required: true},
+            can: { type: Object, required: true },
             imageMimes: {type: Array, required: true },
             instructions: {type: Object, default: () => {}},
             roleOptions: { type: Array, required: true },
