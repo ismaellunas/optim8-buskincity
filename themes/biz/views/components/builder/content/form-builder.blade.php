@@ -40,7 +40,7 @@
         <x-field :class="$schema['button']['position']">
             <button class="button is-medium is-primary">
                 <span class="has-text-weight-bold">
-                    {{ $schema['button']['text'] }}
+                    {{ $schema['button']['text'] ?? 'Submit' }}
                 </span>
             </button>
         </x-field>
