@@ -10,7 +10,7 @@
             >
                 <template #trigger>
                     <span class="icon is-small">
-                        {{ selectedCountry.id }}
+                        {{ selectedCountry?.id }}
                     </span>
                 </template>
 
@@ -23,7 +23,7 @@
                         v-for="country in displayedCountries"
                         :key="country.id"
                         tag="a"
-                        :is-active="(country.id == selectedCountry.id)"
+                        :is-active="(country.id == selectedCountry?.id)"
                         @click.prevent="selectCountry(country)"
                     >
                         {{ country.value }} (+{{ country.dial }})
@@ -44,7 +44,7 @@
                 @keypress="keyPress"
             >
             <span class="icon is-left">
-                +{{ selectedCountry.dial ?? '' }}
+                +{{ selectedCountry?.dial }}
             </span>
         </div>
     </div>
@@ -57,7 +57,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, find, isEmpty } from 'lodash';
-    import { ref, computed } from 'vue';
+    import { ref } from 'vue';
 
     export default {
         name: 'BizPhone',
