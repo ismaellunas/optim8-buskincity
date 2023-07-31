@@ -30,7 +30,7 @@ class MediaService extends AppMediaService
             $extension = $clientExtension;
         }
 
-        $folder = $this->getFolderPrefix().'form_builder_assets';
+        $folder = $this->folderPath('form_builder_assets');
 
         $fileName = $this->getUniqueFileName(
             $fileName,
