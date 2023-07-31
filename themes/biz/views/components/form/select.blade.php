@@ -7,7 +7,9 @@
 ])
 
 <x-field>
-    <x-label :label="$label" :required="$required" />
+    @if ($label)
+        <x-label :label="$label" :required="$required" />
+    @endif
 
     <div class="control">
         <div @class(["select", 'is-fullwidth' => $isFullwidth, $formInputClass]) @required($required) >
