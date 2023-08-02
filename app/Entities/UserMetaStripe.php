@@ -7,7 +7,7 @@ use Stripe\Account;
 
 class UserMetaStripe
 {
-    public User $meta;
+    private User $user;
 
     public function __construct(User $user)
     {
