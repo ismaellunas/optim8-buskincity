@@ -2,15 +2,16 @@
     <div id="app-qr-code" class="page">
         <div class="subpage text-centered">
             <biz-qr-code
-                :height="500"
-                :width="500"
-                text="{{ $text }}"
+                :options="{{ Illuminate\Support\Js::from($qrCodeOptions) }}"
                 logo-url="{{ $logoUrl }}"
+                @on-rendered="print"
             ></biz-qr-code>
         </div>
     </div>
 
-    @vite(['themes/biz/js/print-qr-code.js'])
+    @push('scripts')
+        @vite(['themes/biz/js/print-qr-code.js'])
+    @endpush
 
     @push('styles')
     <style>
@@ -18,27 +19,22 @@
             margin: 0;
             padding: 0;
         }
-
         * {
             box-sizing: border-box;
             -moz-box-sizing: border-box;
         }
-
         .page {
             width: 21cm;
-            min-height: 29.7cm;
-            padding: 2cm;
+            min-height: 296mm;
+            padding: 1cm 0.5cm;
             margin: 1cm auto;
             border: 1px #D3D3D3 solid;
             border-radius: 5px;
             background: #fff;
         }
-
         .subpage {
-            padding: 1cm;
             height: 256mm;
         }
-
         .text-centered {
             text-align: center;
         }
@@ -47,34 +43,21 @@
             size: A4;
             margin: 0;
         }
-
         @media print {
             html, body {
                 width: 210mm;
-                height: 297mm;
+                height: 276mm;
             }
-
             .page {
                 margin: 0;
+                width: auto;
                 border: initial;
                 border-radius: initial;
-                width: initial;
                 min-height: initial;
                 box-shadow: initial;
                 background: initial;
-                page-break-after: always;
             }
         }
     </style>
-    @endpush
-
-    @push('bottom_scripts')
-    <script>
-        window.print();
-
-        window.onafterprint = function() {
-            window.document.body.onfocus = function() { window.close(); }
-        };
-    </script>
     @endpush
 </x-layouts.blank>
