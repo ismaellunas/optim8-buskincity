@@ -3,33 +3,63 @@
 namespace Modules\FormBuilder\Shortcodes;
 
 use App\Services\SettingService;
-use Illuminate\Support\Str;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilder
 {
+    public static string $name = 'form-builder';
+
     public function register($shortcode)
     {
-        $formAttribute = null;
-        $attributes = $shortcode->toArray();
+        $formBuilderService = app(FormBuilderService::class);
+        $formBuilder = $formBuilderService->getForm($shortcode->form_id);
+        $schema = null;
+        $form = [];
 
-        foreach ($attributes as $attribute) {
-            if (Str::startsWith($attribute, 'form-id')) {
-                $formAttribute = $attribute;
+        if (
+            !empty($formBuilder)
+            && $formBuilder->canBeAccessed()
+            && $formBuilderService->getFormLocation()->canBeAccessedBy()
+        ) {
+            $schema = $formBuilder->schema();
+
+            foreach ($schema['fieldGroups'] as $groupField) {
+
+                if (! empty($groupField['fields'])) {
+
+                    foreach ($groupField['fields'] as $key => $field) {
+                        if (is_null($field['value'])) {
+                            $form[ $key ] = null;
+                        } else {
+                            $form[ $key ] = $field['value'];
+                        }
+                    }
+                }
             }
         }
 
         $recaptchaKeys = app(SettingService::class)->getRecaptchaKeys();
         $recaptchaSiteKey = $recaptchaKeys['recaptcha_site_key'] ?? null;
 
-        if ($recaptchaSiteKey) {
-            $formAttribute .= __(' recaptcha-site-key=":siteKey"', [
-                "siteKey" => $recaptchaSiteKey
-            ]);
+        if ($schema == null) {
+            return "";
         }
 
-        return sprintf(
-            '<form-builder %s></form-builder>',
-            $formAttribute
-        );
+        return view('formbuilder::form-builder-slotable-slot', [
+            'schema' => $schema,
+            'formId' => $shortcode->form_id,
+            'recaptchaSiteKey' => $recaptchaSiteKey,
+            'form' => $form,
+            'getColumnSizeClass' => function ($size): string {
+                if ($size) {
+                    return implode(' ', [
+                        $size . '-desktop',
+                        $size . '-tablet',
+                        'is-12-mobile',
+                    ]);
+                }
+                return 'is-12-mobile is-12-tablet is-12-desktop';
+            }
+        ])->render();
     }
 }
