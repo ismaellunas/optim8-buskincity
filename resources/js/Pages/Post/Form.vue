@@ -404,7 +404,7 @@
                                         type: 'menuitem',
                                         text: option.name,
                                         onAction: () => editor.insertContent(
-                                            '[form-builder form-id="'+ option.value + '"]'
+                                            '[form-builder form_id="'+ option.value + '"]'
                                         ),
                                     })
                                 });
