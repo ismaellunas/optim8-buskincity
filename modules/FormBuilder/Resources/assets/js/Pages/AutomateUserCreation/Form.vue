@@ -218,7 +218,7 @@
                             emailTags.value.forEach(function (option) {
                                 items.push({
                                     type: 'menuitem',
-                                    text: _.capitalize(_.replace(option, '_', ' ')),
+                                    text: _.capitalize(option.replaceAll('_', ' ')),
                                     onAction: () => editor.insertContent('{'+ option + '}'),
                                 })
                             });
