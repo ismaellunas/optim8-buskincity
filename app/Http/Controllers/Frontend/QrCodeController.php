@@ -19,7 +19,7 @@ class QrCodeController extends Controller
         }]);
 
         return view('prints.qrcode', [
-            'logoUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
+            'logoUrl' => $this->settingService->qrCodePublicPageLogo(),
             'qrCodeOptions' => (new ProfileQrCode($user))->options(),
         ]);
     }
