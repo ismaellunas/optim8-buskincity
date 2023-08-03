@@ -38,7 +38,7 @@ class AutomateUserCreationSettingSeeder extends Seeder
                 "value" => (
                     "<h2>Dear {first_name} {last_name},</h2>".
                     "<p>We wanted to let you know that your profile has been updated.</p>".
-                    "{reset_password_button}".
+                    "{login_button}".
                     "<p>Thank you for choosing {app_name}. We look forward to continuing to serve you.</p>".
                     "<p>&nbsp;</p>".
                     "<p>Regards,<br />{app_name}</p>"
