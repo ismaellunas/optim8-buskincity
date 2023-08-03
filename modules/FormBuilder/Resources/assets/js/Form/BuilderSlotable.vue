@@ -75,10 +75,8 @@
                 };
             }
 
-            const form = resetForm();
-
             return {
-                form,
+                form: resetForm(),
                 resetForm,
             };
         },

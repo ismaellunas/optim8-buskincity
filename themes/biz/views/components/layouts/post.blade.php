@@ -42,6 +42,10 @@
 
         @stack('scripts')
 
+        @vite('themes/'.config('theme.parent').'/js/post.js')
+
+        @vite('resources/js/bulma-misc.js')
+
         @if ($additionalCss)
             <style type="text/css">
                 {!! $additionalCss !!}
@@ -49,8 +53,6 @@
         @endif
 
         {!! $trackingCodeInsideHead !!}
-
-        @vite('themes/'.config('theme.parent').'/js/post.js')
     </head>
 
     <body
@@ -82,8 +84,6 @@
         @endif
 
         @stack('bottom_scripts')
-
-        @vite('resources/js/bulma-misc.js')
 
         @stack('bottom_styles')
 

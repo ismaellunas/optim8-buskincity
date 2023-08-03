@@ -8,6 +8,18 @@ const qrCode = createApp({
             import('./../../../resources/js/Biz/QrCode.vue')
         ),
     },
+
+    mounted() {
+        window.onafterprint = function() {
+            window.document.body.onfocus = function() { window.close(); }
+        };
+    },
+
+    methods: {
+        print() {
+            window.print();
+        }
+    },
 })
 
 qrCode.mount("#app-qr-code");

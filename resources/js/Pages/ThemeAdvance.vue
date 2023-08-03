@@ -123,7 +123,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
-                            :instructions="instructions.logoMediaLibrary"
+                            :instructions="instructions.qrCodeMediaLibrary"
                             :message="error('qrcode_public_page_logo')"
                         />
                     </div>
