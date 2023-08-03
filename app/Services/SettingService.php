@@ -469,15 +469,28 @@ class SettingService
     public function qrCodePublicPageLogo(): string
     {
         return app(SettingCache::class)->remember(
+            'qrcode_thumbnail_logo',
+            function () {
+                $media = $this->getQrCodePublicPageLogoMedia();
+
+                return $media ? $media->thumbnailUrl : "";
+            }
+        );
+    }
+
+    public function qrCodeHighResolutionLogo(): string
+    {
+        return app(SettingCache::class)->remember(
             'qrcode_public_page_logo',
             function () {
                 $media = $this->getQrCodePublicPageLogoMedia();
 
-                if ($media) {
-                    return $media->file_url;
-                }
-
-                return "";
+                return $media
+                    ? $media->getOptimizedImageUrl(
+                        config('constants.dimensions.qr_code_logo.width'),
+                        config('constants.dimensions.qr_code_logo.height')
+                    )
+                    : "";
             }
         );
     }
