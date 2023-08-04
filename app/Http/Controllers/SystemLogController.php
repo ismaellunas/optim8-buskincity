@@ -14,7 +14,7 @@ class SystemLogController extends Controller
     {
         $user = auth()->user();
 
-        $userId = (int) Str::after($request->tag, 'Auth:');
+        $userId = (int) Str::after($request->input('tag', ''), 'Auth:');
 
         $selectedUser = null;
         if (!empty($userId)) {
