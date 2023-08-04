@@ -4,8 +4,12 @@
         :is-close-hidden="true"
     >
         <template #header>
-            <p class="modal-card-title mb-1">
+            <p class="modal-card-title mb-1 is-hidden-touch">
                 Image Editor : {{ fileName ?? '' }}
+            </p>
+
+            <p class="modal-card-title mb-1 is-hidden-desktop">
+                Image Editor
             </p>
             <biz-button
                 aria-label="close"
@@ -17,202 +21,206 @@
         </template>
 
         <template #footer>
-            <template v-if="isCropState">
-                <div class="column">
-                    <biz-button
-                        type="button"
-                        @click="reset"
-                    >
-                        Reset
-                    </biz-button>
-                </div>
-                <div class="column">
-                    <div class="buttons has-addons is-centered">
-                        <biz-button
-                            type="button"
-                            :class="{'is-primary': (aspectRatio == null)}"
-                            :disabled="isProcessing"
-                            @click="setAspectRatio(null)"
+            <div class="column is-12">
+                <div class="columns is-multiline is-mobile">
+                    <template v-if="isCropState">
+                        <div class="column is-12-mobile is-4-tablet is-4-desktop">
+                            <biz-button
+                                type="button"
+                                @click="reset"
+                            >
+                                Reset
+                            </biz-button>
+                        </div>
+                        <div
+                            v-if="! hasDimension"
+                            class="column is-12-mobile is-4-tablet is-4-desktop"
                         >
-                            Free
-                        </biz-button>
-                        <biz-button
-                            type="button"
-                            :class="{'is-primary': (aspectRatio == 16/9)}"
-                            :disabled="isProcessing"
-                            @click="setAspectRatio(16/9)"
-                        >
-                            16:9
-                        </biz-button>
-                        <biz-button
-                            type="button"
-                            :class="{'is-primary': (aspectRatio == 4/3)}"
-                            :disabled="isProcessing"
-                            @click="setAspectRatio(4/3)"
-                        >
-                            4:3
-                        </biz-button>
-                        <biz-button
-                            type="button"
-                            :class="{'is-primary': (aspectRatio == 1)}"
-                            :disabled="isProcessing"
-                            @click="setAspectRatio(1)"
-                        >
-                            1:1
-                        </biz-button>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <biz-button
-                            type="button"
-                            @click="disableState"
-                        >
-                            Cancel
-                        </biz-button>
-                        <biz-button
-                            class="is-primary"
-                            type="button"
-                            @click="cropAndReplace"
-                        >
-                            Done
-                        </biz-button>
-                    </div>
+                            <div class="buttons has-addons is-centered">
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == null)}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(null)"
+                                >
+                                    Free
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 16/9)}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(16/9)"
+                                >
+                                    16:9
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 4/3)}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(4/3)"
+                                >
+                                    4:3
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 1)}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(1)"
+                                >
+                                    1:1
+                                </biz-button>
+                            </div>
+                        </div>
+                        <div class="column is-12-mobile is-4-tablet is-4-desktop">
+                            <div class="is-pulled-right">
+                                <biz-button
+                                    type="button"
+                                    @click="disableState"
+                                >
+                                    Cancel
+                                </biz-button>
+                                <biz-button
+                                    class="is-primary"
+                                    type="button"
+                                    @click="cropAndReplace"
+                                >
+                                    Done
+                                </biz-button>
+                            </div>
 
-                    <div class="is-clearfix" />
-                </div>
-            </template>
+                            <div class="is-clearfix" />
+                        </div>
+                    </template>
 
-            <template v-else-if="isResizeState">
-                <div class="column" />
-                <div class="column is-6">
-                    <div class="columns">
+                    <template v-else-if="isResizeState">
+                        <div class="column is-8">
+                            <div class="columns">
+                                <div class="column">
+                                    <biz-form-field-horizontal>
+                                        <template #label>
+                                            Width
+                                        </template>
+                                        <div class="control">
+                                            <biz-input
+                                                v-model="resize.width"
+                                                :disabled="isProcessing"
+                                            />
+                                        </div>
+                                    </biz-form-field-horizontal>
+                                </div>
+                                <div class="column">
+                                    <biz-form-field-horizontal>
+                                        <template #label>
+                                            Height
+                                        </template>
+                                        <div class="control">
+                                            <biz-input
+                                                v-model="resize.height"
+                                                :disabled="isProcessing"
+                                            />
+                                        </div>
+                                    </biz-form-field-horizontal>
+                                </div>
+                            </div>
+                        </div>
                         <div class="column">
-                            <biz-form-field-horizontal>
-                                <template #label>
-                                    Width
-                                </template>
-                                <div class="control">
-                                    <biz-input
-                                        v-model="resize.width"
+                            <div class="is-pulled-right">
+                                <biz-button
+                                    type="button"
+                                    @click="disableState"
+                                >
+                                    Cancel
+                                </biz-button>
+                                <biz-button
+                                    class="is-primary"
+                                    type="button"
+                                    @click="resizeAndReplace"
+                                >
+                                    Resize
+                                </biz-button>
+                            </div>
+                            <div class="is-clearfix" />
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <div class="column is-hidden-mobile" />
+                        <div class="column is-12-mobile is-6-tablet has-text-centered">
+                            <div class="columns">
+                                <div class="column py-0">
+                                    <biz-button-icon
+                                        v-if="! hasDimension"
+                                        icon-class="is-small"
+                                        icon="fas fa-crop-alt"
+                                        title="Crop"
+                                        type="button"
                                         :disabled="isProcessing"
+                                        @click="enableCropState"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-undo-alt"
+                                        icon-class="is-small"
+                                        title="Rotate Counterclockwise"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="rotateLeft"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-redo-alt"
+                                        icon-class="is-small"
+                                        title="Rotate Clockwise"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="rotateRight"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-arrows-alt-h"
+                                        icon-class="is-small"
+                                        title="Flip Horizontal"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="flipX($event)"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-arrows-alt-v"
+                                        icon-class="is-small"
+                                        title="Flip Vertical"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="flipY($event)"
+                                    />
+                                    <biz-button-icon
+                                        v-if="isResizeEnabled"
+                                        icon="fas fa-expand"
+                                        icon-class="is-small"
+                                        title="Resize"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="enableResizeState"
                                     />
                                 </div>
-                            </biz-form-field-horizontal>
+                            </div>
                         </div>
-                        <div class="column">
-                            <biz-form-field-horizontal>
-                                <template #label>
-                                    Height
-                                </template>
-                                <div class="control">
-                                    <biz-input
-                                        v-model="resize.height"
-                                        :disabled="isProcessing"
-                                    />
-                                </div>
-                            </biz-form-field-horizontal>
+                        <div class="column is-12-mobile">
+                            <div class="is-pulled-right">
+                                <slot
+                                    name="actions"
+                                    :cropper="cropper"
+                                />
+                            </div>
+                            <div class="is-clearfix" />
                         </div>
-                    </div>
+                    </template>
                 </div>
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <biz-button
-                            type="button"
-                            @click="disableState"
-                        >
-                            Cancel
-                        </biz-button>
-                        <biz-button
-                            class="is-primary"
-                            type="button"
-                            @click="resizeAndReplace"
-                        >
-                            Resize
-                        </biz-button>
-                    </div>
-                    <div class="is-clearfix" />
-                </div>
-            </template>
-
-            <template v-else>
-                <div class="column" />
-                <div class="column has-text-centered">
-                    <div class="columns">
-                        <div class="column py-0">
-                            <biz-button-icon
-                                icon-class="is-small"
-                                icon="fas fa-crop-alt"
-                                title="Crop"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="enableCropState"
-                            />
-                            <biz-button-icon
-                                icon="fas fa-undo-alt"
-                                icon-class="is-small"
-                                title="Rotate Counterclockwise"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="rotateLeft"
-                            />
-                            <biz-button-icon
-                                icon="fas fa-redo-alt"
-                                icon-class="is-small"
-                                title="Rotate Clockwise"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="rotateRight"
-                            />
-                            <biz-button-icon
-                                icon="fas fa-arrows-alt-h"
-                                icon-class="is-small"
-                                title="Flip Horizontal"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="flipX($event)"
-                            />
-                            <biz-button-icon
-                                icon="fas fa-arrows-alt-v"
-                                icon-class="is-small"
-                                title="Flip Vertical"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="flipY($event)"
-                            />
-                            <biz-button-icon
-                                icon="fas fa-expand"
-                                icon-class="is-small"
-                                title="Resize"
-                                type="button"
-                                :disabled="isProcessing"
-                                @click="enableResizeState"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <slot
-                            name="actions"
-                            :cropper="cropper"
-                        />
-                    </div>
-                    <div class="is-clearfix" />
-                </div>
-            </template>
+            </div>
         </template>
 
         <div id="image-editor-container">
             <vue-cropper
                 ref="cropper"
+                v-bind="cropperOptions"
                 alt="Source Image"
-                drag-mode="move"
-                :auto-crop-area="1"
-                :auto-crop="false"
-                :check-cross-origin="true"
                 :src="previewFileSrc"
-                :min-container-height="400"
                 @crop="updateImageData"
             />
         </div>
@@ -258,6 +266,8 @@
             isDebugMode: { type: Boolean, default: false },
             isProcessing: { type: Boolean, default: false },
             modelValue: { type: [String, null], default: "" },
+            dimensions: { type: Object, default: () => {} },
+            isResizeEnabled: { type: Boolean, default: true, },
         },
         emits: [
             'close',
@@ -293,6 +303,40 @@
             isResizeState() {
                 return this.state === this.stateOptions.resize;
             },
+            hasDimension() {
+                return (
+                    ! isEmpty(this.dimensions)
+                    && !! this.dimensions.width
+                    && !! this.dimensions.height
+                );
+            },
+            ratio() {
+                return (
+                    parseFloat(this.dimensions.width) / parseFloat(this.dimensions.height)
+                );
+            },
+            cropperOptions() {
+                if (this.hasDimension) {
+                    return {
+                        autoCrop: true,
+                        autoCropArea: this.ratio,
+                        checkCrossOrigin: true,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        dragMode: "move",
+                        initialAspectRatio: this.ratio,
+                        minContainerHeight: 400,
+                    }
+                }
+
+                return {
+                    autoCrop: false,
+                    autoCropArea: 1,
+                    checkCrossOrigin: true,
+                    dragMode: "move",
+                    minContainerHeight: 400,
+                };
+            },
         },
         mounted() {
             this.cropper = this.$refs.cropper;
@@ -301,7 +345,16 @@
             enableCropState() {
                 this.state = this.stateOptions.crop;
                 this.cropper
-                    .initCrop()
+                    .initCrop({
+                        autoCrop: true,
+                        autoCropArea: this.ratio,
+                        checkCrossOrigin: true,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        dragMode: "move",
+                        initialAspectRatio: this.ratio,
+                        minContainerHeight: 400,
+                    })
                     .setDragMode("crop");
             },
             enableResizeState() {

@@ -8,6 +8,7 @@
                 v-if="isImage"
                 :alt="medium.display_file_name"
                 :src="imgSrc"
+                :ratio="ratio"
             />
             <span
                 v-else
@@ -101,6 +102,7 @@
             isSelectEnabled: { type: Boolean, default: true },
             medium: { type: Object, default: () => {}},
             isImagePreviewThumbnail: { type:Boolean, default: true },
+            ratio: { type: String, default: null },
         },
 
         emits: [
