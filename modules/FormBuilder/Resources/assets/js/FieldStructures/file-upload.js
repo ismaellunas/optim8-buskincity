@@ -14,6 +14,10 @@ export default {
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
+    image_dimensions: {
+        width: null,
+        height: null,
+    },
     validation: {
         rules: {
             required: false,
@@ -60,40 +64,39 @@ export const config = {
             },
         }
     },
-    validation: {
-        label: "Validation",
-        config: {
-            required: {
-                component: "ConfigCheckbox",
-                label: "Is Required?",
-            },
-            mimes: {
-                component: "ConfigCheckboxes",
-                label: "Accepted Type",
-                settings: {
-                    options: [
-                        { id: 'image', value: 'Image' },
-                        { id: 'video', value: 'Video' },
-                        { id: 'document', value: 'Document' },
-                        { id: 'spreadsheet', value: 'Spreadsheet' },
-                        { id: 'presentation', value: 'Presentation' },
-                    ]
-                },
-            },
-            max: {
-                component: "ConfigNumberAddons",
-                label: "Maximal File Size",
-                settings: {
-                    addons: 'KiB',
-                    max: maxFileSize,
-                    note: `Max file size: ${maxFileSize} KiB`
-                }
-            },
-        },
+    customValidation: {
+        // config: {
+        //     required: {
+        //         component: "ConfigCheckbox",
+        //         label: "Is Required?",
+        //     },
+        //     mimes: {
+        //         component: "ConfigCheckboxes",
+        //         label: "Accepted Type",
+        //         settings: {
+        //             options: [
+        //                 { id: 'image', value: 'Image' },
+        //                 { id: 'video', value: 'Video' },
+        //                 { id: 'document', value: 'Document' },
+        //                 { id: 'spreadsheet', value: 'Spreadsheet' },
+        //                 { id: 'presentation', value: 'Presentation' },
+        //             ]
+        //         },
+        //     },
+        //     max: {
+        //         component: "ConfigNumberAddons",
+        //         label: "Maximal File Size",
+        //         settings: {
+        //             addons: 'KiB',
+        //             max: maxFileSize,
+        //             note: `Max file size: ${maxFileSize} KiB`
+        //         }
+        //     },
+        // },
+        component: "ConfigFileUploadValidation",
 
     },
     attributes: {
-        label: "Attributes",
         component: "ConfigFileUploadAttribute",
     },
 };
