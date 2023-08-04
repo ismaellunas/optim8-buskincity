@@ -9,7 +9,8 @@
                 :alt="medium.display_file_name"
                 :src="imgSrc"
                 :ratio="ratio"
-                :style="imageStyle"
+                :style="imageStyles"
+                :figure-styles="figureStyles"
             />
             <span
                 v-else
@@ -104,7 +105,8 @@
             medium: { type: Object, default: () => {}},
             isImagePreviewThumbnail: { type:Boolean, default: true },
             ratio: { type: String, default: null },
-            imageStyle: { type: [String, Object, Array], default: null },
+            imageStyles: { type: [String, Object, Array], default: null },
+            figureStyles: { type: [String, Object, Array], default: null },
         },
 
         emits: [
