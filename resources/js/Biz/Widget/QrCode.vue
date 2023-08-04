@@ -7,12 +7,12 @@
             <div class="columns is-multiline is-mobile">
                 <div class="column is-4-desktop is-12-tablet is-12-mobile">
                     <biz-qr-code
-                        :height="128"
-                        :width="128"
+                        :height="data.dimension.default.height"
+                        :width="data.dimension.default.width"
                         :text="data.text"
-                        :logo-url="data.logoUrl"
                         :name="data.name"
-                        @data-url-download="setDownloadUrl"
+                        :logo-url="data.logoThumbnailUrl"
+                        @on-rendered="setDownloadUrl"
                     />
                 </div>
 
@@ -22,13 +22,14 @@
                     </p>
 
                     <div class="buttons are-small mt-5">
-                        <a
-                            :href="qrCodeUrl.download"
-                            class="button is-primary"
-                            :download="data.name"
+                        <biz-button
+                            type="button"
+                            class="is-primary"
+                            @click="download"
                         >
                             <span class="has-text-weight-bold">Download</span>
-                        </a>
+                        </biz-button>
+
                         <a
                             :href="route('frontend.print.qrcode', { user: data.uniqueKey })"
                             class="button"
@@ -44,14 +45,22 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizButton from '@/Biz/Button.vue';
     import BizQrCode from '@/Biz/QrCode.vue';
+    import QRCode from 'easyqrcodejs';
 
     export default {
         name: 'QrCode',
 
         components: {
+            BizButton,
             BizQrCode,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             data: {type: Object, required: true},
@@ -71,6 +80,36 @@
             setDownloadUrl(url) {
                 this.qrCodeUrl.download = url;
             },
+
+            download() {
+                let qrElement = document.createElement('div');
+
+                const options = {
+                    ...{
+                        logo: this.data.logoUrl,
+                        crossOrigin: "anonymous",
+                        onRenderingStart: () => {
+                            this.onStartLoadingOverlay();
+                        },
+                        onRenderingEnd: (qrCodeOptions, dataUrl) => {
+                            this.onEndLoadingOverlay();
+                            this.downloadBase64File(dataUrl, this.data.name + '.png');
+                            qrElement.remove();
+                        }
+                    },
+                    ...this.data.qrOptions,
+                }
+
+                new QRCode(qrElement, options);
+            },
+
+            downloadBase64File(href, fileName) {
+                const downloadLink = document.createElement("a");
+                downloadLink.href = href;
+                downloadLink.download = fileName;
+                downloadLink.click();
+                downloadLink.remove();
+            }
         },
     };
 </script>

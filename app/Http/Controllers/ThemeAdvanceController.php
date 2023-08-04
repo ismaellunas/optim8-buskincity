@@ -60,7 +60,7 @@ class ThemeAdvanceController extends CrudController
                 'qrCodePublicPageIsDisplayed' => $this->settingService->qrCodePublicPageIsDisplayed(),
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'instructions' => [
-                    'logoMediaLibrary' => MediaService::logoMediaLibraryInstructions(),
+                    'qrCodeMediaLibrary' => MediaService::qrCodeMediaLibraryInstructions(),
                     'faviconMediaLibrary' => [
                         ...MediaService::defaultMediaLibraryInstructions(),
                         ...[

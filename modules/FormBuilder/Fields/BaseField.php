@@ -21,7 +21,10 @@ class BaseField
 
     public function value(): mixed
     {
-        return htmlspecialchars($this->value);
+        if ($this->value) {
+            return htmlspecialchars($this->value);
+        }
+        return null;
     }
 
     public function componentValue(): array

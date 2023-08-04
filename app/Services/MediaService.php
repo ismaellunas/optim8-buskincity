@@ -549,6 +549,23 @@ class MediaService
         ];
     }
 
+    public static function qrCodeMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    SettingService::maxFileSize() * 1024
+                )
+            ]),
+            __('Recommended dimension: :dimension.', [
+                'dimension' => config('constants.recomended_dimensions.qr_code')
+            ]),
+        ];
+    }
+
     public static function defaultMediaLibraryTranslations(): array
     {
         return [

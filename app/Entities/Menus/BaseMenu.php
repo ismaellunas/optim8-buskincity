@@ -36,7 +36,9 @@ abstract class BaseMenu
         $this->menuItem = $menuItem;
 
         foreach ($menuItem->getAttributes() as $attribute => $value) {
-            $this->$attribute = $value;
+            if (property_exists(self::class, $attribute)) {
+                $this->$attribute = $value;
+            }
         }
     }
 

@@ -8,17 +8,9 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
-        @include('favicon')
-
         @stack('styles')
 
         @stack('scripts')
-
-        @if ($additionalCss)
-            <style type="text/css">
-                {!! $additionalCss !!}
-            </style>
-        @endif
     </head>
 
     <body class="font-sans antialiased">
@@ -29,12 +21,5 @@
         </div>
 
         @stack('bottom_scripts')
-
-        @if ($additionalJavascript)
-            <script>
-                {!! $additionalJavascript !!}
-            </script>
-        @endif
     </body>
-
 </html>

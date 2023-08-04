@@ -6,7 +6,9 @@
 ])
 
 <x-field>
-    <x-label :label="$label" :required="$required" />
+    @if ($label)
+        <x-label :label="$label" :required="$required" />
+    @endif
 
     <div class="control">
         <input type="{{ $type }}" {{ $attributes->class(['input', $formInputClass]) }} @required($required) />

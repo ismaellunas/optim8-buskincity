@@ -97,6 +97,7 @@ return [
         ],
         'custom_attributes' => [
             ['a', 'target', 'Enum#_blank,_self,_target,_top'],
+            ['table', 'role', 'Text'],
         ],
         'custom_elements' => [
             ['u', 'Inline', 'Inline', 'Common'],
@@ -121,9 +122,11 @@ return [
 
         'email' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'a[href|title|target|id],b,blockquote,br,code[class],em,h1,h2,h3,h4,h5,h6,hr,i,img[width|height|alt|src],li,ol[start],p[style],pre,s,span[style],strong,sub,sup,table[class],tbody,td[class],th,thead,tr,u,ul',
+            'HTML.Allowed'             => 'a[href|title|target|id|class|rel],b,blockquote,br,code[class],em,h1,h2,h3,h4,h5,h6,hr,i,img[width|height|alt|src],li,ol[start],p[style],pre,s,span[style],strong,sub,sup,table[class|align|border|width|cellpadding|cellspacing|role],tbody,td[align|class],th,thead,tr,u,ul',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
-            'Attr.AllowedClasses'      => 'alert,alert-danger,alert-info,alert-success,alert-warning,blockquote,blockquote-footer,img-responsive,table,table-bordered,table-condensed,table-hover,table-responsive,table-striped',
+            'Attr.AllowedClasses'      => 'alert,alert-danger,alert-info,alert-success,alert-warning,blockquote,blockquote-footer,img-responsive,table,table-bordered,table-condensed,table-hover,table-responsive,table-striped,'.
+            'action,break-all,button,button-blue,button-error,button-green,button-primary,button-red,button-success,content,content-cell,footer,header,inner-body,logo,body,panel,panel-content,panel-item,sub,subcopy,table,wrapper',
+            'Attr.AllowedRel'          => 'nofollow,noreferrer,noopener',
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty'   => true,
         ],
