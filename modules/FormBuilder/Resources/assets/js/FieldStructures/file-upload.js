@@ -65,34 +65,6 @@ export const config = {
         }
     },
     customValidation: {
-        // config: {
-        //     required: {
-        //         component: "ConfigCheckbox",
-        //         label: "Is Required?",
-        //     },
-        //     mimes: {
-        //         component: "ConfigCheckboxes",
-        //         label: "Accepted Type",
-        //         settings: {
-        //             options: [
-        //                 { id: 'image', value: 'Image' },
-        //                 { id: 'video', value: 'Video' },
-        //                 { id: 'document', value: 'Document' },
-        //                 { id: 'spreadsheet', value: 'Spreadsheet' },
-        //                 { id: 'presentation', value: 'Presentation' },
-        //             ]
-        //         },
-        //     },
-        //     max: {
-        //         component: "ConfigNumberAddons",
-        //         label: "Maximal File Size",
-        //         settings: {
-        //             addons: 'KiB',
-        //             max: maxFileSize,
-        //             note: `Max file size: ${maxFileSize} KiB`
-        //         }
-        //     },
-        // },
         component: "ConfigFileUploadValidation",
 
     },
