@@ -345,16 +345,7 @@
             enableCropState() {
                 this.state = this.stateOptions.crop;
                 this.cropper
-                    .initCrop({
-                        autoCrop: true,
-                        autoCropArea: this.ratio,
-                        checkCrossOrigin: true,
-                        cropBoxMovable: false,
-                        cropBoxResizable: false,
-                        dragMode: "move",
-                        initialAspectRatio: this.ratio,
-                        minContainerHeight: 400,
-                    })
+                    .initCrop()
                     .setDragMode("crop");
             },
             enableResizeState() {
