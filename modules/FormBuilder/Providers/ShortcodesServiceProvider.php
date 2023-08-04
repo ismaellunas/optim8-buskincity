@@ -15,7 +15,7 @@ class ShortcodesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Shortcode::register('form-builder', FormBuilder::class);
+        Shortcode::register(FormBuilder::$name, FormBuilder::class);
     }
 
     /**
