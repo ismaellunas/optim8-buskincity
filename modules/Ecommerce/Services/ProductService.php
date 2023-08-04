@@ -12,11 +12,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Modules\Ecommerce\ModuleService;
 
 class ProductService
 {
-    public function __construct(MediaService $mediaService)
+    public function __construct(private MediaService $mediaService)
     {
         $this->mediaService = $mediaService;
     }
