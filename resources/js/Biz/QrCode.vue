@@ -31,31 +31,35 @@
                 type: String,
                 default: 'qrcode',
             },
+            options: { type: Object, default: () => {} },
         },
 
         emits: [
-            'data-url-download',
+            'on-rendered',
         ],
 
         data(props) {
             return {
                 dataUrl: null,
-                options: {
-                    text: props.text,
-                    width: props.width,
-                    height: props.height,
-                    correctLevel: QRCode.CorrectLevel.H,
-                    logo: this.logoUrl,
-                    crossOrigin: "anonymous",
+                mergedOptions: {
+                    ...{
+                        text: props.text,
+                        width: props.width,
+                        height: props.height,
+                        logo: this.logoUrl,
+                        crossOrigin: "anonymous",
+                        quietZone: props.height * 3 / 100,
+                    },
+                    ...props.options,
                 }
             };
         },
 
         mounted() {
-            const options = this.options;
+            const options = this.mergedOptions;
 
             options['onRenderingEnd'] = (qrCodeOptions, dataUrl) => {
-                this.$emit('data-url-download', dataUrl);
+                this.$emit('on-rendered', dataUrl);
             };
 
             new QRCode(this.$refs.qrCode, options);
