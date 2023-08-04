@@ -8,7 +8,7 @@
             :is-preview-enabled="true"
             :is-image-preview-thumbnail="false"
             :ratio="isMultipleUpload ? `is-1by1` : null"
-            :image-style="isMultipleUpload ? `object-fit: contain;` : null"
+            :image-style="isMultipleUpload ? `object-fit: cover;` : null"
             @on-edit-clicked="onEditClicked()"
             @on-preview-clicked="onPreviewClicked()"
         />
