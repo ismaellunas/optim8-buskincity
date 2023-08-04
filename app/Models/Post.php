@@ -167,7 +167,11 @@ class Post extends BaseModel implements PublishableInterface
 
     private function removeWrappedParagraphFromShortcode(string $content): string
     {
-        return preg_replace('/<p>\\s*?(\[form-builder.*?\])?\\s*<\\/p>/s', '\1', $content);
+        return preg_replace(
+            '/(<[^>]*>.*)(\[form-builder.*?\])(.*<\/.+>)/',
+            '$1$3$2',
+            $content
+        );
     }
 
     public function getPurifiedContentAttribute(): string
