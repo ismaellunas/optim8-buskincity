@@ -368,6 +368,10 @@ return [
             'width' => 1600,
             'height' => 1600,
         ],
+        'favicon' => [
+            'width' => 180,
+            'height' => 180,
+        ],
     ],
 
     'icon' => [
