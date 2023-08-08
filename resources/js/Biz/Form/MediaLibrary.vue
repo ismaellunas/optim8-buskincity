@@ -111,7 +111,14 @@
             MixinMediaLibrary,
         ],
 
+        provide() {
+            return {
+                injectDimensions: this.dimension,
+            }
+        },
+
         props: {
+            dimension: { type: Object, default: () => {} },
             disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},

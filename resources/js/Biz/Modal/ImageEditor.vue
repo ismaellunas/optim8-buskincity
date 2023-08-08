@@ -352,10 +352,17 @@
                 this.state = this.stateOptions.resize;
             },
             disableState() {
-                this.cropper
-                    .reset()
-                    .clear()
-                    .setDragMode('move');
+                if (this.hasDimension) {
+                    this.cropper
+                        .reset()
+                        .setDragMode('crop');
+                } else {
+                    this.cropper
+                        .reset()
+                        .clear()
+                        .setDragMode('move');
+                }
+
                 this.state = null;
             },
             cropAndReplace() {

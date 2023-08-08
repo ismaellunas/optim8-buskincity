@@ -70,6 +70,7 @@
             :cropped-image-type="croppedImageType"
             :file-name="computedMedia.file_name"
             :is-processing="isProcessing"
+            :dimensions="computedDimensions"
             @close="closeModal"
         >
             <template #actions="slotProps">
@@ -154,11 +155,13 @@
                     done : 'Done',
                 })
             },
+            injectDimensions: {},
         },
 
         props: {
             allowMultiple: { type: Boolean, default: false, },
             baseRouteName: {type: String, default: 'admin.media'},
+            dimensions: { type: Object, default: () => {} },
             isAjax: {type: Boolean, default: false},
             isProcessing: {type: Boolean, default: false},
             media: { type: Object, required: true },
@@ -189,6 +192,10 @@
                 return this.computedMedia?.file_url
                     ?? this.computedMedia?.file
                     ?? '';
+            },
+
+            computedDimensions() {
+                return this.dimensions ?? this.injectDimensions;
             },
         },
 
