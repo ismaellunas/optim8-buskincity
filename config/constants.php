@@ -372,6 +372,10 @@ return [
             'width' => 180,
             'height' => 180,
         ],
+        'cover' => [
+            'width' => 2560,
+            'height' => 576,
+        ],
     ],
 
     'icon' => [
