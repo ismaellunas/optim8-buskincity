@@ -74,6 +74,7 @@
             :is-download-enabled="can?.media?.read ?? false"
             :is-upload-enabled="can?.media?.add ?? false"
             :mediums="gallery"
+            :dimension="dimensions.gallery"
             :allow-multiple="true"
             :max-files="rules.maxProductFileNumber"
             :instructions="instructions.mediaLibrary"
@@ -119,6 +120,7 @@
                 Gallery : 'Gallery',
                 upload : 'Upload',
             }) },
+            dimensions: {},
         },
 
         props: {
