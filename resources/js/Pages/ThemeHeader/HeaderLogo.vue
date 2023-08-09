@@ -9,7 +9,7 @@
                     :is-download-enabled="can?.media?.read ?? false"
                     :is-upload-enabled="can?.media?.add ?? false"
                     :medium="logoMedia"
-                    :dimension="dimensions.logo"
+                    :dimensions="dimensions.logo"
                     :message="error('logo')"
                     :instructions="instructions.mediaLibrary"
                 />

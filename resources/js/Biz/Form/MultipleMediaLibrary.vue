@@ -121,14 +121,14 @@
         provide() {
             return {
                 selectedMedia: this.selectedMedia,
-                injectDimensions: this.dimension,
+                injectMediaDimensions: this.dimensions,
             }
         },
 
         props: {
             allowMultiple: { type: Boolean, default: false, },
             disabled: { type: Boolean, default: false },
-            dimension: { type: Object, default: () => {} },
+            dimensions: { type: Object, default: () => {} },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},
             isDownloadEnabled: { type: Boolean, default: true },

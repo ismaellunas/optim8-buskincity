@@ -113,12 +113,12 @@
 
         provide() {
             return {
-                injectDimensions: this.dimension,
+                injectMediaDimensions: this.dimensions,
             }
         },
 
         props: {
-            dimension: { type: Object, default: () => {} },
+            dimensions: { type: Object, default: () => {} },
             disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},

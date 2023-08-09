@@ -228,7 +228,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="logoMedia"
-                            :dimension="dimensions.logo"
+                            :dimensions="dimensions.logo"
                             :instructions="instructions.mediaLibrary"
                             :message="error('logo')"
                         />
