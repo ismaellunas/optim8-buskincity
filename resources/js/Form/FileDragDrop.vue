@@ -89,13 +89,13 @@
                             <biz-button
                                 type="button"
                                 class="is-link"
-                                @click="updateMedia()"
+                                @click="saveEditedFiles()"
                             >
                                 Save
                             </biz-button>
 
                             <biz-button
-                                class="is-link is-light ml-2"
+                                class="ml-2"
                                 type="button"
                                 @click="closeModal()"
                             >
@@ -169,7 +169,6 @@
                 editIcon,
                 hasImage: false,
                 isModalPreviewOpen: false,
-                onUpdateMedia: false,
                 previewImageSrc: null,
             };
         },
@@ -205,7 +204,7 @@
             },
 
             onAddFile() {
-                if (this.checkValueHasImage) {
+                if (this.checkValueHasImage()) {
                     this.openModal();
                 }
             },
@@ -232,17 +231,15 @@
                 this.checkValueHasImage();
             },
 
-            updateMedia() {
+            saveEditedFiles() {
                 const newFiles = cloneDeep(this.computedValue.files);
 
-                this.onUpdateMedia = true;
                 this.reset();
 
                 this.$refs.file_upload
                     .$refs.file_upload.addFiles(newFiles);
 
                 setTimeout(() => {
-                    this.onUpdateMedia = false;
                     this.closeModal();
                 }, 200);
             },
