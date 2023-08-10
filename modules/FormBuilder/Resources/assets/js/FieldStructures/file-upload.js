@@ -27,6 +27,7 @@ export default {
         message: []
     },
     is_multiple_upload: false,
+    is_image_editor_enabled: false,
     visibility: [],
     translated: false,
 };
@@ -64,8 +65,40 @@ export const config = {
             },
         }
     },
-    customValidation: {
-        component: "ConfigFileUploadValidation",
+    validation: {
+        label: "Validation",
+        config: {
+            required: {
+                component: "ConfigCheckbox",
+                label: "Is Required?",
+            },
+            mimes: {
+                component: "ConfigCheckboxes",
+                label: "Accepted Type",
+                settings: {
+                    options: [
+                        { id: 'image', value: 'Image' },
+                        { id: 'video', value: 'Video' },
+                        { id: 'document', value: 'Document' },
+                        { id: 'spreadsheet', value: 'Spreadsheet' },
+                        { id: 'presentation', value: 'Presentation' },
+                    ]
+                },
+            },
+            max: {
+                component: "ConfigNumberAddons",
+                label: "Maximal File Size",
+                settings: {
+                    addons: 'KiB',
+                    max: maxFileSize,
+                    note: `Max file size: ${maxFileSize} KiB`
+                }
+            },
+        },
+
+    },
+    imageEditor: {
+        component: "ConfigFileUploadImageEditor",
 
     },
     attributes: {

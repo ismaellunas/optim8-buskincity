@@ -64,7 +64,7 @@
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
     import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
     import ConfigFileUploadAttribute from './Configs/FileUploadAttribute.vue';
-    import ConfigFileUploadValidation from './Configs/FileUploadValidation.vue';
+    import ConfigFileUploadImageEditor from './Configs/FileUploadImageEditor.vue';
     import ConfigInput from '@/Blocks/Configs/Input.vue';
     import ConfigNumber from '@/Blocks/Configs/Number.vue';
     import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
@@ -88,7 +88,7 @@
             ConfigCheckbox,
             ConfigCheckboxes,
             ConfigFileUploadAttribute,
-            ConfigFileUploadValidation,
+            ConfigFileUploadImageEditor,
             ConfigInput,
             ConfigNumber,
             ConfigNumberAddons,

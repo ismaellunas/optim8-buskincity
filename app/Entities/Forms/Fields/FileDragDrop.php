@@ -34,7 +34,7 @@ class FileDragDrop extends File
         $schema = [
             'max_file_size' => $this->maxFileSize,
             'accept' => $this->getMimeTypes(),
-            'is_image_editor_enabled' => $this->hasImageType(),
+            'is_image_editor_enabled' => $this->isImageEditorEnabled(),
             'dimensions' => $this->getDimensions(),
         ];
 
@@ -71,14 +71,15 @@ class FileDragDrop extends File
         );
     }
 
-    private function hasImageType(): bool
+    private function isImageEditorEnabled(): bool
     {
-        return in_array('image', $this->mimes);
+        return in_array('image', $this->mimes)
+            && $this->data['is_image_editor_enabled'] ?? false;
     }
 
     private function getDimensions(): array
     {
-        if ($this->hasImageType()) {
+        if ($this->isImageEditorEnabled()) {
             return $this->data['image_dimensions'] ?? [];
         }
 
