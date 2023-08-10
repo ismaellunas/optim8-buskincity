@@ -1,17 +1,21 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth>
     <div class="column is-7-desktop is-6-tablet is-12-mobile">
         <div class="level is-mobile">
             <div class="level-left">
                 <div class="level-item">
-                    <a onclick="backOrOpenSocialMediaForm()">
+                    <a
+                        @if ($isSocialiteDriverExists)
+                            onclick="backOrOpenSocialMediaForm()"
+                        @else
+                            href="{{ route('homepage') }}"
+                        @endif
+                    >
                         <span class="icon-text">
                             <x-icon icon="fa-arrow-left" />
 
                             <span>{{ __('Back') }}</span>
                         </span>
-                    </a>
+                    </aonclick=>
                 </div>
             </div>
 
@@ -31,7 +35,13 @@
             </div>
         </div>
 
-        <div class="columns is-multiline is-mobile mt-6" id="socialMediaForm">
+        <div
+            id="socialMediaForm"
+            @class([
+                'columns is-multiline is-mobile mt-6',
+                'is-hidden' => ! $isSocialiteDriverExists
+            ])
+        >
             <div class="column is-8-desktop is-offset-2-desktop is-12-tablet is-12-mobile">
                 <h1 class="title">{{ __('Log In') }}</h1>
                 <h2 class="subtitle">
@@ -52,28 +62,22 @@
                     </div>
                 @endif
 
-                @php
-                    $availableSocialiteDrivers = $loginService->getAvailableSocialiteDrivers();
-                @endphp
+                @foreach ($availableSocialiteDrivers as $driver)
+                    <a
+                        href="{{ route('oauth.redirect', $driver) }}"
+                        class="button is-medium is-fullwidth mt-4"
+                    >
+                        <span class="icon-text">
+                            <x-icon icon="fa-brands fa-{{ $driver }}" />
 
-                @if (!empty($availableSocialiteDrivers))
-                    @foreach ($availableSocialiteDrivers as $driver)
-                        <a
-                            href="{{ route('oauth.redirect', $driver) }}"
-                            class="button is-medium is-fullwidth mt-4"
-                        >
-                            <span class="icon-text">
-                                <x-icon icon="fa-brands fa-{{ $driver }}" />
-
-                                <span>
-                                    Continue with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span>
-                                </span>
+                            <span>
+                                Continue with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span>
                             </span>
-                        </a>
-                    @endforeach
+                        </span>
+                    </a>
+                @endforeach
 
-                    <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
-                @endif
+                <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
 
                 <a
                     href="#"
@@ -91,7 +95,13 @@
             </div>
         </div>
 
-        <div class="columns is-multiline is-mobile mt-6 is-hidden" id="formFields">
+        <div
+            id="formFields"
+            @class([
+                'columns is-multiline is-mobile mt-6',
+                'is-hidden' => $isSocialiteDriverExists
+            ])
+        >
             <div class="column is-8-desktop is-offset-2-desktop is-12-tablet is-12-mobile">
                 <h1 class="title">
                     {{ __('Welcome Back') }}
