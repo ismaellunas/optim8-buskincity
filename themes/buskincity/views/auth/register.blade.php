@@ -1,5 +1,3 @@
-@inject('loginService', 'App\Services\LoginService')
-
 <x-layouts.auth>
     <x-slot name="title">
         {{ __('Signup | :appName', ['appName' => config('app.name')]) }}
@@ -21,7 +19,14 @@
             <nav class="level is-mobile">
                 <!-- Left side -->
                 <div class="level-left">
-                    <a onclick="backOrOpenSocialMediaForm()" class="button is-white">
+                    <a
+                        class="button is-white"
+                        @if ($isSocialiteDriverExists)
+                            onclick="backOrOpenSocialMediaForm()"
+                        @else
+                            href="{{ route('homepage') }}"
+                        @endif
+                    >
                         <x-icon icon="fa-arrow-left" is-small />
                         <span class="has-text-weight-bold">
                             {{ __('Back') }}
@@ -53,7 +58,13 @@
             @endif
 
             <div class="columns is-mobile is-vcentered is-flex-grow-1">
-                <div id="socialMediaForm" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
+                <div
+                    id="socialMediaForm"
+                    @class([
+                        'column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile',
+                        'is-hidden' => ! $isSocialiteDriverExists
+                    ])
+                >
                     <h1 class="title is-2 mb-4">
                         {{ __('Sign Up') }}
                     </h1>
@@ -61,22 +72,20 @@
                         {{ __('Please choose a method to continue.') }}
                     </p>
 
-                    @if (!empty($loginService->getAvailableSocialiteDrivers()))
-                        @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
-                            <a href="{{ route('oauth.redirect', $driver) }}" @class([
-                                "button is-medium is-light is-fullwidth",
-                                "mt-6" => $loop->first,
-                                "mt-4" => !$loop->first,
-                            ])>
-                                <x-icon icon="fa-brands fa-{{ $driver }}" is-small />
-                                <span>
-                                    {!! __('Sign up with :driver', ['driver' => '<span class="has-text-weight-bold">'.Str::title($driver).'</span>']) !!}
-                                </span>
-                            </a>
-                        @endforeach
+                    @foreach ($availableSocialiteDrivers as $driver)
+                        <a href="{{ route('oauth.redirect', $driver) }}" @class([
+                            "button is-medium is-light is-fullwidth",
+                            "mt-6" => $loop->first,
+                            "mt-4" => !$loop->first,
+                        ])>
+                            <x-icon icon="fa-brands fa-{{ $driver }}" is-small />
+                            <span>
+                                {!! __('Sign up with :driver', ['driver' => '<span class="has-text-weight-bold">'.Str::title($driver).'</span>']) !!}
+                            </span>
+                        </a>
+                    @endforeach
 
-                        <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
-                    @endif
+                    <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
 
                     <a class="button is-medium is-light is-fullwidth mt-4" onclick="showForm()">
                         <x-icon icon="fa-envelope" is-small />
@@ -86,7 +95,13 @@
                     </a>
                 </div>
 
-                <div id="formFields" class="column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile is-hidden">
+                <div
+                    id="formFields"
+                    @class([
+                        'column is-8-desktop is-offset-2-desktop is-10-tablet is-offset-1-tablet is-12-mobile',
+                        'is-hidden' => $isSocialiteDriverExists
+                    ])
+                >
                     <h1 class="title is-2 mb-4">
                         {{ __('Create Account') }}
                     </h1>
