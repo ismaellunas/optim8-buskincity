@@ -17,7 +17,7 @@
         <div class="control">
             <biz-file-upload
                 v-if="maxFileNumber > 0"
-                :key="filePondKey"
+                ref="file_upload"
                 :accepted-types="acceptedTypes"
                 :allow-multiple="allowMultiple"
                 :disabled="disabled"
@@ -27,9 +27,11 @@
                 :placeholder="placeholder"
                 :required="isRequired"
                 @on-update-files="onUpdateFiles"
+                @on-add-file="$emit('on-add-file')"
             />
         </div>
 
+        <slot />
 
         <slot name="note">
             <p
@@ -135,18 +137,14 @@
         },
 
         emits: [
+            'on-add-file',
             'on-file-picked',
+            'on-update-files',
         ],
 
         setup(props, { emit }) {
             return {
                 fileUploadField: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
-                filePondKey: 0,
             };
         },
 
@@ -197,6 +195,8 @@
         methods: {
             onUpdateFiles(files) {
                 this.fileUploadField.files = files;
+
+                this.$emit('on-update-files');
             },
 
             onDeleteMedium(medium) {
@@ -210,7 +210,7 @@
             },
 
             reset() {
-                this.filePondKey += 1;
+                this.$refs.file_upload.reset();
             },
         },
     }

@@ -5,15 +5,15 @@ export default {
         };
     },
     methods: {
-            openModal() {
-                this.isModalOpen = true;
-                this.onShownModal();
-            },
-            closeModal() {
-                this.isModalOpen = false;
-                this.onCloseModal();
-            },
-            onShownModal() {},
-            onCloseModal() {},
+        openModal() {
+            this.isModalOpen = true;
+            this.onShownModal();
+        },
+        closeModal() {
+            this.isModalOpen = false;
+            this.onCloseModal();
+        },
+        onShownModal() {},
+        onCloseModal() {},
     }
 }
