@@ -69,6 +69,11 @@ class LoginService
         return $drivers;
     }
 
+    public static function isSocialiteDriverExists(): bool
+    {
+        return ! empty(self::getAvailableSocialiteDrivers());
+    }
+
     public static function isConnectedAccountEnabled(): bool
     {
         return Socialstream::show() && self::isUserHomeUrl();
