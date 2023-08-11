@@ -5,6 +5,7 @@
             :label="label"
             :is-small="true"
             :class="{ 'is-danger': isInvalid }"
+            :placeholder="settings.placeholder"
             :message="errorMessage"
         >
             <template #afterInput>
