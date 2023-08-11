@@ -73,7 +73,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
-                            :dimensions="dimensions.favicon"
+                            :dimension="dimensions.favicon"
                             :instructions="instructions.faviconMediaLibrary"
                             :message="error('favicon')"
                         />
@@ -124,7 +124,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
-                            :dimensions="dimensions.qrCode"
+                            :dimension="dimensions.qrCode"
                             :instructions="instructions.qrCodeMediaLibrary"
                             :message="error('qrcode_public_page_logo')"
                         />

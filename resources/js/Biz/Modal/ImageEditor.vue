@@ -266,7 +266,7 @@
             isDebugMode: { type: Boolean, default: false },
             isProcessing: { type: Boolean, default: false },
             modelValue: { type: [String, null], default: "" },
-            dimensions: { type: Object, default: () => {} },
+            dimension: { type: Object, default: () => {} },
             isResizeEnabled: { type: Boolean, default: true, },
         },
         emits: [
@@ -305,14 +305,14 @@
             },
             hasDimension() {
                 return (
-                    ! isEmpty(this.dimensions)
-                    && !! this.dimensions.width
-                    && !! this.dimensions.height
+                    ! isEmpty(this.dimension)
+                    && !! this.dimension.width
+                    && !! this.dimension.height
                 );
             },
             ratio() {
                 return (
-                    parseFloat(this.dimensions.width) / parseFloat(this.dimensions.height)
+                    parseFloat(this.dimension.width) / parseFloat(this.dimension.height)
                 );
             },
             cropperOptions() {

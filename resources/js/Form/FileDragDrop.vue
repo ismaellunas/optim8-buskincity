@@ -72,7 +72,7 @@
                     >
                         <biz-file-drag-drop-detail
                             v-model:medium="computedValue.files[index]"
-                            :dimensions="schema.dimensions"
+                            :dimension="schema.dimension"
                             :is-multiple-upload="isMultipleUpload"
                         />
                     </div>
