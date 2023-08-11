@@ -14,7 +14,7 @@ export default {
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
-    image_dimensions: {
+    media_dimension: {
         width: null,
         height: null,
     },

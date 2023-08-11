@@ -37,7 +37,7 @@ class FixFormBuilderFileUploadDimension extends Command
                 if (
                     $field['type'] == 'FileDragDrop'
                 ) {
-                    $fields[$key]['image_dimensions'] = [
+                    $fields[$key]['media_dimension'] = [
                         "width" => null,
                         "height" => null,
                     ];
