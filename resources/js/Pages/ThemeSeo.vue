@@ -41,7 +41,7 @@
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="postThumbnailMedia"
-                            :dimensions="dimensions.postThumbnail"
+                            :dimension="dimensions.postThumbnail"
                             :instructions="instructions.postThumbnailMediaLibrary"
                             :message="error('post_thumbnail')"
                         />
@@ -60,7 +60,7 @@
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="openGraphMedia"
-                            :dimensions="dimensions.openGraph"
+                            :dimension="dimensions.openGraph"
                             :instructions="instructions.openGraphMediaLibrary"
                             :message="error('open_graph')"
                         />

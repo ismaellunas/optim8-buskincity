@@ -70,7 +70,7 @@
             :cropped-image-type="croppedImageType"
             :file-name="computedMedia.file_name"
             :is-processing="isProcessing"
-            :dimensions="injectMediaDimensions"
+            :dimension="injectMediaDimension"
             @close="closeModal"
         >
             <template #actions="slotProps">
@@ -155,7 +155,7 @@
                     done : 'Done',
                 })
             },
-            injectMediaDimensions: {},
+            injectMediaDimension: {},
         },
 
         props: {

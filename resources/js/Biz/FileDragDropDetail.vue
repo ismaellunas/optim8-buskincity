@@ -18,7 +18,7 @@
             v-if="isModalOpen"
             v-model:medium="computedMedium"
             v-model:medium-url="computedMediumUrl"
-            :dimensions="dimensions"
+            :dimension="dimension"
             @on-close="closeModal()"
         />
 
@@ -58,7 +58,7 @@
         ],
 
         props: {
-            dimensions: { type: Object, default: () => {} },
+            dimension: { type: Object, default: () => {} },
             isMultipleUpload: { type: Boolean, required: true },
             medium: { type: Object, required: true },
         },
