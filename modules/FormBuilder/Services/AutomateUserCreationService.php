@@ -8,10 +8,12 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\LanguageService;
 use App\Services\MediaService;
+use App\Services\ResetPasswordService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
@@ -442,6 +444,33 @@ class AutomateUserCreationService
         ];
     }
 
+    private static function loginButtonHtml(User $user): string
+    {
+        $routeName = "login";
+
+        if ($user->can('system.dashboard')) {
+            $routeName = config('fortify.routes.admin_login');
+        }
+
+        return view('vendor.mail.html.button', [
+            'color' => 'primary',
+            'slot' => __('Login'),
+            'url' => route($routeName),
+        ])->render();
+    }
+
+    private static function resetButtonHtml(User $user): string
+    {
+        return view('vendor.mail.html.button', [
+            'color' => 'primary',
+            'slot' => __('Reset Password'),
+            'url' => ResetPasswordService::getResetUrl(
+                $user,
+                Password::getRepository()->create($user, now()->addMonth())
+            ),
+        ])->render();
+    }
+
     public static function emailTags(User $user = null): array
     {
         return [
@@ -449,6 +478,8 @@ class AutomateUserCreationService
             'first_name' => $user->first_name ?? null,
             'last_name' => $user->last_name ?? null,
             'app_name' => config('app.name'),
+            'login_button' => $user ? self::loginButtonHtml($user) : null,
+            'reset_password_button' => $user ? self::resetButtonHtml($user) : null,
         ];
     }
 

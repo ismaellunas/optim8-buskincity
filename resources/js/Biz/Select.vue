@@ -26,7 +26,7 @@
 
         props: {
             disabled: { type: Boolean, default: false },
-            modelValue: { type: [String, Number, Boolean, null], required: true },
+            modelValue: { type: [String, Number, Boolean, Object, null], required: true },
             name: { type: [String, null], default: null },
             placeholder: { type: [String, null], default: null },
         },

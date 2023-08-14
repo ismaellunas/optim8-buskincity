@@ -24,13 +24,7 @@ class AutomateUserCreationSettingSeeder extends Seeder
                 "value" => (
                     "<h2>Dear {first_name} {last_name},</h2>".
                     "<p>We're writing to let you know that your account is now set up and ready to use. To ensure the security of your account, we recommend that you reset your password.</p>".
-                    "<h2>Please follow the steps below to reset your password:</h2>".
-                    "<ol>".
-                    "<li>Visit our website and go to the login page.</li>".
-                    "<li>Click \"Forgot Password\".</li>".
-                    "<li>Enter the email address (your email: <em>{email}</em>).</li>".
-                    "<li>Follow the instructions to reset your password.</li>".
-                    "</ol>".
+                    "{reset_password_button}".
                     "<p>Thank you for joining {app_name}. We look forward to having you as a member!</p>".
                     "<p>&nbsp;</p>".
                     "<p>Regards,<br />{app_name}</p>"
@@ -44,12 +38,7 @@ class AutomateUserCreationSettingSeeder extends Seeder
                 "value" => (
                     "<h2>Dear {first_name} {last_name},</h2>".
                     "<p>We wanted to let you know that your profile has been updated.</p>".
-                    "<h2>Please follow the steps below:</h2>".
-                    "<ol>".
-                    "<li>Login to our website.</li>".
-                    "<li>Go to your profile page.</li>".
-                    "<li>Review the updated information to make sure everything is correct.</li>".
-                    "</ol>".
+                    "{login_button}".
                     "<p>Thank you for choosing {app_name}. We look forward to continuing to serve you.</p>".
                     "<p>&nbsp;</p>".
                     "<p>Regards,<br />{app_name}</p>"

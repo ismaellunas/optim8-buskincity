@@ -340,6 +340,7 @@ return [
         'gallery' => '1280 x 720px',
         'post_thumbnail' => '600 x 400px',
         'open_graph' => '1200 x 630px',
+        'qr_code' => '1600 x 1600px',
     ],
 
     'dimensions' => [
@@ -362,6 +363,10 @@ return [
         'open_graph' => [
             'width' => 1200,
             'height' => 630,
+        ],
+        'qr_code_logo' => [
+            'width' => 1600,
+            'height' => 1600,
         ],
     ],
 

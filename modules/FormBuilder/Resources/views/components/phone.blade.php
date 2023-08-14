@@ -5,7 +5,9 @@
 ])
 
 <x-field>
-    <x-label :label="$field['label']" :required="$field['is_required']" />
+    @if ($field['label'])
+        <x-label :label="$field['label']" :required="$field['is_required']" />
+    @endif
 
     <form-phone
         v-model="form.{{ $fieldName }}"

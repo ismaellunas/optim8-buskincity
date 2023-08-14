@@ -5,7 +5,9 @@
 ])
 
 <x-field>
-    <x-label :label="$label" :required="$required" />
+    @if ($label)
+        <x-label :label="$label" :required="$required" />
+    @endif
 
     <div class="control">
         <textarea class="textarea" {{ $attributes }} @required($required) ></textarea>
