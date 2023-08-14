@@ -2,6 +2,7 @@
     <figure
         class="image is-clipped"
         :class="composedFigureClass"
+        :style="figureStyles"
     >
         <img
             v-bind="$attrs"
@@ -31,6 +32,7 @@
             src: { type: [String, null], default: null },
             dataSrc: { type: String, default: null },
             hasPosition: { type: Boolean, default: false },
+            figureStyles: { type: [String, Object, Array], default: null },
         },
         computed: {
             composedImgClass() {
