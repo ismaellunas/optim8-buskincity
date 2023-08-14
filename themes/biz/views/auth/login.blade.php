@@ -15,7 +15,7 @@
 
                             <span>{{ __('Back') }}</span>
                         </span>
-                    </aonclick=>
+                    </a>
                 </div>
             </div>
 
