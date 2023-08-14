@@ -42,7 +42,7 @@
 
         @stack('scripts')
 
-        @vite('themes/'.config('theme.active').'/js/post.js')
+        @vite('themes/'.config('theme.parent').'/js/post.js')
 
         @vite('resources/js/bulma-misc.js')
 
