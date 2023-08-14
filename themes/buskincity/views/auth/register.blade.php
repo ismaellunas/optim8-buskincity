@@ -72,7 +72,7 @@
                         {{ __('Please choose a method to continue.') }}
                     </p>
 
-                    <x-social-driver />
+                    @include('auth.social-driver-list')
                 </div>
 
                 <div
