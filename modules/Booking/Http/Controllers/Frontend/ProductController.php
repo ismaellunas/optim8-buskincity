@@ -77,6 +77,9 @@ class ProductController extends CrudController
             'product' => $this->productService->productDetailResource($product),
             'timezone' => $schedule->timezone,
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
+            'i18n' => [
+                'products' => __('Products'),
+            ],
         ]));
     }
 
