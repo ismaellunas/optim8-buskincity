@@ -55,7 +55,7 @@
                     </div>
                 @endif
 
-                <x-social-driver />
+                @include('auth.social-driver-list')
             </div>
         </div>
 
