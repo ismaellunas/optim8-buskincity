@@ -54,6 +54,7 @@
             return {
                 can: this.can,
                 i18n: this.i18n,
+                dimensions: this.dimensions,
             };
         },
 
@@ -64,6 +65,7 @@
             breadcrumbs: { type: Object, required: true },
             can: { type: Object, required: true },
             defaultCountry: { type: String, required: true },
+            dimensions: { type: Object, default: () => {} },
             instructions: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },

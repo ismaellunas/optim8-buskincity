@@ -205,6 +205,7 @@
             return {
                 can: this.can,
                 i18n: this.i18n,
+                dimensions: this.dimensions,
             }
         },
 
@@ -214,6 +215,7 @@
             can: { type: Object, required: true },
             coverMedia: { type: Object, default: () => {} },
             defaultCountry: { type: String, required: true },
+            dimensions: { type: Object, default: () => {} },
             errors: { type: Object, default:() => {} },
             instructions: { type: Object, required: true },
             logoMedia: { type: Object, default: () => {} },

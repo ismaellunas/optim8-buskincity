@@ -20,7 +20,7 @@
             v-model:cropper="cropper"
             :cropped-image-type="croppedImageType"
             :file-name="computedMedium.name"
-            :dimensions="dimensions"
+            :dimension="dimension"
             :is-resize-enabled="false"
             @close="closeModal"
         >
@@ -74,7 +74,7 @@
 
         props: {
             medium: { type: Object, required: true },
-            dimensions: { type: Object, default: () => {} },
+            dimension: { type: Object, default: () => {} },
             isMultipleUpload: { type: Boolean, required: true },
         },
 

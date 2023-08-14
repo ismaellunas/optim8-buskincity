@@ -41,6 +41,7 @@
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="postThumbnailMedia"
+                            :dimension="dimensions.postThumbnail"
                             :instructions="instructions.postThumbnailMediaLibrary"
                             :message="error('post_thumbnail')"
                         />
@@ -59,6 +60,7 @@
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="openGraphMedia"
+                            :dimension="dimensions.openGraph"
                             :instructions="instructions.openGraphMediaLibrary"
                             :message="error('open_graph')"
                         />
@@ -100,6 +102,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, default: () => {} },
+            dimensions: { type: Object, default: () => {} },
             errors: { type: Object, default: () => {} },
             instructions: { type: Object, default: () => {} },
             postThumbnailMedia: { type: Object, default: () => {} },

@@ -60,6 +60,9 @@ class ThemeHeaderController extends CrudController
                     'mediaLibrary' => MediaService::logoMediaLibraryInstructions(),
                 ],
                 'i18n' => $this->translations(),
+                'dimensions' => [
+                    'logo' => config('constants.dimensions.logo'),
+                ],
             ]),
         );
     }

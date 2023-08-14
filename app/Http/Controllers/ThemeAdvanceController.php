@@ -71,6 +71,10 @@ class ThemeAdvanceController extends CrudController
                     ],
                 ],
                 'i18n' => $this->translations(),
+                'dimensions' => [
+                    'favicon' => config('constants.dimensions.favicon'),
+                    'qrCode' => config('constants.dimensions.qr_code_logo'),
+                ],
             ])
         );
     }
