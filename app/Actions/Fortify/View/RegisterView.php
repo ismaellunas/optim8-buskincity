@@ -9,7 +9,6 @@ class RegisterView
     public function __invoke()
     {
         return view('auth.register', [
-            'availableSocialiteDrivers' => LoginService::getAvailableSocialiteDrivers(),
             'isSocialiteDriverExists' => LoginService::isSocialiteDriverExists(),
         ]);
     }
