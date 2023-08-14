@@ -55,36 +55,7 @@
                     </div>
                 @endif
 
-                @foreach ($availableSocialiteDrivers as $driver)
-                    <a
-                        href="{{ route('oauth.redirect', $driver) }}"
-                        class="button is-medium is-fullwidth mt-4"
-                    >
-                        <span class="icon-text">
-                            <x-icon icon="fa-brands fa-{{ $driver }}" />
-
-                            <span>
-                                Continue with <span class="has-text-weight-bold">{{ Str::title($driver) }}</span>
-                            </span>
-                        </span>
-                    </a>
-                @endforeach
-
-                <div class="is-divider mt-6 mb-6 ml-5 mr-6" data-content="OR"></div>
-
-                <a
-                    href="#"
-                    class="button is-medium is-fullwidth"
-                    onclick="showForm()"
-                >
-                    <span class="icon-text">
-                        <x-icon icon="fa-envelope" />
-
-                        <span>
-                            Continue with <span class="has-text-weight-bold">Email</span>
-                        </span>
-                    </span>
-                </a>
+                <x-social-driver />
             </div>
         </div>
 

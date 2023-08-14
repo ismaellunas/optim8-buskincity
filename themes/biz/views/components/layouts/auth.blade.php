@@ -52,7 +52,7 @@
         <div id="app">
             <loading-overlay id="loader" class="is-hidden"></loading-overlay>
 
-            <section class="section is-flex is-align-items-center" style="height: 100vh">
+            <section class="section">
                 <div class="container">
                     <div class="columns is-multiline">
                         <div class="column is-5-desktop is-6-tablet is-hidden-mobile">
