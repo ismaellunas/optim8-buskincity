@@ -56,6 +56,10 @@ class ThemeSeoController extends CrudController
                 ],
                 'i18n' => $this->translations(),
                 'title' => $this->title(),
+                'dimensions' => [
+                    'postThumbnail' => config('constants.dimensions.post_thumbnail'),
+                    'openGraph' => config('constants.dimensions.open_graph'),
+                ],
             ])
         );
     }

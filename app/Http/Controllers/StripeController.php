@@ -65,6 +65,9 @@ class StripeController extends Controller
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
             'title' => __('Stripe'),
             'i18n' => $this->translations(),
+            'dimensions' => [
+                'logo' => config('constants.dimensions.logo'),
+            ],
         ]);
     }
 

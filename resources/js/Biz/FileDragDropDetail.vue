@@ -14,26 +14,13 @@
             @on-preview-clicked="onPreviewClicked()"
         />
 
-        <biz-modal-image-editor
+        <biz-file-drag-drop-modal-image-editor
             v-if="isModalOpen"
-            v-model="computedMediumFileUrl"
-            v-model:cropper="cropper"
-            :cropped-image-type="croppedImageType"
-            :file-name="computedMedium.name"
-            :dimensions="dimensions"
-            :is-resize-enabled="false"
-            @close="closeModal"
-        >
-            <template #actions>
-                <biz-button
-                    type="button"
-                    class="is-link"
-                    @click="updateFile"
-                >
-                    Done
-                </biz-button>
-            </template>
-        </biz-modal-image-editor>
+            v-model:medium="computedMedium"
+            v-model:medium-url="computedMediumUrl"
+            :dimension="dimension"
+            @on-close="closeModal()"
+        />
 
         <biz-modal
             v-show="isModalPreviewOpen"
@@ -51,21 +38,19 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button.vue';
+    import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
     import BizModal from '@/Biz/Modal.vue';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
-    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import { ref } from 'vue';
 
     export default {
         name: "BizFileDragDropDetail",
 
         components: {
-            BizButton,
+            BizFileDragDropModalImageEditor,
             BizMediaGalleryItem,
             BizModal,
-            BizModalImageEditor,
         },
 
         mixins: [
@@ -73,22 +58,20 @@
         ],
 
         props: {
-            medium: { type: Object, required: true },
-            dimensions: { type: Object, default: () => {} },
+            dimension: { type: Object, default: () => {} },
             isMultipleUpload: { type: Boolean, required: true },
+            medium: { type: Object, required: true },
         },
 
         setup(props, {emit}) {
             return {
                 computedMedium: useModelWrapper(props, emit, 'medium'),
-                computedMediumFileUrl: ref(URL.createObjectURL(props.medium))
+                computedMediumUrl: ref(URL.createObjectURL(props.medium))
             }
         },
 
         data() {
             return {
-                croppedImageType: "image/png",
-                cropper: null,
                 isModalPreviewOpen: false,
                 previewImageSrc: null,
             };
@@ -98,7 +81,7 @@
             computedMediumItem() {
                 return {
                     file: this.computedMedium,
-                    file_url: this.computedMediumFileUrl,
+                    file_url: this.computedMediumUrl,
                 }
             },
         },
@@ -109,28 +92,9 @@
             },
 
             onPreviewClicked() {
-                this.previewImageSrc = this.computedMediumItem.file_url;
+                this.previewImageSrc = this.computedMediumUrl;
 
                 this.isModalPreviewOpen = true;
-            },
-
-            updateFile() {
-                const self = this;
-
-                self.getCropperBlob()
-                    .then((blob) => {
-                        self.computedMediumFileUrl = URL.createObjectURL(blob);
-                        self.computedMedium = blob;
-
-                        self.closeModal();
-                    });
-            },
-
-            getCropperBlob() {
-                return getCanvasBlob(
-                    this.cropper.getCroppedCanvas(),
-                    this.croppedImageType
-                );
             },
         },
     }

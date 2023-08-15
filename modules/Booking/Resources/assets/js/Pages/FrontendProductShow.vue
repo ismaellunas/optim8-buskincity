@@ -8,7 +8,7 @@
                 <ul>
                     <li>
                         <biz-link :href="route(baseRouteName+'.index')">
-                            Products
+                            {{ i18n.products }}
                         </biz-link>
                     </li>
                     <li class="is-active">
@@ -264,6 +264,12 @@
             product: { type: Object, required: true },
             timezone: { type: String, required: true },
             googleApiKey: { type: String, default: null },
+            i18n: {
+                type: Object,
+                default: () => ({
+                    products: 'Products',
+                })
+            },
         },
 
         setup(props) {
