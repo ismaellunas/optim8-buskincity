@@ -82,6 +82,7 @@
                         :is-download-enabled="can?.media?.read ?? false"
                         :is-upload-enabled="can?.media?.add ?? false"
                         :medium="logoMedia"
+                        :dimension="dimensions.logo"
                         :instructions="instructions.logoMediaLibrary"
                         :message="error('logo')"
                     />
@@ -97,6 +98,7 @@
                         :is-image-preview-thumbnail="false"
                         :is-upload-enabled="can?.media?.add ?? false"
                         :medium="coverMedia"
+                        :dimension="dimensions.cover"
                         :instructions="instructions.coverMediaLibrary"
                         :message="error('cover')"
                     />
@@ -208,6 +210,7 @@
                 email: 'Email',
                 phone: 'Phone',
             }) },
+            dimensions: {},
         },
 
         props: {

@@ -9,6 +9,7 @@
                     :is-download-enabled="can?.media?.read ?? false"
                     :is-upload-enabled="can?.media?.add ?? false"
                     :medium="logoMedia"
+                    :dimension="dimensions.logo"
                     :message="error('logo')"
                     :instructions="instructions.mediaLibrary"
                 />
@@ -40,6 +41,7 @@
                 logo : 'Logo',
                 open_media_library : 'Open media library',
             }) },
+            dimensions: {},
         },
 
         props: {

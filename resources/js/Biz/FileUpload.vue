@@ -62,6 +62,10 @@
                     });
             },
 
+            getFiles() {
+                return this.$refs.pond.getFiles();
+            },
+
             onUpdateFiles(files) {
                 let uploadFiles = [];
 

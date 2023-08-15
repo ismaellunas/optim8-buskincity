@@ -39,73 +39,84 @@
             </template>
         </form-file-upload>
 
-        <biz-modal-card
-            v-if="isModalOpen && isImageEditorEnabled"
-            content-class="is-huge"
-            :is-close-hidden="true"
-            @close="closeModal()"
-        >
-            <template #header>
-                <p class="modal-card-title">
-                    Image Editor
-                </p>
-                <biz-button
-                    aria-label="close"
-                    class="delete is-primary"
-                    type="button"
-                    @click="closeModal()"
-                />
-            </template>
-
-            <div
-                class="columns is-multiline is-mobile"
-                :class="{ 'is-centered': ! isMultipleUpload }"
+        <template v-if="isMultipleUpload">
+            <biz-modal-card
+                v-if="isModalOpen && isImageEditorEnabled"
+                content-class="is-huge"
+                :is-close-hidden="true"
+                @close="cancelEditedFiles()"
             >
-                <template
-                    v-for="(file, index) in computedValue.files"
-                    :key="index"
-                >
-                    <div
-                        v-if="isImage(file)"
-                        class="column"
-                        :class="cardImageClasses"
-                    >
-                        <biz-file-drag-drop-detail
-                            v-model:medium="computedValue.files[index]"
-                            :dimensions="schema.dimensions"
-                            :is-multiple-upload="isMultipleUpload"
-                        />
-                    </div>
+                <template #header>
+                    <p class="modal-card-title">
+                        Image Editor
+                    </p>
+                    <biz-button
+                        aria-label="close"
+                        class="delete is-primary"
+                        type="button"
+                        @click="cancelEditedFiles()"
+                    />
                 </template>
-            </div>
 
-            <template #footer>
                 <div
-                    class="columns"
-                    style="width: 100%"
+                    class="columns is-multiline is-mobile"
+                    :class="{ 'is-centered': ! isMultipleUpload }"
                 >
-                    <div class="column">
-                        <div class="buttons is-pulled-right">
-                            <biz-button
-                                type="button"
-                                class="is-link"
-                                @click="saveEditedFiles()"
-                            >
-                                Save
-                            </biz-button>
+                    <template
+                        v-for="(file, index) in computedValue.files"
+                        :key="index"
+                    >
+                        <div
+                            v-if="isImage(file)"
+                            class="column"
+                            :class="cardImageClasses"
+                        >
+                            <biz-file-drag-drop-detail
+                                v-model:medium="computedValue.files[index]"
+                                :dimension="schema.dimensions"
+                                :is-multiple-upload="isMultipleUpload"
+                            />
+                        </div>
+                    </template>
+                </div>
 
-                            <biz-button
-                                class="ml-2"
-                                type="button"
-                                @click="closeModal()"
-                            >
-                                Cancel
-                            </biz-button>
+                <template #footer>
+                    <div
+                        class="columns"
+                        style="width: 100%"
+                    >
+                        <div class="column">
+                            <div class="buttons is-pulled-right">
+                                <biz-button
+                                    type="button"
+                                    class="is-link"
+                                    @click="saveEditedFiles()"
+                                >
+                                    Save
+                                </biz-button>
+
+                                <biz-button
+                                    class="ml-2"
+                                    type="button"
+                                    @click="cancelEditedFiles()"
+                                >
+                                    Cancel
+                                </biz-button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </template>
-        </biz-modal-card>
+                </template>
+            </biz-modal-card>
+        </template>
+
+        <template v-else>
+            <biz-file-drag-drop-modal-image-editor
+                v-if="isModalOpen"
+                v-model:medium="computedValue.files[0]"
+                :dimension="schema.dimensions"
+                @on-close="saveEditedFiles()"
+            />
+        </template>
     </div>
 </template>
 
@@ -115,11 +126,12 @@
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizFieldNotes from '@/Biz/FieldNotes.vue';
+    import BizFileDragDropDetail from '@/Biz/FileDragDropDetail.vue';
+    import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
-    import BizFileDragDropDetail from '@/Biz/FileDragDropDetail.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, map } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
     export default {
@@ -129,9 +141,10 @@
             BizButton,
             BizButtonIcon,
             BizFieldNotes,
+            BizFileDragDropDetail,
+            BizFileDragDropModalImageEditor,
             BizModalCard,
             FormFileUpload,
-            BizFileDragDropDetail,
         },
 
         mixins: [
@@ -169,6 +182,7 @@
                 editIcon,
                 hasImage: false,
                 isModalPreviewOpen: false,
+                isMultipleUpload: false,
                 previewImageSrc: null,
             };
         },
@@ -182,10 +196,6 @@
             isImageEditorEnabled() {
                 return this.schema.is_image_editor_enabled
                     && this.hasImage;
-            },
-
-            isMultipleUpload() {
-                return this.schema.max_file_number > 1
             },
 
             cardImageClasses() {
@@ -223,12 +233,20 @@
                 return self.hasImage;
             },
 
+            checkValueIsMultipleUpload() {
+                this.isMultipleUpload = (
+                    this.schema.max_file_number > 1
+                    && this.computedValue.files.length > 1
+                );
+            },
+
             isImage(file) {
                 return file.type.startsWith("image");
             },
 
             onUpdateFiles() {
                 this.checkValueHasImage();
+                this.checkValueIsMultipleUpload();
             },
 
             saveEditedFiles() {
@@ -242,6 +260,15 @@
                 setTimeout(() => {
                     this.closeModal();
                 }, 200);
+            },
+
+            cancelEditedFiles() {
+                let files = this.$refs.file_upload
+                    .$refs.file_upload.getFiles();
+
+                this.computedValue.files = map(files, 'file');
+
+                this.closeModal();
             },
         },
     };

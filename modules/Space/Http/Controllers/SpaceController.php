@@ -151,6 +151,10 @@ class SpaceController extends CrudController
                     'add' => $user->can('media.add'),
                 ],
             ],
+            'dimensions' => [
+                'logo' => config('constants.dimensions.logo'),
+                'cover' => config('constants.dimensions.cover'),
+            ],
         ]));
     }
 
@@ -283,6 +287,10 @@ class SpaceController extends CrudController
                 ],
             ],
             'i18n' => $this->translationCreateEditPage(),
+            'dimensions' => [
+                'logo' => config('constants.dimensions.logo'),
+                'cover' => config('constants.dimensions.cover'),
+            ],
         ]));
     }
 
