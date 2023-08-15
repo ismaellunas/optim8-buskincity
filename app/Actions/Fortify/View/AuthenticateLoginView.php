@@ -24,7 +24,7 @@ class AuthenticateLoginView
         }
 
         return view('auth.login', [
-            'availableSocialiteDrivers' => app(LoginService::class)->getAvailableSocialiteDrivers()
+            'isSocialiteDriverExists' => LoginService::isSocialiteDriverExists(),
         ]);
     }
 }
