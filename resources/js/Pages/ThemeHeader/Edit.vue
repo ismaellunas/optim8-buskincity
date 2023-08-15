@@ -78,6 +78,7 @@
                 instructions: this.instructions,
                 can: this.can,
                 i18n: this.i18n,
+                dimensions: this.dimensions,
             };
         },
 
@@ -86,6 +87,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, default: () => {} },
+            dimensions: { type: Object, default: () => {} },
             headerMenus: { type: Object, default: () => {} },
             instructions: { type: Object, default: () => {} },
             logoMedia: { type: Object, default: () => {} },

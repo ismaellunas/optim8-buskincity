@@ -106,6 +106,9 @@ class ProductController extends CrudController
             ],
             'instructions' => $this->getInstructions(),
             'i18n' => $this->translationCreateEditPage(),
+            'dimensions' => [
+                'gallery' => config('constants.dimensions.gallery'),
+            ],
         ]));
     }
 
@@ -227,6 +230,9 @@ class ProductController extends CrudController
             ],
             'instructions' => $this->getInstructions(),
             'i18n' => $this->translationCreateEditPage(),
+            'dimensions' => [
+                'gallery' => config('constants.dimensions.gallery'),
+            ],
         ]));
     }
 
