@@ -22,15 +22,15 @@
         </label>
 
         <config-number-addons
-            v-if="computedValue.hasOwnProperty('image_dimensions')"
-            v-model="computedValue.image_dimensions.width"
+            v-if="computedValue.hasOwnProperty('media_dimension')"
+            v-model="computedValue.media_dimension.width"
             class="mb-2"
             :settings="{ placeholder: 'Width', addons: 'px' }"
         />
 
         <config-number-addons
-            v-if="computedValue.hasOwnProperty('image_dimensions')"
-            v-model="computedValue.image_dimensions.height"
+            v-if="computedValue.hasOwnProperty('media_dimension')"
+            v-model="computedValue.media_dimension.height"
             :settings="{ placeholder: 'Height', addons: 'px' }"
         />
 
