@@ -1,3 +1,7 @@
+@push('styles')
+    <link rel="preload" href="{{ $src }}" as="image">
+@endpush
+
 <img
     @class($imageClasses)
     @if ($alt) alt="{{ $alt }}" @endif
