@@ -1,5 +1,6 @@
 <template>
     <file-pond
+        ref="pond"
         class-name="my-pond"
         :accepted-file-types="acceptedTypes"
         :allow-multiple="allowMultiple"
@@ -10,6 +11,7 @@
         :max-total-file-size="maxTotalFileSize"
         :required="required"
         :drop-validation="true"
+        @addfile="$emit('on-add-file')"
         @updatefiles="onUpdateFiles"
     />
 </template>
@@ -48,10 +50,22 @@
         },
 
         emits: [
+            'on-add-file',
             'on-update-files',
         ],
 
         methods: {
+            addFiles(files) {
+                this.$refs.pond.addFiles(files)
+                    .catch(() => {
+                        return ;
+                    });
+            },
+
+            getFiles() {
+                return this.$refs.pond.getFiles();
+            },
+
             onUpdateFiles(files) {
                 let uploadFiles = [];
 
@@ -60,6 +74,10 @@
                 });
 
                 this.$emit('on-update-files', uploadFiles);
+            },
+
+            reset() {
+                this.$refs.pond.removeFiles();
             },
         },
     }

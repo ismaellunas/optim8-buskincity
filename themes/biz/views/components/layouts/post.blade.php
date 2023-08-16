@@ -21,7 +21,7 @@
         @include('favicon')
 
         <!-- Fonts -->
-        @include('head-fonts', ['fontUrls' => $fontUrls])
+        @include('head-fonts', ['       fontUrls' => $fontUrls])
 
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 

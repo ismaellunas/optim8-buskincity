@@ -13,11 +13,14 @@ class FileDragDrop extends File
 
     public $maxFileSize;
 
+    private $mimes = [];
+
     public function __construct(string $name, array $data = [])
     {
         parent::__construct($name, $data);
 
         $this->maxFileSize = $data['validation']['rules']['max'] ?? null;
+        $this->mimes = $data['validation']['rules']['mimes'] ?? [];
 
         $this->convertMimesOnValidation();
 
@@ -31,6 +34,8 @@ class FileDragDrop extends File
         $schema = [
             'max_file_size' => $this->maxFileSize,
             'accept' => $this->getMimeTypes(),
+            'is_image_editor_enabled' => $this->isImageEditorEnabled(),
+            'dimension' => $this->getDimension(),
         ];
 
         return array_merge(parent::schema(), $schema);
@@ -58,11 +63,27 @@ class FileDragDrop extends File
 
     private function convertMimesOnValidation(): void
     {
-        $mimes = $this->validation['rules']['mimes'] ?? [];
+        $mimes = $this->mimes;
 
         $this->validation['rules']['mimes'] = implode(
             ",",
             $this->convertMimesToAcceptedExtensions($mimes)
         );
+    }
+
+    private function isImageEditorEnabled(): bool
+    {
+        return in_array('image', $this->mimes)
+            && $this->data['is_image_editor_enabled'] ?? false;
+    }
+
+    private function getDimension(): array
+    {
+        if ($this->isImageEditorEnabled()) {
+            return $this->data['media_dimension']
+                ?? [ 'width' => null, 'height' => null ];
+        }
+
+        return [];
     }
 }

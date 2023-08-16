@@ -73,6 +73,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
+                            :dimension="dimensions.favicon"
                             :instructions="instructions.faviconMediaLibrary"
                             :message="error('favicon')"
                         />
@@ -123,6 +124,7 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
+                            :dimension="dimensions.qrCode"
                             :instructions="instructions.qrCodeMediaLibrary"
                             :message="error('qrcode_public_page_logo')"
                         />
@@ -229,13 +231,14 @@
             additionalCodes: {type: Object, required: true},
             baseRouteName: {type: String, required: true},
             can: { type: Object, default: () => {} },
+            dimensions: { type: Object, default: () => {} },
             errors: {type: Object, default: () => {}},
             faviconMedia: { type: Object, default: () => {} },
             homePageId: {type: [Number, String, null], default: null},
             instructions: {type: Object, default: () => {}},
             pageOptions: {type: Object, default: () => {}},
-            qrCodePublicPageIsDisplayed: {type: Boolean, required: true},
             qrCodeMedia: { type: Object, default: () => {} },
+            qrCodePublicPageIsDisplayed: {type: Boolean, required: true},
             title: {type: String, required: true},
             trackingCodes: {type: Object, required: true},
             i18n: { type: Object, default: () => ({
@@ -248,7 +251,7 @@
                 additional_code : 'Additional code',
                 open_media_library : 'Open media library',
                 is_displayed : 'Is displayed?',
-            }) }
+            }) },
         },
 
         setup(props) {

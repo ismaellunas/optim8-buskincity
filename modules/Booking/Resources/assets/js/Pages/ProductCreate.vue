@@ -68,6 +68,7 @@
             return {
                 can: this.can,
                 i18n: this.i18n,
+                dimensions: this.dimensions,
             };
         },
 
@@ -76,6 +77,7 @@
         props: {
             baseRouteName: {type: String, required: true},
             can: { type: Object, required: true },
+            dimensions: { type: Object, default: () => {} },
             imageMimes: {type: Array, required: true },
             instructions: {type: Object, default: () => {}},
             roleOptions: { type: Array, required: true },

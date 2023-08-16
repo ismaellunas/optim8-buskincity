@@ -14,6 +14,10 @@ export default {
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
+    media_dimension: {
+        width: null,
+        height: null,
+    },
     validation: {
         rules: {
             required: false,
@@ -23,6 +27,7 @@ export default {
         message: []
     },
     is_multiple_upload: false,
+    is_image_editor_enabled: false,
     visibility: [],
     translated: false,
 };
@@ -92,8 +97,11 @@ export const config = {
         },
 
     },
+    imageEditor: {
+        component: "ConfigFileUploadImageEditor",
+
+    },
     attributes: {
-        label: "Attributes",
         component: "ConfigFileUploadAttribute",
     },
 };

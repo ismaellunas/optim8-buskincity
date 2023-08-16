@@ -45,13 +45,13 @@ class ModuleService
     {
         return [
             [
-                'title' => 'Products',
+                'title' => __('Products'),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => true,
             ],
             [
-                'title' => 'Bookings',
+                'title' => __('Bookings'),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
                 'isEnabled' => true,
