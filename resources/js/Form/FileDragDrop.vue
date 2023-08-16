@@ -73,7 +73,7 @@
                         >
                             <biz-file-drag-drop-detail
                                 v-model:medium="computedValue.files[index]"
-                                :dimension="schema.dimensions"
+                                :dimension="schema.dimension"
                                 :is-multiple-upload="isMultipleUpload"
                             />
                         </div>
@@ -113,7 +113,7 @@
             <biz-file-drag-drop-modal-image-editor
                 v-if="isModalOpen"
                 v-model:medium="computedValue.files[0]"
-                :dimension="schema.dimensions"
+                :dimension="schema.dimension"
                 @on-close="saveEditedFiles()"
             />
         </template>
