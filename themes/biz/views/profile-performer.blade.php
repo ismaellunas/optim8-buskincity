@@ -66,14 +66,16 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
+                                    <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio" onclick="event.preventDefault();">
+                                        {{ __('Read more') }}
+                                    </a>
                                 @endif
                             </div>
                         </div>
                         <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
