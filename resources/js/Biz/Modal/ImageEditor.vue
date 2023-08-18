@@ -15,6 +15,7 @@
                 aria-label="close"
                 class="delete is-primary"
                 type="button"
+                :class="{ 'component-configurable': isConfig }"
                 :disabled="isProcessing"
                 @click="$emit('close')"
             />
@@ -27,6 +28,7 @@
                         <div class="column is-12-mobile is-4-tablet is-4-desktop">
                             <biz-button
                                 type="button"
+                                :class="{ 'component-configurable': isConfig }"
                                 @click="reset"
                             >
                                 Reset
@@ -39,7 +41,7 @@
                             <div class="buttons has-addons is-centered">
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == null)}"
+                                    :class="{'is-primary': (aspectRatio == null), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(null)"
                                 >
@@ -47,7 +49,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 16/9)}"
+                                    :class="{'is-primary': (aspectRatio == 16/9), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(16/9)"
                                 >
@@ -55,7 +57,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 4/3)}"
+                                    :class="{'is-primary': (aspectRatio == 4/3), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(4/3)"
                                 >
@@ -63,7 +65,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 1)}"
+                                    :class="{'is-primary': (aspectRatio == 1), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(1)"
                                 >
@@ -75,6 +77,7 @@
                             <div class="is-pulled-right">
                                 <biz-button
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="disableState"
                                 >
                                     Cancel
@@ -82,6 +85,7 @@
                                 <biz-button
                                     class="is-primary"
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="cropAndReplace"
                                 >
                                     Done
@@ -127,6 +131,7 @@
                             <div class="is-pulled-right">
                                 <biz-button
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="disableState"
                                 >
                                     Cancel
@@ -134,6 +139,7 @@
                                 <biz-button
                                     class="is-primary"
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="resizeAndReplace"
                                 >
                                     Resize
@@ -154,6 +160,7 @@
                                         icon="fas fa-crop-alt"
                                         title="Crop"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="enableCropState"
                                     />
@@ -162,6 +169,7 @@
                                         icon-class="is-small"
                                         title="Rotate Counterclockwise"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="rotateLeft"
                                     />
@@ -170,6 +178,7 @@
                                         icon-class="is-small"
                                         title="Rotate Clockwise"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="rotateRight"
                                     />
@@ -178,6 +187,7 @@
                                         icon-class="is-small"
                                         title="Flip Horizontal"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="flipX($event)"
                                     />
@@ -186,6 +196,7 @@
                                         icon-class="is-small"
                                         title="Flip Vertical"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="flipY($event)"
                                     />
@@ -195,6 +206,7 @@
                                         icon-class="is-small"
                                         title="Resize"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="enableResizeState"
                                     />
@@ -247,6 +259,11 @@
             BizInput,
             BizModalCard,
             VueCropper,
+        },
+        inject: {
+            isConfig: {
+                default: false,
+            },
         },
         props: {
             croppedImageType: {
