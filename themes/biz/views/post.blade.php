@@ -104,13 +104,14 @@
                             <div class="is-flex is-align-items-center">
                                 <div class="pr-2">
                                     <figure class="image is-96x96 mr-3">
-                                        <img
+                                        <x-image
+                                            src="{{ $post->author->optimizedProfilePhotoOrDefaultUrl }}"
+                                            alt="Author: {{ $post->author->fullName }}"
+                                            class="is-rounded ls-is-cached"
                                             width="96"
                                             height="96"
-                                            src="{{ $post->author->optimizedProfilePhotoOrDefaultUrl }}"
-                                            class="is-rounded ls-is-cached lazyloaded"
-                                            alt="Author: {{ $post->author->fullName }}"
-                                        >
+                                            is-lazyload
+                                        />
                                     </figure>
                                 </div>
                                 <div>
