@@ -201,7 +201,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-12-mobile">
+                        <div class="column is-hidden-mobile" />
+
+                        <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <div class="is-pulled-right">
                                 <slot
                                     name="actions"
