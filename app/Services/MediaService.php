@@ -285,9 +285,8 @@ class MediaService
         Media $media,
         string $fileName,
         MediaStorage $mediaStorage,
-        string $folder = null,
     ): Media {
-        $folder = $this->folderPath($folder);
+        $folder = $this->folderPath();
 
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
@@ -296,9 +295,11 @@ class MediaService
             $folder,
         );
 
+        $fileName = $folder.$fileName;
+
         $asset = $mediaStorage->rename(
             $media->file_name,
-            $folder.$fileName,
+            $fileName,
             $media->file_type
         );
 
