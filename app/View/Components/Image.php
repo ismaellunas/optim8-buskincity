@@ -126,7 +126,7 @@ class Image extends Component
         $classes->push($this->rounded);
 
         if ($this->isLazyload) {
-            $classes->push('lazyload');
+            $classes->push('lazyload blur-up');
         }
 
         return $classes->filter()->all();
