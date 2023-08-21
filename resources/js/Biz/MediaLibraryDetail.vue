@@ -155,7 +155,9 @@
                     done : 'Done',
                 })
             },
-            injectMediaDimension: {},
+            injectMediaDimension: {
+                default: () => {},
+            },
         },
 
         props: {

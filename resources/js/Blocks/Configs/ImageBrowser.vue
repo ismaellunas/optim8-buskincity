@@ -80,6 +80,12 @@
 
         inject: ['can'],
 
+        provide() {
+            return {
+                isConfig: true,
+            };
+        },
+
         inheritAttrs: false,
 
         props: {
