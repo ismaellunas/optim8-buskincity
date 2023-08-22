@@ -11,6 +11,7 @@
             <p class="modal-card-title mb-1 is-hidden-desktop">
                 Image Editor
             </p>
+
             <biz-button
                 aria-label="close"
                 class="delete is-primary"
@@ -296,7 +297,7 @@
         setup(props, { emit }) {
             return {
                 previewFileSrc: useModelWrapper(props, emit),
-                cropper: useModelWrapper(props, emit, 'cropper'),
+                imageCropper: useModelWrapper(props, emit, 'cropper'),
             };
         },
         data() {
@@ -358,12 +359,12 @@
             },
         },
         mounted() {
-            this.cropper = this.$refs.cropper;
+            this.imageCropper = this.$refs.cropper;
         },
         methods: {
             enableCropState() {
                 this.state = this.stateOptions.crop;
-                this.cropper
+                this.imageCropper
                     .initCrop()
                     .setDragMode("crop");
             },
@@ -372,11 +373,11 @@
             },
             disableState() {
                 if (this.hasDimension) {
-                    this.cropper
+                    this.imageCropper
                         .reset()
                         .setDragMode('crop');
                 } else {
-                    this.cropper
+                    this.imageCropper
                         .reset()
                         .clear()
                         .setDragMode('move');
@@ -387,13 +388,13 @@
             cropAndReplace() {
                 const self = this;
                 getCanvasBlob(
-                    self.cropper.getCroppedCanvas(),
+                    self.imageCropper.getCroppedCanvas(),
                     self.croppedImageType
                 )
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
-                        self.cropper.replace(objectURL, false);
+                        self.imageCropper.replace(objectURL, false);
                     });
 
                 self.disableState();
@@ -408,12 +409,12 @@
                     }
                 }
 
-                this.cropper.initCrop();
-                getCanvasBlob(this.cropper.getCroppedCanvas(resizeData))
+                this.imageCropper.initCrop();
+                getCanvasBlob(this.imageCropper.getCroppedCanvas(resizeData))
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
-                        self.cropper.replace(objectURL, false);
+                        self.imageCropper.replace(objectURL, false);
 
                         self.resize.width = null;
                         self.resize.height = null;
@@ -422,38 +423,38 @@
                     });
             },
             rotateRight() {
-                this.cropper.rotate(90);
+                this.imageCropper.rotate(90);
             },
             rotateLeft() {
-                this.cropper.rotate(-90);
+                this.imageCropper.rotate(-90);
             },
             flipY(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.cropper.scaleY(scale);
+                this.imageCropper.scaleY(scale);
                 dom.setAttribute('data-scale', scale);
             },
             flipX(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.cropper.scaleX(scale);
+                this.imageCropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
             },
             reset() {
-                this.cropper
+                this.imageCropper
                     .reset()
                     .setAspectRatio(null);
                 this.aspectRatio = null;
             },
             setAspectRatio(ratio) {
-                this.cropper.setAspectRatio(ratio);
+                this.imageCropper.setAspectRatio(ratio);
                 this.aspectRatio = ratio;
             },
             updateImageData() {
                 if (this.isDebugMode) {
-                    this.imageData = this.cropper.getData(true)
+                    this.imageData = this.imageCropper.getData(true)
                 }
             },
         },
