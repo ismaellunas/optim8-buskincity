@@ -11,7 +11,7 @@ const appPostContent = createApp({
         ),
 
         FormFileDragDrop: defineAsyncComponent(() =>
-            import('./../../../resources/js/Form/FileDragDrop.vue')
+            import('./../../../resources/js/Form/Fields/FileDragDrop.vue')
         ),
         FormPhone: defineAsyncComponent(() =>
             import('./../../../modules/FormBuilder/Resources/assets/js/Form/Phone.vue')

@@ -44,7 +44,7 @@ class MediaService
         $searchFileName = $fileName;
 
         if (!empty($folder)) {
-            $searchFileName = $folder.'/'.$searchFileName;
+            $searchFileName = $folder.$searchFileName;
         }
 
         if (!empty($extension)) {
@@ -159,7 +159,13 @@ class MediaService
 
     protected function folderPath(string $suffix = null): ?string
     {
-        return config('filesystems.folder_prefix').$suffix;
+        $path = config('filesystems.folder_prefix');
+
+        if ($suffix) {
+            $path = $path.$suffix.'/';
+        }
+
+        return $path;
     }
 
     public function upload(
@@ -284,13 +290,18 @@ class MediaService
     public function rename(
         Media $media,
         string $fileName,
-        MediaStorage $mediaStorage
+        MediaStorage $mediaStorage,
     ): Media {
+        $folder = $this->folderPath();
+
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
             [],
-            ($media->file_type != 'image' ? $media->extension : null)
+            ($media->file_type != 'image' ? $media->extension : null),
+            $folder,
         );
+
+        $fileName = $folder.$fileName;
 
         $asset = $mediaStorage->rename(
             $media->file_name,

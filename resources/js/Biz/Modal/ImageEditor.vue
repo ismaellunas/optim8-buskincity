@@ -11,10 +11,12 @@
             <p class="modal-card-title mb-1 is-hidden-desktop">
                 Image Editor
             </p>
+
             <biz-button
                 aria-label="close"
                 class="delete is-primary"
                 type="button"
+                :class="{ 'component-configurable': isConfig }"
                 :disabled="isProcessing"
                 @click="$emit('close')"
             />
@@ -27,6 +29,7 @@
                         <div class="column is-12-mobile is-4-tablet is-4-desktop">
                             <biz-button
                                 type="button"
+                                :class="{ 'component-configurable': isConfig }"
                                 @click="reset"
                             >
                                 Reset
@@ -39,7 +42,7 @@
                             <div class="buttons has-addons is-centered">
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == null)}"
+                                    :class="{'is-primary': (aspectRatio == null), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(null)"
                                 >
@@ -47,7 +50,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 16/9)}"
+                                    :class="{'is-primary': (aspectRatio == 16/9), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(16/9)"
                                 >
@@ -55,7 +58,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 4/3)}"
+                                    :class="{'is-primary': (aspectRatio == 4/3), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(4/3)"
                                 >
@@ -63,7 +66,7 @@
                                 </biz-button>
                                 <biz-button
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == 1)}"
+                                    :class="{'is-primary': (aspectRatio == 1), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
                                     @click="setAspectRatio(1)"
                                 >
@@ -75,6 +78,7 @@
                             <div class="is-pulled-right">
                                 <biz-button
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="disableState"
                                 >
                                     Cancel
@@ -82,6 +86,7 @@
                                 <biz-button
                                     class="is-primary"
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="cropAndReplace"
                                 >
                                     Done
@@ -127,6 +132,7 @@
                             <div class="is-pulled-right">
                                 <biz-button
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="disableState"
                                 >
                                     Cancel
@@ -134,6 +140,7 @@
                                 <biz-button
                                     class="is-primary"
                                     type="button"
+                                    :class="{ 'component-configurable': isConfig }"
                                     @click="resizeAndReplace"
                                 >
                                     Resize
@@ -154,6 +161,7 @@
                                         icon="fas fa-crop-alt"
                                         title="Crop"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="enableCropState"
                                     />
@@ -162,6 +170,7 @@
                                         icon-class="is-small"
                                         title="Rotate Counterclockwise"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="rotateLeft"
                                     />
@@ -170,6 +179,7 @@
                                         icon-class="is-small"
                                         title="Rotate Clockwise"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="rotateRight"
                                     />
@@ -178,6 +188,7 @@
                                         icon-class="is-small"
                                         title="Flip Horizontal"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="flipX($event)"
                                     />
@@ -186,6 +197,7 @@
                                         icon-class="is-small"
                                         title="Flip Vertical"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="flipY($event)"
                                     />
@@ -195,13 +207,16 @@
                                         icon-class="is-small"
                                         title="Resize"
                                         type="button"
+                                        :class="{ 'component-configurable': isConfig }"
                                         :disabled="isProcessing"
                                         @click="enableResizeState"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div class="column is-12-mobile">
+                        <div class="column is-hidden-mobile" />
+
+                        <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <div class="is-pulled-right">
                                 <slot
                                     name="actions"
@@ -248,6 +263,11 @@
             BizModalCard,
             VueCropper,
         },
+        inject: {
+            isConfig: {
+                default: false,
+            },
+        },
         props: {
             croppedImageType: {
                 type: String,
@@ -277,7 +297,7 @@
         setup(props, { emit }) {
             return {
                 previewFileSrc: useModelWrapper(props, emit),
-                cropper: useModelWrapper(props, emit, 'cropper'),
+                imageCropper: useModelWrapper(props, emit, 'cropper'),
             };
         },
         data() {
@@ -319,7 +339,7 @@
                 if (this.hasDimension) {
                     return {
                         autoCrop: true,
-                        autoCropArea: this.ratio,
+                        autoCropArea: this.ratio > 1 ? 1 : this.ratio,
                         checkCrossOrigin: true,
                         cropBoxMovable: false,
                         cropBoxResizable: false,
@@ -339,12 +359,12 @@
             },
         },
         mounted() {
-            this.cropper = this.$refs.cropper;
+            this.imageCropper = this.$refs.cropper;
         },
         methods: {
             enableCropState() {
                 this.state = this.stateOptions.crop;
-                this.cropper
+                this.imageCropper
                     .initCrop()
                     .setDragMode("crop");
             },
@@ -353,11 +373,11 @@
             },
             disableState() {
                 if (this.hasDimension) {
-                    this.cropper
+                    this.imageCropper
                         .reset()
                         .setDragMode('crop');
                 } else {
-                    this.cropper
+                    this.imageCropper
                         .reset()
                         .clear()
                         .setDragMode('move');
@@ -368,13 +388,13 @@
             cropAndReplace() {
                 const self = this;
                 getCanvasBlob(
-                    self.cropper.getCroppedCanvas(),
+                    self.imageCropper.getCroppedCanvas(),
                     self.croppedImageType
                 )
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
-                        self.cropper.replace(objectURL, false);
+                        self.imageCropper.replace(objectURL, false);
                     });
 
                 self.disableState();
@@ -389,12 +409,12 @@
                     }
                 }
 
-                this.cropper.initCrop();
-                getCanvasBlob(this.cropper.getCroppedCanvas(resizeData))
+                this.imageCropper.initCrop();
+                getCanvasBlob(this.imageCropper.getCroppedCanvas(resizeData))
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
-                        self.cropper.replace(objectURL, false);
+                        self.imageCropper.replace(objectURL, false);
 
                         self.resize.width = null;
                         self.resize.height = null;
@@ -403,38 +423,38 @@
                     });
             },
             rotateRight() {
-                this.cropper.rotate(90);
+                this.imageCropper.rotate(90);
             },
             rotateLeft() {
-                this.cropper.rotate(-90);
+                this.imageCropper.rotate(-90);
             },
             flipY(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.cropper.scaleY(scale);
+                this.imageCropper.scaleY(scale);
                 dom.setAttribute('data-scale', scale);
             },
             flipX(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.cropper.scaleX(scale);
+                this.imageCropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
             },
             reset() {
-                this.cropper
+                this.imageCropper
                     .reset()
                     .setAspectRatio(null);
                 this.aspectRatio = null;
             },
             setAspectRatio(ratio) {
-                this.cropper.setAspectRatio(ratio);
+                this.imageCropper.setAspectRatio(ratio);
                 this.aspectRatio = ratio;
             },
             updateImageData() {
                 if (this.isDebugMode) {
-                    this.imageData = this.cropper.getData(true)
+                    this.imageData = this.imageCropper.getData(true)
                 }
             },
         },
