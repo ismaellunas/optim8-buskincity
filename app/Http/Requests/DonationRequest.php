@@ -7,6 +7,8 @@ use Illuminate\Validation\Rule;
 
 class DonationRequest extends BaseFormRequest
 {
+    protected $errorBag = 'donation';
+
     public function authorize()
     {
         return true;

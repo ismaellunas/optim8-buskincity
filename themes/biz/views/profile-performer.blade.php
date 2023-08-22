@@ -196,4 +196,17 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
+
+    @if (
+        ! empty($errors->donation->all())
+        || session('error')
+    )
+        @push('bottom_scripts')
+            <script>
+                document.getElementById('donation').classList.add('is-active');
+
+                function removeErrorMessage(element) { element.parentElement.remove() };
+            </script>
+        @endpush
+    @endif
 </x-layouts.master>
