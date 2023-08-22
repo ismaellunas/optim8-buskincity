@@ -183,6 +183,18 @@
                             <p>{{ __('Thank you for your support!') }}</p>
                         </div>
                     </div>
+
+                    @if (session('error'))
+                    <div class="notification is-danger mt-4">
+                        <button
+                            type="button"
+                            class="delete"
+                            onclick="removeErrorMessage(this)"
+                        ></button>
+                        {{ session('error') }}
+                    </div>
+                    @endif
+
                     <x-stripe-form-donation :user-id="$user->id"/>
                 </div>
             </div>
