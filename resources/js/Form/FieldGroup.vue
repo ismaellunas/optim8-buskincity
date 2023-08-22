@@ -92,7 +92,7 @@
 
             listComponents.forEach((componentName) => {
                 asyncComponents[componentName] = defineAsyncComponent(() => import(
-                    `../Form/${componentName}.vue`)
+                    `./Fields/${componentName}.vue`)
                 );
             });
 
