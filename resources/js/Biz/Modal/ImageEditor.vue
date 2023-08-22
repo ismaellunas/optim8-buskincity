@@ -339,7 +339,7 @@
                 if (this.hasDimension) {
                     return {
                         autoCrop: true,
-                        autoCropArea: this.ratio,
+                        autoCropArea: this.ratio > 1 ? 1 : this.ratio,
                         checkCrossOrigin: true,
                         cropBoxMovable: false,
                         cropBoxResizable: false,
