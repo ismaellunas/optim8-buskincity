@@ -2,7 +2,7 @@
 
 @setup
     if (empty($env)) {
-        $env = "deploy";
+        $env = "local";
     }
 
     if ($env == "local") {
@@ -17,7 +17,7 @@
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
     $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
-    $heroku_app = $_ENV['HEROKU_APP'];
+    $heroku_app = $_ENV['HEROKU_APP'] ?? null;
     $heroku_vars = [
         'APP_DEBUG',
         'APP_DOMAIN',
