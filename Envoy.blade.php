@@ -109,10 +109,7 @@
 @task('install-dependencies')
     composer install
     yarn install
-    rm public/js/*
-    rm public/themes/{{ $theme }}/js/*
-    npm run prod
-    npm run prod --theme={{ $theme }}
+    yarn build
 @endtask
 
 @task('git-restore-and-stash')
