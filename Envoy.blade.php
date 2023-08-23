@@ -93,7 +93,7 @@
 
 @task('heroku:migration')
     @if (! $skipMigration)
-        heroku run -a {{ $heroku_app }} php artisan migrate --force
+        heroku run -a {{ $heroku_app }} -- php artisan migrate --force
     @endif
 @endtask
 
@@ -165,7 +165,7 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run -a {{ $heroku_app }} php artisan route:list --path="admin"
+    heroku run -a {{ $heroku_app }} -- php artisan route:list --path="admin"
 @endtask
 
 @task('nwatch')
