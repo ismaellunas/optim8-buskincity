@@ -168,14 +168,6 @@
     heroku run -a {{ $heroku_app }} -- php artisan route:list --path="admin"
 @endtask
 
-@task('nwatch')
-    npm run watch-poll
-@endtask
-
-@task('nwatch-theme')
-    npm run watch-poll --theme={{ $theme }}
-@endtask
-
 @task('sail:fresh')
     sail artisan db:wipe
     sail artisan migrate
@@ -183,19 +175,6 @@
     sail artisan module:seed Space
     sail artisan module:seed Ecommerce
     sail artisan module:seed Booking
-@endtask
-
-@task('sail:watch')
-    sail npm run watch-poll
-@endtask
-
-@task('sail:watch-theme')
-    sail npm run watch-poll --theme={{ $theme }}
-@endtask
-
-@task('sail:dev')
-    sail npm run dev
-    sail npm run dev --theme={{ $theme }}
 @endtask
 
 @task('sail:queue')
