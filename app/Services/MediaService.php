@@ -372,11 +372,7 @@ class MediaService
 
         $clientExtension = $file->getClientOriginalExtension();
 
-        $fileName = preg_replace(
-            '/[^a-z0-9]+/',
-            '-',
-            Str::lower(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
-        );
+        $fileName = Str::lower(Str::random(10));
 
         if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
