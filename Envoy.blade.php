@@ -1,8 +1,15 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @setup
+    function logSuccess($message) { return "echo '\033[0;32m" .$message. "\033[0m';\n"; }
+    function logWarn($message)    { return "echo '\033[0;31m" .$message. "\033[0m';\n"; }
+    function logInfo($message)    { return "echo '\033[1;33m" .$message. "\033[0m';\n"; }
+    function logLine($message)    { return "echo '" .$message. "';\n"; }
+
+    $deployEnvironments = ['staging', 'prod'];
+
     if (empty($env)) {
-        $env = "deploy";
+        $env = "local";
     }
 
     if ($env == "local") {
@@ -17,7 +24,7 @@
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
     $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
-    $heroku_app = $_ENV['HEROKU_APP'];
+    $heroku_app = $_ENV['HEROKU_APP'] ?? null;
     $heroku_vars = [
         'APP_DEBUG',
         'APP_DOMAIN',
@@ -52,6 +59,7 @@
 @endsetup
 
 @story('heroku:deploy')
+    check-deploy-environment
     git-restore-and-stash
     git-checkout
     git-commit-deployment
@@ -67,6 +75,7 @@
 @endstory
 
 @story('heroku:deploy-full')
+    check-deploy-environment
     git-restore-and-stash
     git-checkout
     git-commit-deployment
@@ -84,7 +93,7 @@
 
 @task('heroku:migration')
     @if (! $skipMigration)
-        heroku run -a {{ $heroku_app }} php artisan migrate --force
+        heroku run -a {{ $heroku_app }} -- php artisan migrate --force
     @endif
 @endtask
 
@@ -100,6 +109,7 @@
 @task('install-dependencies')
     composer install
     yarn install
+    yarn build
 @endtask
 
 @task('git-restore-and-stash')
@@ -153,15 +163,7 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run -a {{ $heroku_app }} php artisan route:list --path="admin"
-@endtask
-
-@task('nwatch')
-    npm run watch-poll
-@endtask
-
-@task('nwatch-theme')
-    npm run watch-poll --theme={{ $theme }}
+    heroku run -a {{ $heroku_app }} -- php artisan route:list --path="admin"
 @endtask
 
 @task('sail:fresh')
@@ -171,19 +173,6 @@
     sail artisan module:seed Space
     sail artisan module:seed Ecommerce
     sail artisan module:seed Booking
-@endtask
-
-@task('sail:watch')
-    sail npm run watch-poll
-@endtask
-
-@task('sail:watch-theme')
-    sail npm run watch-poll --theme={{ $theme }}
-@endtask
-
-@task('sail:dev')
-    sail npm run dev
-    sail npm run dev --theme={{ $theme }}
 @endtask
 
 @task('sail:queue')
@@ -209,4 +198,11 @@
     php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce
     php artisan module:seed Booking
     php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder
+@endtask
+
+@task('check-deploy-environment')
+    @if (! in_array($env, $deployEnvironments))
+        {{ logWarn("Env is not for deployment") }}
+        exit;
+    @endif
 @endtask
