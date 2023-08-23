@@ -7,6 +7,7 @@
 .env.backup
 .env.deploy
 .env.dusk.local
+.env.prod
 .env.sail
 .env.staging
 .env.testing
