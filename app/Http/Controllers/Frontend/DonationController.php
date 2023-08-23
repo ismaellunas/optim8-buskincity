@@ -36,7 +36,7 @@ class DonationController extends Controller
 
             return redirect()
                 ->back()
-                ->with('error', __("We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance."));
+                ->with('donationError', __("We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance."));
         }
     }
 
