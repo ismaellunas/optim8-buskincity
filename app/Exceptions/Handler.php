@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use App\Models\ErrorLog;
 use App\Services\ErrorLogService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -47,9 +46,7 @@ class Handler extends ExceptionHandler
 
     public function report(Throwable $exception)
     {
-        $errorLogService = new ErrorLogService();
-
-        $errorLogService->report($exception);
+        app(ErrorLogService::class)->report($exception);
     }
 
     public function render($request, Throwable $e)

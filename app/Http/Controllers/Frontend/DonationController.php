@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Exceptions\Handler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DonationRequest;
 use App\Models\User;
