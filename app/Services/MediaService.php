@@ -159,7 +159,13 @@ class MediaService
 
     protected function folderPath(string $suffix = null): ?string
     {
-        return config('filesystems.folder_prefix').$suffix;
+        $path = config('filesystems.folder_prefix');
+
+        if ($suffix) {
+            $path = $path.$suffix.'/';
+        }
+
+        return $path;
     }
 
     public function upload(
