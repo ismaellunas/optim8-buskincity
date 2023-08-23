@@ -1,6 +1,13 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @setup
+    function logSuccess($message) { return "echo '\033[32m" .$message. "\033[0m';\n"; }
+    function logWarn($message) { return "echo '\033[31m" .$message. "\033[0m';\n"; }
+    function logInfo($message) { return "echo '\033[36m" .$message. "\033[0m';\n"; }
+    function logLine($message) { return "echo '" .$message. "';\n"; }
+
+    $deployEnvironments = ['staging', 'prod'];
+
     if (empty($env)) {
         $env = "local";
     }
@@ -52,6 +59,7 @@
 @endsetup
 
 @story('heroku:deploy')
+    check-deploy-environment
     git-restore-and-stash
     git-checkout
     git-commit-deployment
@@ -67,6 +75,7 @@
 @endstory
 
 @story('heroku:deploy-full')
+    check-deploy-environment
     git-restore-and-stash
     git-checkout
     git-commit-deployment
@@ -212,4 +221,11 @@
     php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce
     php artisan module:seed Booking
     php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder
+@endtask
+
+@task('check-deploy-environment')
+    @if (! in_array($env, $deployEnvironments))
+        {{ logWarn("Env is not for deployment") }}
+        exit;
+    @endif
 @endtask
