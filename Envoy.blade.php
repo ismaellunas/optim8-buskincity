@@ -1,10 +1,10 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @setup
-    function logSuccess($message) { return "echo '\033[32m" .$message. "\033[0m';\n"; }
-    function logWarn($message) { return "echo '\033[31m" .$message. "\033[0m';\n"; }
-    function logInfo($message) { return "echo '\033[36m" .$message. "\033[0m';\n"; }
-    function logLine($message) { return "echo '" .$message. "';\n"; }
+    function logSuccess($message) { return "echo '\033[0;32m" .$message. "\033[0m';\n"; }
+    function logWarn($message)    { return "echo '\033[0;31m" .$message. "\033[0m';\n"; }
+    function logInfo($message)    { return "echo '\033[1;33m" .$message. "\033[0m';\n"; }
+    function logLine($message)    { return "echo '" .$message. "';\n"; }
 
     $deployEnvironments = ['staging', 'prod'];
 
