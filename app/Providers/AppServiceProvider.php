@@ -16,8 +16,9 @@ use App\Entities\Caches\{
     TranslationCache
 };
 use App\Services\{
-    CountryService,
     CategoryService,
+    CountryService,
+    ErrorLogService,
     FormService,
     GlobalOptionService,
     IPService,
@@ -54,8 +55,9 @@ class AppServiceProvider extends ServiceProvider
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
 
-        CountryService::class => CountryService::class,
         CategoryService::class => CategoryService::class,
+        CountryService::class => CountryService::class,
+        ErrorLogService::class => ErrorLogService::class,
         FormService::class => FormService::class,
         GlobalOptionService::class => GlobalOptionService::class,
         IPService::class => IPService::class,

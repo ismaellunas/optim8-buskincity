@@ -184,14 +184,14 @@
                         </div>
                     </div>
 
-                    @if (session('error'))
+                    @if (session('donationError'))
                     <div class="notification is-danger mt-4">
                         <button
                             type="button"
                             class="delete"
                             onclick="removeErrorMessage(this)"
                         ></button>
-                        {{ session('error') }}
+                        {{ session('donationError') }}
                     </div>
                     @endif
 
@@ -211,7 +211,7 @@
 
     @if (
         ! empty($errors->donation->all())
-        || session('error')
+        || session('donationError')
     )
         @push('bottom_scripts')
             <script>
