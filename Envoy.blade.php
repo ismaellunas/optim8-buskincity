@@ -21,7 +21,7 @@
     $dotenv->safeLoad();
 
     $branch = $_ENV['HEROKU_BRANCH'] ?? 'main';
-    $git_remote = $_ENV['HEROKU_REMOTE'] ?? 'heroku';
+    $git_remote = $_ENV['HEROKU_REMOTE'] ?? 'remote_is_empty';
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
 
     $heroku_vars = [
