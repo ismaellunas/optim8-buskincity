@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Exceptions\Handler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DonationRequest;
 use App\Models\User;
@@ -37,7 +36,7 @@ class DonationController extends Controller
 
             return redirect()
                 ->back()
-                ->with('error', __("We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance."));
+                ->with('donationError', __("We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance."));
         }
     }
 
