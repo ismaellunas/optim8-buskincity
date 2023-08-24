@@ -183,6 +183,18 @@
                             <p>{{ __('Thank you for your support!') }}</p>
                         </div>
                     </div>
+
+                    @if (session('donationError'))
+                    <div class="notification is-danger mt-4">
+                        <button
+                            type="button"
+                            class="delete"
+                            onclick="removeErrorMessage(this)"
+                        ></button>
+                        {{ session('donationError') }}
+                    </div>
+                    @endif
+
                     <x-stripe-form-donation :user-id="$user->id"/>
                 </div>
             </div>
@@ -196,4 +208,17 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
+
+    @if (
+        ! empty($errors->donation->all())
+        || session('donationError')
+    )
+        @push('bottom_scripts')
+            <script>
+                document.getElementById('donation').classList.add('is-active');
+
+                function removeErrorMessage(element) { element.parentElement.remove() };
+            </script>
+        @endpush
+    @endif
 </x-layouts.master>
