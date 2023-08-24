@@ -15,6 +15,7 @@
                     :is-download-enabled="isDownloadEnabled"
                     :is-edit-enabled="isEditEnabled"
                     :is-preview-enabled="isPreviewEnabled"
+                    :is-filename-shown="isFilenameShown"
                     @on-delete-clicked="$emit('on-delete-clicked', $event)"
                     @on-edit-clicked="$emit('on-edit-clicked', $event)"
                     @on-select-clicked="$emit('on-select-clicked', $event)"
@@ -70,6 +71,7 @@
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
             isScrolled: { type: Boolean, default: false },
+            isFilenameShown: { type: Boolean, default: true },
             maxHeight: { type: Number, default: 700 },
             media: { type: Array, default: () => [] },
         },
