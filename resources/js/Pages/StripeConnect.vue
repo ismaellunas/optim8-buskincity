@@ -2,30 +2,43 @@
     <div class="columns is-multiline is-mobile">
         <div
             v-if="!hasConnectedAccount"
-            class="column is-12-desktop is-12-tablet is-12-mobile"
+            class="column is-6-desktop is-12-tablet is-12-mobile"
         >
             <div class="box is-shadowless">
-                <biz-form-select
-                    v-model="createStripeForm.country"
-                    label="Country"
-                    :message="error('country')"
-                >
-                    <option
-                        v-for="option in countryOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }}
-                    </option>
-                </biz-form-select>
+                <label class="label">
+                    Country<sup class="has-text-danger">*</sup>
+                </label>
 
-                <div class="control">
-                    <biz-button
-                        class="is-medium is-primary"
-                        @click="createConnectedAccount"
-                    >
-                        <span class="has-text-weight-bold">Create Connected Account</span>
-                    </biz-button>
+                <div class="field is-horizontal">
+                    <div class="field-body">
+                        <biz-form-select
+                            v-model="createStripeForm.country"
+                            :message="error('country')"
+                            is-fullwidth
+                            required
+                        >
+                            <option
+                                v-for="option in countryOptions"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.value }}
+                            </option>
+                        </biz-form-select>
+
+                        <div class="field">
+                            <div class="control">
+                                <biz-button
+                                    class="is-primary"
+                                    @click="createConnectedAccount"
+                                >
+                                    <span class="has-text-weight-bold">
+                                        Create Connected Account
+                                    </span>
+                                </biz-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
