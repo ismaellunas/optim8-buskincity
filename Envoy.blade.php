@@ -200,7 +200,9 @@
 
 @task('check-deploy-environment')
     @if (! in_array($env, $deployEnvironments))
-        {{ logWarn("Env is not for deployment") }}
+        {{ logWarn("Env is NOT for deployment") }}
         exit;
     @endif
+
+    {{ logInfo("Deployment is starting") }}
 @endtask
