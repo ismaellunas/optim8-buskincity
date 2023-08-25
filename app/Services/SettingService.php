@@ -876,4 +876,11 @@ class SettingService
             }
         );
     }
+
+    public function getStripePaymentMethodTypes(): array
+    {
+        $paymentMethods = $this->getKey('stripe_payment_method_types');
+
+        return is_null($paymentMethods) ? [] : json_decode($paymentMethods);
+    }
 }

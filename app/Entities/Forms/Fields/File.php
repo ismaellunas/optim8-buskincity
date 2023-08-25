@@ -161,6 +161,7 @@ class File extends BaseField
             'file_url',
             'size',
             'type',
+            'version',
             'updated_at',
         ])
             ->whereIn('id', $mediaIds)
