@@ -102,7 +102,7 @@
 @endtask
 
 @task('heroku:add-translations')
-    heroku restart -r {{ $git_remote }} php artisan fix:translation-source
+    heroku run -r {{ $git_remote }} php artisan fix:translation-source
 @endtask
 
 @task('heroku:restart')
