@@ -50,9 +50,7 @@ class DonationRequest extends BaseFormRequest
             $stripeService->getCurrencyMinimalPayment($currency)
         );
 
-        $settings = app(StripeSettingService::class)->getAll();
-
-        $currencyMinimalPayment = $settings->get('stripe_minimal_amounts')->$currency ?? 0;
+        $currencyMinimalPayment = app(StripeSettingService::class)->getMinimalAmountByCurrency($currency);
 
         return $currencyMinimalPayment > $minimalPayment
             ? $currencyMinimalPayment

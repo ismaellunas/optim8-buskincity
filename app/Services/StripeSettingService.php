@@ -218,4 +218,13 @@ class StripeSettingService
     {
         return config('constants.one_megabyte') / 2;
     }
+
+    public function getMinimalAmountByCurrency(string $currency)
+    {
+        $values = Setting::key('stripe_minimal_amounts')
+            ->group('stripe')
+            ->value('value');
+
+        return json_decode($values, TRUE)[$currency] ?? 0;
+    }
 }
