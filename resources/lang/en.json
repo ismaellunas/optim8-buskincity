@@ -1024,5 +1024,13 @@
     "Post thumbnail": "Post thumbnail",
     "Open graph": "Open graph",
     ":minute Minute Read": ":minute Minute Read",
+    "Manage Payments": "Manage Payments",
+    "If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:": "If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:",
+    "Visit the payment’s dashboard to manage your Stripe Connect account.": "Visit the payment’s dashboard to manage your Stripe Connect account.",
+    "Select option": "Select option",
+    "Create connected account": "Create connected account",
+    "Manage payments": "Manage payments",
+    "Please double-check your country!": "Please double-check your country!",
+    "You will not be able to change your country in the future.": "You will not be able to change your country in the future.",
     "We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance.": "We're sorry, but there was a problem processing your donation. Please contact the web administrator for assistance."
 }
