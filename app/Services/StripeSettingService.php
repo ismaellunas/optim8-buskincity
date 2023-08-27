@@ -219,12 +219,32 @@ class StripeSettingService
         return config('constants.one_megabyte') / 2;
     }
 
-    public function getMinimalAmountByCurrency(string $currency)
+    private function getMinimalAmounts(): array
     {
         $values = Setting::key('stripe_minimal_amounts')
             ->group('stripe')
             ->value('value');
 
-        return json_decode($values, TRUE)[$currency] ?? 0;
+        return json_decode($values, TRUE);
+    }
+
+    public function getMinimalAmountByCurrency(string $currency)
+    {
+        return $this->getMinimalAmounts()[$currency] ?? 0;
+    }
+
+    public function syncMinimalAmountOption(): void
+    {
+        $minimalAmounts = $this->getMinimalAmounts();
+        $amountOptions = $this->getAmountOptions();
+
+        foreach ($amountOptions as $currency => $amountOption) {
+            $amountOptions[$currency] = collect($amountOption)
+                ->filter(fn ($amount) => $amount >= $minimalAmounts[$currency])
+                ->values()
+                ->all();
+        }
+
+        $this->save('stripe_amount_options', $amountOptions);
     }
 }
