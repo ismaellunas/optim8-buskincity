@@ -65,6 +65,7 @@
     heroku:push
     heroku:migration
     heroku:generate-css
+    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -81,6 +82,7 @@
     heroku:push
     heroku:migration
     heroku:generate-css
+    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -97,6 +99,10 @@
 @task('heroku:clean-after-deploy')
     heroku run -r {{ $git_remote }} php artisan optimize:clear
     heroku run -r {{ $git_remote }} rm Envoy.blade.php
+@endtask
+
+@task('heroku:add-translations')
+    heroku run -r {{ $git_remote }} php artisan fix:translation-source
 @endtask
 
 @task('heroku:restart')
@@ -194,7 +200,9 @@
 
 @task('check-deploy-environment')
     @if (! in_array($env, $deployEnvironments))
-        {{ logWarn("Env is not for deployment") }}
+        {{ logWarn("Env is NOT for deployment") }}
         exit;
     @endif
+
+    {{ logInfo("Deployment is starting") }}
 @endtask

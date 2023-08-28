@@ -22,7 +22,10 @@
             </span>
         </div>
 
-        <div class="card-content p-2">
+        <div
+            v-if="isFilenameShown"
+            class="card-content p-2"
+        >
             <div
                 class="content"
                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
@@ -107,6 +110,7 @@
             ratio: { type: String, default: null },
             imageStyles: { type: [String, Object, Array], default: null },
             figureStyles: { type: [String, Object, Array], default: null },
+            isFilenameShown: { type: Boolean, default: true },
         },
 
         emits: [
