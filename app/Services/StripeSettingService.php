@@ -232,19 +232,4 @@ class StripeSettingService
     {
         return $this->getMinimalAmounts()[$currency] ?? 0;
     }
-
-    public function syncMinimalAmountOption(): void
-    {
-        $minimalAmounts = $this->getMinimalAmounts();
-        $amountOptions = $this->getAmountOptions();
-
-        foreach ($amountOptions as $currency => $amountOption) {
-            $amountOptions[$currency] = collect($amountOption)
-                ->filter(fn ($amount) => $amount >= $minimalAmounts[$currency])
-                ->values()
-                ->all();
-        }
-
-        $this->save('stripe_amount_options', $amountOptions);
-    }
 }

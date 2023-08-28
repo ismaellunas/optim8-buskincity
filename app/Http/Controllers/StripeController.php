@@ -114,8 +114,6 @@ class StripeController extends Controller
             dispatch($job);
         }
 
-        $this->stripeSettingService->syncMinimalAmountOption();
-
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __('Stripe')
         ]);

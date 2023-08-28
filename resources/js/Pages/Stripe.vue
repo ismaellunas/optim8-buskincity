@@ -139,7 +139,7 @@
                                         <biz-form-input
                                             v-model="form.minimal_amounts[ currency ]"
                                             type="number"
-                                            min="1"
+                                            :min="minimalCurrencyAmounts[currency]"
                                             style="width: 5rem;"
                                         >
                                             <template #note>
@@ -155,7 +155,7 @@
                                                 <biz-form-input-addons
                                                     v-model="tempAmountOptions[ currency ]"
                                                     type="number"
-                                                    min="1"
+                                                    :min="form.minimal_amounts[ currency ] >= minimalCurrencyAmounts[currency] ? form.minimal_amounts[ currency ] : minimalCurrencyAmounts[currency]"
                                                     @keydown.enter.prevent="addAmount(currency)"
                                                 >
                                                     <template #afterInput>
@@ -173,7 +173,7 @@
 
                                                     <template #note>
                                                         <p class="help is-info">
-                                                            {{ `${i18n.minimal}: ${minimalCurrencyAmounts[currency]} ${currency}` }}
+                                                            {{ `${i18n.minimal}: ${form.minimal_amounts[ currency ] >= minimalCurrencyAmounts[currency] ? form.minimal_amounts[ currency ] : minimalCurrencyAmounts[currency]} ${currency}` }}
                                                         </p>
                                                     </template>
                                                 </biz-form-input-addons>
@@ -454,6 +454,22 @@
                     });
                 },
             },
+
+            'form.minimal_amounts': {
+                deep: true,
+                handler(value) {
+                    const self = this;
+
+                    forEach(self.form.amount_options, (options, currency) => {
+                        self.form.amount_options[currency] = filter(
+                            options,
+                            function (amountOption) {
+                                return amountOption >= value[currency];
+                            }
+                        );
+                    });
+                },
+            },
         },
 
         methods: {
@@ -477,11 +493,15 @@
             },
 
             canAddAmountOption(amount, currency) {
+                let minimalAmount = this.form.minimal_amounts[ currency ] >= this.minimalCurrencyAmounts[currency]
+                    ? this.form.minimal_amounts[ currency ]
+                    : this.minimalCurrencyAmounts[currency];
+
                 return (
                     amount
                     && /^\+?\d+$/.test(amount.replace(/\s/g,''))
                     && parseInt(amount) > 0
-                ) && this.minimalCurrencyAmounts[currency] <= amount;
+                ) && minimalAmount <= amount;
             },
 
             deleteAmount(currency, index) {
