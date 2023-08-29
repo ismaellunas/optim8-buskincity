@@ -387,7 +387,7 @@
             },
         },
 
-        setup(props, {emit}) {
+        setup(props) {
             const form = {
                 amount_options: props.amountOptions ?? {},
                 application_fee_percentage: props.applicationFeePercentage ?? null,

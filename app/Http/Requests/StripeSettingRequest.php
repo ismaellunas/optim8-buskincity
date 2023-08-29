@@ -57,7 +57,7 @@ class StripeSettingRequest extends BaseFormRequest
             ],
             'minimal_amounts' => [
                 'array',
-                new StripeMinimalAmount
+                new StripeMinimalAmount()
             ],
             'minimal_amounts.*' => [
                 'nullable',
