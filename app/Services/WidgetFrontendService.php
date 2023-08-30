@@ -2,59 +2,27 @@
 
 namespace App\Services;
 
-use App\Services\ModuleService;
-use Illuminate\Support\Str;
-
 class WidgetFrontendService extends WidgetService
 {
     protected function getWidgetLists(): array
     {
-        return [
-            'qrCode',
-            'socialMediaShare',
-            'stripeConnect',
-            'upcomingEvents',
-            'streetPerformersYouMightLike',
-            'wantToBecomeAStreetPerformer',
-        ];
+        return collect(app(SettingService::class)->getFrontendWidgetLists())
+            ->sortBy('order')
+            ->all();
     }
 
-    protected function moduleWidgets(): array
+    public function generateWidgets(): array
     {
-        $modules = app(ModuleService::class)->getAllEnabledNames();
+        $widgets = collect([]);
 
-        $widgets = [];
+        foreach ($this->getWidgetLists() as $widgetList) {
+            $className = $widgetList['widget'];
 
-        foreach ($modules as $module) {
-            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
+            if (class_exists($className)) {
+                $widgetObject = new $className($widgetList);
 
-            $methodName = 'frontendWidgets';
-
-            if (
-                class_exists($moduleService)
-                && method_exists($moduleService, $methodName)
-            ) {
-                $widgets[$module] = $moduleService::$methodName();
-            }
-        }
-
-        return $widgets;
-    }
-
-    public function generateModuleWidgets($request): array
-    {
-        $widgets = collect();
-
-        foreach ($this->moduleWidgets() as $module => $moduleWidgets) {
-            foreach ($moduleWidgets as $widgetName) {
-                $className = "\\Modules\\{$module}\\Widgets\\".Str::of($widgetName)->studly()."Widget";
-
-                if (class_exists($className)) {
-                    $widgetObject = new $className($request);
-
-                    if ($widgetObject->canBeAccessed()) {
-                        $widgets->push($widgetObject->data());
-                    }
+                if ($widgetObject->canBeAccessed()) {
+                    $widgets->push($widgetObject->data());
                 }
             }
         }
