@@ -879,8 +879,18 @@ class SettingService
 
     public function getStripePaymentMethodTypes(): array
     {
-        $paymentMethods = $this->getKey('stripe_payment_method_types');
+        return $this->getArrayValueByKey('stripe_payment_method_types');
+    }
 
-        return is_null($paymentMethods) ? [] : json_decode($paymentMethods);
+    public function getFrontendWidgetLists(): array
+    {
+        return $this->getArrayValueByKey('dashboard_widget');
+    }
+
+    public function getArrayValueByKey(string $key): array
+    {
+        $value = $this->getKey($key);
+
+        return is_null($value) ? [] : json_decode($value, TRUE);
     }
 }
