@@ -49,12 +49,9 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
         );
 
         return [
-            ...parent::getData(),
-            ...[
-                'countryOptions' => $this->stripeService->getCountryOptions(),
-                'defaultCountry' => $defaultCountry,
-                'hasConnectedAccount' => $hasConnectedAccount,
-            ],
+            'countryOptions' => $this->stripeService->getCountryOptions(),
+            'defaultCountry' => $defaultCountry,
+            'hasConnectedAccount' => $hasConnectedAccount,
         ];
     }
 
