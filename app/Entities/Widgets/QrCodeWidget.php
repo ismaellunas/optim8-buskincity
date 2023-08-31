@@ -5,6 +5,7 @@ namespace App\Entities\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Entities\ProfileQrCode;
 use App\Services\SettingService;
+use Illuminate\Support\Arr;
 
 class QrCodeWidget extends BaseWidget implements WidgetInterface
 {
@@ -22,9 +23,13 @@ class QrCodeWidget extends BaseWidget implements WidgetInterface
                 ],
             ],
             'name' => $this->user->qr_code_logo_name,
-            'text' => $this->user->profile_page_url,
             'uniqueKey' => $this->user->unique_key,
-            'qrOptions' => (new ProfileQrCode($this->user, 2480))->options(),
+            'qrOptions' => (
+                    new ProfileQrCode(
+                        $this->user, 2480,
+                        $this->storedSetting['setting']['query_parameter'] ?? []
+                    )
+                )->options(),
         ];
     }
 
@@ -38,5 +43,12 @@ class QrCodeWidget extends BaseWidget implements WidgetInterface
                 $canPublicPage
                 && $qrCodeIsDisplayed
             );
+    }
+
+    private function getQueryParameter(): string
+    {
+        return Arr::query(
+            $this->storedSetting['setting']['query_parameter'] ?? []
+        );
     }
 }

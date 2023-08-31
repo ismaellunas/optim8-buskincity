@@ -4,6 +4,7 @@ namespace App\Entities;
 
 use App\Services\SettingService;
 use App\Helpers\Color;
+use Illuminate\Support\Arr;
 
 class ProfileQrCode
 {
@@ -23,6 +24,7 @@ class ProfileQrCode
     public function __construct(
         private $user,
         private $dimension = 620,
+        private $queryParameter = [],
         private $nameAttribute = 'stage_name',
     ) {
         $this->settingService = app(SettingService::class);
@@ -97,10 +99,14 @@ class ProfileQrCode
 
         $font = $this->font();
 
+        $text = $this->user->profile_page_url . (
+            ! empty($this->queryParameter) ? '?' . $this->getQueryParameter() : null
+        );
+
         return [
             'width' => $this->dimension,
             'height' => $this->dimension,
-            'text' => $this->user->profile_page_url,
+            'text' => $text,
             'title' => $this->nameLines[0] ?? '',
             'titleBackgroundColor' => $this->primaryColor(),
             'titleColor' => $fontColor,
@@ -116,5 +122,10 @@ class ProfileQrCode
             'quietZone' => $this->dimension * 0.02,
             'quietZoneColor' => $this->quietZoneColor,
         ];
+    }
+
+    private function getQueryParameter(): string
+    {
+        return Arr::query($this->queryParameter);
     }
 }
