@@ -36,7 +36,7 @@
                         </biz-button>
 
                         <a
-                            :href="route('frontend.print.qrcode', { user: data.uniqueKey })"
+                            :href="route('frontend.print.qrcode', { user: data.uniqueKey, setting: data.setting })"
                             class="button"
                             target="_blank"
                         >
