@@ -5,9 +5,9 @@
             class="column is-6-desktop is-12-tablet is-12-mobile"
         >
             <div class="box is-shadowless">
-                <label class="label">
-                    Country<sup class="has-text-danger">*</sup>
-                </label>
+                <biz-label is-required>
+                    Country
+                </biz-label>
 
                 <div class="field is-horizontal">
                     <div class="field-body">
@@ -249,6 +249,7 @@
     import Layout from '@/Layouts/User.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizLabel from '@/Biz/Label.vue';
     import BizTable from '@/Biz/Table.vue';
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
@@ -260,6 +261,7 @@
         components: {
             BizButton,
             BizFormSelect,
+            BizLabel,
             BizTable,
         },
 
