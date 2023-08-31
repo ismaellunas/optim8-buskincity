@@ -30,7 +30,7 @@
                             required
                         >
                             <option value="">
-                                {{ i18n.select_option }}
+                                {{ i18n.select_an_option }}
                             </option>
                             <option
                                 v-for="option in data.countryOptions"
