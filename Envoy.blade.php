@@ -20,11 +20,10 @@
 
     $dotenv->safeLoad();
 
-    $branch = "main";
+    $branch = $_ENV['HEROKU_BRANCH'] ?? 'main';
+    $git_remote = $_ENV['HEROKU_REMOTE'] ?? 'remote_is_empty';
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
-    $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
-    $heroku_app = $_ENV['HEROKU_APP'] ?? null;
     $heroku_vars = [
         'APP_DEBUG',
         'APP_DOMAIN',
@@ -62,11 +61,11 @@
     check-deploy-environment
     git-restore-and-stash
     git-checkout
-    git-commit-deployment
     heroku:maintenance-on
     heroku:push
     heroku:migration
     heroku:generate-css
+    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -78,12 +77,12 @@
     check-deploy-environment
     git-restore-and-stash
     git-checkout
-    git-commit-deployment
     heroku:maintenance-on
     heroku:config-set
     heroku:push
     heroku:migration
     heroku:generate-css
+    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -93,39 +92,39 @@
 
 @task('heroku:migration')
     @if (! $skipMigration)
-        heroku run -a {{ $heroku_app }} -- php artisan migrate --force
+        heroku run -r {{ $git_remote }} -- php artisan migrate --force
     @endif
 @endtask
 
 @task('heroku:clean-after-deploy')
-    heroku run -a {{ $heroku_app }} php artisan optimize:clear
-    heroku run -a {{ $heroku_app }} rm Envoy.blade.php
+    heroku run -r {{ $git_remote }} php artisan optimize:clear
+    heroku run -r {{ $git_remote }} rm Envoy.blade.php
+@endtask
+
+@task('heroku:add-translations')
+    heroku run -r {{ $git_remote }} php artisan fix:translation-source
 @endtask
 
 @task('heroku:restart')
-    heroku restart -a {{ $heroku_app }} worker
+    heroku restart -r {{ $git_remote }} worker
 @endtask
 
 @task('install-dependencies')
     composer install
     yarn install
-    yarn build
 @endtask
 
 @task('git-restore-and-stash')
     git restore public/css/app.css
-    git restore public/js/app.js
     git restore public/mix-manifest.json
     git stash -u
 @endtask
 
 @task('git-checkout')
     git checkout {{ $branch }}
-    git fetch origin master
-    git merge master
 @endtask
 
-@task('git-commit-deployment')
+@task('git-commit-changes-before-deployment')
     git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
@@ -134,23 +133,23 @@
 @endtask
 
 @task('heroku:maintenance-on')
-    heroku maintenance:on -a {{ $heroku_app }}
+    heroku maintenance:on -r {{ $git_remote }}
 @endtask
 
 @task('heroku:maintenance-off')
-    heroku maintenance:off -a {{ $heroku_app }}
+    heroku maintenance:off -r {{ $git_remote }}
 @endtask
 
 @task('heroku:config-set')
     @foreach ($_ENV as $key => $value)
         @if (in_array($key, $heroku_vars))
-            heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
+            heroku config:set {{ $key }}={{ $value }} -r {{ $git_remote }}
         @endif
     @endforeach
 @endtask
 
 @task('heroku:generate-css')
-    heroku run -a {{ $heroku_app }} php artisan generate:theme-css
+    heroku run -r {{ $git_remote }} php artisan generate:theme-css
 @endtask
 
 @task('heroku:push')
@@ -162,7 +161,7 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run -a {{ $heroku_app }} -- php artisan route:list --path="admin"
+    heroku run -r {{ $git_remote }} -- php artisan route:list --path="admin"
 @endtask
 
 @task('sail:fresh')
@@ -201,7 +200,9 @@
 
 @task('check-deploy-environment')
     @if (! in_array($env, $deployEnvironments))
-        {{ logWarn("Env is not for deployment") }}
+        {{ logWarn("Env is NOT for deployment") }}
         exit;
     @endif
+
+    {{ logInfo("Deployment is starting") }}
 @endtask
