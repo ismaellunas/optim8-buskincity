@@ -31,7 +31,11 @@ class WidgetSeeder extends Seeder
                             'tablet' => 6,
                             'mobile' => 12,
                         ],
-                        'setting' => [],
+                        'setting' => [
+                            'query_parameter' => [
+                                'qrcode' => true,
+                            ],
+                        ],
                         'i18n' => [
                             'description' => 'Print your QR code and place it on your pitch. It will allow your audience to find you on :appName, send donations, book you for private gigs, or follow your work.',
                             'button_print' => 'Print',
