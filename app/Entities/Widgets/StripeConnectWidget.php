@@ -20,9 +20,9 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
     {
         parent::__construct($storedSetting);
 
-        $this->stripeService = new StripeService();
+        $this->stripeService = app(StripeService::class);
 
-        $this->isStripeKeyExists = app(StripeService::class)->isStripeKeyExists();
+        $this->isStripeKeyExists = $this->stripeService->isStripeKeyExists();
     }
 
     protected function getTitle(): string
