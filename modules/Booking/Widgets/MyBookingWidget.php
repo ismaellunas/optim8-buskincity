@@ -39,7 +39,7 @@ class MyBookingWidget extends BaseWidget implements WidgetInterface
 
     private function getRecords(): Collection
     {
-        $events = Event::passed()
+        $events = Event::upcoming()
             ->with([
                 'orderLine' => function ($query) {
                     $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
