@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Services;
 
+use App\Models\Country;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -394,5 +395,104 @@ class ProductEventService
         }
 
         return implode("", $urlParts);
+    }
+
+    public function getLocationOptions(): array
+    {
+        $user = auth()->user();
+        $isUserProductManager = false;
+
+        if ($user) {
+            $isUserProductManager = $user->isProductManager();
+        }
+
+        $products = Product::with([
+                'metas' => function ($q){
+                    $q->whereIn('key', ['locations', 'roles']);
+                },
+            ])
+            ->whereHas('metas', function ($query) {
+                $query->where('key', 'locations');
+            })
+            ->when($isUserProductManager, function ($query) use ($user) {
+                $query->whereHas('managers', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })
+            ->whereHas('productType', function ($query) {
+                $query->where('name', 'Event');
+            })
+            ->get(['id', 'product_type_id']);
+
+        return $this->generateLocationOptions($products);
+    }
+
+    public function getFrontendLocationOptions(): array
+    {
+        $user = auth()->user();
+
+        $products = Product::with([
+                'metas' => function ($q){
+                    $q->whereIn('key', ['locations', 'roles']);
+                },
+            ])
+            ->whereHas('metas', function ($query) use ($user) {
+                $roleIds = $user->roles->pluck('id');
+
+                if ($roleIds->isNotEmpty()) {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonContains('value', $roleIds);
+                } else {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonLength('value', 0);
+                }
+            })
+            ->whereHas('productType', function ($query) {
+                $query->where('name', 'Event');
+            })
+            ->get(['id', 'product_type_id']);
+
+        return $this->generateLocationOptions($products);
+    }
+
+    private function generateLocationOptions(Collection $products)
+    {
+        $locations = $products
+            ->map(function ($product) {
+                return collect($product->locations[0] ?? [])
+                    ->only(['country_code', 'city'])
+                    ->all();
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->mapToGroups(function ($location) {
+                return [$location['country_code'] => $location['city']];
+            });
+
+        $countries = collect();
+
+        if ($locations->keys()->isNotEmpty()) {
+            $countries = Country::
+                whereIn('alpha2', $locations->keys())
+                ->get([
+                    'alpha2',
+                    'display_name',
+                ]);
+        }
+
+        return $locations->transform(function ($location, $key) use ($countries) {
+            return [
+                'country_code' => $key,
+                'country' => $countries->where('alpha2', $key)->first()->display_name ?? '',
+                'cities' => collect($location)
+                    ->map(fn ($value) => trim($value))
+                    ->filter()
+                    ->unique()
+                    ->all(),
+            ];
+        })->all();
     }
 }
