@@ -60,6 +60,8 @@ class ProductService
             return (object) [
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
+                'city' => $record->displayCity,
+                'country' => $record->displayCountry,
                 'status' => Str::title($record->status),
                 'can' => [
                     'edit' => $user->can('update', $record),
