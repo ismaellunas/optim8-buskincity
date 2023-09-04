@@ -40,19 +40,30 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
+        $scopes = [
+            'orderByColumn' => [
+                'column' => $request->column,
+                'order' => $request->order,
+            ],
+            'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
+        ];
+
         return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term', 'column', 'order')),
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'column',
+                'order',
+                'city',
+                'country',
+            )),
             'products' => $this->productService->getFrontendRecords(
                 $user,
                 $request->term,
-                [
-                    'orderByColumn' => [
-                        'column' => $request->column,
-                        'order' => $request->order,
-                    ]
-                ]
+                $scopes,
             ),
+            'locationOptions' => $this->productEventService->getFrontendLocationOptions(),
         ]));
     }
 

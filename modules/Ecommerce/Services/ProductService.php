@@ -123,6 +123,8 @@ class ProductService
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
+                'city' => $record->displayCity,
+                'country' => $record->displayCountry,
                 'coverUrl' => $record->getCoverThumbnailUrl(),
             ];
         });
