@@ -177,7 +177,7 @@ class Product extends LunarProduct
             $countryName = app(CountryService::class)->getCountryName($countryCode);
         }
 
-        return $countryName;
+        return $countryName ?? "";
     }
 
     public function syncMedia(array $mediaIds = []): void
