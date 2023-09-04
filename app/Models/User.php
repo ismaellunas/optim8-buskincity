@@ -347,13 +347,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return route('frontend.profile', [
             'user' => $this->unique_key,
-            'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
+            'firstname_lastname' => Str::of($this->fullName)->slug()
         ]);
     }
 
     public function getQrCodeLogoNameAttribute(): string
     {
-        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->ascii()->lower()->replace(' ', '-');
+        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->slug();
     }
 
     public function sendPasswordResetNotification($token)
