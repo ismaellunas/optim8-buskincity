@@ -52,15 +52,27 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
+        $scopes = [
+            'inStatus' => $request->status ?? null,
+            'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
+        ];
+
         return Inertia::render('Booking::ProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term', 'status')),
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'status',
+                'city',
+                'country',
+            )),
             'products' => $this->productService->getRecords(
                 $user,
                 $request->term,
-                ['inStatus' => $request->status ?? null]
+                $scopes,
             ),
             'statusOptions' => ProductStatus::options(),
+            'locationOptions' => $this->productEventService->getLocationOptions(),
             'can' => [
                 'add' => $user->can('product.add'),
             ],
@@ -320,6 +332,8 @@ class ProductController extends CrudController
             'status' => __('Status'),
             'create_new' => __('Create new'),
             'name' => __('Name'),
+            'city' => __('City'),
+            'country' => __('Country'),
             'status' => __('Status'),
             'actions' => __('Actions'),
             'are_you_sure' => __('Are you sure?'),
