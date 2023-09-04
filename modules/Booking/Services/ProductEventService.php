@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
@@ -395,51 +394,5 @@ class ProductEventService
         }
 
         return implode("", $urlParts);
-    }
-
-    public function getCityOptions(?array $relatedUserIds = null): array
-    {
-        $user = auth()->user();
-        $isUserProductManager = false;
-
-         if ($user) {
-            $isUserProductManager = $user->isProductManager();
-         }
-
-        $products = Product::with([
-                'metas' => function ($q){
-                    $q->whereIn('key', ['locations']);
-                },
-            ])
-            ->when($isUserProductManager, function ($query) use ($user) {
-                $query->whereHas('managers', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                });
-            })
-            ->whereHas('productType', function ($query) use ($user) {
-                $query->where('name', 'Event');
-            })
-            ->whereHas('variants', function ($query) use ($relatedUserIds) {
-                $query->whereHas('orderLine.order', function ($query) use ($relatedUserIds) {
-                    $query->when($relatedUserIds, function ($query, $relatedUserIds) {
-                        $query->whereIn('user_id', $relatedUserIds);
-                    });
-                });
-                $query->whereHas('orderLine.latestEvent');
-            })
-            ->whereHas('metas', function ($query) {
-                $query->where('key', 'locations');
-                $query->whereNotNull(DB::raw("value::json->0->>'city'"));
-            })
-            ->get(['id', 'product_type_id']);
-
-        $cities = $products
-            ->map(fn ($product) => $product->locations[0]['city'])
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-
-        return $cities;
     }
 }
