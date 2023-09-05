@@ -204,5 +204,5 @@
         exit;
     @endif
 
-    {{ logInfo("Deployment is starting") }}
+    {{ logInfo("Deployment is starting ---") }}
 @endtask
