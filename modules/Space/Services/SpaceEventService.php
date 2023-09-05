@@ -58,12 +58,15 @@ class SpaceEventService
 
         $spaceEvents->getCollection()->transform(function ($event) {
             $space = $event->space;
+            $purifireConfigs = [
+                'AutoFormat.AutoParagraph' => false,
+            ];
 
             $shortDescription = nl2br(preg_replace("/[\r\n]+/", "\n", Purifier::clean(
                 !empty($event->excerpt)
                 ? $event->excerpt
                 : Str::words($event->description, 60, ' ...')
-            )));
+            , $purifireConfigs)));
 
             $data = [
                 'id' => $event->id,
@@ -71,7 +74,7 @@ class SpaceEventService
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
                 'short_description' => $shortDescription,
-                'description' => nl2br(Purifier::clean($event->description)),
+                'description' => nl2br(Purifier::clean($event->description, $purifireConfigs)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
                 'address' => $space->address,
