@@ -76,6 +76,13 @@ class StripeSeeder extends Seeder
                 "display_name" => "Secondary Color",
                 "value" => "#fcd42f",
             ],
+            [
+                "key" => "stripe_payment_method_types",
+                "display_name" => "Payment Methods",
+                "value" => json_encode([
+                    'card',
+                ]),
+            ],
         ];
 
         foreach ($settings as $setting) {

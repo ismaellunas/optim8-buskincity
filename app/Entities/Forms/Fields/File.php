@@ -119,22 +119,7 @@ class File extends BaseField
 
         $deleteMediaIds = $inputs[$this->name]['deleted_media'] ?? [];
 
-        if (! empty($deleteMediaIds)) {
-            $deleteMediaIds = array_intersect(
-                $deleteMediaIds,
-                $storedValue
-            );
-
-            $this->deleteFiles($deleteMediaIds);
-
-            $value = array_diff(
-                $storedValue,
-                $deleteMediaIds,
-            );
-
-        } else {
-            $value = $storedValue;
-        }
+        $value = $storedValue;
 
         if (! empty($files)) {
 
@@ -144,6 +129,21 @@ class File extends BaseField
                 $value,
                 $media->pluck('id')->all()
             );
+        }
+
+        if (! empty($deleteMediaIds)) {
+            $deleteMediaIds = array_intersect(
+                $deleteMediaIds,
+                $value
+            );
+
+            $this->deleteFiles($deleteMediaIds);
+
+            $value = array_diff(
+                $value,
+                $deleteMediaIds,
+            );
+
         }
 
         $data[$this->name] = array_values($value);
@@ -161,6 +161,7 @@ class File extends BaseField
             'file_url',
             'size',
             'type',
+            'version',
             'updated_at',
         ])
             ->whereIn('id', $mediaIds)

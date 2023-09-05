@@ -564,7 +564,7 @@ class SettingService
                     }
                 }
 
-                return $drivers;
+                return array_values($drivers);
             });
     }
 
@@ -875,5 +875,12 @@ class SettingService
                 return "";
             }
         );
+    }
+
+    public function getStripePaymentMethodTypes(): array
+    {
+        $paymentMethods = $this->getKey('stripe_payment_method_types');
+
+        return is_null($paymentMethods) ? [] : json_decode($paymentMethods);
     }
 }

@@ -11,6 +11,7 @@
             :media="listMedia"
             :is-edit-enabled="false"
             :is-scrolled="true"
+            :is-filename-shown="isFilenameShown"
             @on-delete-clicked="onDeleteMedium"
         />
 
@@ -101,6 +102,10 @@
             media: {
                 type: Array,
                 default:() => []
+            },
+            isFilenameShown: {
+                type: Boolean,
+                default: true,
             },
             mediaComponent: {
                 type: String,

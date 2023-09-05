@@ -3,10 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Services\StripeService;
+use App\Services\StripeSettingService;
 use Illuminate\Validation\Rule;
 
 class DonationRequest extends BaseFormRequest
 {
+    protected $errorBag = 'donation';
+
     public function authorize()
     {
         return true;
@@ -16,9 +19,7 @@ class DonationRequest extends BaseFormRequest
     {
         $stripeService = app(StripeService::class);
 
-        $minimalPayment = $stripeService->getMinimalPaymentWithFee(
-            $stripeService->getCurrencyMinimalPayment($this->currency)
-        );
+        $minimalPayment = $this->getMinimalPayment();
 
         $currencies = array_map(
             function ($option) {
@@ -38,5 +39,21 @@ class DonationRequest extends BaseFormRequest
                 Rule::in($currencies),
             ],
         ];
+    }
+
+    private function getMinimalPayment()
+    {
+        $currency = $this->currency;
+        $stripeService = app(StripeService::class);
+
+        $minimalPayment = $stripeService->getMinimalPaymentWithFee(
+            $stripeService->getCurrencyMinimalPayment($currency)
+        );
+
+        $currencyMinimalPayment = app(StripeSettingService::class)->getMinimalAmountByCurrency($currency);
+
+        return $currencyMinimalPayment > $minimalPayment
+            ? $currencyMinimalPayment
+            : $minimalPayment;
     }
 }

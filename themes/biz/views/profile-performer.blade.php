@@ -66,14 +66,16 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
+                                    <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio" onclick="event.preventDefault();">
+                                        {{ __('Read more') }}
+                                    </a>
                                 @endif
                             </div>
                         </div>
                         <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
@@ -183,6 +185,18 @@
                             <p>{{ __('Thank you for your support!') }}</p>
                         </div>
                     </div>
+
+                    @if (session('donationError'))
+                    <div class="notification is-danger mt-4">
+                        <button
+                            type="button"
+                            class="delete"
+                            onclick="removeErrorMessage(this)"
+                        ></button>
+                        {{ session('donationError') }}
+                    </div>
+                    @endif
+
                     <x-stripe-form-donation :user-id="$user->id"/>
                 </div>
             </div>
@@ -196,4 +210,17 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
+
+    @if (
+        ! empty($errors->donation->all())
+        || session('donationError')
+    )
+        @push('bottom_scripts')
+            <script>
+                document.getElementById('donation').classList.add('is-active');
+
+                function removeErrorMessage(element) { element.parentElement.remove() };
+            </script>
+        @endpush
+    @endif
 </x-layouts.master>
