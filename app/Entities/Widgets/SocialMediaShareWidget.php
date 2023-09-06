@@ -47,7 +47,7 @@ class SocialMediaShareWidget implements WidgetInterface
                     'description' => '',
                     'quote' => '',
                     'hashtags' => '',
-                    'icon' => 'fa-brands fa-twitter',
+                    'icon' => 'fa-brands fa-x-twitter',
                     'class' => null,
                     'text' => 'Twitter',
                 ],
