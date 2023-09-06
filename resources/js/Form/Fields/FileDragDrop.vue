@@ -220,18 +220,28 @@
                 }
             },
 
+            isPromise(obj) {
+                return (
+                    !!obj &&
+                    (typeof obj === "object" || typeof obj === "function") &&
+                    typeof obj.then === "function"
+                );
+            },
+
             checkValueHasImage() {
-                const self = this;
+                this.hasImage = false;
 
-                self.hasImage = false;
-
-                self.computedValue.files.forEach(function (file) {
-                    if (file.type.startsWith("image")) {
-                        self.hasImage = true;
+                this.computedValue.files.forEach(async (file) => {
+                    if (this.isPromise(file)) {
+                        if (this.isImage(await file)) {
+                            this.hasImage = true;
+                        }
+                    } else if (this.isImage(file)) {
+                        this.hasImage = true;
                     }
                 });
 
-                return self.hasImage;
+                return this.hasImage;
             },
 
             checkValueIsMultipleUpload() {
@@ -250,8 +260,8 @@
                 this.checkValueIsMultipleUpload();
             },
 
-            saveEditedFiles() {
-                const newFiles = cloneDeep(this.computedValue.files);
+            async saveEditedFiles() {
+                const newFiles = cloneDeep(await Promise.all(this.computedValue.files));
 
                 this.reset();
 
