@@ -180,17 +180,16 @@
                     style="width: 100%"
                 >
                     <div class="column">
-                        <div class="buttons is-pulled-right">
+                        <div class="buttons is-right">
                             <biz-button
                                 type="button"
-                                class="is-link"
+                                class="is-primary"
                                 @click="onSubmit()"
                             >
                                 {{ i18n.save }}
                             </biz-button>
 
                             <biz-button
-                                class="is-link is-light ml-2"
                                 type="button"
                                 @click="closeEditModal"
                             >
