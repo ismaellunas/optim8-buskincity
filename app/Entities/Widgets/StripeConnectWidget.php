@@ -2,57 +2,45 @@
 
 namespace App\Entities\Widgets;
 
-use App\Entities\UserMetaStripe;
 use App\Contracts\WidgetInterface;
-use App\Services\{
-    IPService,
-    StripeService,
-    StripeSettingService,
-};
+use App\Entities\UserMetaStripe;
+use App\Services\IPService;
+use App\Services\StripeService;
+use App\Services\StripeSettingService;
 
-class StripeConnectWidget implements WidgetInterface
+class StripeConnectWidget extends BaseWidget implements WidgetInterface
 {
-    protected $data = [];
-    protected $title = "Connect Payments with Stripe";
     protected $componentName = 'StripeConnect';
-    protected $user;
+    protected $title = "Connect Payments with Stripe";
 
+    private $isStripeKeyExists = false;
     private $stripeService;
     private $userMetaStripe;
-    private $isStripeKeyExists = false;
 
     public function __construct()
     {
-        $this->stripeService = new StripeService();
+        parent::__construct();
 
-        $this->user = auth()->user();
+        $this->stripeService = app(StripeService::class);
 
-        $this->isStripeKeyExists = app(StripeService::class)->isStripeKeyExists();
-
-        if ($this->isStripeKeyExists) {
-            $this->data = $this->getWidgetData();
-        }
+        $this->isStripeKeyExists = $this->stripeService->isStripeKeyExists();
     }
 
-    public function data(): array
-    {
-        return [
-            'title' => $this->getTitle(),
-            'componentName' => $this->componentName,
-            'data' => $this->data,
-        ];
-    }
-
-    private function getTitle(): string
+    protected function getTitle(): string
     {
         if ($this->hasConnectedAccount()) {
-            return 'Stripe Connect';
+            return __('Manage Payments');
         }
-        return $this->title;
+
+        return parent::getTitle();
     }
 
-    private function getWidgetData(): array
+    protected function getData(): array
     {
+        if (! $this->isStripeKeyExists) {
+            return [];
+        }
+
         $hasConnectedAccount = $this->hasConnectedAccount();
 
         $defaultCountry = app(IPService::class)->getCountryCode(
@@ -63,12 +51,30 @@ class StripeConnectWidget implements WidgetInterface
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
-            'description' => __(
+        ];
+    }
+
+    protected function i18n(): array
+    {
+        return [
+            'inconnect' => __(
                 'If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:',
                 [
                     'appName' => config('app.name'),
                 ]
-            )
+            ),
+            'country' => __('Country'),
+            'select_option' => __('Select option'),
+            'create_connected_account' => __('Create connected account'),
+            'connect' => __(
+                'Visit the payment’s dashboard to manage your Stripe Connect account.'
+            ),
+            'manage_payments' => __('Manage payments'),
+            'create_alert' => [
+                'title' => __('Please double-check your country!'),
+                'text' => __('You will not be able to change your country in the future.'),
+                'button' => __('Continue'),
+            ],
         ];
     }
 
@@ -77,7 +83,7 @@ class StripeConnectWidget implements WidgetInterface
         return $this->getUserMetaStripe()->hasAccount() ?? false;
     }
 
-    private function getUserMetaStripe()
+    private function getUserMetaStripe(): UserMetaStripe
     {
         if (is_null($this->userMetaStripe)) {
             $this->userMetaStripe = new UserMetaStripe(auth()->user());
