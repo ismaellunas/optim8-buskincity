@@ -4,7 +4,10 @@
         :class="fieldClass"
         :label-class="{'is-size-7': isSmall}"
     >
-        <template #label>
+        <template
+            v-if="!! label"
+            #label
+        >
             {{ label }}
         </template>
 

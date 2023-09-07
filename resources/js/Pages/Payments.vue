@@ -2,13 +2,15 @@
     <div>
         <div class="columns is-multiline">
             <biz-widget-stripe-connect
-                title="Stripe Connected"
+                :title="widgetTitle"
                 class="is-12-tablet is-12-mobile"
                 :data="stripeConnectData"
                 :order="0"
             >
                 <template #description>
-                    <p>Create and connect an account with Stripe, this will allow you to receive payments through BuskinCity. If you already have a Stripe account you need to create a new one using the form below:</p>
+                    <p>
+                        {{ i18n.inconnect }}
+                    </p>
                 </template>
             </biz-widget-stripe-connect>
         </div>
@@ -19,6 +21,7 @@
     import BizWidgetStripeConnect from '@/Biz/Widget/StripeConnect.vue';
     import Layout from '@/Layouts/User.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { startCase } from 'lodash';
 
     export default {
         name: 'WidgetPayments',
@@ -50,6 +53,10 @@
                 type: String,
                 default: null,
             },
+            i18n: {
+                type: Object,
+                default: () => {},
+            },
         },
 
         data() {
@@ -58,8 +65,19 @@
                     countryOptions: this.countryOptions,
                     defaultCountry: this.defaultCountry,
                     hasConnectedAccount: this.hasConnectedAccount,
+                    i18n: this.i18n,
                 },
             };
+        },
+
+        computed: {
+            widgetTitle() {
+                if (this.hasConnectedAccount) {
+                    return startCase(this.i18n.manage_payments);
+                }
+
+                return this.i18n.connect_payment;
+            },
         },
     };
 </script>
