@@ -58,7 +58,7 @@ class SpaceEventService
 
         $spaceEvents->getCollection()->transform(function ($event) {
             $space = $event->space;
-            $purifireConfigs = [
+            $purifiedConfigs = [
                 'AutoFormat.AutoParagraph' => false,
             ];
 
@@ -66,7 +66,7 @@ class SpaceEventService
                 !empty($event->excerpt)
                 ? $event->excerpt
                 : Str::words($event->description, 60, ' ...')
-            , $purifireConfigs)));
+            , $purifiedConfigs)));
 
             $data = [
                 'id' => $event->id,
