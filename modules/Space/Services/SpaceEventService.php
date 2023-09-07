@@ -74,7 +74,7 @@ class SpaceEventService
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
                 'short_description' => $shortDescription,
-                'description' => nl2br(Purifier::clean($event->description, $purifireConfigs)),
+                'description' => nl2br(Purifier::clean($event->description, $purifiedConfigs)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
                 'address' => $space->address,
