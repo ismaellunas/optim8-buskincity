@@ -564,7 +564,7 @@ class SettingService
                     }
                 }
 
-                return $drivers;
+                return array_values($drivers);
             });
     }
 
