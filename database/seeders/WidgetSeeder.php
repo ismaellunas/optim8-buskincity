@@ -73,7 +73,7 @@ class WidgetSeeder extends Seeder
                             'inconnect' => 'If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:',
                             'country' => 'Country',
                             'select_an_option' => 'Select an option',
-                            'create_connected_account' => 'Create a connected account',
+                            'create_a_connected_account' => 'Create a connected account',
                             'connect' => 'Visit the payment’s dashboard to manage your Stripe Connect account.',
                             'manage_payments' => 'Manage payments',
                             'create_alert_title' => 'Please double-check your country!',
