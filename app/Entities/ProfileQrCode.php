@@ -123,9 +123,4 @@ class ProfileQrCode
             'quietZoneColor' => $this->quietZoneColor,
         ];
     }
-
-    private function getQueryParameter(): string
-    {
-        return Arr::query($this->queryParameter);
-    }
 }
