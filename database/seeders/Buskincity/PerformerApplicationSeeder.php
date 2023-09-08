@@ -676,8 +676,8 @@ class PerformerApplicationSeeder extends Seeder
                         "max_file_number" => "10",
                         "min_file_number" => 0,
                         "media_dimension" => [
-                            "width" => null,
-                            "height" => null,
+                            "width" => 900,
+                            "height" => 600,
                         ],
                         "validation" => [
                             "rules" => [

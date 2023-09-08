@@ -10,6 +10,8 @@ class PerformerApplicationLinkWidget extends BaseWidget implements WidgetInterfa
 {
     protected $component = "PerformerApplicationLink";
 
+    private $hasSubmittedApplication = null;
+
     protected function getData(): array
     {
         if ($this->hasSubmittedApplication()) {
@@ -51,16 +53,18 @@ class PerformerApplicationLinkWidget extends BaseWidget implements WidgetInterfa
 
     private function hasSubmittedApplication(): bool
     {
-        $formId = $this->storedSetting['setting']['form_id'] ?? null;
+        if ($this->hasSubmittedApplication === null) {
+            $formId = $this->storedSetting['setting']['form_id'] ?? null;
 
-        if ($formId) {
-            return FormEntry::with(['metas'])
-                ->where('form_id', $formId)
-                ->where('user_id', $this->user->id)
-                ->exists();
+            if ($formId) {
+                $this->hasSubmittedApplication = FormEntry::with(['metas'])
+                    ->where('form_id', $formId)
+                    ->where('user_id', $this->user->id)
+                    ->exists();
+            }
         }
 
-        return false;
+        return !! $this->hasSubmittedApplication;
     }
 
     public function canBeAccessed(): bool

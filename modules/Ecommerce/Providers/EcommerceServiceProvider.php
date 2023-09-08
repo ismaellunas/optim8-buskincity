@@ -49,7 +49,11 @@ class EcommerceServiceProvider extends ServiceProvider
         });
 
         User::macro('isProductManager', function () {
-            return $this->products->isNotEmpty();
+            return $this->products->isNotEmpty()
+                && (
+                    ! $this->IsSuperAdministrator
+                    && ! $this->IsAdministrator
+                );
         });
     }
 

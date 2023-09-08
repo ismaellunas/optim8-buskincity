@@ -25,7 +25,7 @@ abstract class BaseWidget
                 'title' => $this->getTitle(),
                 'component' => $this->component,
                 'componentModule' => $this->componentModule,
-                'module' => $this->storedSetting['module'],
+                'module' => $this->storedSetting['module'] ?? null,
                 'grid' => $this->storedSetting['grid'] ?? $this->defaultGrid(),
             ],
             ...[
