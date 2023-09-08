@@ -48,7 +48,7 @@
                                     @click="createConnectedAccount"
                                 >
                                     <span class="has-text-weight-bold">
-                                        {{ i18n.create_connected_account }}
+                                        {{ i18n.create_a_connected_account }}
                                     </span>
                                 </button>
                             </div>
