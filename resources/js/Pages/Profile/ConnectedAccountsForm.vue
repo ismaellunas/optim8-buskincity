@@ -20,7 +20,7 @@
                             <span class="has-text-weight-bold">
                                 {{ providerTitle(provider) }}
                             </span>
-                            <span> - Connected</span>
+                            <span>&nbsp;- Connected</span>
                         </biz-button>
                     </template>
 
@@ -56,7 +56,10 @@
                 </template>
 
                 <template #default>
-                    Please confirm your removal of this account - this action cannot be undone.
+                    <p>
+                        Please confirm the removal of this account. This action cannot be undone.<br>
+                        You can only log in with <span class="has-text-weight-bold">{{ availableProviders.join(',') }} Account</span> after removing this connected account.
+                    </p>
                 </template>
 
                 <template #footer>
@@ -88,6 +91,8 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import ConnectedAccountIcon from '@/Socialstream/ConnectedAccountIcon.vue';
     import { useForm } from '@inertiajs/vue3';
+    import { startCase } from 'lodash';
+    import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -129,6 +134,12 @@
                     || this.$page.props.socialstream.hasPassword
                 );
             },
+
+            availableProviders() {
+                return this.$page.props.socialstream.connectedAccounts
+                    .filter(account => account.id !== this.accountId)
+                    .map(account => startCase(account.provider));
+            },
         },
 
         methods: {
@@ -139,6 +150,10 @@
                     this.accountId = id;
 
                     this.openModal();
+                } else {
+                    oopsAlert({
+                        text: "Please set the password first before removing this connected account.",
+                    });
                 }
             },
 
