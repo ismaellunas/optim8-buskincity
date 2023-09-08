@@ -44,11 +44,4 @@ class QrCodeWidget extends BaseWidget implements WidgetInterface
                 && $qrCodeIsDisplayed
             );
     }
-
-    private function getQueryParameter(): string
-    {
-        return Arr::query(
-            $this->storedSetting['setting']['query_parameter'] ?? []
-        );
-    }
 }

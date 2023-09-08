@@ -316,6 +316,7 @@ class SettingSeeder extends Seeder
                 "value" => json_encode([
                     'google',
                     'facebook',
+                    'twitter',
                 ]),
                 "group" => "socialite",
                 "order" => "1",
