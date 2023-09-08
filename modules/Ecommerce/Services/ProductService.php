@@ -218,7 +218,10 @@ class ProductService
 
         return User::available()
             ->backend()
-            ->notInRoleNames([config('permission.super_admin_role')])
+            ->notInRoleNames([
+                config('permission.role_names.super_admin'),
+                config('permission.role_names.admin'),
+            ])
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })
