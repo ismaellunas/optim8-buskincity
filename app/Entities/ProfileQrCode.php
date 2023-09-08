@@ -99,9 +99,7 @@ class ProfileQrCode
 
         $font = $this->font();
 
-        $text = $this->user->profile_page_url . (
-            ! empty($this->queryParameter) ? '?' . $this->getQueryParameter() : null
-        );
+        $text = $this->user->getProfilePageUrlAttribute($this->queryParameter);
 
         return [
             'width' => $this->dimension,
@@ -122,10 +120,5 @@ class ProfileQrCode
             'quietZone' => $this->dimension * 0.02,
             'quietZoneColor' => $this->quietZoneColor,
         ];
-    }
-
-    private function getQueryParameter(): string
-    {
-        return Arr::query($this->queryParameter);
     }
 }
