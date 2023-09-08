@@ -356,7 +356,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getQrCodeLogoNameAttribute(): string
     {
-        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->ascii()->lower()->replace(' ', '-');
+        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->slug();
     }
 
     public function sendPasswordResetNotification($token)
