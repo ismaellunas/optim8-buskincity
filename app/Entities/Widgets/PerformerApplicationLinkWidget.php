@@ -16,11 +16,8 @@ class PerformerApplicationLinkWidget extends BaseWidget implements WidgetInterfa
     {
         if ($this->hasSubmittedApplication()) {
             return [
-                ...parent::getData(),
-                ...[
-                    'hasSubmitted' => $this->hasSubmittedApplication(),
-                    'pageUrl' => "",
-                ]
+                'hasSubmitted' => $this->hasSubmittedApplication(),
+                'pageUrl' => "",
             ];
         }
 
@@ -49,11 +46,8 @@ class PerformerApplicationLinkWidget extends BaseWidget implements WidgetInterfa
         }
 
         return [
-            ...parent::getData(),
-            ...[
-                'hasSubmitted' => $this->hasSubmittedApplication(),
-                'pageUrl' => $pageUrl,
-            ],
+            'hasSubmitted' => $this->hasSubmittedApplication(),
+            'pageUrl' => $pageUrl,
         ];
     }
 

@@ -13,21 +13,18 @@ class QrCodeWidget extends BaseWidget implements WidgetInterface
     protected function getData(): array
     {
         return [
-            ...parent::getData(),
-            ...[
-                'logoThumbnailUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
-                'logoUrl' => app(SettingService::class)->qrCodeHighResolutionLogo(),
-                'dimension' => [
-                    'default' => [
-                        'width' => 128,
-                        'height' => 128,
-                    ],
+            'logoThumbnailUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
+            'logoUrl' => app(SettingService::class)->qrCodeHighResolutionLogo(),
+            'dimension' => [
+                'default' => [
+                    'width' => 128,
+                    'height' => 128,
                 ],
-                'name' => $this->user->qr_code_logo_name,
-                'text' => $this->user->profile_page_url,
-                'uniqueKey' => $this->user->unique_key,
-                'qrOptions' => (new ProfileQrCode($this->user, 2480))->options(),
             ],
+            'name' => $this->user->qr_code_logo_name,
+            'text' => $this->user->profile_page_url,
+            'uniqueKey' => $this->user->unique_key,
+            'qrOptions' => (new ProfileQrCode($this->user, 2480))->options(),
         ];
     }
 

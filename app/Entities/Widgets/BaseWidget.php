@@ -29,7 +29,13 @@ abstract class BaseWidget
                 'grid' => $this->storedSetting['grid'] ?? $this->defaultGrid(),
             ],
             ...[
-                'data' => $this->getData(),
+                'data' => [
+                    ...[
+                        'i18n' => $this->i18n(),
+                        'setting' => $this->storedSetting['setting'] ?? [],
+                    ],
+                    ...$this->getData()
+                ],
             ],
         ];
     }
@@ -52,10 +58,7 @@ abstract class BaseWidget
 
     protected function getData(): array
     {
-        return [
-            'i18n' => $this->i18n(),
-            'setting' => $this->storedSetting['setting'] ?? [],
-        ];
+        return [];
     }
 
     protected function i18n(): array
