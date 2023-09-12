@@ -29,6 +29,8 @@ class FixTranslationSource extends Command
 
         $this->importModuleTranslations();
 
+        $this->importAppIdTranslations();
+
         app(TranslationCache::class)->flush();
 
         return Command::SUCCESS;
@@ -150,6 +152,15 @@ class FixTranslationSource extends Command
 
             if (! is_dir($basePath)) continue;
 
+            $this->importTranslations($basePath);
+        }
+    }
+
+    private function importAppIdTranslations()
+    {
+        $basePath = lang_path()."/".strtolower(config('app.id'));
+
+        if (is_dir($basePath)) {
             $this->importTranslations($basePath);
         }
     }
