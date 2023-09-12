@@ -63,8 +63,8 @@ class PaymentController extends Controller
                 ]
             ),
             'country' => __('Country'),
-            'select_option' => __('Select option'),
-            'create_connected_account' => __('Create connected account'),
+            'select_an_option' => __('Select an option'),
+            'create_a_connected_account' => __('Create a connected account'),
             'connect' => __(
                 'Visit the payment’s dashboard to manage your Stripe Connect account.'
             ),

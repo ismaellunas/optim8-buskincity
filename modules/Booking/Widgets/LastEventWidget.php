@@ -3,32 +3,29 @@
 namespace Modules\Booking\Widgets;
 
 use App\Contracts\WidgetInterface;
+use App\Entities\Widgets\BaseWidget;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 
-class LastEventWidget implements WidgetInterface
+class LastEventWidget extends BaseWidget implements WidgetInterface
 {
-    private $user;
-
-    private $componentName = "EventUpcoming";
-    private $title = "Last Events";
     private $records = [];
 
-    public function __construct($request)
+    protected $componentModule = "EventUpcoming";
+
+    public function __construct(array $storedSetting)
     {
-        $this->user = $request->user();
+        parent::__construct($storedSetting);
 
         $this->records = $this->getRecords();
     }
 
-    public function data(): array
+    protected function getData(): array
     {
         return [
-            'title' => $this->title,
-            'componentName' => $this->componentName,
-            'moduleName' => config('booking.name'),
-            'data' => [
+            ...parent::getData(),
+            ...[
                 'records' => $this->records,
             ],
         ];
@@ -36,8 +33,11 @@ class LastEventWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return $this->user->hasRole([config('permission.role_names.performer')])
-            && $this->records->isNotEmpty();
+        return parent::canBeAccessed()
+            && (
+                $this->user->hasRole([config('permission.role_names.performer')])
+                && $this->records->isNotEmpty()
+            );
     }
 
     private function getRecords(): Collection

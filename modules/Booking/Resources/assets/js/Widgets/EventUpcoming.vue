@@ -1,7 +1,10 @@
 <template>
-    <div class="column is-6-desktop is-12-tablet is-12-mobile">
+    <div
+        class="column"
+        :class="columnClasses"
+    >
         <h2 class="title is-4">
-            {{ title }}
+            {{ startCase(title) }}
         </h2>
 
         <div class="box is-shadowless">
@@ -31,7 +34,7 @@
                         v-else
                         class="has-text-centered"
                     >
-                        Empty
+                        {{ i18n.empty }}
                     </p>
                 </div>
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
@@ -40,7 +43,7 @@
                             class="is-small is-light"
                             :href="route('booking.orders.index')"
                         >
-                            <span>More ...</span>
+                            <span>{{ i18n.button_more }} ...</span>
                         </biz-button-link>
                     </p>
                 </div>
@@ -50,10 +53,12 @@
 </template>
 
 <script>
+    import MixinWidget from '@/Mixins/Widget';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
+    import { startCase } from 'lodash';
 
     export default {
         name: 'WidgetEventUpcoming',
@@ -63,6 +68,10 @@
             BizIcon,
             BizTable,
         },
+
+        mixins: [
+            MixinWidget,
+        ],
 
         props: {
             data: {type: Object, required: true},
@@ -76,6 +85,7 @@
         },
 
         methods: {
+            startCase,
         },
     };
 </script>
