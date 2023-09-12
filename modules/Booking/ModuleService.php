@@ -59,15 +59,6 @@ class ModuleService
         ];
     }
 
-
-    public static function frontendWidgets(): array
-    {
-        return [
-            'upcomingEvent',
-            'lastEvent',
-        ];
-    }
-
     public static function widgets(): array
     {
         return [

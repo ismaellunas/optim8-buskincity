@@ -3,44 +3,29 @@
 namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\Setting;
 use App\Models\Page;
 use Modules\FormBuilder\Entities\FormEntry;
 
-class PerformerApplicationLinkWidget implements WidgetInterface
+class PerformerApplicationLinkWidget extends BaseWidget implements WidgetInterface
 {
-    protected $componentName = "PerformerApplicationLink";
-    protected $data = [];
-    protected $title = "Become a Performer";
-    protected $user;
+    protected $component = "PerformerApplicationLink";
 
-    private $settings = [];
+    private $hasSubmittedApplication = null;
 
-    public function __construct()
+    protected function getData(): array
     {
-        $this->user = auth()->user();
-        $this->settings = $this->getSettings();
-        $this->data = $this->getWidgetData();
-    }
-
-    public function data(): array
-    {
-        $data = [
-            'title' => $this->title,
-            'componentName' => $this->componentName,
-        ];
-
-        if (!$this->hasSubmittedApplication()) {
-            $data['data'] = $this->data;
+        if ($this->hasSubmittedApplication()) {
+            return [
+                ...parent::getData(),
+                ...[
+                    'hasSubmitted' => $this->hasSubmittedApplication(),
+                    'pageUrl' => "",
+                ]
+            ];
         }
 
-        return $data;
-    }
-
-    private function getWidgetData(): array
-    {
-        $pageUrl = null;
-        $pageId = $this->settings['page_id'] ?? null;
+        $pageUrl = "";
+        $pageId = $this->storedSetting['setting']['page_id'] ?? null;
 
         if ($pageId) {
             $page = Page::with([
@@ -64,33 +49,33 @@ class PerformerApplicationLinkWidget implements WidgetInterface
         }
 
         return [
-            'pageUrl' => $pageUrl,
+            ...parent::getData(),
+            ...[
+                'hasSubmitted' => $this->hasSubmittedApplication(),
+                'pageUrl' => $pageUrl,
+            ],
         ];
     }
 
     private function hasSubmittedApplication(): bool
     {
-        $formId = $this->settings['form_id'] ?? null;
+        if ($this->hasSubmittedApplication === null) {
+            $formId = $this->storedSetting['setting']['form_id'] ?? null;
 
-        if ($formId) {
-            return FormEntry::with(['metas'])
-                ->where('form_id', $formId)
-                ->where('user_id', $this->user->id)
-                ->exists();
+            if ($formId) {
+                $this->hasSubmittedApplication = FormEntry::with(['metas'])
+                    ->where('form_id', $formId)
+                    ->where('user_id', $this->user->id)
+                    ->exists();
+            }
         }
 
-        return false;
+        return !! $this->hasSubmittedApplication;
     }
 
     public function canBeAccessed(): bool
     {
-        return $this->user->roles->isEmpty();
-    }
-
-    private function getSettings()
-    {
-        return Setting::group('widget.performer_application')
-            ->pluck('value', 'key')
-            ->toArray();
+        return parent::canBeAccessed()
+            && $this->user->roles->isEmpty();
     }
 }

@@ -10,16 +10,15 @@ use App\Services\StripeSettingService;
 
 class StripeConnectWidget extends BaseWidget implements WidgetInterface
 {
-    protected $componentName = 'StripeConnect';
-    protected $title = "Connect Payments with Stripe";
+    protected $component = 'StripeConnect';
 
     private $isStripeKeyExists = false;
     private $stripeService;
     private $userMetaStripe;
 
-    public function __construct()
+    public function __construct(array $storedSetting)
     {
-        parent::__construct();
+        parent::__construct($storedSetting);
 
         $this->stripeService = app(StripeService::class);
 
@@ -29,7 +28,9 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
     protected function getTitle(): string
     {
         if ($this->hasConnectedAccount()) {
-            return __('Manage Payments');
+            return __(
+                $this->storedSetting['i18n']['manage_payments']
+            );
         }
 
         return parent::getTitle();
@@ -38,7 +39,7 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
     protected function getData(): array
     {
         if (! $this->isStripeKeyExists) {
-            return [];
+            return parent::getData();
         }
 
         $hasConnectedAccount = $this->hasConnectedAccount();
@@ -48,32 +49,11 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
         );
 
         return [
-            'countryOptions' => $this->stripeService->getCountryOptions(),
-            'defaultCountry' => $defaultCountry,
-            'hasConnectedAccount' => $hasConnectedAccount,
-        ];
-    }
-
-    protected function i18n(): array
-    {
-        return [
-            'inconnect' => __(
-                'If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:',
-                [
-                    'appName' => config('app.name'),
-                ]
-            ),
-            'country' => __('Country'),
-            'select_option' => __('Select option'),
-            'create_connected_account' => __('Create connected account'),
-            'connect' => __(
-                'Visit the payment’s dashboard to manage your Stripe Connect account.'
-            ),
-            'manage_payments' => __('Manage payments'),
-            'create_alert' => [
-                'title' => __('Please double-check your country!'),
-                'text' => __('You will not be able to change your country in the future.'),
-                'button' => __('Continue'),
+            ...parent::getData(),
+            ...[
+                'countryOptions' => $this->stripeService->getCountryOptions(),
+                'defaultCountry' => $defaultCountry,
+                'hasConnectedAccount' => $hasConnectedAccount,
             ],
         ];
     }
@@ -94,7 +74,10 @@ class StripeConnectWidget extends BaseWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return $this->user->can('manageStripeConnectedAccount', $this->user)
-            && $this->isStripeKeyExists;
+        return parent::canBeAccessed()
+            && (
+                $this->user->can('manageStripeConnectedAccount', $this->user)
+                && $this->isStripeKeyExists
+            );
     }
 }

@@ -1,7 +1,10 @@
 <template>
-    <div class="column is-6-desktop is-6-tablet is-12-mobile">
+    <div
+        class="column"
+        :class="columnClasses"
+    >
         <h2 class="title is-4">
-            {{ title }}
+            {{ startCase(title) }}
         </h2>
         <div class="box is-shadowless">
             <template v-if="!data.hasConnectedAccount">
@@ -27,7 +30,7 @@
                             required
                         >
                             <option value="">
-                                {{ i18n.select_option }}
+                                {{ i18n.select_an_option }}
                             </option>
                             <option
                                 v-for="option in data.countryOptions"
@@ -45,7 +48,7 @@
                                     @click="createConnectedAccount"
                                 >
                                     <span class="has-text-weight-bold">
-                                        {{ i18n.create_connected_account }}
+                                        {{ i18n.create_a_connected_account }}
                                     </span>
                                 </button>
                             </div>
@@ -83,11 +86,13 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinWidget from '@/Mixins/Widget';
     import BizLabel from '@/Biz/Label.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizLink from '@/Biz/Link.vue';
     import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
+    import { startCase } from 'lodash';
 
     export default {
         name: 'StripeConnect',
@@ -101,6 +106,7 @@
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
+            MixinWidget,
         ],
 
         props: {
@@ -118,21 +124,15 @@
             };
         },
 
-        computed: {
-            i18n() {
-                return this.data.i18n;
-            },
-        },
-
         methods: {
             createConnectedAccount() {
                 const self = this;
                 const url = route('payments.stripe.create-connected-account');
 
                 confirmAlert(
-                    this.i18n.create_alert.title,
-                    this.i18n.create_alert.text,
-                    this.i18n.create_alert.button,
+                    this.i18n.create_alert_title,
+                    this.i18n.create_alert_text,
+                    this.i18n.create_alert_button,
                 )
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -148,6 +148,8 @@
                         }
                     });
             },
+
+            startCase,
         },
     };
 </script>

@@ -3,9 +3,8 @@
         <div class="columns is-multiline">
             <biz-widget-stripe-connect
                 :title="widgetTitle"
-                class="is-12-tablet is-12-mobile"
                 :data="stripeConnectData"
-                :order="0"
+                :columns="stripeConnectGrid"
             >
                 <template #description>
                     <p>
@@ -66,6 +65,11 @@
                     defaultCountry: this.defaultCountry,
                     hasConnectedAccount: this.hasConnectedAccount,
                     i18n: this.i18n,
+                },
+                stripeConnectGrid: {
+                    desktop: 6,
+                    tablet: 8,
+                    mobile: 12,
                 },
             };
         },
