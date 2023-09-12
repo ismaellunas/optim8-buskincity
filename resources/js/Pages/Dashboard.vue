@@ -1,7 +1,6 @@
 <template>
     <biz-widget-columns
         :widgets="widgets"
-        :module-widgets="moduleWidgets"
     />
 </template>
 
@@ -19,7 +18,6 @@
         layout: Layout,
 
         props: {
-            moduleWidgets: { type: Array, default:() => [] },
             widgets: { type: Array, default:() => [] },
         },
     };

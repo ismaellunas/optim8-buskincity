@@ -1,5 +1,8 @@
 <template>
-    <div class="column is-6-desktop is-6-tablet is-12-mobile">
+    <div
+        class="column"
+        :class="columnClasses"
+    >
         <h2 class="title is-4">
             {{ title }}
         </h2>
@@ -18,7 +21,7 @@
 
                 <div class="column is-8-desktop is-12-tablet is-12-mobile">
                     <p>
-                        {{ data.description }}
+                        {{ i18n.description }}
                     </p>
 
                     <div class="buttons are-small mt-5">
@@ -27,7 +30,9 @@
                             class="is-primary"
                             @click="download"
                         >
-                            <span class="has-text-weight-bold">Download</span>
+                            <span class="has-text-weight-bold">
+                                {{ i18n.button_download }}
+                            </span>
                         </biz-button>
 
                         <a
@@ -35,7 +40,9 @@
                             class="button"
                             target="_blank"
                         >
-                            <span class="has-text-weight-bold">Print</span>
+                            <span class="has-text-weight-bold">
+                                {{ i18n.button_print }}
+                            </span>
                         </a>
                     </div>
                 </div>
@@ -46,6 +53,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinWidget from '@/Mixins/Widget';
     import BizButton from '@/Biz/Button.vue';
     import BizQrCode from '@/Biz/QrCode.vue';
     import QRCode from 'easyqrcodejs';
@@ -60,12 +68,12 @@
 
         mixins: [
             MixinHasLoader,
+            MixinWidget,
         ],
 
         props: {
             data: {type: Object, required: true},
             title: {type: String, default: ""},
-            order: {type: Number, required: true},
         },
 
         data() {

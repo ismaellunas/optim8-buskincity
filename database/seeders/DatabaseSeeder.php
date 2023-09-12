@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             StripeSeeder::class,
             StripeSettingSeeder::class,
             DashboardWidgetSeeder::class,
+            WidgetSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();

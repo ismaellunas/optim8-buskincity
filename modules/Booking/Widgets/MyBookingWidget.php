@@ -3,46 +3,43 @@
 namespace Modules\Booking\Widgets;
 
 use App\Contracts\WidgetInterface;
+use App\Entities\Widgets\BaseWidget;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 
-class LastEventWidget implements WidgetInterface
+class MyBookingWidget extends BaseWidget implements WidgetInterface
 {
-    private $user;
-
-    private $componentName = "EventUpcoming";
-    private $title = "Last Events";
     private $records = [];
 
-    public function __construct($request)
+    protected $componentModule = "MyBooking";
+
+    public function __construct(array $storedSetting)
     {
-        $this->user = $request->user();
+        parent::__construct($storedSetting);
 
         $this->records = $this->getRecords();
     }
 
-    public function data(): array
+    protected function getData(): array
     {
         return [
-            'title' => $this->title,
-            'componentName' => $this->componentName,
-            'moduleName' => config('booking.name'),
-            'data' => [
-                'records' => $this->records,
-            ],
+            'records' => $this->records,
         ];
     }
 
     public function canBeAccessed(): bool
     {
-        return $this->user->hasRole([config('permission.role_names.performer')])
-            && $this->records->isNotEmpty();
+        return parent::canBeAccessed()
+            && (
+                $this->user->hasRole([config('permission.role_names.performer')])
+                && $this->records->isNotEmpty()
+            );
     }
 
     private function getRecords(): Collection
     {
-        $events = Event::passed()
+        $events = Event::upcoming()
             ->with([
                 'orderLine' => function ($query) {
                     $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
@@ -64,9 +61,13 @@ class LastEventWidget implements WidgetInterface
             ->get();
 
         $events->transform(function ($event) {
+            $product = $event->orderLine->purchasable->product;
+
             return [
                 'order_id' => $event->orderLine->order_id,
-                'name' => Str::limit($event->orderLine->purchasable->product->displayName, 35, '...'),
+                'name' => Str::limit($product->displayName, 35, '...'),
+                'city' => $product->displayCity,
+                'country' => $product->displayCountry,
                 'booked_at' => $event->booked_at->format(config('ecommerce.format.date_event_widget_record')),
                 'timezone' => $event->schedule->timezone,
                 'url' => route('booking.orders.show', $event->orderLine->order_id),
