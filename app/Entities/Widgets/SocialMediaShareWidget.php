@@ -11,40 +11,37 @@ class SocialMediaShareWidget extends BaseWidget implements WidgetInterface
     protected function getData(): array
     {
         return [
-            ...parent::getData(),
-            ...[
-                'profilePageUrl' => $this->user->profile_page_url,
-                'socialMediaShare' => [
-                    'facebook' => [
-                        'url' => $this->user->profile_page_url,
-                        'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
-                        'description' => '',
-                        'quote' => '',
-                        'hashtags' => '',
-                        'icon' => 'fa-brands fa-facebook',
-                        'class' => null,
-                        'text' => 'Facebook',
-                    ],
-                    'twitter' => [
-                        'url' => $this->user->profile_page_url,
-                        'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
-                        'description' => '',
-                        'quote' => '',
-                        'hashtags' => '',
-                        'icon' => 'fa-brands fa-twitter',
-                        'class' => null,
-                        'text' => 'Twitter',
-                    ],
-                    'linkedIn' => [
-                        'url' => $this->user->profile_page_url,
-                        'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
-                        'description' => '',
-                        'quote' => '',
-                        'hashtags' => '',
-                        'icon' => 'fa-brands fa-linkedin-in',
-                        'class' => null,
-                        'text' => 'LinkedIn',
-                    ],
+            'profilePageUrl' => $this->user->profile_page_url,
+            'socialMediaShare' => [
+                'facebook' => [
+                    'url' => $this->user->profile_page_url,
+                    'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
+                    'description' => '',
+                    'quote' => '',
+                    'hashtags' => '',
+                    'icon' => 'fa-brands fa-facebook',
+                    'class' => null,
+                    'text' => 'Facebook',
+                ],
+                'twitter' => [
+                    'url' => $this->user->profile_page_url,
+                    'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
+                    'description' => '',
+                    'quote' => '',
+                    'hashtags' => '',
+                    'icon' => 'fa-brands fa-twitter',
+                    'class' => null,
+                    'text' => 'Twitter',
+                ],
+                'linkedIn' => [
+                    'url' => $this->user->profile_page_url,
+                    'title' => 'Hello, ' . ucwords($this->user->first_name) . ' here!',
+                    'description' => '',
+                    'quote' => '',
+                    'hashtags' => '',
+                    'icon' => 'fa-brands fa-linkedin-in',
+                    'class' => null,
+                    'text' => 'LinkedIn',
                 ],
             ],
         ];

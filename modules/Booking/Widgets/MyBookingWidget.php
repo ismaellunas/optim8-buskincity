@@ -8,11 +8,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 
-class LastEventWidget extends BaseWidget implements WidgetInterface
+class MyBookingWidget extends BaseWidget implements WidgetInterface
 {
     private $records = [];
 
-    protected $componentModule = "EventUpcoming";
+    protected $componentModule = "MyBooking";
 
     public function __construct(array $storedSetting)
     {
@@ -24,10 +24,7 @@ class LastEventWidget extends BaseWidget implements WidgetInterface
     protected function getData(): array
     {
         return [
-            ...parent::getData(),
-            ...[
-                'records' => $this->records,
-            ],
+            'records' => $this->records,
         ];
     }
 
@@ -42,7 +39,7 @@ class LastEventWidget extends BaseWidget implements WidgetInterface
 
     private function getRecords(): Collection
     {
-        $events = Event::passed()
+        $events = Event::upcoming()
             ->with([
                 'orderLine' => function ($query) {
                     $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
@@ -64,9 +61,13 @@ class LastEventWidget extends BaseWidget implements WidgetInterface
             ->get();
 
         $events->transform(function ($event) {
+            $product = $event->orderLine->purchasable->product;
+
             return [
                 'order_id' => $event->orderLine->order_id,
-                'name' => Str::limit($event->orderLine->purchasable->product->displayName, 35, '...'),
+                'name' => Str::limit($product->displayName, 35, '...'),
+                'city' => $product->displayCity,
+                'country' => $product->displayCountry,
                 'booked_at' => $event->booked_at->format(config('ecommerce.format.date_event_widget_record')),
                 'timezone' => $event->schedule->timezone,
                 'url' => route('booking.orders.show', $event->orderLine->order_id),
