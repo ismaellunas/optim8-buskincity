@@ -2,19 +2,27 @@
 
 namespace Modules\Booking\Services;
 
-use App\Models\Country;
+use App\Models\User;
+use App\Services\CountryService;
 use App\Services\IPService;
+use App\Services\ModuleService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use KMLaravel\GeographicalCalculator\Classes\Geo;
-use Modules\Booking\Services\ProductEventService;
-use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Entities\Product;
+use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\EventCalendar;
+use Modules\Space\Entities\Space;
 
 class EventsCalendarService
 {
     private $geo;
+
+    private Collection $cachedEvents;
+    private Collection $cachedSpaces;
+    private Collection $cachedUsers;
 
     private function getGeo(): Geo
     {
@@ -40,161 +48,199 @@ class EventsCalendarService
         return 20;
     }
 
+    private function availableTypes(): array
+    {
+        $moduleService = app(ModuleService::class);
+        $types = [];
+
+        if ($moduleService->isModuleActive('Booking')) {
+            $types[] = 'booked_event';
+        }
+
+        if ($moduleService->isModuleActive('Space')) {
+            $types[] = 'space_event';
+        }
+
+        return $types;
+    }
+
+    private function setCachedEvents($paginator)
+    {
+        $eventIds = $paginator
+            ->getCollection()
+            ->filter(function($record) {
+                return Arr::has($record->entity_ids, 'event_id');
+            })
+            ->map(fn ($record) => $record->entity_ids['event_id'])
+            ->all();
+
+        $this->cachedEvents = Event::whereIn('id', $eventIds)->get();
+    }
+
+    private function setCachedSpaces($paginator)
+    {
+        $spaceIds = $paginator
+            ->getCollection()
+            ->filter(function($record) {
+                return Arr::has($record->entity_ids, 'space_id');
+            })
+            ->map(fn ($record) => $record->entity_ids['space_id'])
+            ->all();
+
+        $this->cachedSpaces = Space::with([
+                'page.translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'status',
+                    ]);
+                },
+                'logoMedia' => function ($query) {
+                    $query->select([
+                        'media.id',
+                        'media.extension',
+                        'media.file_name',
+                        'media.file_url',
+                        'media.version',
+                    ]);
+                },
+            ])
+            ->whereIn('id', $spaceIds)
+            ->get();
+    }
+
+    private function setCachedUsers($paginator)
+    {
+        $userIds = $paginator
+            ->getCollection()
+            ->filter(fn ($record) => $record->user_id)
+            ->map(fn ($record) => $record->user_id)
+            ->all();
+
+        $this->cachedUsers = User::
+            select([
+                'id',
+                'first_name',
+                'last_name',
+                'unique_key',
+                'profile_photo_media_id'
+            ])
+            ->with(['profilePhoto' => function ($query) {
+                $query->select([
+                    'id',
+                    'extension',
+                    'file_name',
+                    'file_url',
+                    'version',
+                ]);
+            }])
+            ->whereIn('id', $userIds)
+            ->get();
+    }
+
     public function getRecords(
         int $perPage = 15,
         array $scopes = []
     ) {
-        $records = Order::when($scopes, function ($query, $scopes) {
-            foreach ($scopes as $scopeName => $value) {
-                $query->when($value, function ($query, $value) use ($scopeName) {
-                    if ($scopeName == 'dateRange') {
-                        $query->whereHas(
-                            'firstEventLine.latestEvent',
-                            function (Builder $query) use ($scopeName, $value) {
-                                $query->$scopeName($value);
-                            }
-                        );
-                    } elseif ($scopeName == 'city') {
-                        $query->whereHas('firstEventLine.purchasable.product.metas', function (Builder $query) use ($value) {
-                            $query->where('key', 'locations');
-                            $query->where(DB::raw("value::json->0->>'city'"), $value);
-                        });
-                    } elseif ($scopeName == 'country') {
-                        $query->whereHas('firstEventLine.purchasable.product.metas', function (Builder $query) use ($value) {
-                            $query->where('key', 'locations');
-                            $query->where(DB::raw("value::json#>>'{0,country_code}'"), $value);
-                        });
-                    } else {
+        $paginator = EventCalendar::
+            when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->when($value, function ($query, $value) use ($scopeName) {
                         $query->$scopeName($value);
-                    }
-                });
-            }
-        })
-            ->with([
-                'firstEventLine' => function ($query) {
-                    $query->with([
-                        'latestEvent' => function ($query) {
-                            $query->with('schedule', function ($query) {
-                                $query->select('id', 'timezone');
-                            });
-                        },
-                        'purchasable' => function ($query) {
-                            $query->with('product', function ($query) {
-                                $query->select('id', 'product_type_id', 'attribute_data');
-                                $query->with('metas', function ($query) {
-                                    $query->whereIn('key', ['locations']);
-                                });
-                            });
-                        },
-                    ]);
-                },
-                'user' => function ($query) {
-                    $query->select('id', 'email', 'first_name', 'last_name', 'unique_key', 'profile_photo_media_id');
-                    $query->with([
-                        'metas' => function ($query) {
-                            $query->whereIn('key', ['stage_name']);
-                        },
-                        'profilePhoto' => function ($q) {
-                            $q->select([
-                                'id',
-                                'extension',
-                                'file_name',
-                                'file_url',
-                                'version',
-                            ]);
-                        },
-                    ]);
-                },
-            ])
-            ->select(
-                'id',
-                'user_id',
-                'status',
-                'placed_at',
-            )
+                    });
+                }
+            })
+            ->inType($this->availableTypes())
+            ->orderBy('started_at')
+            ->orderBy('ended_at')
             ->paginate($perPage);
 
         $fromPosition = app(IPService::class)->getGeoLocation();
 
-        $records->getCollection()->transform(function ($record) use ($fromPosition) {
-            $event = $record->firstEventLine->latestEvent;
+        $this->setCachedEvents($paginator);
+        $this->setCachedSpaces($paginator);
+        $this->setCachedUsers($paginator);
 
-            $product = $record->firstEventLine->purchasable->product;
+        $paginator->through(function ($record) use ($fromPosition) {
+            $method = Str::camel($record->type).'Record';
 
-            $customer = $record->user;
-
-            $location = $product->locations[0] ?? [];
-
-            return (object) [
-                'id' => $record->id,
-                'product_name' => $product->displayName,
-                'user' => [
-                    'name' => $customer->fullName ?? null,
-                    'stage_name' => $customer->metas->where('key', 'stage_name')->value('value'),
-                    'profile_page_url' => $customer->profilePageUrl,
-                    'profile_photo_url' => $customer->optimizedProfilePhotoUrl,
-                ],
-                'date' => $event->timezonedBookedAt->format('d M Y'),
-                'timezone' => $event->timezonedBookedAt->format('P'),
-                'event' => [
-                    'date' => $event->timezonedBookedAt->format('d F Y'),
-                    'duration' => $event->displayDuration,
-                    'start_end_time' => $event->displayStartEndTime,
-                    'timezone' => $event->schedule->timezone,
-                ],
-                'location' => $location,
-                'direction_url' => app(ProductEventService::class)
-                    ->getGoogleMapDirectionUrl($product, $fromPosition),
-            ];
+            return $this->$method($record, $fromPosition);
         });
 
-        return $records;
+        return $paginator;
+    }
+
+    private function bookedEventRecord($record, array $geoLocation): array
+    {
+        $event = $this->cachedEvents->firstWhere('id', $record->entity_ids['event_id']);
+        $user = $this->cachedUsers->firstWhere('id', $record->user_id);
+
+        $defaultData = $record->eventData();
+
+        $data = [
+            'title' => $record->title_alt ?? $record->title,
+            'page_url' => $user->profilePageUrl,
+            'photo_url' => $user->optimizedProfilePhotoUrl,
+            'duration' => $event->displayDuration,
+            'direction_url' => $record->directionUrl($geoLocation),
+            'started_time' => $event->displayStartEndTime,
+            'ended_datetime' => null,
+            'ended_time' => null,
+        ];
+
+        return [
+            ...$defaultData,
+            ...$data,
+        ];
+    }
+
+    private function spaceEventRecord($record, array $geoLocation): array
+    {
+        $space = $this->cachedSpaces->firstWhere('id', $record->entity_ids['space_id']);
+
+        $pageTranslation = $space->page->translate(currentLocale(), true);
+
+        $data = [
+            'page_url' => (
+                $space->is_page_enabled && $pageTranslation->isPublished
+                ? $space->pageLocalizeURL(currentLocale())
+                : ''
+            ),
+            'photo_url' => $space->getOptimizedLogoImageUrl(300, 300),
+            'duration' => null,
+            'direction_url' => $record->directionUrl($geoLocation),
+        ];
+
+        return [
+            ...$record->eventData(),
+            ...$data,
+        ];
     }
 
     public function getLocationOptions(): array
     {
-        $products = Product::with(['metas'])
-            ->whereHas('productType', function ($query) {
-                $query->where('name', 'Event');
+        $countryService = app(CountryService::class);
+
+        $options = EventCalendar::select('country_code', 'city')
+            ->whereNotNull('country_code')
+            ->whereNotNull('city')
+            ->inType($this->availableTypes())
+            ->distinct()
+            ->get()
+            ->groupBy('country_code')
+            ->map(function ($items, $key) use ($countryService) {
+                return [
+                    'country_code' => $key,
+                    'country' => $countryService->getCountryName($key),
+                    'cities' => $items->map(function ($item) {
+                        return Str::title($item->city);
+                    })->all(),
+                ];
             })
-            ->whereHas('variants', function ($query) {
-                $query->whereHas('orderLine.order');
-                $query->whereHas('orderLine.latestEvent');
-            })
-            ->whereHas('metas', function ($query) {
-                $query->where('key', 'locations');
-            })
-            ->get(['id', 'product_type_id']);
+            ->all();
 
-        $locations = $products
-            ->filter(fn ($product) => !empty($product->locations) && is_array($product->locations))
-            ->mapToGroups(function ($product) {
-                $location = $product->locations[0];
-                return [$location['country_code'] => $location['city']];
-            });
-
-        $countries = collect();
-
-        if ($locations->keys()->isNotEmpty()) {
-            $countries = Country::
-                whereIn('alpha2', $locations->keys())
-                ->get([
-                    'alpha2',
-                    'display_name',
-                ]);
-        }
-
-        return $locations->transform(function ($location, $key) use ($countries) {
-            return [
-                'country_code' => $key,
-                'country' => $countries->where('alpha2', $key)->first()->display_name ?? '',
-                'cities' => collect($location)
-                    ->map(fn ($value) => trim($value))
-                    ->filter()
-                    ->unique()
-                    ->all(),
-            ];
-        })->all();
+        return $options;
     }
 
     public function getCoordinates(LengthAwarePaginator $pagination): array
@@ -202,7 +248,7 @@ class EventsCalendarService
         return $pagination
             ->getCollection()
             ->map(function ($event) {
-                $location = $event->location;
+                $location = $event['geolocation'] ?? [];
 
                 if (!empty($location['latitude']) && !empty($location['longitude'])) {
                     return [$location['latitude'], $location['longitude']];
