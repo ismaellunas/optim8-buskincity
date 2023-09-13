@@ -21,9 +21,10 @@
                 >
                     <biz-media-gallery-item
                         :medium="mediumPreview"
-                        :is-edit-enabled="false"
                         :is-download-enabled="isDownloadEnabled"
+                        :is-edit-enabled="isEditEnabled"
                         :is-image-preview-thumbnail="isImagePreviewThumbnail"
+                        :is-delete-enabled="isBrowseEnabled"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
                     />
@@ -34,7 +35,7 @@
                 <biz-button-icon
                     type="button"
                     :icon="icon.image"
-                    :disabled="disabled"
+                    :disabled="isDisabled"
                     @click="openModal"
                 >
                     <span>
@@ -61,6 +62,7 @@
                 :accepted-file-type="acceptedFileType"
                 :data="media"
                 :is-download-enabled="isDownloadEnabled"
+                :is-edit-enabled="isEditEnabled"
                 :is-upload-enabled="isUploadEnabled"
                 :query-params="mediaListQueryParams"
                 :search="search"
@@ -122,7 +124,10 @@
             disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},
+            isBrowseEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
+            isEditEnabled: { type: Boolean, default: true },
+            isImagePreviewThumbnail: { type:Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},
             mediaTypes: { type: Array, default: () => ['image'] },
@@ -138,7 +143,6 @@
                     return (value >= 1 && value <= 12);
                 }
             },
-            isImagePreviewThumbnail: { type:Boolean, default: true },
         },
 
         emits: [
@@ -183,9 +187,20 @@
             imagePreviewSizeClass() {
                 return "is-" + this.imagePreviewSize;
             },
+
+            isDisabled() {
+                return (this.disabled || ! this.isBrowseEnabled);
+            },
         },
 
         methods: {
+            openModal() { /* @override */
+                if (! this.isDisabled) {
+                    this.isModalOpen = true;
+                    this.onShownModal();
+                }
+            },
+
             onPreviewOpened(medium) {
                 this.isModalPreviewOpen = true;
 

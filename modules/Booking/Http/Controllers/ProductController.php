@@ -84,8 +84,10 @@ class ProductController extends CrudController
             ],
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'title' => $this->getCreateTitle(),
@@ -224,8 +226,10 @@ class ProductController extends CrudController
                     'edit' => $canManageManager,
                 ],
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'instructions' => $this->getInstructions(),

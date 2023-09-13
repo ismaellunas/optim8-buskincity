@@ -23,8 +23,9 @@
                 >
                     <biz-media-gallery-item
                         :medium="medium"
-                        :is-edit-enabled="false"
+                        :is-delete-enabled="isBrowseEnabled"
                         :is-download-enabled="isDownloadEnabled"
+                        :is-edit-enabled="isEditEnabled"
                         :is-select-enabled="false"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
@@ -36,11 +37,11 @@
                 <biz-button-icon
                     type="button"
                     :icon="icon.image"
-                    :disabled="disabled"
+                    :disabled="isDisabled"
                     @click="openModal"
                 >
                     <span>
-                        Open Media Library
+                        {{ placeholder }}
                     </span>
                 </biz-button-icon>
             </div>
@@ -64,6 +65,7 @@
                 :allow-multiple="allowMultiple"
                 :data="media"
                 :is-download-enabled="isDownloadEnabled"
+                :is-edit-enabled="isEditEnabled"
                 :is-upload-enabled="(isUploadEnabled && maxFileNumber > 0)"
                 :query-params="mediaListQueryParams"
                 :search="search"
@@ -127,20 +129,23 @@
 
         props: {
             allowMultiple: { type: Boolean, default: false, },
-            disabled: { type: Boolean, default: false },
             dimension: { type: Object, default: () => {} },
+            disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},
+            isBrowseEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
+            isEditEnabled: { type: Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},
             maxFiles: { type: Number, default: 1, },
+            maxFileSize: { type: [String, Number], default: null, },
             mediaTypes: { type: Array, default: () => ['image'] },
             mediums: { type: Array, default: () => [] },
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: Array, required: true },
+            placeholder: { type: String, default: 'Open Media Library' },
             required: { type: Boolean, default: false },
-            maxFileSize: { type: [String, Number], default: null, },
             imagePreviewSize: {
                 type: [String, Number],
                 default: 3,
@@ -210,10 +215,21 @@
                         'Max file upload: ' + this.maxFileNumber
                     ]
                 ];
-            }
+            },
+
+            isDisabled() {
+                return (this.disabled || ! this.isBrowseEnabled);
+            },
         },
 
         methods: {
+            openModal() { /* @override */
+                if (! this.isDisabled) {
+                    this.isModalOpen = true;
+                    this.onShownModal();
+                }
+            },
+
             onPreviewOpened(medium) {
                 this.isModalPreviewOpen = true;
 

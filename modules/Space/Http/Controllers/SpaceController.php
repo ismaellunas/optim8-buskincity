@@ -147,8 +147,10 @@ class SpaceController extends CrudController
             'i18n' => $this->translationCreateEditPage(),
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'dimensions' => [
@@ -263,8 +265,10 @@ class SpaceController extends CrudController
                 'update' => $user->can('update', $space),
                 'changeParent' => $canChangeParent,
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'page' => $page,
