@@ -289,6 +289,26 @@ class MediaController extends CrudController
         return $request->ajax() ? $records : abort(404);
     }
 
+    public function apiReplace(MediaReplaceRequest $request)
+    {
+        $oldMedia = Media::find($request->media_id);
+
+        $media = $this->mediaService->replace(
+            $request->file('image'),
+            $oldMedia,
+            new CloudinaryStorage()
+        );
+
+        $media->append(['is_image', 'display_file_name', 'thumbnail_url']);
+
+        return response()->json([
+            'media' => $media,
+            'message' => __('The :resource was updated!', [
+                'resource' => __('Media')
+            ]),
+        ]);
+    }
+
     private function isValidMediaType($type): bool
     {
         return collect(config('constants.extensions'))

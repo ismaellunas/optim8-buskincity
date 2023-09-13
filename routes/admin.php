@@ -219,6 +219,8 @@ Route::name('api.')
     ->group(function () {
         Route::post('/media', [MediaController::class, 'apiStore'])
             ->name('media.store');
+        Route::post('/media/replace', [MediaController::class, 'apiReplace'])
+            ->name('media.replace');
 
         Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
             ->name('theme.header.menu-item.validate');
