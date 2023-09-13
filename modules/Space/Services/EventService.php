@@ -44,6 +44,10 @@ class EventService
         return [
             'id' => $event->id,
             'address' => $event->address,
+            'city' => $event->city,
+            'country_code' => $event->country_code,
+            'latitude' => $event->latitude,
+            'longitude' => $event->longitude,
             'ended_at' => $event->ended_at->toIso8601String(),
             'started_at' => $event->started_at->toIso8601String(),
             'title' => $event->title,
@@ -65,6 +69,10 @@ class EventService
     {
         $event->title = $inputs['title'];
         $event->address = $inputs['address'];
+        $event->city = $inputs['city'];
+        $event->country_code = $inputs['country_code'];
+        $event->latitude = $inputs['latitude'];
+        $event->longitude = $inputs['longitude'];
         $event->started_at = $inputs['started_at'];
         $event->ended_at = $inputs['ended_at'];
         $event->fill($inputs['translations']);

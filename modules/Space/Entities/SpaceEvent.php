@@ -37,6 +37,11 @@ class SpaceEvent extends Model implements TranslatableContract
         'ended_at',
     ];
 
+    protected $casts = [
+        'latitude' => 'double',
+        'longitude' => 'double',
+    ];
+
     protected static function newFactory()
     {
         return \Modules\Space\Database\factories\SpaceEventFactory::new();

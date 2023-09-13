@@ -43,13 +43,13 @@
                 </div>
             </div>
 
-            <biz-form-textarea
-                v-model="form.address"
-                :label="i18n.address"
-                :placeholder="i18n.address"
-                rows="2"
-                maxlength="500"
-                :message="error('address', null, formErrors)"
+            <biz-form-fieldset-location
+                v-model:address="form.address"
+                v-model:city="form.city"
+                v-model:country-code="form.country_code"
+                v-model:latitude="form.latitude"
+                v-model:longitude="form.longitude"
+                :error-bag="formErrors"
             />
 
             <div class="box">
@@ -116,6 +116,7 @@
     import BizButton from '@/Biz/Button.vue';
     import BizFormDateTime from '@/Biz/Form/DateTime.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
@@ -133,6 +134,7 @@
             BizButton,
             BizFormDateTime,
             BizFormInput,
+            BizFormFieldsetLocation,
             BizFormTextarea,
             BizLanguageTab,
             BizModalCard,
@@ -184,6 +186,7 @@
             }
 
             return {
+                capitalCase,
                 defaultLocale,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
@@ -247,7 +250,6 @@
 
                 this.form = useForm(this.newEvent());
             }
-
         },
 
         methods: {
@@ -259,7 +261,11 @@
                     address: null,
                     started_at: null,
                     ended_at: null,
-                    translations: {}
+                    city: null,
+                    country_code: null,
+                    latitude: null,
+                    longitude: null,
+                    translations: {},
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();
@@ -365,8 +371,6 @@
                         self.formErrors = error.response.data.errors;
                     });
             },
-
-            capitalCase,
         },
     };
 </script>

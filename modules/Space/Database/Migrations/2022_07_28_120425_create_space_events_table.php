@@ -19,6 +19,11 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->dateTime('started_at');
             $table->dateTime('ended_at');
+            $table->string('timezone', 32)->nullable();
+            $table->string('city')->nullable();
+            $table->string('country_code', 3)->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
 
             $table
                 ->foreignId('space_id')

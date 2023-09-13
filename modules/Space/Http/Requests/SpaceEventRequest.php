@@ -5,7 +5,9 @@ namespace Modules\Space\Http\Requests;
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
 use App\Rules\MaxWords;
+use App\Services\CountryService;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Validation\Rule;
 use Modules\Space\Entities\SpaceEventTranslation;
 
 class SpaceEventRequest extends BaseFormRequest
@@ -42,6 +44,18 @@ class SpaceEventRequest extends BaseFormRequest
             'ended_at' => [
                 'required',
                 'date',
+            ],
+            'address' => ['nullable', 'max:500'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+            'city' => ['required', 'max:64'],
+            'country_code' => [
+                'required',
+                Rule::in(
+                    app(CountryService::class)
+                        ->getCountryOptions()
+                        ->pluck('id')
+                )
             ],
         ]);
     }
