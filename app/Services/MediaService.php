@@ -591,11 +591,16 @@ class MediaService
             'size' => __('Size'),
             'actions' => __('Actions'),
             'save' => __('Save'),
+            'save_as_new' => __('Save as new'),
             'cancel' => __('Cancel'),
             'done' => __('Done'),
             'delete' => __('Delete'),
             'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
             'are_you_sure' => __('Are you sure?'),
+            'yes' => __('yes'),
+            'edit_resource' => __('Edit :resource', ['resource' => __('Media')]),
+            'warning_edit_resource' => __('This resource is still being used in another place. If you :action this resource, it may have an effect on that other place.', ['action' => 'edit']),
+            'update_media_success' => __('The :resource was updated!', ['resource' => __('Media')]),
         ];
     }
 }
