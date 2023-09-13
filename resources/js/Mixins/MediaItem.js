@@ -1,4 +1,5 @@
 import icon from '@/Libs/icon-class';
+import { isPromise } from '@/Libs/utils';
 
 export default {
     data() {
@@ -8,11 +9,18 @@ export default {
     },
 
     computed: {
-        isImage() {
-            return (
-                (this.medium?.is_image)
-                || (this.medium?.file && this.medium.file.type.startsWith("image"))
-            );
+        async isImage() {
+            if (this.medium.hasOwnProperty('is_image')) {
+                return this.medium.is_image;
+            }
+
+            if (isPromise(this.medium?.file)) {
+                let promiseFile = await this.medium.file;
+
+                return promiseFile.type.startsWith("image");
+            } else {
+                return this.medium.file.type.startsWith("image");
+            }
         },
 
         thumbnailIcon() {
