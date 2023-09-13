@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Services;
 
+use App\Helpers\GoogleMap;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -385,16 +386,12 @@ class ProductEventService
             return null;
         }
 
-        $urlParts = [
-            "https://www.google.com/maps/dir/?api=1",
-            "&destination=".urlencode($location['latitude']).','.urlencode($location['longitude']),
-        ];
-
-        if ($origin) {
-            $urlParts[] = "&origin=".urlencode($origin['latitude']).','.urlencode($origin['longitude']);
-        }
-
-        return implode("", $urlParts);
+        return GoogleMap::directionUrl(
+            $location['latitude'],
+            $location['longitude'],
+            $origin['latitude'],
+            $origin['longitude']
+        );
     }
 
     public function getCityOptions(?array $relatedUserIds = null): array
