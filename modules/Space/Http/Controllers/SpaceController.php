@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -242,6 +243,9 @@ class SpaceController extends CrudController
         if ($logoMedia) {
             $this->transformMedia($logoMedia);
         }
+
+        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
+        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => $this->getEditTitle(),
