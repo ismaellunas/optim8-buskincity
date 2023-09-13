@@ -27,6 +27,7 @@
                         :is-delete-enabled="isBrowseEnabled"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
+                        @on-edit-clicked="onEditedExistingMedia"
                     />
                 </div>
             </div>
@@ -34,7 +35,7 @@
             <div class="buttons mb-0">
                 <biz-button-icon
                     type="button"
-                    :icon="icon.image"
+                    :icon="imageIcon"
                     :disabled="isDisabled"
                     @click="openModal"
                 >
@@ -73,6 +74,13 @@
                 @on-media-submitted="onUpdateMedia"
                 @on-view-changed="setView"
             />
+
+            <biz-modal-media-library-detail
+                v-if="isModalEdit"
+                :media="selectedEditedMedia"
+                @update-media="updateMediaPreview"
+                @close="closeEditModal()"
+            />
         </div>
 
         <template #error>
@@ -87,12 +95,13 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
+    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
     import BizModal from '@/Biz/Modal.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
-    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
-    import icon from '@/Libs/icon-class.js';
+    import BizModalMediaLibraryDetail from '@/Biz/Modal/MediaLibraryDetail.vue';
+    import { image as imageIcon } from '@/Libs/icon-class.js';
     import { useModelWrapper } from '@/Libs/utils';
-    import { isEmpty } from 'lodash';
+    import { isEmpty, cloneDeep, isArray } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
     import { acceptedFileGroups } from '@/Libs/defaults';
 
@@ -101,17 +110,20 @@
 
         components: {
             BizButtonIcon,
-            BizModal,
-            BizModalMediaBrowser,
             BizFormField,
             BizInputError,
             BizMediaGalleryItem,
+            BizModal,
+            BizModalMediaBrowser,
+            BizModalMediaLibraryDetail,
         },
 
         mixins: [
             MixinHasModal,
             MixinMediaLibrary,
         ],
+
+        inject: ['i18n'],
 
         provide() {
             return {
@@ -145,11 +157,6 @@
             },
         },
 
-        emits: [
-            'on-delete-clicked',
-            'update:modelValue'
-        ],
-
         setup(props, {emit}) {
             return {
                 computedValue: useModelWrapper(props, emit),
@@ -158,11 +165,12 @@
 
         data() {
             return {
-                actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
-                icon,
+                imageIcon,
                 previewImageSrc: null,
                 isModalPreviewOpen: false,
                 mediumPreview: this.medium,
+                isModalEdit: false,
+                selectedEditedMedia: {},
             };
         },
 
@@ -241,6 +249,34 @@
                 this.onSelectMedia(response.data[0]);
 
                 this.closeModal();
+            },
+
+            onEditedExistingMedia(media) {
+                if (this.isEditEnabled) {
+                    if (media.can_edit_existing_media) {
+                        this.selectedEditedMedia = media;
+
+                        this.isModalEdit = true;
+                    } else {
+                        this.openModal();
+                    }
+                }
+            },
+
+            closeEditModal() {
+                this.isModalEdit = false;
+            },
+
+            updateMediaPreview(media) {
+                let cloneMedia = cloneDeep(media);
+
+                cloneMedia.thumbnail_url = null;
+
+                if (! isArray(cloneMedia.translations)) {
+                    cloneMedia.translations = this.mediumPreview.translations;
+                }
+
+                this.mediumPreview = cloneMedia;
             },
         },
     }

@@ -237,12 +237,12 @@ class SpaceController extends CrudController
 
         $coverMedia = $space->cover;
         if ($coverMedia) {
-            $this->transformMedia($coverMedia);
+            $coverMedia->transformMediaLibrary();
         }
 
         $logoMedia = $space->logo;
         if ($logoMedia) {
-            $this->transformMedia($logoMedia);
+            $logoMedia->transformMediaLibrary();
         }
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
@@ -354,11 +354,6 @@ class SpaceController extends CrudController
     public function isUsedByMenus(Space $space, ?string $locale = null)
     {
         return app(MenuService::class)->isModelUsedByMenu($space, $locale);
-    }
-
-    private function transformMedia(Media $media): void
-    {
-        $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
     }
 
     private function translationCreateEditPage(): array

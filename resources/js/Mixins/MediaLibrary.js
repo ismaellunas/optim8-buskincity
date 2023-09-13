@@ -30,6 +30,9 @@ export default {
                     self.onMediaListLoadedFail(error);
                 });
         },
+        refreshMediaList() {
+            this.getMediaList(route(this.mediaListRouteName));
+        },
         setTerm(term) {
             this.mediaListQueryParams['term'] = term;
         },
@@ -41,7 +44,7 @@ export default {
         },
         search(term) {
             this.setTerm(term);
-            this.getMediaList(route(this.mediaListRouteName));
+            this.refreshMediaLists();
         },
         setMedia(media) {
             this.media = media;

@@ -125,7 +125,9 @@ class MediaService
         $record->readable_size = $record->readableSize;
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
         $record->display_file_name = $record->displayFileName;
-        $record->canDeleted = $record->canDeleted;
+        $record->canDeleted = $record->canModify;
+        $record->canEdited = $record->canModify;
+        $record->can_edit_existing_media = $record->canEditExistingMedia;
         $record->optimize_file_url = $record->optimizedImageUrl != ''
             ? $record->optimizedImageUrl
             : $record->file_url;

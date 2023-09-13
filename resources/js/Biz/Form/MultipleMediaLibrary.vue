@@ -29,6 +29,7 @@
                         :is-select-enabled="false"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
+                        @on-edit-clicked="onEditedExistingMedia"
                     />
                 </div>
             </div>
@@ -36,7 +37,7 @@
             <div class="buttons mb-0">
                 <biz-button-icon
                     type="button"
-                    :icon="icon.image"
+                    :icon="imageIcon"
                     :disabled="isDisabled"
                     @click="openModal"
                 >
@@ -79,6 +80,13 @@
                 @on-view-changed="setView"
                 @on-multiple-media-selected="onSelectMedia"
             />
+
+            <biz-modal-media-library-detail
+                v-if="isModalEdit"
+                :media="selectedEditedMedia"
+                @update-media="updateMediaPreview"
+                @close="closeEditModal()"
+            />
         </div>
 
         <template #error>
@@ -96,12 +104,13 @@
     import BizModal from '@/Biz/Modal.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
-    import icon from '@/Libs/icon-class.js';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { confirmDelete } from '@/Libs/alert';
+    import BizModalMediaLibraryDetail from '@/Biz/Modal/MediaLibraryDetail.vue';
     import { acceptedFileGroups } from '@/Libs/defaults';
+    import { confirmDelete } from '@/Libs/alert';
+    import { image as imageIcon } from '@/Libs/icon-class.js';
+    import { cloneDeep, map, isArray } from 'lodash';
     import { reactive } from 'vue';
-    import { cloneDeep } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFormMultipleMediaLibrary',
@@ -113,12 +122,15 @@
             BizFormField,
             BizInputError,
             BizMediaGalleryItem,
+            BizModalMediaLibraryDetail,
         },
 
         mixins: [
             MixinHasModal,
             MixinMediaLibrary,
         ],
+
+        inject: ['i18n'],
 
         provide() {
             return {
@@ -174,11 +186,12 @@
 
         data() {
             return {
-                actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
-                icon,
-                previewImageSrc: null,
+                imageIcon,
+                isModalEdit: false,
                 isModalPreviewOpen: false,
                 mediumsPreview: this.mediums,
+                previewImageSrc: null,
+                selectedEditedMedia: {},
             };
         },
 
@@ -306,6 +319,42 @@
             setDefaultSelectedMedia() {
                 this.selectedMedia.mediaIds = cloneDeep(this.computedValue);
                 this.selectedMedia.media = cloneDeep(this.mediumsPreview);
+            },
+
+            onEditedExistingMedia(media) {
+                if (this.isEditEnabled) {
+                    if (media.can_edit_existing_media) {
+                        this.selectedEditedMedia = media;
+
+                        this.isModalEdit = true;
+                    } else {
+                        this.openModal();
+                    }
+                }
+            },
+
+            closeEditModal() {
+                this.isModalEdit = false;
+            },
+
+            updateMediaPreview(media) {
+                let cloneMedia = cloneDeep(media);
+
+                cloneMedia.thumbnail_url = null;
+
+                this.mediumsPreview = map(
+                    this.mediumsPreview, function (medium) {
+                        if (cloneMedia.id == medium.id) {
+                            if (! isArray(cloneMedia.translations)) {
+                                cloneMedia.translations = medium.translations;
+                            }
+
+                            return cloneMedia;
+                        }
+
+                        return medium;
+                    }
+                );
             },
         },
     }

@@ -6,6 +6,7 @@ use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\{
     MediaIndexRequest,
+    MediaReplaceRequest,
     MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
@@ -107,7 +108,7 @@ class MediaController extends CrudController
                 $media->update($data);
             }
 
-            $media->append(['is_image', 'display_file_name']);
+            $media->transformMediaLibrary();
 
             $allMedia[] = $media;
         }
@@ -130,12 +131,14 @@ class MediaController extends CrudController
 
     private function syncMedia(Request $request)
     {
+        $allMedia = [];
+
         $storeInputs = collect($request->all())
             ->filter(fn ($media) => empty($media['id']))
             ->all();
 
         if (!empty($storeInputs)) {
-            $this->storeProcess($storeInputs);
+            $allMedia = $this->storeProcess($storeInputs);
 
             $this->generateFlashMessage('The :resource was created!', [
                 'resource' => __('Media')
@@ -147,12 +150,14 @@ class MediaController extends CrudController
             ->all();
 
         if (!empty($updateInputs)) {
-            $this->updateProsess($updateInputs);
+            $allMedia = $this->updateProsess($updateInputs);
 
             $this->generateFlashMessage('The :resource was updated!', [
                 'resource' => __('Media')
             ]);
         }
+
+        return $allMedia;
     }
 
     /**
@@ -161,14 +166,14 @@ class MediaController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function apiStore(MediaStoreRequest $request)
+    public function apiStore(MediaStoreRequest $request): array
     {
-        $allMedia = $this->storeProcess($request->all());
+        $allMedia = $this->syncMedia($request);
 
         return $allMedia;
     }
 
-    private function updateProsess(array $inputs)
+    private function updateProsess(array $inputs): array
     {
         $allMedia = [];
 
@@ -202,6 +207,8 @@ class MediaController extends CrudController
                 $media->deleteTranslations($localeToBeDeleted);
             }
 
+            $media->transformMediaLibrary();
+
             $allMedia[] = $media;
         }
 
@@ -232,6 +239,10 @@ class MediaController extends CrudController
             $media,
             new CloudinaryStorage()
         );
+
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => __('Media')
+        ]);
 
         return $request->ajax()
             ? redirect()->back()
