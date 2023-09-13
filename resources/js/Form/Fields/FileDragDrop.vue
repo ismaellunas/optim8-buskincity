@@ -131,7 +131,7 @@
     import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isPromise } from '@/Libs/utils';
     import { cloneDeep, map } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
@@ -220,23 +220,13 @@
                 }
             },
 
-            isPromise(obj) {
-                return (
-                    !!obj &&
-                    (typeof obj === "object" || typeof obj === "function") &&
-                    typeof obj.then === "function"
-                );
-            },
-
-            checkValueHasImage() {
+            async checkValueHasImage() {
                 this.hasImage = false;
 
-                this.computedValue.files.forEach(async (file) => {
-                    if (this.isPromise(file)) {
-                        if (this.isImage(await file)) {
-                            this.hasImage = true;
-                        }
-                    } else if (this.isImage(file)) {
+                let files = await Promise.all(this.computedValue.files);
+
+                files.forEach((file) => {
+                    if (this.isImage(file)) {
                         this.hasImage = true;
                     }
                 });
@@ -251,8 +241,14 @@
                 );
             },
 
-            isImage(file) {
-                return file.type.startsWith("image");
+            async isImage(file) {
+                if (isPromise(file)) {
+                    let promiseFile = await file;
+
+                    return promiseFile.type.startsWith("image");
+                } else {
+                    return file.type.startsWith("image");;
+                }
             },
 
             onUpdateFiles() {
