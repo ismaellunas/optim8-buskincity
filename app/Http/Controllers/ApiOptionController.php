@@ -10,4 +10,9 @@ class ApiOptionController extends Controller
     {
         return app(CountryService::class)->getPhoneCountryOptions();
     }
+
+    public function countryOptions()
+    {
+        return app(CountryService::class)->getCountryOptions();
+    }
 }
