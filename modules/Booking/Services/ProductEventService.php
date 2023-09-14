@@ -95,41 +95,6 @@ class ProductEventService
         ]);
     }
 
-    public function timezoneOptions(): Collection
-    {
-        if (! is_null($this->timezones)) {
-            return $this->timezones;
-        }
-
-        $timezones = array();
-        $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( DateTimeZone::ALL ) );
-
-        $timezoneOffsets = array();
-        foreach ($timezones as $timezone) {
-            $tz = new DateTimeZone($timezone);
-            $timezoneOffsets[$timezone] = $tz->getOffset(new DateTime());
-        }
-
-        asort($timezoneOffsets);
-
-        $timezoneList = [];
-        foreach ($timezoneOffsets as $timezone => $offset) {
-            $offsetPrefix = $offset < 0 ? '-' : '+';
-            $offsetFormatted = gmdate( 'H:i', abs($offset) );
-
-            $prettyOffset = "UTC{$offsetPrefix}{$offsetFormatted}";
-
-            $timezoneList[] = [
-                'id' => $timezone,
-                'value' => "({$prettyOffset}) $timezone",
-            ];
-        }
-
-        $this->timezones = collect($timezoneList);
-
-        return $this->timezones;
-    }
-
     public function weeklyHours(Product $product): array
     {
         $weeklyHours = [];

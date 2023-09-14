@@ -242,6 +242,9 @@ Route::name('api.')
         Route::get('/options/countries', [ApiOptionController::class, 'countryOptions'])
             ->name('options.countries');
 
+        Route::get('/options/timezones', [ApiOptionController::class, 'timezoneOptions'])
+            ->name('options.timezones');
+
         Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
             ->name('page-builder.post.category-options');
 

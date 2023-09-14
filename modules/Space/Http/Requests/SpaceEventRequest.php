@@ -4,10 +4,10 @@ namespace Modules\Space\Http\Requests;
 
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
+use App\Rules\CountryCode;
 use App\Rules\MaxWords;
-use App\Services\CountryService;
+use App\Rules\Timezone;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Validation\Rule;
 use Modules\Space\Entities\SpaceEventTranslation;
 
 class SpaceEventRequest extends BaseFormRequest
@@ -45,24 +45,24 @@ class SpaceEventRequest extends BaseFormRequest
                 'required',
                 'date',
             ],
+            'timezone' => ['required', new Timezone()],
             'address' => ['nullable', 'max:500'],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
             'city' => ['required', 'max:64'],
-            'country_code' => [
-                'required',
-                Rule::in(
-                    app(CountryService::class)
-                        ->getCountryOptions()
-                        ->pluck('id')
-                )
-            ],
+            'country_code' => ['required', new CountryCode()],
         ]);
     }
 
     protected function customAttributes(): array
     {
-        $translatedAttributes = [];
+        $translatedAttributes = [
+            'timezone' => __('Timezone'),
+            'title' => __('Title'),
+            'started_at' => __('Started at'),
+            'ended_at' => __('Ended at'),
+        ];
+
         $locales = array_keys($this->translations);
 
         $attributes = (new SpaceEventTranslation())->getFillable();

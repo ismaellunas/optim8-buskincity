@@ -52,6 +52,7 @@ class EventService
             'started_at' => $event->started_at->toIso8601String(),
             'title' => $event->title,
             'translations' => $event->getTranslationsArray(),
+            'timezone' => $event->timezone,
         ];
     }
 
@@ -76,6 +77,7 @@ class EventService
         $event->started_at = $inputs['started_at'];
         $event->ended_at = $inputs['ended_at'];
         $event->fill($inputs['translations']);
+        $event->timezone = $inputs['timezone'];
 
         return $event->save();
     }
