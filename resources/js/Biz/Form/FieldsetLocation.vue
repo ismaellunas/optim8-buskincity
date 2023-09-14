@@ -3,7 +3,7 @@
         <div class="column is-6">
             <biz-form-textarea
                 v-model="modelAddress"
-                rows="5"
+                rows="4"
                 :label="i18n.address"
                 :maxlength="maxlengthAddress"
                 :message="error(mergedErrorKey.address, errorBagName, errorBag)"
@@ -82,7 +82,7 @@
             latitude: { type: [Number, String, null], default: null },
             longitude: { type: [Number, String, null], default: null },
             errorBag: { type: [Object, null], default: null },
-            errorName: { type: [String, null], default: null },
+            errorBagName: { type: [String, null], default: null },
             errorKey: { type: Object, default: () => {} },
             isMapEnabled: { type: Boolean, default: true },
             isAddressRequired: { type: Boolean, default: false },

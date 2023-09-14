@@ -64,10 +64,13 @@ return new class extends Migration
                 NULL AS duration,
                 NULL AS duration_unit,
                 se.timezone AS timezone,
-                se.address,
-                se.city,
-                se.country_code,
-                json_build_object('latitude', se.latitude::double precision, 'longitude', se.longitude::double precision) AS geolocation,
+                CASE se.is_same_address_as_parent WHEN true THEN s.address ELSE se.address END AS address,
+                CASE se.is_same_address_as_parent WHEN true THEN s.city ELSE se.city END AS city,
+                CASE se.is_same_address_as_parent WHEN true THEN s.country_code ELSE se.country_code END AS country_code,
+                CASE se.is_same_address_as_parent
+                    WHEN true THEN json_build_object('latitude', s.latitude::double precision, 'longitude', s.longitude::double precision)
+                    ELSE json_build_object('latitude', se.latitude::double precision, 'longitude', se.longitude::double precision)
+                END AS geolocation,
                 json_build_object('space_id', s.id) AS entity_ids
             FROM space_events AS se
             JOIN spaces s ON s.id = se.space_id
