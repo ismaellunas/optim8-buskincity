@@ -25,13 +25,11 @@ class SpaceController extends CrudController
     protected $baseRouteName = 'admin.spaces';
     protected $title = "Space";
 
-    private $spaceService;
-
-    public function __construct(SpaceService $spaceService)
-    {
+    public function __construct(
+        private SpaceService $spaceService,
+        private IPService $ipService
+    ) {
         $this->authorizeResource(Space::class, 'space');
-
-        $this->spaceService = $spaceService;
     }
 
     public function index(SpaceIndexRequest $request)
@@ -249,6 +247,10 @@ class SpaceController extends CrudController
 
         Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
         Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
+        Inertia::share('timezone', function () {
+            $timezone = $this->ipService->getTimezone();
+            return ($timezone == 'ETC/UTC') ? 'UTC' : $timezone;
+        });
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => $this->getEditTitle(),

@@ -82,15 +82,15 @@
                                 </td>
                                 <td :class="tdDescriptionClass">
                                     <template v-if="record.duration">
-                                        <span>{{ record.formated_started_date }}</span>
+                                        <span>{{ record.formatted_started_date }}</span>
                                         <span>, {{ record.started_time }}</span>
                                     </template>
 
                                     <template v-else>
-                                        <span>{{ record.formated_started_date }}, {{ record.started_time }}</span>
+                                        <span>{{ record.formatted_started_date }}, {{ record.started_time }}</span>
                                     </template>
 
-                                    <span v-if="record.timezone">, {{ record.timezone }}</span>
+                                    <span v-if="record.timezone">, ({{ record.formatted_timezone }})</span>
                                 </td>
                             </tr>
 
@@ -103,7 +103,7 @@
                                         {{ record.duration }}
                                     </span>
                                     <span v-else>
-                                        {{ record.formated_ended_date }}, {{ record.ended_time }}
+                                        {{ record.formatted_ended_date }}, {{ record.ended_time }}
                                     </span>
                                 </td>
                             </tr>
@@ -184,7 +184,7 @@
             },
 
             isStartDateRowDisplayed() {
-                return this.record.formated_started_date
+                return this.record.formatted_started_date
             },
 
             cityCountry() {

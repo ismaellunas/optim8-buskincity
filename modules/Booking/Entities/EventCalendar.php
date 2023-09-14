@@ -6,6 +6,7 @@ use App\Helpers\GoogleMap;
 use App\Models\BaseModel;
 use App\Services\CountryService;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -110,6 +111,17 @@ class EventCalendar extends BaseModel
         return $defaultUrl;
     }
 
+    private function formattedTimezone(): string
+    {
+        if (!empty($this->timezone)) {
+            $offsetName = CarbonTimeZone::create($this->timezone)->toOffsetName();
+
+            return 'GMT'.($offsetName != '+00:00' ? $offsetName : '');
+        }
+
+        return '';
+    }
+
     public function eventData(): array
     {
         return [
@@ -126,8 +138,9 @@ class EventCalendar extends BaseModel
             'ended_datetime' => $this->started_at,
             'started_time' => $this->startedAt()->format('H:i'),
             'ended_time' => $this->endedAt()->format('H:i'),
-            'formated_started_date' => $this->startedAt()->format('d M Y'),
-            'formated_ended_date' => $this->endedAt()->format('d M Y'),
+            'formatted_started_date' => $this->startedAt()->format('d M Y'),
+            'formatted_ended_date' => $this->endedAt()->format('d M Y'),
+            'formatted_timezone' => $this->formattedTimezone(),
         ];
     }
 }

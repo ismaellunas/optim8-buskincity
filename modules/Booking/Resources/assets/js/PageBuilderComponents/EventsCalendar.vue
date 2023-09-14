@@ -427,14 +427,14 @@
                         (
                             record.is_ended_on_same_date
                                 ? (
-                                    ', '+record.formated_started_date+
+                                    ', '+record.formatted_started_date+
                                     ', '+record.started_time
                                 )
                                 : (
-                                    ', '+record.formated_started_date+' '+record.started_time+
-                                    ' - '+record.formated_ended_date+' '+record.ended_time
+                                    ', '+record.formatted_started_date+' '+record.started_time+
+                                    ' - '+record.formatted_ended_date+' '+record.ended_time
                                 )
-                        ) + (record.timezone ? ' ('+record.timezone+')' : '') +
+                        ) + (record.timezone ? ' ('+record.formatted_timezone+')' : '') +
                         '</li>'
                     );
                 });
