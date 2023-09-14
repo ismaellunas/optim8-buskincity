@@ -20,6 +20,7 @@ return new class extends Migration
             $table->dateTime('started_at');
             $table->dateTime('ended_at');
             $table->string('timezone', 32)->nullable();
+            $table->boolean('is_same_address_as_parent')->default(true);
             $table->string('city')->nullable();
             $table->string('country_code', 3)->nullable();
             $table->double('latitude')->nullable();

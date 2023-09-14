@@ -3,6 +3,7 @@
 namespace Modules\Space\Services;
 
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Arr;
 use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 
@@ -53,6 +54,7 @@ class EventService
             'title' => $event->title,
             'translations' => $event->getTranslationsArray(),
             'timezone' => $event->timezone,
+            'is_same_address_as_parent' => $event->is_same_address_as_parent,
         ];
     }
 
@@ -68,16 +70,26 @@ class EventService
 
     public function updateEvent(&$event, $inputs)
     {
-        $event->title = $inputs['title'];
-        $event->address = $inputs['address'];
-        $event->city = $inputs['city'];
-        $event->country_code = $inputs['country_code'];
-        $event->latitude = $inputs['latitude'];
-        $event->longitude = $inputs['longitude'];
-        $event->started_at = $inputs['started_at'];
-        $event->ended_at = $inputs['ended_at'];
-        $event->fill($inputs['translations']);
-        $event->timezone = $inputs['timezone'];
+        $event->title = Arr::get($inputs, 'title');
+        $event->started_at = Arr::get($inputs, 'started_at');
+        $event->ended_at = Arr::get($inputs, 'ended_at');
+        $event->fill(Arr::get($inputs, 'translations', []));
+        $event->timezone = Arr::get($inputs, 'timezone');
+        $event->is_same_address_as_parent = Arr::get($inputs, 'is_same_address_as_parent', true);
+
+        if ($event->is_same_address_as_parent) {
+            $event->address = null;
+            $event->city = null;
+            $event->country_code = null;
+            $event->latitude = null;
+            $event->longitude = null;
+        } else {
+            $event->address = Arr::get($inputs, 'address');
+            $event->city = Arr::get($inputs, 'city');
+            $event->country_code = Arr::get($inputs, 'country_code');
+            $event->latitude = Arr::get($inputs, 'latitude');
+            $event->longitude = Arr::get($inputs, 'longitude');
+        }
 
         return $event->save();
     }

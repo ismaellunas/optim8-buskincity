@@ -52,7 +52,18 @@
                 </div>
             </div>
 
+            <div class="columns">
+                <div class="column is-half">
+                    <biz-form-checkbox-toggle
+                        v-model="form.is_same_address_as_parent"
+                        :text="i18n.is_same_address_as_parent"
+                        :value="form.is_same_address_as_parent"
+                    />
+                </div>
+            </div>
+
             <biz-form-fieldset-location
+                v-if="!form.is_same_address_as_parent"
                 v-model:address="form.address"
                 v-model:city="form.city"
                 v-model:country-code="form.country_code"
@@ -123,9 +134,10 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import BizFormDateTime from '@/Biz/Form/DateTime.vue';
-    import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
@@ -142,9 +154,10 @@
 
         components: {
             BizButton,
+            BizFormCheckboxToggle,
             BizFormDateTime,
-            BizFormInput,
             BizFormFieldsetLocation,
+            BizFormInput,
             BizFormTextarea,
             BizFormTimezone,
             BizLanguageTab,
@@ -278,6 +291,7 @@
                     latitude: null,
                     longitude: null,
                     translations: {},
+                    is_same_address_as_parent: true,
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();

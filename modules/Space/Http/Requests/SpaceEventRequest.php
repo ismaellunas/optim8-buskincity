@@ -46,11 +46,18 @@ class SpaceEventRequest extends BaseFormRequest
                 'date',
             ],
             'timezone' => ['required', new Timezone()],
+            'is_same_address_as_parent' => ['required', 'boolean'],
             'address' => ['nullable', 'max:500'],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
-            'city' => ['required', 'max:64'],
-            'country_code' => ['required', new CountryCode()],
+            'city' => [
+                'required_if:is_same_address_as_parent,false',
+                'max:64'
+            ],
+            'country_code' => [
+                'required_if:is_same_address_as_parent,false',
+                new CountryCode()
+            ],
         ]);
     }
 
@@ -61,6 +68,7 @@ class SpaceEventRequest extends BaseFormRequest
             'title' => __('Title'),
             'started_at' => __('Started at'),
             'ended_at' => __('Ended at'),
+            'city' => __('City'),
         ];
 
         $locales = array_keys($this->translations);
@@ -75,5 +83,13 @@ class SpaceEventRequest extends BaseFormRequest
         }
 
         return $translatedAttributes;
+    }
+
+    public function messages()
+    {
+        return [
+            'city.required_if' => __('validation.required'),
+            'country_code.required_if' => __('validation.required'),
+        ];
     }
 }
