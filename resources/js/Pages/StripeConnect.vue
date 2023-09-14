@@ -2,30 +2,43 @@
     <div class="columns is-multiline is-mobile">
         <div
             v-if="!hasConnectedAccount"
-            class="column is-12-desktop is-12-tablet is-12-mobile"
+            class="column is-6-desktop is-12-tablet is-12-mobile"
         >
             <div class="box is-shadowless">
-                <biz-form-select
-                    v-model="createStripeForm.country"
-                    label="Country"
-                    :message="error('country')"
-                >
-                    <option
-                        v-for="option in countryOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }}
-                    </option>
-                </biz-form-select>
+                <biz-label is-required>
+                    Country
+                </biz-label>
 
-                <div class="control">
-                    <biz-button
-                        class="is-medium is-primary"
-                        @click="createConnectedAccount"
-                    >
-                        <span class="has-text-weight-bold">Create Connected Account</span>
-                    </biz-button>
+                <div class="field is-horizontal">
+                    <div class="field-body">
+                        <biz-form-select
+                            v-model="createStripeForm.country"
+                            :message="error('country')"
+                            is-fullwidth
+                            required
+                        >
+                            <option
+                                v-for="option in countryOptions"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.value }}
+                            </option>
+                        </biz-form-select>
+
+                        <div class="field">
+                            <div class="control">
+                                <biz-button
+                                    class="is-primary"
+                                    @click="createConnectedAccount"
+                                >
+                                    <span class="has-text-weight-bold">
+                                        Create Connected Account
+                                    </span>
+                                </biz-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,6 +249,7 @@
     import Layout from '@/Layouts/User.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizLabel from '@/Biz/Label.vue';
     import BizTable from '@/Biz/Table.vue';
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
@@ -247,6 +261,7 @@
         components: {
             BizButton,
             BizFormSelect,
+            BizLabel,
             BizTable,
         },
 

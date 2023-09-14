@@ -1,42 +1,45 @@
 <template>
-    <div class="column is-6-desktop is-6-tablet is-12-mobile">
+    <div
+        class="column"
+        :class="columnClasses"
+    >
         <h2 class="title is-4">
-            {{ title }}
+            {{ startCase(title) }}
         </h2>
         <div class="box is-shadowless">
             <template v-if="!data.hasConnectedAccount">
                 <slot name="description">
                     <p>
-                        {{ data.description }}
+                        {{ i18n.inconnect }}
                     </p>
                 </slot>
 
-                <label class="label mt-5">Country<sup class="has-text-danger">*</sup></label>
+                <biz-label
+                    class="mt-5"
+                    is-required
+                >
+                    {{ i18n.country }}
+                </biz-label>
+
                 <div class="field is-horizontal">
                     <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select
-                                        v-model="createStripeForm.country"
-                                        required
-                                    >
-                                        <option value="">
-                                            Select option
-                                        </option>
-                                        <option
-                                            v-for="option in data.countryOptions"
-                                            :key="option.id"
-                                            :value="option.id"
-                                        >
-                                            {{ option.value }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <biz-input-error :message="error('country')" />
-                        </div>
+                        <biz-form-select
+                            v-model="createStripeForm.country"
+                            :message="error('country')"
+                            is-fullwidth
+                            required
+                        >
+                            <option value="">
+                                {{ i18n.select_an_option }}
+                            </option>
+                            <option
+                                v-for="option in data.countryOptions"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.value }}
+                            </option>
+                        </biz-form-select>
 
                         <div class="field">
                             <div class="control">
@@ -44,7 +47,9 @@
                                     class="button is-primary"
                                     @click="createConnectedAccount"
                                 >
-                                    <span class="has-text-weight-bold">Create Connected Account</span>
+                                    <span class="has-text-weight-bold">
+                                        {{ i18n.create_a_connected_account }}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -56,7 +61,9 @@
                 v-else
                 class="notification is-info is-light"
             >
-                <p>You are already connected with Stripe. <strong>See more details?</strong></p>
+                <p>
+                    {{ i18n.connect }}
+                </p>
 
                 <div class="buttons are-small mt-5">
                     <biz-link
@@ -66,7 +73,9 @@
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
                         </span>
-                        <span class="has-text-weight-bold">Stripe Connect</span>
+                        <span class="has-text-weight-bold">
+                            {{ i18n.manage_payments }}
+                        </span>
                     </biz-link>
                 </div>
             </div>
@@ -77,28 +86,32 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizInputError from '@/Biz/InputError.vue';
+    import MixinWidget from '@/Mixins/Widget';
+    import BizLabel from '@/Biz/Label.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizLink from '@/Biz/Link.vue';
     import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
+    import { startCase } from 'lodash';
 
     export default {
         name: 'StripeConnect',
 
         components: {
-            BizInputError,
+            BizLabel,
+            BizFormSelect,
             BizLink,
         },
 
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
+            MixinWidget,
         ],
 
         props: {
             data: {type: Object, required: true},
             title: {type: String, default: ""},
-            order: {type: Number, required: true},
         },
 
         setup(props) {
@@ -117,9 +130,9 @@
                 const url = route('payments.stripe.create-connected-account');
 
                 confirmAlert(
-                    "Please double-check your country!",
-                    "You will not be able to change your country in the future.",
-                    "Continue"
+                    this.i18n.create_alert_title,
+                    this.i18n.create_alert_text,
+                    this.i18n.create_alert_button,
                 )
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -135,6 +148,8 @@
                         }
                     });
             },
+
+            startCase,
         },
     };
 </script>

@@ -12,6 +12,7 @@ export const checkCircle = iconFormatter('fa-check-circle');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
+export const crop = iconFormatter('fa-crop');
 export const desktop = iconFormatter('fa-desktop');
 export const download = iconFormatter('fa-download');
 export const edit = iconFormatter('fa-pen');
@@ -26,6 +27,8 @@ export const filePdf = iconFormatter('fa-file-pdf');
 export const filePowerpoint = iconFormatter('fa-file-powerpoint');
 export const fileVideo = iconFormatter('fa-file-video');
 export const fileWord = iconFormatter('fa-file-word');
+export const flipHorizontal = iconFormatter('fa-arrows-left-right');
+export const flipVertical = iconFormatter('fa-arrows-up-down');
 export const globe = iconFormatter('fa-globe');
 export const grid = iconFormatter('fa-th');
 export const idCard = iconFormatter('fa-id-card');
@@ -39,6 +42,8 @@ export const preview = iconFormatter('fa-arrow-up-right-from-square');
 export const rectangleList = iconFormatter('fa-rectangle-list');
 export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
+export const rotateLeft = iconFormatter('fa-rotate-left');
+export const rotateRight = iconFormatter('fa-rotate-right');
 export const search = iconFormatter('fa-magnifying-glass');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
@@ -68,6 +73,7 @@ export default {
     clear,
     close,
     copy,
+    crop,
     desktop,
     download,
     edit,
@@ -82,6 +88,8 @@ export default {
     filePowerpoint,
     fileVideo,
     fileWord,
+    flipHorizontal,
+    flipVertical,
     globe,
     grid,
     idCard,
@@ -95,6 +103,8 @@ export default {
     rectangleList,
     recycle,
     remove,
+    rotateLeft,
+    rotateRight,
     search,
     show,
     signIn,

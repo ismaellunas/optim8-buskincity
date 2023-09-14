@@ -13,19 +13,16 @@
 
             <div class="buttons are-small mt-5">
                 <a
-                    :href="data.profilePageUrl"
+                    :href="url"
                     class="button is-primary"
-                    target="_blank"
                 >
                     <span class="icon is-small">
                         <i class="fa-solid fa-arrow-up-right-from-square" />
                     </span>
                     <span class="has-text-weight-bold">
-                        {{ i18n.button_view }}
+                        {{ i18n.button_url }}
                     </span>
                 </a>
-
-                <biz-social-media-share :data="data.socialMediaShare" />
             </div>
         </div>
     </div>
@@ -33,14 +30,9 @@
 
 <script>
     import MixinWidget from '@/Mixins/Widget';
-    import BizSocialMediaShare from '@/Biz/SocialMediaShare.vue';
 
     export default {
-        name: 'SocialMediaShare',
-
-        components: {
-            BizSocialMediaShare,
-        },
+        name: 'DefaultWidget',
 
         mixins: [
             MixinWidget,
@@ -49,6 +41,12 @@
         props: {
             data: {type: Object, required: true},
             title: {type: String, default: ""},
+        },
+
+        computed: {
+            url() {
+                return this.data.setting.url;
+            },
         },
     };
 </script>

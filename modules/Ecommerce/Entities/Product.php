@@ -163,6 +163,23 @@ class Product extends LunarProduct
         return $this->translateAttribute('description', config('app.locale'));
     }
 
+    public function getDisplayCityAttribute(): string
+    {
+        return $this->locations[0]['city'] ?? "";
+    }
+
+    public function getDisplayCountryAttribute(): string
+    {
+        $countryCode = $this->locations[0]['country_code'] ?? null;
+        $countryName = null;
+
+        if ($countryCode) {
+            $countryName = app(CountryService::class)->getCountryName($countryCode);
+        }
+
+        return $countryName;
+    }
+
     public function syncMedia(array $mediaIds = []): void
     {
         $mediaIds = collect($mediaIds)
@@ -182,7 +199,7 @@ class Product extends LunarProduct
         $this->gallery()->detach($mediaId);
     }
 
-    public function getLocationAttribute()
+    public function getLocationAttribute(): string
     {
         $city = $this->locations[0]['city'] ?? null;
         $countryCode = $this->locations[0]['country_code'] ?? null;
