@@ -9,9 +9,11 @@ class Timezone implements InvokableRule
 {
     public function __invoke($attribute, $value, $fail)
     {
-        if (app(CountryService::class)
-            ->getTimezoneOptions()
-            ->doesntContain('id', $value)
+        if (
+            !(is_null($value) || $value == '')
+            && app(CountryService::class)
+                ->getTimezoneOptions()
+                ->doesntContain('id', $value)
         ) {
             $fail('validation.in')->translate();
         }
