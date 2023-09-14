@@ -12,7 +12,7 @@
                     <biz-qr-code
                         :height="data.dimension.default.height"
                         :width="data.dimension.default.width"
-                        :text="data.text"
+                        :text="data.qrOptions.text"
                         :name="data.name"
                         :logo-url="data.logoThumbnailUrl"
                         @on-rendered="setDownloadUrl"
@@ -36,7 +36,7 @@
                         </biz-button>
 
                         <a
-                            :href="route('frontend.print.qrcode', { user: data.uniqueKey })"
+                            :href="route('frontend.print.qrcode', { user: data.uniqueKey, setting: data.setting })"
                             class="button"
                             target="_blank"
                         >
