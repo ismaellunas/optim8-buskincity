@@ -1576,6 +1576,10 @@
         "class": "fa-brands fa-twitter-square"
     },
     {
+        "name": "x twitter",
+        "class": "fa-brands fa-x-twitter"
+    },
+    {
         "name": "typo3",
         "class": "fa-brands fa-typo3"
     },
