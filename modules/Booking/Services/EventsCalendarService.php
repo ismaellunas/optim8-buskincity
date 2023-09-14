@@ -181,7 +181,7 @@ class EventsCalendarService
         $data = [
             'title' => $record->title_alt ?? $record->title,
             'page_url' => $user->profilePageUrl,
-            'photo_url' => $user->optimizedProfilePhotoUrl,
+            'photo_url' => $user->optimizedProfilePhotoOrDefaultUrl,
             'duration' => $event->displayDuration,
             'direction_url' => $record->directionUrl($geoLocation),
             'started_time' => $event->displayStartEndTime,

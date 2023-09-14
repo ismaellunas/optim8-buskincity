@@ -7,11 +7,17 @@
                         <div :class="{ 'pt-2': !isMobile }">
                             <figure class="image is-128x128 level-item">
                                 <img
-                                    :data-src="photoUrl"
+                                    v-if="record.photo_url"
+                                    :data-src="record.photo_url"
                                     width="128"
                                     height="128"
                                     class="is-rounded lazyload"
                                 >
+                                <biz-icon
+                                    v-else
+                                    class="has-text-primary"
+                                    :icon="[icon.camera, 'fa-6x']"
+                                />
                             </figure>
                         </div>
                     </div>
@@ -61,17 +67,12 @@
                                 </td>
                             </tr>
 
-                            <tr v-if="isCityRowDisplayed">
+                            <tr v-if="cityCountry">
                                 <td :class="tdLabelClass">
                                     <biz-icon :icon="icon.city" />
                                 </td>
                                 <td :class="tdDescriptionClass">
-                                    <span v-if="record.city">
-                                        {{ record.city }}
-                                    </span>
-                                    <span v-if="record.country">
-                                        , {{ record.country }}
-                                    </span>
+                                    {{ cityCountry }}
                                 </td>
                             </tr>
 
@@ -141,9 +142,8 @@
 
 <script>
     import bookingIcon from '@mod/Booking/Resources/assets/js/Libs/booking-icon';
-    import { city, locationMark } from '@/Libs/icon-class';
+    import { camera, city, locationMark } from '@/Libs/icon-class';
     import { computed, defineAsyncComponent } from 'vue';
-    import { userImage } from '@/Libs/defaults';
 
     export default {
         name: 'EventsCalendarItem',
@@ -164,15 +164,41 @@
         setup(props, { emit }) {
             return {
                 bookingIcon,
-                icon: { city, locationMark },
-                isCityRowDisplayed: computed(() => props.record.city || props.record.country),
-                isEndDateRowDisplayed: computed(() => props.record.duration || props.record.ended_time),
-                isMobile: computed(() => props.screenType == 'mobile'),
-                isStartDateRowDisplayed: computed(() => props.record.formated_started_date),
-                photoUrl: computed(() => props.record.photo_url ?? userImage),
+                icon: { camera, city, locationMark },
                 tdDescriptionClass: "m-0 py-0 px-0",
                 tdLabelClass: "m-0 py-0 pl-0 pr-1",
             };
+        },
+
+        computed: {
+            isCityRowDisplayed() {
+                return this.record.city || this.record.country;
+            },
+
+            isEndDateRowDisplayed() {
+                return this.record.duration || this.record.ended_time;
+            },
+
+            isMobile() {
+                return this.screenType == 'mobile';
+            },
+
+            isStartDateRowDisplayed() {
+                return this.record.formated_started_date
+            },
+
+            cityCountry() {
+                const texts = [];
+
+                if (!!this.record?.city) {
+                    texts.push(this.record.city);
+                }
+                if (!!this.record?.country) {
+                    texts.push(this.record.country);
+                }
+
+                return texts.join(', ');
+            },
         },
     };
 </script>
