@@ -291,6 +291,7 @@
                     latitude: null,
                     longitude: null,
                     translations: {},
+                    timezone: usePage().props.timezone,
                     is_same_address_as_parent: true,
                 };
 

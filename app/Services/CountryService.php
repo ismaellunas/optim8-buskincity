@@ -131,7 +131,7 @@ class CountryService
             $offsetPrefix = $offset < 0 ? '-' : '+';
             $offsetFormatted = gmdate( 'H:i', abs($offset) );
 
-            $prettyOffset = "UTC{$offsetPrefix}{$offsetFormatted}";
+            $prettyOffset = "GMT{$offsetPrefix}{$offsetFormatted}";
 
             $timezoneList[] = [
                 'id' => $timezone,
