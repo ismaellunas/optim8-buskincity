@@ -4,6 +4,7 @@
             <biz-form-input
                 v-model="modelLatitude"
                 type="number"
+                step="any"
                 :label="i18n.latitude"
                 :message="error(mergedErrorKey.latitude, null, errorBag)"
                 :required="required"
@@ -34,6 +35,7 @@
             <biz-form-input
                 v-model="modelLongitude"
                 type="number"
+                step="any"
                 :label="i18n.longitude"
                 :message="error(mergedErrorKey.longitude, null, errorBag)"
                 :required="required"

@@ -6,7 +6,7 @@
                 rows="5"
                 :label="i18n.address"
                 :maxlength="maxlengthAddress"
-                :message="error(mergedErrorKey.address, null, errorBag)"
+                :message="error(mergedErrorKey.address, errorBagName, errorBag)"
                 :placeholder="i18n.address"
                 :required="isAddressRequired"
             />
@@ -15,14 +15,14 @@
                 v-model="modelCity"
                 :label="i18n.city ?? 'City'"
                 :maxlength="maxlengthCity"
-                :message="error(mergedErrorKey.city, null, errorBag)"
+                :message="error(mergedErrorKey.city, errorBagName, errorBag)"
                 :required="isCityRequired"
             />
 
             <biz-form-select
                 v-model="modelCountryCode"
                 :label="i18n.country ?? 'Country'"
-                :message="error(mergedErrorKey.countryCode, null, errorBag)"
+                :message="error(mergedErrorKey.countryCode, errorBagName, errorBag)"
                 :required="isCountryRequired"
             >
                 <option
@@ -81,7 +81,8 @@
             countryCode: { type: [String, null], default: null },
             latitude: { type: [Number, String, null], default: null },
             longitude: { type: [Number, String, null], default: null },
-            errorBag: { type: Object, default: () => {} },
+            errorBag: { type: [Object, null], default: null },
+            errorName: { type: [String, null], default: null },
             errorKey: { type: Object, default: () => {} },
             isMapEnabled: { type: Boolean, default: true },
             isAddressRequired: { type: Boolean, default: false },
