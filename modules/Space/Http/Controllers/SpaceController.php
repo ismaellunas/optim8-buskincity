@@ -126,6 +126,9 @@ class SpaceController extends CrudController
             );
         }
 
+        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
+        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
+
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
