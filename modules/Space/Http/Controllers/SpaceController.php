@@ -413,6 +413,7 @@ class SpaceController extends CrudController
                 'page_preview' => __('Page preview'),
                 'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
+                'timezone' => __('Timezone'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

@@ -41,6 +41,15 @@
                         :start-time="[startTime, endTime]"
                     />
                 </div>
+
+                <div class="column is-half">
+                    <biz-form-timezone
+                        v-model="form.timezone"
+                        required
+                        :label="i18n.timezone"
+                        :message="error('timezone', null, formErrors)"
+                    />
+                </div>
             </div>
 
             <biz-form-fieldset-location
@@ -118,6 +127,7 @@
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep, find, sortBy } from 'lodash';
@@ -136,6 +146,7 @@
             BizFormInput,
             BizFormFieldsetLocation,
             BizFormTextarea,
+            BizFormTimezone,
             BizLanguageTab,
             BizModalCard,
         },
@@ -155,6 +166,7 @@
                 cancel: 'Cancel',
                 create: 'Create',
                 update: 'Update',
+                timezone: 'Timezone',
             }) },
         },
 
