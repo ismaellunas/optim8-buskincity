@@ -22,9 +22,13 @@ class QrCodeWidget extends BaseWidget implements WidgetInterface
                 ],
             ],
             'name' => $this->user->qr_code_logo_name,
-            'text' => $this->user->profile_page_url,
             'uniqueKey' => $this->user->unique_key,
-            'qrOptions' => (new ProfileQrCode($this->user, 2480))->options(),
+            'qrOptions' => (
+                    new ProfileQrCode(
+                        $this->user, 2480,
+                        $this->storedSetting['setting']['query_parameter'] ?? []
+                    )
+                )->options(),
         ];
     }
 
