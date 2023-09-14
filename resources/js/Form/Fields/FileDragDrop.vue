@@ -131,7 +131,7 @@
     import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isPromise } from '@/Libs/utils';
     import { cloneDeep, map } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
@@ -220,18 +220,18 @@
                 }
             },
 
-            checkValueHasImage() {
-                const self = this;
+            async checkValueHasImage() {
+                this.hasImage = false;
 
-                self.hasImage = false;
+                let files = await Promise.all(this.computedValue.files);
 
-                self.computedValue.files.forEach(function (file) {
-                    if (file.type.startsWith("image")) {
-                        self.hasImage = true;
+                files.forEach((file) => {
+                    if (this.isImage(file)) {
+                        this.hasImage = true;
                     }
                 });
 
-                return self.hasImage;
+                return this.hasImage;
             },
 
             checkValueIsMultipleUpload() {
@@ -241,8 +241,14 @@
                 );
             },
 
-            isImage(file) {
-                return file.type.startsWith("image");
+            async isImage(file) {
+                if (isPromise(file)) {
+                    let promiseFile = await file;
+
+                    return promiseFile.type.startsWith("image");
+                } else {
+                    return file.type.startsWith("image");;
+                }
             },
 
             onUpdateFiles() {
@@ -250,8 +256,8 @@
                 this.checkValueIsMultipleUpload();
             },
 
-            saveEditedFiles() {
-                const newFiles = cloneDeep(this.computedValue.files);
+            async saveEditedFiles() {
+                const newFiles = cloneDeep(await Promise.all(this.computedValue.files));
 
                 this.reset();
 
