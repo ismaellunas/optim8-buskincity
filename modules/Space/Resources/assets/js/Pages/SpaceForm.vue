@@ -51,8 +51,7 @@
             v-model:country-code="space.country_code"
             v-model:latitude="space.latitude"
             v-model:longitude="space.longitude"
-            :error-bag="null"
-            :error-bag-name="null"
+            :is-city-required="false"
         />
 
         <div class="columns">
