@@ -7,6 +7,7 @@ use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
 use App\Models\User;
+use App\Services\CountryService;
 use App\Traits\Mediable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -264,5 +265,18 @@ class Space extends BaseModel implements TranslatableContract
             && !empty($this->page)
             && $this->page->translations->contains('status', PageTranslation::STATUS_PUBLISHED)
         );
+    }
+
+    public function getFullAddressAttribute(): string
+    {
+        return collect([
+            $this->address,
+            $this->city,
+            (
+                $this->country_code
+                ? app(CountryService::class)->getCountryName($this->country_code)
+                : null
+            ),
+        ])->filter()->implode(', ');
     }
 }
