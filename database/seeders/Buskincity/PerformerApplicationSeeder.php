@@ -675,10 +675,6 @@ class PerformerApplicationSeeder extends Seeder
                         "default_value" => [],
                         "max_file_number" => "10",
                         "min_file_number" => 0,
-                        "media_dimension" => [
-                            "width" => 900,
-                            "height" => 600,
-                        ],
                         "validation" => [
                             "rules" => [
                                 "required" => true,
@@ -688,12 +684,16 @@ class PerformerApplicationSeeder extends Seeder
                             "message" => [],
                         ],
                         "is_multiple_upload" => true,
-                        "is_image_editor_enabled" => true,
+                        "media_dimension" => [
+                            "width" => config('constants.dimensions.gallery.width'),
+                            "height" => config('constants.dimensions.gallery.height'),
+                        ],
                         "visibility" => [],
                         "translated" => false,
                         "id" => "IDLD8H5U52FQ",
                         "properties" => [],
                         "attributes" => [],
+                        "is_image_editor_enabled" => true,
                     ],
                 ]
             ],
