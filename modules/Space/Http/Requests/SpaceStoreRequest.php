@@ -40,7 +40,7 @@ class SpaceStoreRequest extends FormRequest
             ],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
-            'city' => ['required', 'max:64'],
+            'city' => ['max:64'],
             'country_code' => ['required', new CountryCode()],
             'type_id' => [
                 'nullable',

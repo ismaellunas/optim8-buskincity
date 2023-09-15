@@ -82,7 +82,7 @@
             latitude: { type: [Number, String, null], default: null },
             longitude: { type: [Number, String, null], default: null },
             errorBag: { type: [Object, null], default: null },
-            errorBagName: { type: [String, null], default: null },
+            errorBagName: { type: [String, null], default: 'default' },
             errorKey: { type: Object, default: () => {} },
             isMapEnabled: { type: Boolean, default: true },
             isAddressRequired: { type: Boolean, default: false },

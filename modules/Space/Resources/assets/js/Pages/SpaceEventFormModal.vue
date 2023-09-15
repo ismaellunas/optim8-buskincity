@@ -70,6 +70,7 @@
                 v-model:latitude="form.latitude"
                 v-model:longitude="form.longitude"
                 :error-bag="formErrors"
+                :error-bag-name="null"
             />
 
             <div class="box">
