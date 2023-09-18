@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Services;
 
+use App\Helpers\GoogleMap;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -92,41 +93,6 @@ class ProductEventService
             ['id' => 'date_range', 'value' => 'Date Range'],
             ['id' => 'indefinitely_into_the_future', 'value' => 'Indefinitely into the future'],
         ]);
-    }
-
-    public function timezoneOptions(): Collection
-    {
-        if (! is_null($this->timezones)) {
-            return $this->timezones;
-        }
-
-        $timezones = array();
-        $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( DateTimeZone::ALL ) );
-
-        $timezoneOffsets = array();
-        foreach ($timezones as $timezone) {
-            $tz = new DateTimeZone($timezone);
-            $timezoneOffsets[$timezone] = $tz->getOffset(new DateTime());
-        }
-
-        asort($timezoneOffsets);
-
-        $timezoneList = [];
-        foreach ($timezoneOffsets as $timezone => $offset) {
-            $offsetPrefix = $offset < 0 ? '-' : '+';
-            $offsetFormatted = gmdate( 'H:i', abs($offset) );
-
-            $prettyOffset = "UTC{$offsetPrefix}{$offsetFormatted}";
-
-            $timezoneList[] = [
-                'id' => $timezone,
-                'value' => "({$prettyOffset}) $timezone",
-            ];
-        }
-
-        $this->timezones = collect($timezoneList);
-
-        return $this->timezones;
     }
 
     public function weeklyHours(Product $product): array
@@ -385,16 +351,12 @@ class ProductEventService
             return null;
         }
 
-        $urlParts = [
-            "https://www.google.com/maps/dir/?api=1",
-            "&destination=".urlencode($location['latitude']).','.urlencode($location['longitude']),
-        ];
-
-        if ($origin) {
-            $urlParts[] = "&origin=".urlencode($origin['latitude']).','.urlencode($origin['longitude']);
-        }
-
-        return implode("", $urlParts);
+        return GoogleMap::directionUrl(
+            $location['latitude'],
+            $location['longitude'],
+            $origin['latitude'],
+            $origin['longitude']
+        );
     }
 
     public function getCityOptions(?array $relatedUserIds = null): array

@@ -12,7 +12,18 @@
             :class="contentClass"
         >
             <header class="modal-card-head">
-                <slot name="header" />
+                <slot name="header">
+                    <p class="modal-card-title has-text-weight-bold">
+                        {{ headerTitle ?? "" }}
+                    </p>
+
+                    <button
+                        aria-label="close"
+                        type="button"
+                        class="delete"
+                        @click="$emit('close')"
+                    />
+                </slot>
             </header>
 
             <section class="modal-card-body">
@@ -46,6 +57,7 @@
                 type: Boolean,
                 default: false
             },
+            headerTitle: { type: String, default: "" },
         },
 
         emits: ['close'],
