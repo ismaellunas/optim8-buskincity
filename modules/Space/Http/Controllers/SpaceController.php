@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -24,13 +25,11 @@ class SpaceController extends CrudController
     protected $baseRouteName = 'admin.spaces';
     protected $title = "Space";
 
-    private $spaceService;
-
-    public function __construct(SpaceService $spaceService)
-    {
+    public function __construct(
+        private SpaceService $spaceService,
+        private IPService $ipService
+    ) {
         $this->authorizeResource(Space::class, 'space');
-
-        $this->spaceService = $spaceService;
     }
 
     public function index(SpaceIndexRequest $request)
@@ -124,6 +123,9 @@ class SpaceController extends CrudController
                 $user->can('space.add') ? __("None") : null
             );
         }
+
+        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
+        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
 
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => $this->getCreateTitle(),
@@ -242,6 +244,13 @@ class SpaceController extends CrudController
         if ($logoMedia) {
             $this->transformMedia($logoMedia);
         }
+
+        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
+        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
+        Inertia::share('timezone', function () {
+            $timezone = $this->ipService->getTimezone();
+            return ($timezone == 'ETC/UTC') ? 'UTC' : $timezone;
+        });
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => $this->getEditTitle(),
@@ -406,6 +415,8 @@ class SpaceController extends CrudController
                 'page_preview' => __('Page preview'),
                 'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
+                'timezone' => __('Timezone'),
+                'is_same_address_as_parent' => __("Is it the same address as the parent?"),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

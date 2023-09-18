@@ -22,7 +22,7 @@ class EventController extends Controller
 
     public function store(SpaceEventRequest $request, Space $space)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $event = $this->eventService->createEvent($space, $inputs);
 
@@ -34,7 +34,7 @@ class EventController extends Controller
 
     public function update(SpaceEventRequest $request, Space $space, SpaceEvent $event)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $this->eventService->updateEvent($event, $inputs);
 
