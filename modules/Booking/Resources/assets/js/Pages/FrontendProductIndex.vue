@@ -10,10 +10,27 @@
 
             <div class="column is-2-desktop is-3-tablet is-12-mobile">
                 <biz-select
+                    v-model="city"
+                    class="is-fullwidth"
+                    placeholder="City"
+                    @change="onCityChanged()"
+                >
+                    <option
+                        v-for="cityOption in cityOptions"
+                        :key="cityOption.value"
+                        :value="cityOption.value"
+                    >
+                        {{ cityOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column is-2-desktop is-3-tablet is-12-mobile">
+                <biz-select
                     v-model="country"
                     class="is-fullwidth"
                     placeholder="Country"
-                    @change="onLocationChanged()"
+                    @change="onCountryChanged()"
                 >
                     <option
                         v-for="countryOption in countryOptions"
@@ -21,23 +38,6 @@
                         :value="countryOption.value"
                     >
                         {{ countryOption.name }}
-                    </option>
-                </biz-select>
-            </div>
-
-            <div class="column is-2-desktop is-3-tablet is-12-mobile">
-                <biz-select
-                    v-model="city"
-                    class="is-fullwidth"
-                    placeholder="City"
-                    @change="onLocationChanged()"
-                >
-                    <option
-                        v-for="cityOption in computedCityOptions"
-                        :key="cityOption.value"
-                        :value="cityOption.value"
-                    >
-                        {{ cityOption.name }}
                     </option>
                 </biz-select>
             </div>
@@ -113,7 +113,7 @@
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizSelect from '@/Biz/Select.vue';
     import { calendarCirclePlus as calendarCirclePlusIcon } from '@/Libs/icon-class';
-    import { merge, filter, some } from 'lodash';
+    import { merge, filter, find } from 'lodash';
     import { ref, computed } from "vue";
 
     export default {
@@ -160,29 +160,23 @@
             };
         },
 
-        computed: {
-            computedCityOptions() {
-                const self = this;
-
-                return filter(self.cityOptions, function (option) {
-                    if (self.country !== null) {
-                        return (option.country_code === self.country);
-                    }
-
-                    return true;
-                });
-            },
-        },
-
         methods: {
-            onLocationChanged() {
+            onCountryChanged() {
+                this.city = null;
+
+                this.queryParams['country'] = this.country;
+                this.queryParams['city'] = null;
+
+                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+            },
+
+            onCityChanged() {
                 const self = this;
 
-                if (
-                    ! some(self.computedCityOptions, { value: self.city })
-                    && self.city !== null
-                ) {
-                    self.city = null;
+                let findCountryCode = find(self.cityOptions, { value: self.city })?.country_code;
+
+                if (typeof findCountryCode !== 'undefined') {
+                    self.country = find(self.cityOptions, { value: self.city }).country_code;
                 }
 
                 self.queryParams['country'] = self.country;
