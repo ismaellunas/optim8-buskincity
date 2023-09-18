@@ -10,17 +10,34 @@
 
             <div class="column is-2-desktop is-3-tablet is-12-mobile">
                 <biz-select
-                    v-model="location"
+                    v-model="country"
                     class="is-fullwidth"
-                    placeholder="Any"
+                    placeholder="Country"
                     @change="onLocationChanged()"
                 >
                     <option
-                        v-for="locationOption in computedLocationOptions"
-                        :key="locationOption.id"
-                        :value="locationOption.id"
+                        v-for="countryOption in countryOptions"
+                        :key="countryOption.value"
+                        :value="countryOption.value"
                     >
-                        {{ locationOption.value }}
+                        {{ countryOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column is-2-desktop is-3-tablet is-12-mobile">
+                <biz-select
+                    v-model="city"
+                    class="is-fullwidth"
+                    placeholder="City"
+                    @change="onLocationChanged()"
+                >
+                    <option
+                        v-for="cityOption in computedCityOptions"
+                        :key="cityOption.value"
+                        :value="cityOption.value"
+                    >
+                        {{ cityOption.name }}
                     </option>
                 </biz-select>
             </div>
@@ -76,7 +93,7 @@
                         >
                             <biz-icon
                                 class="is-small"
-                                :icon="icon.calendarCirclePlus"
+                                :icon="calendarCirclePlusIcon"
                             />
                         </biz-button-link>
                     </div>
@@ -95,9 +112,9 @@
     import BizTableColumnSort from '@/Biz/TableColumnSort.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizSelect from '@/Biz/Select.vue';
-    import icon from '@/Libs/icon-class';
-    import { merge, each } from 'lodash';
-    import { ref } from "vue";
+    import { calendarCirclePlus as calendarCirclePlusIcon } from '@/Libs/icon-class';
+    import { merge, filter, some } from 'lodash';
+    import { ref, computed } from "vue";
 
     export default {
         components: {
@@ -119,79 +136,59 @@
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             products: { type: Object, required: true },
-            locationOptions: { type: Object, default: () => {} },
+            countryOptions: { type: Array, default: () => [] },
+            cityOptions: { type: Array, default: () => [] },
         },
 
         setup(props) {
-            const queryParams = merge(
+            const queryParams = computed(() => merge(
                 {},
                 props.pageQueryParams
-            );
-
-            const country = props.pageQueryParams?.country;
-            const city = props.pageQueryParams?.city;
-            const location = country
-                ? country + (city ? '-' + city : '')
-                : null;
+            ));
 
             return {
                 queryParams: ref(queryParams),
-                term: ref(props.pageQueryParams?.term ?? ""),
-                location: ref(location),
+                term: ref(queryParams.value?.term ?? ""),
+                country: ref(queryParams.value?.country ?? null),
+                city: ref(queryParams.value?.city ?? null),
             };
         },
 
         data() {
             return {
-                icon
+                calendarCirclePlusIcon,
             };
         },
 
         computed: {
-            computedLocationOptions() {
-                const options = [];
+            computedCityOptions() {
+                const self = this;
 
-                each(this.locationOptions, (location, key) => {
-                    options.push({
-                        id: key,
-                        value: location.country,
-                    });
+                return filter(self.cityOptions, function (option) {
+                    if (self.country !== null) {
+                        return (option.country_code === self.country);
+                    }
 
-                    each(location.cities, (city) => {
-                        options.push({
-                            id: key +'-'+ city,
-                            value: ' - '+ city,
-                        });
-                    });
+                    return true;
                 });
-
-                return options;
-            },
-
-            locationParts() {
-                const countryCity = {
-                    country: null,
-                    city: null,
-                };
-
-                if (!this.location) {
-                    return countryCity;
-                }
-
-                const locationParts = this.location.split('-');
-
-                return {
-                    country: locationParts[0],
-                    city: locationParts[1],
-                };
             },
         },
 
         methods: {
             onLocationChanged() {
-                this.queryParams['city'] = this.locationParts.city;
-                this.queryParams['country'] = this.locationParts.country;
-                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+                const self = this;
+
+                if (
+                    ! some(self.computedCityOptions, { value: self.city })
+                    && self.city !== null
+                ) {
+                    self.city = null;
+                }
+
+                self.queryParams['country'] = self.country;
+                self.queryParams['city'] = self.city;
+
+                self.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
             }
         },
     };

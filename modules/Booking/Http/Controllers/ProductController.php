@@ -30,17 +30,11 @@ class ProductController extends CrudController
     protected $title = "Product";
     protected $baseRouteName = "admin.booking.products";
 
-    private $productService;
-    private $productEventService;
-
     public function __construct(
-        ProductService $productService,
-        ProductEventService $productEventService
+        private ProductService $productService,
+        private ProductEventService $productEventService
     ) {
         $this->authorizeResource(Product::class, 'product');
-
-        $this->productService = $productService;
-        $this->productEventService = $productEventService;
     }
 
     private function getImageMimeTypes(): Collection
@@ -72,7 +66,8 @@ class ProductController extends CrudController
                 $scopes,
             ),
             'statusOptions' => ProductStatus::options(),
-            'locationOptions' => $this->productEventService->getLocationOptions(),
+            'countryOptions' => $this->productEventService->getCountryOptions(),
+            'cityOptions' => $this->productEventService->getCityOptions(),
             'can' => [
                 'add' => $user->can('product.add'),
             ],
