@@ -4,7 +4,6 @@ namespace App\Entities;
 
 use App\Services\SettingService;
 use App\Helpers\Color;
-use Illuminate\Support\Arr;
 
 class ProfileQrCode
 {

@@ -5,7 +5,6 @@ namespace App\Entities\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Entities\ProfileQrCode;
 use App\Services\SettingService;
-use Illuminate\Support\Arr;
 
 class QrCodeWidget extends BaseWidget implements WidgetInterface
 {
