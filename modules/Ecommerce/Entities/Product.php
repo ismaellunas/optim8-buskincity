@@ -202,13 +202,13 @@ class Product extends LunarProduct
     public function getDisplayCountryAttribute(): string
     {
         $countryCode = $this->locations[0]['country_code'] ?? null;
-        $countryName = null;
+        $countryName = "";
 
         if ($countryCode) {
             $countryName = app(CountryService::class)->getCountryName($countryCode);
         }
 
-        return $countryName ?? "";
+        return $countryName;
     }
 
     public function syncMedia(array $mediaIds = []): void
