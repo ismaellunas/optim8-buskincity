@@ -41,15 +41,36 @@
                         :start-time="[startTime, endTime]"
                     />
                 </div>
+
+                <div class="column is-half">
+                    <biz-form-timezone
+                        v-model="form.timezone"
+                        required
+                        :label="i18n.timezone"
+                        :message="error('timezone', null, formErrors)"
+                    />
+                </div>
             </div>
 
-            <biz-form-textarea
-                v-model="form.address"
-                :label="i18n.address"
-                :placeholder="i18n.address"
-                rows="2"
-                maxlength="500"
-                :message="error('address', null, formErrors)"
+            <div class="columns">
+                <div class="column is-half">
+                    <biz-form-checkbox-toggle
+                        v-model="form.is_same_address_as_parent"
+                        :text="i18n.is_same_address_as_parent"
+                        :value="form.is_same_address_as_parent"
+                    />
+                </div>
+            </div>
+
+            <biz-form-fieldset-location
+                v-if="!form.is_same_address_as_parent"
+                v-model:address="form.address"
+                v-model:city="form.city"
+                v-model:country-code="form.country_code"
+                v-model:latitude="form.latitude"
+                v-model:longitude="form.longitude"
+                :error-bag="formErrors"
+                :error-bag-name="null"
             />
 
             <div class="box">
@@ -114,9 +135,12 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import BizFormDateTime from '@/Biz/Form/DateTime.vue';
+    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep, find, sortBy } from 'lodash';
@@ -131,9 +155,12 @@
 
         components: {
             BizButton,
+            BizFormCheckboxToggle,
             BizFormDateTime,
+            BizFormFieldsetLocation,
             BizFormInput,
             BizFormTextarea,
+            BizFormTimezone,
             BizLanguageTab,
             BizModalCard,
         },
@@ -153,6 +180,7 @@
                 cancel: 'Cancel',
                 create: 'Create',
                 update: 'Update',
+                timezone: 'Timezone',
             }) },
         },
 
@@ -184,6 +212,7 @@
             }
 
             return {
+                capitalCase,
                 defaultLocale,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
@@ -247,7 +276,6 @@
 
                 this.form = useForm(this.newEvent());
             }
-
         },
 
         methods: {
@@ -259,7 +287,13 @@
                     address: null,
                     started_at: null,
                     ended_at: null,
-                    translations: {}
+                    city: null,
+                    country_code: null,
+                    latitude: null,
+                    longitude: null,
+                    translations: {},
+                    timezone: usePage().props.timezone,
+                    is_same_address_as_parent: true,
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();
@@ -365,8 +399,6 @@
                         self.formErrors = error.response.data.errors;
                     });
             },
-
-            capitalCase,
         },
     };
 </script>
