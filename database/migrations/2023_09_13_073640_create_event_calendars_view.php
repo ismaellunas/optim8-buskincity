@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
+use Modules\Ecommerce\ModuleService;
 use Modules\Space\Entities\Space;
 
 return new class extends Migration
@@ -18,6 +19,8 @@ return new class extends Migration
      */
     public function up()
     {
+        $lunarPrefix =  ModuleService::tablePrefix();
+
         $bookedEventQuery = "
             SELECT
                 'booked_event' AS type,
@@ -36,17 +39,17 @@ return new class extends Migration
                 sub_loc.location::json#>>'{0,country_code}' AS country_code,
                 json_build_object('latitude', (sub_loc.location::json#>>'{0,latitude}')::double precision, 'longitude', (sub_loc.location::json#>>'{0,longitude}')::double precision) AS geolocation,
                 json_build_object('event_id', events.id) AS entity_ids
-            FROM lunar_order_lines AS lol
-            JOIN lunar_orders AS lo ON lo.id = lol.order_id
+            FROM {$lunarPrefix}order_lines AS lol
+            JOIN {$lunarPrefix}orders AS lo ON lo.id = lol.order_id
             JOIN users ON users.id = lo.user_id
             JOIN events ON events.order_line_id = lol.id
             JOIN (SELECT max(id) AS id, order_line_id FROM events GROUP BY order_line_id) sub ON sub.id = events.id
             JOIN schedules ON schedules.id = events.schedule_id
-            JOIN lunar_product_variants lpv ON lpv.id = lol.purchasable_id
+            JOIN {$lunarPrefix}product_variants lpv ON lpv.id = lol.purchasable_id
                 AND lol.purchasable_type = '".ProductVariant::class."'
-            JOIN lunar_products lp ON lp.id = lpv.product_id
+            JOIN {$lunarPrefix}products lp ON lp.id = lpv.product_id
                 AND lp.status = '".ProductStatus::PUBLISHED->value."'
-            LEFT JOIN (SELECT lpm.product_id, lpm.value AS location from lunar_products_meta lpm WHERE lpm.key = 'locations') sub_loc ON sub_loc.product_id = lp.id
+            LEFT JOIN (SELECT lpm.product_id, lpm.value AS location from {$lunarPrefix}products_meta lpm WHERE lpm.key = 'locations') sub_loc ON sub_loc.product_id = lp.id
             WHERE lol.type = 'event'
                 AND events.status IN ('".BookingStatus::UPCOMING->value."','".BookingStatus::ONGOING->value."')
         ";

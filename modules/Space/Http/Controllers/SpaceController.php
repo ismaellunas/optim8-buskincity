@@ -416,7 +416,7 @@ class SpaceController extends CrudController
                 'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
                 'timezone' => __('Timezone'),
-                'is_same_address_as_parent' => __("Is it the same location as the space?"),
+                'is_same_address_as_parent' => __("Is it the same address as the parent?"),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
