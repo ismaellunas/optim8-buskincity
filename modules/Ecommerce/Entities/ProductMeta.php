@@ -2,11 +2,11 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Ecommerce\ModuleService;
 
-class ProductMeta extends Model
+class ProductMeta extends BaseModel
 {
     use HasFactory;
 
