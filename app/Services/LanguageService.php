@@ -118,10 +118,13 @@ class LanguageService
 
     public function getOriginLanguageFromCookie(): string
     {
-        $originLanguage = app(LifetimeCookie::class)->get('origin_language');
+        $lifetimeCookie = app(LifetimeCookie::class);
+        $originLanguage = $lifetimeCookie->get('origin_language');
 
-        if (!$originLanguage) {
+        if (! $originLanguage) {
             $originLanguage = $this->getOriginFromIP()->code;
+
+            $lifetimeCookie->set('origin_language', $originLanguage);
         }
 
         if (
@@ -129,10 +132,9 @@ class LanguageService
         ) {
             $originLanguage = defaultLocale();
 
-            app(LifetimeCookie::class)->set('origin_language', $originLanguage);
+            $lifetimeCookie->set('origin_language', $originLanguage);
         }
 
         return $originLanguage;
     }
-
 }
