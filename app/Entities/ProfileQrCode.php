@@ -23,6 +23,7 @@ class ProfileQrCode
     public function __construct(
         private $user,
         private $dimension = 620,
+        private $queryParameter = [],
         private $nameAttribute = 'stage_name',
     ) {
         $this->settingService = app(SettingService::class);
@@ -97,10 +98,12 @@ class ProfileQrCode
 
         $font = $this->font();
 
+        $text = $this->user->getProfilePageUrlAttribute($this->queryParameter);
+
         return [
             'width' => $this->dimension,
             'height' => $this->dimension,
-            'text' => $this->user->profile_page_url,
+            'text' => $text,
             'title' => $this->nameLines[0] ?? '',
             'titleBackgroundColor' => $this->primaryColor(),
             'titleColor' => $fontColor,

@@ -252,8 +252,8 @@
                 this.checkValueIsMultipleUpload();
             },
 
-            saveEditedFiles() {
-                const newFiles = cloneDeep(this.computedValue.files);
+            async saveEditedFiles() {
+                const newFiles = cloneDeep(await Promise.all(this.computedValue.files));
 
                 this.reset();
 
