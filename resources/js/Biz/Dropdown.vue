@@ -35,7 +35,7 @@
             v-show="isActive || isHoverable"
             :id="uniqueMenuId"
             ref="dropdownMenu"
-            class="dropdown-menu"
+            class="dropdown-menu pb-1"
             role="menu"
         >
             <div class="dropdown-content">

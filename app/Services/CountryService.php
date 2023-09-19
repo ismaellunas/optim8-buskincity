@@ -7,10 +7,14 @@ use App\Models\Country;
 use App\Models\UserMeta;
 use App\Traits\HasCache;
 use Illuminate\Support\Collection;
+use DateTime;
+use DateTimeZone;
 
 class CountryService
 {
     use HasCache;
+
+    private $timezones;
 
     public function getPhoneCountryOptions(): Collection
     {
@@ -103,5 +107,40 @@ class CountryService
         }
 
         return "";
+    }
+
+    public function getTimezoneOptions(): Collection
+    {
+        if (! is_null($this->timezones)) {
+            return $this->timezones;
+        }
+
+        $timezones = array();
+        $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( DateTimeZone::ALL ) );
+
+        $timezoneOffsets = array();
+        foreach ($timezones as $timezone) {
+            $tz = new DateTimeZone($timezone);
+            $timezoneOffsets[$timezone] = $tz->getOffset(new DateTime());
+        }
+
+        asort($timezoneOffsets);
+
+        $timezoneList = [];
+        foreach ($timezoneOffsets as $timezone => $offset) {
+            $offsetPrefix = $offset < 0 ? '-' : '+';
+            $offsetFormatted = gmdate( 'H:i', abs($offset) );
+
+            $prettyOffset = "GMT{$offsetPrefix}{$offsetFormatted}";
+
+            $timezoneList[] = [
+                'id' => $timezone,
+                'value' => "({$prettyOffset}) $timezone",
+            ];
+        }
+
+        $this->timezones = collect($timezoneList);
+
+        return $this->timezones;
     }
 }

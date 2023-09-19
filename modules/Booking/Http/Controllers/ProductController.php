@@ -30,17 +30,12 @@ class ProductController extends CrudController
     protected $title = "Product";
     protected $baseRouteName = "admin.booking.products";
 
-    private $productService;
-    private $productEventService;
-
     public function __construct(
-        ProductService $productService,
-        ProductEventService $productEventService
+        private ProductService $productService,
+        private ProductEventService $productEventService,
+        private CountryService $countryService
     ) {
         $this->authorizeResource(Product::class, 'product');
-
-        $this->productService = $productService;
-        $this->productEventService = $productEventService;
     }
 
     private function getImageMimeTypes(): Collection
@@ -198,13 +193,13 @@ class ProductController extends CrudController
             ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
-            'countryOptions' => app(CountryService::class)->getCountryOptions(),
+            'countryOptions' => $this->countryService->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
             'eventDurationOptions' => $this->productEventService->durationOptions(),
             'event' => $this->productEventService->formResource($product),
-            'timezoneOptions' => $this->productEventService->timezoneOptions(),
+            'timezoneOptions' => $this->countryService->getTimezoneOptions(),
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),

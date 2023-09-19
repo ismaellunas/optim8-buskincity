@@ -232,9 +232,6 @@ Route::name('api.')
             ->middleware('can:page.edit')
             ->name('pages.is-used-by-menu');
 
-        Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
-            ->name('page-builder.country-options');
-
         Route::get('/page-builder/type-options', [ApiPageBuilderController::class, 'typeOptions'])
             ->name('page-builder.type-options');
 
@@ -243,6 +240,12 @@ Route::name('api.')
 
         Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
             ->name('options.phone-countries');
+
+        Route::get('/options/countries', [ApiOptionController::class, 'countryOptions'])
+            ->name('options.countries');
+
+        Route::get('/options/timezones', [ApiOptionController::class, 'timezoneOptions'])
+            ->name('options.timezones');
 
         Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
             ->name('page-builder.post.category-options');

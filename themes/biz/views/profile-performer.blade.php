@@ -165,7 +165,7 @@
 
     <!-- Modal: Payment donation is-active -->
     @can ('receiveDonation', $user)
-    <x-modal id="donation">
+    <x-modal id="donation" @class(['is-active' => request()->get('qrcode') ?? false])>
         <div class="modal-content is-small">
             <div class="card">
                 <div class="card-content">
