@@ -480,18 +480,8 @@ class ProductEventService
             ->unique()
             ->values();
 
-        $countries = [];
-
-        if ($countryCodes->isNotEmpty()) {
-            $countries = app(CountryService::class)
-                ->getCountryOptions()
-                ->whereIn('id', $countryCodes->all())
-                ->mapWithKeys(fn ($country) => [$country['id'] => $country['value']])
-                ->all();
-        }
-
-        return $countryCodes->transform(function ($code) use ($countries, $products) {
-                $countryName = $countries[$code] ?? "";
+        return $countryCodes->transform(function ($code) use ($products) {
+                $countryName = app(CountryService::class)->getCountryName($code);
 
                 $city = $products
                     ->where('country_code', $code)
