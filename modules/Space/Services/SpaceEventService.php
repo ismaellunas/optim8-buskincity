@@ -45,7 +45,7 @@ class SpaceEventService
             ->with([
                 'space' => function ($query) {
                     $query->select([
-                        'id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'address', 'latitude', 'longitude', 'updated_at'
+                        'id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'address', 'latitude', 'longitude', 'updated_at', 'city', 'country_code'
                     ]);
                     $query->withStructuredUrl();
                 },
@@ -58,12 +58,15 @@ class SpaceEventService
 
         $spaceEvents->getCollection()->transform(function ($event) {
             $space = $event->space;
+            $purifiedConfigs = [
+                'AutoFormat.AutoParagraph' => false,
+            ];
 
             $shortDescription = nl2br(preg_replace("/[\r\n]+/", "\n", Purifier::clean(
                 !empty($event->excerpt)
                 ? $event->excerpt
-                : Str::words($event->description, 60, ' ...')
-            )));
+                : Str::words($event->description ?? '', 60, ' ...')
+            , $purifiedConfigs)));
 
             $data = [
                 'id' => $event->id,
@@ -71,10 +74,10 @@ class SpaceEventService
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
                 'short_description' => $shortDescription,
-                'description' => nl2br(Purifier::clean($event->description)),
+                'description' => nl2br(Purifier::clean($event->description, $purifiedConfigs)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
-                'address' => $space->address,
+                'address' => $event->fullAddress,
             ];
 
             if ($space->latitude && $space->longitude) {

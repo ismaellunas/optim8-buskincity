@@ -89,3 +89,5 @@ export const loadingOptions = {
     opacity: 0.3,
     zIndex: 8000,
 };
+
+export const canvasWidth = 1920;

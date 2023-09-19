@@ -32,7 +32,8 @@ class ProductController extends CrudController
 
     public function __construct(
         private ProductService $productService,
-        private ProductEventService $productEventService
+        private ProductEventService $productEventService,
+        private CountryService $countryService
     ) {
         $this->authorizeResource(Product::class, 'product');
     }
@@ -203,13 +204,13 @@ class ProductController extends CrudController
             ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
-            'countryOptions' => app(CountryService::class)->getCountryOptions(),
+            'countryOptions' => $this->countryService->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
             'eventDurationOptions' => $this->productEventService->durationOptions(),
             'event' => $this->productEventService->formResource($product),
-            'timezoneOptions' => $this->productEventService->timezoneOptions(),
+            'timezoneOptions' => $this->countryService->getTimezoneOptions(),
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
