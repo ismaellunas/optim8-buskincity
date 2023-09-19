@@ -31,10 +31,6 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
-<<<<<<< HEAD
-=======
-    import { computed, ref } from 'vue';
->>>>>>> a137c96d78f5c2acb44e1f21e2d68192850e1667
     import { getBlob, getCanvas } from '@/Libs/crop-helper';
     import { useModelWrapper } from '@/Libs/utils';
 
