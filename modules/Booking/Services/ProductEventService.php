@@ -4,8 +4,7 @@ namespace Modules\Booking\Services;
 
 use App\Helpers\GoogleMap;
 use Carbon\Carbon;
-use DateTime;
-use DateTimeZone;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -16,8 +15,6 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductEventService
 {
-    private $timezones;
-
     public function availableTimesRouteName(): string
     {
         return "booking.products.available-times";
@@ -354,8 +351,8 @@ class ProductEventService
         return GoogleMap::directionUrl(
             $location['latitude'],
             $location['longitude'],
-            $origin['latitude'],
-            $origin['longitude']
+            Arr::get($origin, 'latitude'),
+            Arr::get($origin, 'longitude')
         );
     }
 
