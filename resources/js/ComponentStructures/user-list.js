@@ -58,7 +58,7 @@ export const config = {
                 component: "ConfigSelectMultiple",
                 label: "Country",
                 settings: {
-                    optionsRoute: "admin.api.page-builder.country-options",
+                    optionsRoute: "admin.api.options.countries",
                 },
             },
             types: {

@@ -8,7 +8,9 @@ export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
 export const buildingCheck = iconFormatter('fa-building-circle-check');
 export const calendarCirclePlus = iconFormatter('fa-calendar-circle-plus');
+export const camera = iconFormatter('fa-camera');
 export const checkCircle = iconFormatter('fa-check-circle');
+export const city = iconFormatter('fa-city');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
@@ -69,7 +71,9 @@ export default {
     bracketCurlyRight,
     buildingCheck,
     calendarCirclePlus,
+    camera,
     checkCircle,
+    city,
     clear,
     close,
     copy,

@@ -360,7 +360,9 @@
                 const space = pick(this.spaceRecord, [
                     'id',
                     'address',
+                    'city',
                     'contacts',
+                    'country_code',
                     'is_page_enabled',
                     'latitude',
                     'longitude',
