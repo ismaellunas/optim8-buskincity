@@ -153,7 +153,7 @@
     import BizTag from '@/Biz/Tag.vue';
     import { angleDown as iconAngleDown, show as iconShow } from '@/Libs/icon-class';
     import { isArray, each } from 'lodash';
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
 
     export default {
         components: {
@@ -182,8 +182,10 @@
         },
 
         setup(props) {
-            const country = props.pageQueryParams?.country;
-            const city = props.pageQueryParams?.city;
+            const queryParams = computed(() => props.pageQueryParams);
+
+            const country = queryParams.value?.country;
+            const city = queryParams.value?.city;
             const location = country
                 ? country + (city ? '-' + city : '')
                 : null;
@@ -191,13 +193,17 @@
             return {
                 iconAngleDown,
                 iconShow,
-                dates: ref(isArray(props.pageQueryParams?.dates)
-                    ? props.pageQueryParams?.dates.filter(Boolean)
-                    : []
+                dates: ref(
+                    isArray(queryParams.value?.dates)
+                        ? queryParams.value?.dates.filter(Boolean)
+                        : []
                 ),
-                queryParams: ref({ ...{}, ...props.pageQueryParams }),
-                status: ref(props.pageQueryParams?.status ?? null),
-                term: ref(props.pageQueryParams?.term ?? null),
+                queryParams: ref({
+                    ...{},
+                    ...queryParams.value
+                }),
+                status: ref(queryParams.value?.status ?? null),
+                term: ref(queryParams.value?.term ?? null),
                 location: ref(location),
             };
         },
