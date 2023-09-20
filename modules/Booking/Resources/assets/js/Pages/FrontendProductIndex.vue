@@ -7,6 +7,23 @@
                     @search="search"
                 />
             </div>
+
+            <div class="column is-2-desktop is-3-tablet is-12-mobile">
+                <biz-select
+                    v-model="location"
+                    class="is-fullwidth"
+                    placeholder="Any"
+                    @change="onLocationChanged()"
+                >
+                    <option
+                        v-for="locationOption in computedLocationOptions"
+                        :key="locationOption.id"
+                        :value="locationOption.id"
+                    >
+                        {{ locationOption.value }}
+                    </option>
+                </biz-select>
+            </div>
         </div>
 
         <biz-table-index
@@ -22,6 +39,20 @@
                     >
                         Name
                     </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'city'"
+                        @click="orderColumn('city')"
+                    >
+                        City
+                    </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'country'"
+                        @click="orderColumn('country')"
+                    >
+                        Country
+                    </biz-table-column-sort>
                     <th>
                         <div class="level-right">
                             Actions
@@ -35,6 +66,8 @@
                 :key="product.id"
             >
                 <td>{{ product.name }}</td>
+                <td>{{ product.city }}</td>
+                <td>{{ product.country }}</td>
                 <td>
                     <div class="level-right">
                         <biz-button-link
@@ -61,8 +94,9 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizTableColumnSort from '@/Biz/TableColumnSort.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import icon from '@/Libs/icon-class';
-    import { merge } from 'lodash';
+    import { merge, each } from 'lodash';
     import { ref } from "vue";
 
     export default {
@@ -72,6 +106,7 @@
             BizIcon,
             BizTableColumnSort,
             BizTableIndex,
+            BizSelect,
         },
 
         mixins: [
@@ -84,6 +119,7 @@
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             products: { type: Object, required: true },
+            locationOptions: { type: Object, default: () => {} },
         },
 
         setup(props) {
@@ -92,9 +128,16 @@
                 props.pageQueryParams
             );
 
+            const country = props.pageQueryParams?.country;
+            const city = props.pageQueryParams?.city;
+            const location = country
+                ? country + (city ? '-' + city : '')
+                : null;
+
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? ""),
+                location: ref(location),
             };
         },
 
@@ -102,6 +145,54 @@
             return {
                 icon
             };
+        },
+
+        computed: {
+            computedLocationOptions() {
+                const options = [];
+
+                each(this.locationOptions, (location, key) => {
+                    options.push({
+                        id: key,
+                        value: location.country,
+                    });
+
+                    each(location.cities, (city) => {
+                        options.push({
+                            id: key +'-'+ city,
+                            value: ' - '+ city,
+                        });
+                    });
+                });
+
+                return options;
+            },
+
+            locationParts() {
+                const countryCity = {
+                    country: null,
+                    city: null,
+                };
+
+                if (!this.location) {
+                    return countryCity;
+                }
+
+                const locationParts = this.location.split('-');
+
+                return {
+                    country: locationParts[0],
+                    city: locationParts[1],
+                };
+            },
+        },
+
+        methods: {
+            onLocationChanged() {
+                this.queryParams['city'] = this.locationParts.city;
+                this.queryParams['country'] = this.locationParts.country;
+                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+            }
         },
     };
 </script>
