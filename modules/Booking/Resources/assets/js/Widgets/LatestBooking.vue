@@ -259,8 +259,8 @@
                 const locationParts = this.search.location.split('-');
 
                 return {
-                    country: locationParts[0],
-                    city: locationParts[1],
+                    country: locationParts[0] ?? "",
+                    city: locationParts[1] ?? "",
                 };
             },
         },
