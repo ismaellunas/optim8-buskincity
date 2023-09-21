@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="column is-11-desktop is-12-tablet is-12-mobile">
-                    <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') }}</h1>
+                    <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') ?? $user->fullName }}</h1>
                     <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
 
                     <div class="columns is-multiline is-mobile mt-3">
