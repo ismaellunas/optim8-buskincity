@@ -12,6 +12,7 @@ use App\Services\{
     PageService,
     TranslationService,
 };
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,6 +49,17 @@ class PageController extends Controller
         }
     }
 
+    private function pageTranslationView(
+        PageTranslation $pageTranslation,
+        string $locale
+    ): View {
+        return view('page', [
+            'currentLanguage' => $locale,
+            'images' => $this->getPageImages($pageTranslation),
+            'page' => $pageTranslation,
+        ]);
+    }
+
     private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
         string $locale,
@@ -56,13 +68,10 @@ class PageController extends Controller
         $defaultLocale = $this->translationService->getDefaultLocale();
 
         if ($page->hasTranslation($defaultLocale)) {
-            $pageTranslation = $page->translate($defaultLocale);
-
-            return view('page', [
-                'currentLanguage' => $locale,
-                'images' => $this->getPageImages($pageTranslation),
-                'page' => $pageTranslation,
-            ]);
+            return $this->pageTranslationView(
+                $page->translate($defaultLocale),
+                $locale
+            );
         } else {
             return $fallback;
         }
@@ -114,18 +123,27 @@ class PageController extends Controller
                 $this->redirectFallback()
             );
         } else {
-            $newPageTranslation = $page->translate($locale);
-
             if (
-                $newPageTranslation->status != PageTranslation::STATUS_PUBLISHED
+                !$page->translate($locale)->isPublished
                 && !$this->userCanAccessPage()
             ) {
+                if (
+                    $page->hasTranslation(defaultLocale())
+                    && $page->translate(defaultLocale())->isPublished
+                ) {
+                    return $this->goToPageWithDefaultLocaleOrFallback(
+                        $page,
+                        $locale,
+                        $this->redirectFallback()
+                    );
+                }
+
                 return $this->redirectFallback();
             }
 
-            if ($newPageTranslation->slug !== $pageTranslation->slug) {
+            if ($page->translate($locale)->slug !== $pageTranslation->slug) {
                 return redirect()->route($this->baseRouteName.'.show', [
-                    $newPageTranslation->slug
+                    $page->translate($locale)->slug
                 ]);
             }
 
@@ -133,11 +151,10 @@ class PageController extends Controller
                 return $this->redirectFallback();
             }
 
-            return view('page', [
-                'currentLanguage' => $locale,
-                'images' => $this->getPageImages($newPageTranslation),
-                'page' => $newPageTranslation,
-            ]);
+            return $this->pageTranslationView(
+                $page->translate($locale),
+                $locale
+            );
         }
     }
 
@@ -158,13 +175,11 @@ class PageController extends Controller
                 $this->defaultHomePage()
             );
         } else {
-            $pageTranslation = $page->translate($locale);
 
-            return view('page', [
-                'currentLanguage' => $locale,
-                'images' => $this->getPageImages($pageTranslation, $locale),
-                'page' => $pageTranslation,
-            ]);
+            return $this->pageTranslationView(
+                $page->translate($locale),
+                $locale
+            );
         }
     }
 }
