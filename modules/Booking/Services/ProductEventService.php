@@ -374,7 +374,7 @@ class ProductEventService
 
         $products = Product::with([
                 'metas' => function ($q){
-                    $q->whereIn('key', ['locations', 'roles']);
+                    $q->whereIn('key', ['locations']);
                 },
             ])
             ->type('Event')
