@@ -2,9 +2,11 @@
 
 namespace App\View\Components\Builder\Content;
 
+use Cohensive\OEmbed\Facades\OEmbed;
+
 class Video extends BaseContent
 {
-    public $url;
+    public $embed = null;
 
     /**
      * Create a new component instance.
@@ -15,7 +17,11 @@ class Video extends BaseContent
     {
         parent::__construct($entity);
 
-        $this->url = $this->getUrl();
+        $url = $this->getUrl();
+
+        if ($url) {
+            $this->embed = OEmbed::get($url);
+        }
     }
 
     private function getUrl(): ?string
