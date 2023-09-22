@@ -3,7 +3,6 @@
 namespace Modules\FormBuilder\Fields;
 
 use App\Entities\CloudinaryStorage;
-use App\Entities\Forms\Fields\FileDragDrop as AppFileDragDrop;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Modules\FormBuilder\Contracts\MappableFieldInterface;
@@ -126,7 +125,7 @@ class FileDragDrop extends BaseField implements MappableFieldInterface
             })
             ->flatten();
 
-        $mediaIds = Arr::get($this->value, 'mediaId');
+        $mediaIds = Arr::get($this->value, 'mediaId', []);
 
         $media = Media::whereIn('id', $mediaIds)->get();
 
