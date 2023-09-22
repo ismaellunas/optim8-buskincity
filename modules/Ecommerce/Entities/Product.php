@@ -148,6 +148,14 @@ class Product extends LunarProduct
         });
     }
 
+    public function scopeType($query, string $type)
+    {
+        return $query
+            ->whereHas('productType', function ($query) use ($type) {
+                $query->where('name', $type);
+            });
+    }
+
     /**
      * {@inheritDoc}
      */
