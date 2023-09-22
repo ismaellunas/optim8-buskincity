@@ -10,17 +10,34 @@
 
             <div class="column is-2-desktop is-3-tablet is-12-mobile">
                 <biz-select
-                    v-model="location"
+                    v-model="city"
                     class="is-fullwidth"
-                    placeholder="Any"
-                    @change="onLocationChanged()"
+                    placeholder="City"
+                    @change="onCityChanged()"
                 >
                     <option
-                        v-for="locationOption in computedLocationOptions"
-                        :key="locationOption.id"
-                        :value="locationOption.id"
+                        v-for="cityOption in cityOptions"
+                        :key="cityOption.value"
+                        :value="cityOption.value"
                     >
-                        {{ locationOption.value }}
+                        {{ cityOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column is-2-desktop is-3-tablet is-12-mobile">
+                <biz-select
+                    v-model="country"
+                    class="is-fullwidth"
+                    placeholder="Country"
+                    @change="onCountryChanged()"
+                >
+                    <option
+                        v-for="countryOption in countryOptions"
+                        :key="countryOption.value"
+                        :value="countryOption.value"
+                    >
+                        {{ countryOption.name }}
                     </option>
                 </biz-select>
             </div>
@@ -76,7 +93,7 @@
                         >
                             <biz-icon
                                 class="is-small"
-                                :icon="icon.calendarCirclePlus"
+                                :icon="calendarCirclePlusIcon"
                             />
                         </biz-button-link>
                     </div>
@@ -95,9 +112,9 @@
     import BizTableColumnSort from '@/Biz/TableColumnSort.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizSelect from '@/Biz/Select.vue';
-    import icon from '@/Libs/icon-class';
-    import { merge, each } from 'lodash';
-    import { ref } from "vue";
+    import { calendarCirclePlus as calendarCirclePlusIcon } from '@/Libs/icon-class';
+    import { merge, filter, find } from 'lodash';
+    import { ref, computed } from "vue";
 
     export default {
         components: {
@@ -119,79 +136,53 @@
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             products: { type: Object, required: true },
-            locationOptions: { type: Object, default: () => {} },
+            countryOptions: { type: Array, default: () => [] },
+            cityOptions: { type: Array, default: () => [] },
         },
 
         setup(props) {
-            const queryParams = merge(
+            const queryParams = computed(() => merge(
                 {},
                 props.pageQueryParams
-            );
-
-            const country = props.pageQueryParams?.country;
-            const city = props.pageQueryParams?.city;
-            const location = country
-                ? country + (city ? '-' + city : '')
-                : null;
+            ));
 
             return {
                 queryParams: ref(queryParams),
-                term: ref(props.pageQueryParams?.term ?? ""),
-                location: ref(location),
+                term: ref(queryParams.value?.term ?? ""),
+                country: ref(queryParams.value?.country ?? null),
+                city: ref(queryParams.value?.city ?? null),
             };
         },
 
         data() {
             return {
-                icon
+                calendarCirclePlusIcon,
             };
         },
 
-        computed: {
-            computedLocationOptions() {
-                const options = [];
+        methods: {
+            onCountryChanged() {
+                this.city = null;
 
-                each(this.locationOptions, (location, key) => {
-                    options.push({
-                        id: key,
-                        value: location.country,
-                    });
+                this.queryParams['country'] = this.country;
+                this.queryParams['city'] = null;
 
-                    each(location.cities, (city) => {
-                        options.push({
-                            id: key +'-'+ city,
-                            value: ' - '+ city,
-                        });
-                    });
-                });
-
-                return options;
+                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
             },
 
-            locationParts() {
-                const countryCity = {
-                    country: null,
-                    city: null,
-                };
+            onCityChanged() {
+                const self = this;
 
-                if (!this.location) {
-                    return countryCity;
+                let findCountryCode = find(self.cityOptions, { value: self.city })?.country_code;
+
+                if (typeof findCountryCode !== 'undefined') {
+                    self.country = find(self.cityOptions, { value: self.city }).country_code;
                 }
 
-                const locationParts = this.location.split('-');
+                self.queryParams['country'] = self.country;
+                self.queryParams['city'] = self.city;
 
-                return {
-                    country: locationParts[0],
-                    city: locationParts[1],
-                };
-            },
-        },
-
-        methods: {
-            onLocationChanged() {
-                this.queryParams['city'] = this.locationParts.city;
-                this.queryParams['country'] = this.locationParts.country;
-                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+                self.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
             }
         },
     };

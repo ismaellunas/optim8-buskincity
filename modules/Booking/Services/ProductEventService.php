@@ -2,8 +2,9 @@
 
 namespace Modules\Booking\Services;
 
-use App\Models\Country;
+use App\Services\CountryService;
 use App\Helpers\GoogleMap;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -15,6 +16,9 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductEventService
 {
+    private $cacheProducts = null;
+    private $cacheFrontendProducts = null;
+
     public function availableTimesRouteName(): string
     {
         return "booking.products.available-times";
@@ -356,69 +360,49 @@ class ProductEventService
         );
     }
 
-    public function getLocationOptions(): array
-    {
-        $user = auth()->user();
+    private function getProductLocations(
+        User $user = null,
+        array $options = []
+    ): Collection {
         $isUserProductManager = false;
 
-        if ($user) {
+        if (Arr::get($options, 'hasProductManager', false)) {
             $isUserProductManager = $user->isProductManager();
         }
 
+        $hasRole = Arr::get($options, 'hasRole', false);
+
         $products = Product::with([
                 'metas' => function ($q){
-                    $q->whereIn('key', ['locations', 'roles']);
+                    $q->whereIn('key', ['locations']);
                 },
             ])
-            ->whereHas('metas', function ($query) {
-                $query->where('key', 'locations');
+            ->type('Event')
+            ->whereHas('metas', function ($query) use ($user, $hasRole) {
+                if ($hasRole) {
+                    $roleIds = $user->roles->pluck('id');
+
+                    if ($roleIds->isNotEmpty()) {
+                        $query
+                            ->where('key', 'roles')
+                            ->whereJsonContains('value', $roleIds);
+                    } else {
+                        $query
+                            ->where('key', 'roles')
+                            ->whereJsonLength('value', 0);
+                    }
+                } else {
+                    $query->where('key', 'locations');
+                }
             })
             ->when($isUserProductManager, function ($query) use ($user) {
                 $query->whereHas('managers', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
             })
-            ->whereHas('productType', function ($query) {
-                $query->where('name', 'Event');
-            })
             ->get(['id', 'product_type_id']);
 
-        return $this->generateLocationOptions($products);
-    }
-
-    public function getFrontendLocationOptions(): array
-    {
-        $user = auth()->user();
-
-        $products = Product::with([
-                'metas' => function ($q){
-                    $q->whereIn('key', ['locations', 'roles']);
-                },
-            ])
-            ->whereHas('metas', function ($query) use ($user) {
-                $roleIds = $user->roles->pluck('id');
-
-                if ($roleIds->isNotEmpty()) {
-                    $query
-                        ->where('key', 'roles')
-                        ->whereJsonContains('value', $roleIds);
-                } else {
-                    $query
-                        ->where('key', 'roles')
-                        ->whereJsonLength('value', 0);
-                }
-            })
-            ->whereHas('productType', function ($query) {
-                $query->where('name', 'Event');
-            })
-            ->get(['id', 'product_type_id']);
-
-        return $this->generateLocationOptions($products);
-    }
-
-    private function generateLocationOptions(Collection $products)
-    {
-        $locations = $products
+        return $products
             ->map(function ($product) {
                 return collect($product->locations[0] ?? [])
                     ->only(['country_code', 'city'])
@@ -426,32 +410,105 @@ class ProductEventService
             })
             ->filter()
             ->unique()
-            ->values()
-            ->mapToGroups(function ($location) {
-                return [$location['country_code'] => $location['city']];
-            });
+            ->values();
+    }
 
-        $countries = collect();
-
-        if ($locations->keys()->isNotEmpty()) {
-            $countries = Country::
-                whereIn('alpha2', $locations->keys())
-                ->get([
-                    'alpha2',
-                    'display_name',
-                ]);
+    public function getCountryOptions(): array
+    {
+        if (! $this->cacheProducts) {
+            $this->cacheProducts = $this->getProductLocations(
+                auth()->user(),
+                [
+                    'hasProductManager' => true,
+                    'hasRole' => false,
+                ]
+            );
         }
 
-        return $locations->transform(function ($location, $key) use ($countries) {
-            return [
-                'country_code' => $key,
-                'country' => $countries->where('alpha2', $key)->first()->display_name ?? '',
-                'cities' => collect($location)
-                    ->map(fn ($value) => trim($value))
-                    ->filter()
-                    ->unique()
-                    ->all(),
-            ];
-        })->all();
+        return $this->mapCountryOptions($this->cacheProducts);
+    }
+
+    public function getCityOptions(): array
+    {
+        if (! $this->cacheProducts) {
+            $this->cacheProducts = $this->getProductLocations(
+                auth()->user(),
+                [
+                    'hasProductManager' => true,
+                    'hasRole' => false,
+                ]
+            );
+        }
+
+        return $this->mapCityOptions($this->cacheProducts);
+    }
+
+    public function getFrontendCountryOptions(): array
+    {
+        if (! $this->cacheFrontendProducts) {
+            $this->cacheFrontendProducts = $this->getProductLocations(
+                auth()->user(),
+                [
+                    'hasProductManager' => false,
+                    'hasRole' => true,
+                ]
+            );
+        }
+
+        return $this->mapCountryOptions($this->cacheFrontendProducts);
+    }
+
+    public function getFrontendCityOptions(): array
+    {
+        if (! $this->cacheFrontendProducts) {
+            $this->cacheFrontendProducts = $this->getProductLocations(
+                auth()->user(),
+                [
+                    'hasProductManager' => false,
+                    'hasRole' => true,
+                ]
+            );
+        }
+
+        return $this->mapCityOptions($this->cacheFrontendProducts);
+    }
+
+    private function mapCountryOptions(Collection $products): array
+    {
+        $countryCodes = $products
+            ->pluck('country_code')
+            ->unique()
+            ->values();
+
+        return $countryCodes->transform(function ($code) {
+                $countryName = app(CountryService::class)->getCountryName($code);
+
+                return [
+                    'value' => $code,
+                    'name' => $countryName,
+                ];
+            })
+            ->all();
+    }
+
+    private function mapCityOptions(Collection $products): array
+    {
+        return $products
+            ->pluck('city')
+            ->unique()
+            ->values()
+            ->map(function ($city) use ($products) {
+                $countryCode = $products
+                    ->where('city', $city)
+                    ->first()['country_code']
+                    ?? null;
+
+                return [
+                    'value' => $city,
+                    'name' => $city,
+                    'country_code' => $countryCode,
+                ];
+            })
+            ->all();
     }
 }
