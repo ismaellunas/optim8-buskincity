@@ -478,18 +478,12 @@ class ProductEventService
             ->unique()
             ->values();
 
-        return $countryCodes->transform(function ($code) use ($products) {
+        return $countryCodes->transform(function ($code) {
                 $countryName = app(CountryService::class)->getCountryName($code);
-
-                $city = $products
-                    ->where('country_code', $code)
-                    ->first()['city']
-                    ?? null;
 
                 return [
                     'value' => $code,
                     'name' => $countryName,
-                    'city' => $city,
                 ];
             })
             ->all();
