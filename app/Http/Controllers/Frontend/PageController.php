@@ -67,7 +67,10 @@ class PageController extends Controller
     ) {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if ($page->hasTranslation($defaultLocale)) {
+        if (
+            $page->hasTranslation($defaultLocale)
+            && $page->translate($defaultLocale)->isPublished
+        ) {
             return $this->pageTranslationView(
                 $page->translate($defaultLocale),
                 $locale
@@ -116,30 +119,21 @@ class PageController extends Controller
         $locale = $this->translationService->currentLanguage();
         $page = $pageTranslation->page;
 
-        if (!$page->hasTranslation($locale)) {
+        if (
+            !$page->hasTranslation($locale)
+            || (
+                !$page->translate($locale)->isPublished
+                && !$this->userCanAccessPage()
+            )
+        ) {
+
             return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,
                 $locale,
                 $this->redirectFallback()
             );
-        } else {
-            if (
-                !$page->translate($locale)->isPublished
-                && !$this->userCanAccessPage()
-            ) {
-                if (
-                    $page->hasTranslation(defaultLocale())
-                    && $page->translate(defaultLocale())->isPublished
-                ) {
-                    return $this->goToPageWithDefaultLocaleOrFallback(
-                        $page,
-                        $locale,
-                        $this->redirectFallback()
-                    );
-                }
 
-                return $this->redirectFallback();
-            }
+        } else {
 
             if ($page->translate($locale)->slug !== $pageTranslation->slug) {
                 return redirect()->route($this->baseRouteName.'.show', [
