@@ -11,17 +11,34 @@
 
             <div class="column">
                 <biz-select
-                    v-model="location"
+                    v-model="city"
                     class="is-fullwidth"
-                    placeholder="Any"
-                    @change="onLocationChanged()"
+                    placeholder="City"
+                    @change="onCityChanged()"
                 >
                     <option
-                        v-for="locationOption in computedLocationOptions"
-                        :key="locationOption.id"
-                        :value="locationOption.id"
+                        v-for="cityOption in cityOptions"
+                        :key="cityOption.value"
+                        :value="cityOption.value"
                     >
-                        {{ locationOption.value }}
+                        {{ cityOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column">
+                <biz-select
+                    v-model="country"
+                    class="is-fullwidth"
+                    placeholder="Country"
+                    @change="onCountryChanged()"
+                >
+                    <option
+                        v-for="countryOption in countryOptions"
+                        :key="countryOption.value"
+                        :value="countryOption.value"
+                    >
+                        {{ countryOption.name }}
                     </option>
                 </biz-select>
             </div>
@@ -144,8 +161,8 @@
     import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { merge, each } from 'lodash';
-    import { ref } from "vue";
+    import { merge, filter, find } from 'lodash';
+    import { ref, computed } from "vue";
 
     export default {
         components: {
@@ -173,7 +190,8 @@
             pageQueryParams: { type: Object, default: () => {} },
             products: { type: Object, required: true },
             statusOptions: { type: Array, required: true },
-            locationOptions: { type: Object, default: () => {} },
+            countryOptions: { type: Array, default: () => [] },
+            cityOptions: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 search : 'Search',
                 filter : 'Filter',
@@ -187,64 +205,19 @@
         },
 
         setup(props) {
-            const queryParams = merge(
+            const queryParams = computed(() => merge(
                 {},
                 props.pageQueryParams
-            );
-
-            const country = props.pageQueryParams?.country;
-            const city = props.pageQueryParams?.city;
-            const location = country
-                ? country + (city ? '-' + city : '')
-                : null;
+            ));
 
             return {
-                statuses: ref(props.pageQueryParams?.status ?? []),
+                statuses: ref(queryParams.value?.status ?? []),
                 icon,
                 queryParams: ref(queryParams),
-                term: ref(props.pageQueryParams?.term ?? null),
-                location: ref(location),
+                term: ref(queryParams.value?.term ?? null),
+                country: ref(queryParams.value?.country ?? null),
+                city: ref(queryParams.value?.city ?? null),
             };
-        },
-
-        computed: {
-            computedLocationOptions() {
-                const options = [];
-
-                each(this.locationOptions, (location, key) => {
-                    options.push({
-                        id: key,
-                        value: location.country,
-                    });
-
-                    each(location.cities, (city) => {
-                        options.push({
-                            id: key +'-'+ city,
-                            value: ' - '+ city,
-                        });
-                    });
-                });
-
-                return options;
-            },
-
-            locationParts() {
-                const countryCity = {
-                    country: null,
-                    city: null,
-                };
-
-                if (!this.location) {
-                    return countryCity;
-                }
-
-                const locationParts = this.location.split('-');
-
-                return {
-                    country: locationParts[0],
-                    city: locationParts[1],
-                };
-            },
         },
 
         methods: {
@@ -277,10 +250,28 @@
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
-            onLocationChanged() {
-                this.queryParams['city'] = this.locationParts.city;
-                this.queryParams['country'] = this.locationParts.country;
-                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            onCountryChanged() {
+                this.city = null;
+
+                this.queryParams['country'] = this.country;
+                this.queryParams['city'] = null;
+
+                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+            },
+
+            onCityChanged() {
+                const self = this;
+
+                let findCountryCode = find(self.cityOptions, { value: self.city })?.country_code;
+
+                if (typeof findCountryCode !== 'undefined') {
+                    self.country = find(self.cityOptions, { value: self.city }).country_code;
+                }
+
+                self.queryParams['country'] = self.country;
+                self.queryParams['city'] = self.city;
+
+                self.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
             }
         },
     };
