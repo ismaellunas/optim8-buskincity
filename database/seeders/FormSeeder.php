@@ -465,6 +465,7 @@ class FormSeeder extends Seeder
                             ],
                             "visibility" => [],
                             "translated" => false,
+                            "is_image_editor_enabled" => true,
                         ],
                         [
                             "type" => "FileDragDrop",
@@ -493,6 +494,7 @@ class FormSeeder extends Seeder
                                 "roles" => ["Performer"]
                             ],
                             "translated" => false,
+                            "is_image_editor_enabled" => true,
                         ],
                     ]
                 ]
