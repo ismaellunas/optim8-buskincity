@@ -67,7 +67,8 @@ class ProductController extends CrudController
                 $scopes,
             ),
             'statusOptions' => ProductStatus::options(),
-            'locationOptions' => $this->productEventService->getLocationOptions(),
+            'countryOptions' => $this->productEventService->getCountryOptions(),
+            'cityOptions' => $this->productEventService->getCityOptions(),
             'can' => [
                 'add' => $user->can('product.add'),
             ],
