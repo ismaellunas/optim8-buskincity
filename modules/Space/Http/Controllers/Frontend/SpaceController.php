@@ -46,7 +46,6 @@ class SpaceController extends Controller
     public function index()
     {
         return view('spaces', [
-            'defaultLogoUrl' => ModuleService::defaultLogoUrl(),
             'metaDescription' => __("Spaces"),
             'metaTitle' => __("Spaces"),
             'spaces' => app(SpaceService::class)->getTopParents(),
