@@ -452,7 +452,6 @@ class FormSeeder extends Seeder
                             "max_file_number" => 1,
                             "min_file_number" => 0,
                             "is_multiple_upload" => false,
-                            "is_image_editor_enabled" => true,
                             "image_dimensions" => [
                                 "width" => null,
                                 "height" => null,
@@ -479,7 +478,6 @@ class FormSeeder extends Seeder
                             "max_file_number" => 5,
                             "min_file_number" => 0,
                             "is_multiple_upload" => true,
-                            "is_image_editor_enabled" => true,
                             "image_dimensions" => [
                                 "width" => null,
                                 "height" => null,
