@@ -207,10 +207,6 @@ Route::prefix(Localization::setLocale())
             ->name('language.change')
             ->middleware('changeLanguage');
 
-        Route::get('/', [PageController::class, 'homePage'])
-            ->name('homepage')
-            ->middleware('redirectOriginLanguage');
-
         Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
             ->name('sitemap');
 
@@ -218,18 +214,24 @@ Route::prefix(Localization::setLocale())
             ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
             ->name('sitemap.urls');
 
-        Route::get(LaravelLocalization::transRoute('blog.index'), [PostController::class, 'index'])
-            ->name('blog.index');
+        Route::get('/', [PageController::class, 'homePage'])
+            ->name('homepage')
+            ->middleware('redirectOriginLanguage');
 
-        Route::get(LaravelLocalization::transRoute('blog.category.index'), [PostCategoryController::class, 'index'])
-            ->name('blog.category.index');
+        Route::middleware('checkOriginLanguage')->group(function () {
+            Route::get(LaravelLocalization::transRoute('blog.index'), [PostController::class, 'index'])
+                ->name('blog.index');
 
-        Route::get(LaravelLocalization::transRoute('blog.show'), [PostController::class, 'show'])
-            ->where('slug', '[\w\d\-\_]+')
-            ->name('blog.show');
+            Route::get(LaravelLocalization::transRoute('blog.category.index'), [PostCategoryController::class, 'index'])
+                ->name('blog.category.index');
 
-        Route::get('/{page_translation}', [PageController::class, 'show'])
-            ->name('frontend.pages.show');
+            Route::get(LaravelLocalization::transRoute('blog.show'), [PostController::class, 'show'])
+                ->where('slug', '[\w\d\-\_]+')
+                ->name('blog.show');
+
+            Route::get('/{page_translation}', [PageController::class, 'show'])
+                ->name('frontend.pages.show');
+        });
 
         Route::get(LaravelLocalization::transRoute('frontend.profile'), [FrontendProfileController::class, 'show'])
             ->name('frontend.profile')
