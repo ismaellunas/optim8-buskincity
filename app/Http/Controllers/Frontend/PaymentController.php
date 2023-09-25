@@ -69,11 +69,9 @@ class PaymentController extends Controller
                 'Visit the payment’s dashboard to manage your Stripe Connect account.'
             ),
             'manage_payments' => __('Manage payments'),
-            'create_alert' => [
-                'title' => __('Please double-check your country!'),
-                'text' => __('You will not be able to change your country in the future.'),
-                'button' => __('Continue'),
-            ],
+            'create_alert_title' => __('Please double-check your country!'),
+            'create_alert_text' => __('You will not be able to change your country in the future.'),
+            'create_alert_button' => __('Continue'),
         ];
     }
 }
