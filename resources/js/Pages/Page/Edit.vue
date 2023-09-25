@@ -179,7 +179,7 @@
                         if (isUsedByMenu) {
                             const confirmResult = await confirmDelete(
                                 'Are You Sure?',
-                                'This action will also remove the page on the navigation menu.',
+                                "This page update may affect the navigation menu on the Theme Header and Footer.",
                                 'Yes'
                             );
 
