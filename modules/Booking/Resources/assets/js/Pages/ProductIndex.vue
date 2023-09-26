@@ -10,7 +10,43 @@
             </div>
 
             <div class="column">
-                <biz-dropdown :close-on-click="false">
+                <biz-select
+                    v-model="city"
+                    class="is-fullwidth"
+                    placeholder="City"
+                    @change="onCityChanged()"
+                >
+                    <option
+                        v-for="cityOption in cityOptions"
+                        :key="cityOption.value"
+                        :value="cityOption.value"
+                    >
+                        {{ cityOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column">
+                <biz-select
+                    v-model="country"
+                    class="is-fullwidth"
+                    placeholder="Country"
+                    @change="onCountryChanged()"
+                >
+                    <option
+                        v-for="countryOption in countryOptions"
+                        :key="countryOption.value"
+                        :value="countryOption.value"
+                    >
+                        {{ countryOption.name }}
+                    </option>
+                </biz-select>
+            </div>
+
+            <div class="column">
+                <biz-dropdown
+                    :close-on-click="false"
+                >
                     <template #trigger>
                         <span>{{ i18n.filter }}</span>
 
@@ -56,6 +92,8 @@
                 <tr>
                     <th>#</th>
                     <th>{{ i18n.name }}</th>
+                    <th>{{ i18n.city }}</th>
+                    <th>{{ i18n.country }}</th>
                     <th>{{ i18n.status }}</th>
                     <th>
                         <div class="level-right">
@@ -71,6 +109,8 @@
             >
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
+                <td>{{ product.city }}</td>
+                <td>{{ product.country }}</td>
                 <td>
                     <biz-tag
                         class="is-small is-rounded"
@@ -107,6 +147,7 @@
 </template>
 
 <script>
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
@@ -115,13 +156,13 @@
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
     import BizIcon from '@/Biz/Icon.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTag from '@/Biz/Tag.vue';
-    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { merge } from 'lodash';
-    import { ref } from "vue";
+    import { merge, filter, find } from 'lodash';
+    import { ref, computed } from "vue";
 
     export default {
         components: {
@@ -132,6 +173,7 @@
             BizDropdownItem,
             BizFilterSearch,
             BizIcon,
+            BizSelect,
             BizTableIndex,
             BizTag,
         },
@@ -148,6 +190,8 @@
             pageQueryParams: { type: Object, default: () => {} },
             products: { type: Object, required: true },
             statusOptions: { type: Array, required: true },
+            countryOptions: { type: Array, default: () => [] },
+            cityOptions: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 search : 'Search',
                 filter : 'Filter',
@@ -161,16 +205,18 @@
         },
 
         setup(props) {
-            const queryParams = merge(
+            const queryParams = computed(() => merge(
                 {},
                 props.pageQueryParams
-            );
+            ));
 
             return {
-                statuses: ref(props.pageQueryParams?.status ?? []),
+                statuses: ref(queryParams.value?.status ?? []),
                 icon,
                 queryParams: ref(queryParams),
-                term: ref(props.pageQueryParams?.term ?? null),
+                term: ref(queryParams.value?.term ?? null),
+                country: ref(queryParams.value?.country ?? null),
+                city: ref(queryParams.value?.city ?? null),
             };
         },
 
@@ -203,6 +249,30 @@
                 this.queryParams['status'] = this.statuses;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
+
+            onCountryChanged() {
+                this.city = null;
+
+                this.queryParams['country'] = this.country;
+                this.queryParams['city'] = null;
+
+                this.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+            },
+
+            onCityChanged() {
+                const self = this;
+
+                let findCountryCode = find(self.cityOptions, { value: self.city })?.country_code;
+
+                if (typeof findCountryCode !== 'undefined') {
+                    self.country = find(self.cityOptions, { value: self.city }).country_code;
+                }
+
+                self.queryParams['country'] = self.country;
+                self.queryParams['city'] = self.city;
+
+                self.refreshWithQueryParams(); // on mixin MixinHasColumnSorted
+            }
         },
     };
 </script>

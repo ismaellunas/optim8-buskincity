@@ -5,7 +5,6 @@ namespace Modules\Booking\Http\Controllers\Frontend;
 use App\Http\Controllers\CrudController;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
@@ -18,19 +17,11 @@ class ProductController extends CrudController
     protected $title = "Product";
     protected $baseRouteName = "booking.products";
 
-    private $eventService;
-    private $productEventService;
-    private $productService;
-
     public function __construct(
-        EventService $eventService,
-        ProductEventService $productEventService,
-        ProductService $productService
-    ) {
-        $this->eventService = $eventService;
-        $this->productService = $productService;
-        $this->productEventService = $productEventService;
-    }
+        private EventService $eventService,
+        private ProductEventService $productEventService,
+        private ProductService $productService
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -40,19 +31,31 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
+        $scopes = [
+            'orderByColumn' => [
+                'column' => $request->column,
+                'order' => $request->order,
+            ],
+            'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
+        ];
+
         return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term', 'column', 'order')),
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'column',
+                'order',
+                'city',
+                'country',
+            )),
             'products' => $this->productService->getFrontendRecords(
                 $user,
                 $request->term,
-                [
-                    'orderByColumn' => [
-                        'column' => $request->column,
-                        'order' => $request->order,
-                    ]
-                ]
+                $scopes,
             ),
+            'countryOptions' => $this->productEventService->getFrontendCountryOptions(),
+            'cityOptions' => $this->productEventService->getFrontendCityOptions(),
         ]));
     }
 

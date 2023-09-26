@@ -250,8 +250,8 @@
                 const locationParts = this.selectedLocation.split('-');
 
                 return {
-                    country: locationParts[0],
-                    city: locationParts[1],
+                    country: locationParts[0] ?? "",
+                    city: locationParts[1] ?? "",
                 };
             },
 
