@@ -90,8 +90,7 @@
 </template>
 
 <script>
-    import MixinHasModal from '@/Mixins/HasModal';
-    import MixinMediaLibrary from '@/Mixins/MediaLibrary';
+    import MixinFormMediaLibrary from '@/Mixins/FormMediaLibrary';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
@@ -103,7 +102,6 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty, cloneDeep, isArray } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
-    import { acceptedFileGroups } from '@/Libs/defaults';
 
     export default {
         name: 'BizFormMediaLibrary',
@@ -119,8 +117,7 @@
         },
 
         mixins: [
-            MixinHasModal,
-            MixinMediaLibrary,
+            MixinFormMediaLibrary,
         ],
 
         inject: ['i18n'],
@@ -133,28 +130,17 @@
 
         props: {
             dimension: { type: Object, default: () => {} },
-            disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},
-            isBrowseEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
-            isEditEnabled: { type: Boolean, default: true },
             isImagePreviewThumbnail: { type:Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},
-            mediaTypes: { type: Array, default: () => ['image'] },
             medium: { type: Object, default: () => {} },
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
             placeholder: { type: String, default: 'Open Media Library' },
             required: { type: Boolean, default: false },
-            imagePreviewSize: {
-                type: [String, Number],
-                default: 3,
-                validator(value) {
-                    return (value >= 1 && value <= 12);
-                }
-            },
         },
 
         setup(props, {emit}) {
@@ -166,61 +152,17 @@
         data() {
             return {
                 imageIcon,
-                previewImageSrc: null,
-                isModalPreviewOpen: false,
                 mediumPreview: this.medium,
-                isModalEdit: false,
-                selectedEditedMedia: {},
             };
         },
 
         computed: {
-            acceptedFileType() {
-                let fileTypes = [];
-
-                this.mediaTypes.forEach(function (type) {
-                    fileTypes = [
-                        ...fileTypes,
-                        ...acceptedFileGroups[type] ?? []
-                    ];
-                });
-
-                return fileTypes;
-            },
-
             hasMediumPreview() {
                 return !isEmpty(this.mediumPreview);
-            },
-
-            imagePreviewSizeClass() {
-                return "is-" + this.imagePreviewSize;
-            },
-
-            isDisabled() {
-                return (this.disabled || ! this.isBrowseEnabled);
             },
         },
 
         methods: {
-            openModal() { /* @override */
-                if (! this.isDisabled) {
-                    this.isModalOpen = true;
-                    this.onShownModal();
-                }
-            },
-
-            onPreviewOpened(medium) {
-                this.isModalPreviewOpen = true;
-
-                this.previewImageSrc = medium.file_url;
-            },
-
-            onPreviewClosed() {
-                this.isModalPreviewOpen = false;
-
-                this.previewImageSrc = null;
-            },
-
             onDeleted() {
                 const self = this;
 
@@ -230,12 +172,6 @@
                         self.mediumPreview = {};
                     }
                 })
-            },
-
-            onShownModal() { /* @override */
-                this.setTerm('');
-
-                this.getMediaList(route(this.mediaListRouteName));
             },
 
             onSelectMedia(file) {
@@ -249,22 +185,6 @@
                 this.onSelectMedia(response.data[0]);
 
                 this.closeModal();
-            },
-
-            onEditedExistingMedia(media) {
-                if (this.isEditEnabled) {
-                    if (media.can_edit_existing_media) {
-                        this.selectedEditedMedia = media;
-
-                        this.isModalEdit = true;
-                    } else {
-                        this.openModal();
-                    }
-                }
-            },
-
-            closeEditModal() {
-                this.isModalEdit = false;
             },
 
             updateMediaPreview(media) {
