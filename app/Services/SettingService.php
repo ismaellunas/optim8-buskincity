@@ -881,6 +881,8 @@ class SettingService
     {
         $value = $this->getKey($key);
 
-        return is_null($value) ? [] : json_decode($value, TRUE);
+        return is_null($value) || $value == ""
+            ? []
+            : json_decode($value, TRUE);
     }
 }
