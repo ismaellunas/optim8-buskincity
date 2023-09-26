@@ -336,8 +336,8 @@ return [
         'favicon' => '180 x 180px',
         'logo' => '300 x 300px',
         'profile_picture' => '600 x 600px',
-        'cover' => '2560 x 576px',
-        'gallery' => '1280 x 720px',
+        'cover' => '1440 x 450px',
+        'gallery' => '1200 x 800px',
         'post_thumbnail' => '600 x 400px',
         'open_graph' => '1200 x 630px',
         'qr_code' => '1600 x 1600px',
@@ -373,8 +373,8 @@ return [
             'height' => 180,
         ],
         'cover' => [
-            'width' => 2560,
-            'height' => 576,
+            'width' => 1440,
+            'height' => 450,
         ],
     ],
 
