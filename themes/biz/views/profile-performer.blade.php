@@ -177,7 +177,6 @@
                                 width="48"
                                 height="48"
                                 rounded="is-rounded"
-                                is-lazyload
                             />
                         </figure>
                         <div>
