@@ -184,16 +184,6 @@ class Space extends BaseModel implements TranslatableContract
         $query->whereIn('type_id', $types);
     }
 
-    public function getLogoUrlAttribute(): ?string
-    {
-        return $this->logo ? $this->logo->file_url : null;
-    }
-
-    public function getCoverUrlAttribute(): ?string
-    {
-        return $this->cover ? $this->cover->file_url : null;
-    }
-
     public function getIsParentableAttribute(): bool
     {
         return $this->depth < ModuleService::maxParentDepth();
@@ -221,10 +211,10 @@ class Space extends BaseModel implements TranslatableContract
     public function getOptimizedLogoImageUrl(
         ?int $width = null,
         ?int $height = null
-    ): ?string {
+    ): string {
         return $this->logo
             ? $this->logo->getOptimizedImageUrl($width, $height)
-            : null;
+            : ModuleService::defaultLogoUrl();
     }
 
     public function saveFromInputs(array $inputs)
