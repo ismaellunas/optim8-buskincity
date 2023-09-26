@@ -57,9 +57,8 @@
                 </div>
             </template>
 
-            <div
+            <template
                 v-else
-                class="notification is-info is-light"
             >
                 <p>
                     {{ i18n.connect }}
@@ -68,7 +67,7 @@
                 <div class="buttons are-small mt-5">
                     <biz-link
                         :href=" route('payments.stripe.show')"
-                        class="button is-info"
+                        class="button is-primary"
                     >
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
@@ -78,7 +77,7 @@
                         </span>
                     </biz-link>
                 </div>
-            </div>
+            </template>
         </div>
     </div>
 </template>
