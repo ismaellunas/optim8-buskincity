@@ -267,7 +267,7 @@
                 self.onStartLoadingOverlay();
 
                 axios.post(
-                    '/admin/api/media/replace',
+                    route('admin.api.media.replace'),
                     serialize(editedFile)
                 )
                     .then((response) => {
