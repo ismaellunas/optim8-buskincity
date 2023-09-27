@@ -273,7 +273,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
             'file_name_without_extension',
         ]);
 
-        $this->can_edit_existing_media = auth()->user()->can('update', $this);
+        $user = auth()->user();
+
+        if ($user) {
+            $this->can_edit_existing_media = auth()->user()->can('update', $this);
+        }
 
         $this->load('translations');
     }
