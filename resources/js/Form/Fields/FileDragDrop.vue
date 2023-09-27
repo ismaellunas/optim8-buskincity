@@ -15,6 +15,7 @@
             :placeholder="schema.placeholder"
             :readonly="schema.is_readonly"
             :required="schema.is_required"
+            :dimension="schema.dimension"
             @on-update-files="onUpdateFiles"
             @on-add-file="onAddFile()"
         >
@@ -115,7 +116,8 @@
                 v-if="isModalOpen"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
-                @on-close="saveEditedFiles()"
+                @on-update="saveEditedFiles()"
+                @on-close="cancelEditedFiles()"
             />
         </template>
     </div>

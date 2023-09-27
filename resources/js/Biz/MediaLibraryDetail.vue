@@ -99,6 +99,7 @@
                         {{ i18n.save }}
                     </biz-button>
                     <biz-button
+                        v-if="isSaveAsNewEnabled"
                         type="button"
                         :class="{'is-loading': isUploading, 'is-link': true}"
                         :disabled="isProcessing"
@@ -173,12 +174,14 @@
             baseRouteName: {type: String, default: 'admin.media'},
             isAjax: {type: Boolean, default: false},
             isProcessing: {type: Boolean, default: false},
+            isSaveAsNewEnabled: { type: Boolean, default: true },
             media: { type: Object, required: true },
         },
 
         emits: [
             'on-close-edit-modal',
             'on-delete-edit',
+            'on-update-media',
         ],
 
         setup(props, {emit}) {
@@ -266,9 +269,16 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
 
-                        const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
+                        if (page.props.records) {
+                            const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
 
-                        self.computedMedia.file_url = updatedMedia.file_url;
+                            self.computedMedia.file_url = updatedMedia.file_url;
+                        } else {
+                            self.computedMedia.file_url = getCanvas(cropper, 600)
+                                .toDataURL(this.croppedImageType, 0.8);
+                        }
+
+                        self.$emit('on-update-media', self.computedMedia);
 
                         self.closeModal();
                     },

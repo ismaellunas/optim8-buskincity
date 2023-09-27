@@ -19,6 +19,7 @@
             v-model:medium="computedMedium"
             v-model:medium-url="computedMediumUrl"
             :dimension="dimension"
+            @on-update="closeModal()"
             @on-close="closeModal()"
         />
 

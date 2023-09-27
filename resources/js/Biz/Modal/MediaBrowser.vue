@@ -52,7 +52,7 @@
             :is-ajax="true"
             :is-delete-enabled="false"
             :is-download-enabled="isDownloadEnabled"
-            :is-edit-enabled="false"
+            :is-edit-enabled="isEditEnabled"
             :is-pagination-displayed="false"
             :is-upload-enabled="isUploadEnabled"
             :query-params="queryParams"
@@ -63,6 +63,7 @@
             :instructions="instructions"
             @on-media-submitted="$emit('on-media-submitted', $event)"
             @on-view-changed="$emit('on-view-changed', $event)"
+            @on-close-edit-modal="$emit('on-close-edit-modal')"
         >
             <template
                 #itemActions="{ mediumItem }"
@@ -122,6 +123,7 @@
             instructions: { type: Array, default: () => [] },
             isDownloadEnabled: { type: Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
+            isEditEnabled: { type: Boolean, default: true },
             maxFiles: { type: Number, default: 1, },
             maxFileSize: { type: [String, Number], default: null, },
             queryParams: { type: Object, default: () => {} },
@@ -133,6 +135,7 @@
         emits: [
             'close',
             'on-clicked-pagination',
+            'on-close-edit-modal',
             'on-media-selected',
             'on-media-submitted',
             'on-multiple-media-selected',
