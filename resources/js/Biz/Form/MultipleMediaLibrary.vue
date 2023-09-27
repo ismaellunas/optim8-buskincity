@@ -23,11 +23,13 @@
                 >
                     <biz-media-gallery-item
                         :medium="medium"
-                        :is-edit-enabled="false"
+                        :is-delete-enabled="isBrowseEnabled"
                         :is-download-enabled="isDownloadEnabled"
+                        :is-edit-enabled="isEditEnabled"
                         :is-select-enabled="false"
                         @on-preview-clicked="onPreviewOpened"
                         @on-delete-clicked="onDeleted"
+                        @on-edit-clicked="onEditedExistingMedia"
                     />
                 </div>
             </div>
@@ -35,12 +37,12 @@
             <div class="buttons mb-0">
                 <biz-button-icon
                     type="button"
-                    :icon="icon.image"
-                    :disabled="disabled"
+                    :icon="imageIcon"
+                    :disabled="isDisabled"
                     @click="openModal"
                 >
                     <span>
-                        Open Media Library
+                        {{ placeholder }}
                     </span>
                 </biz-button-icon>
             </div>
@@ -64,6 +66,7 @@
                 :allow-multiple="allowMultiple"
                 :data="media"
                 :is-download-enabled="isDownloadEnabled"
+                :is-edit-enabled="isEditEnabled"
                 :is-upload-enabled="(isUploadEnabled && maxFileNumber > 0)"
                 :query-params="mediaListQueryParams"
                 :search="search"
@@ -77,6 +80,13 @@
                 @on-view-changed="setView"
                 @on-multiple-media-selected="onSelectMedia"
             />
+
+            <biz-modal-media-library-detail
+                v-if="isModalEdit"
+                :media="selectedEditedMedia"
+                @update-media="updateMediaPreview"
+                @close="closeEditModal()"
+            />
         </div>
 
         <template #error>
@@ -86,20 +96,19 @@
 </template>
 
 <script>
-    import MixinHasModal from '@/Mixins/HasModal';
-    import MixinMediaLibrary from '@/Mixins/MediaLibrary';
+    import MixinFormMediaLibrary from '@/Mixins/FormMediaLibrary';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizModal from '@/Biz/Modal.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
-    import icon from '@/Libs/icon-class.js';
-    import { useModelWrapper } from '@/Libs/utils';
+    import BizModalMediaLibraryDetail from '@/Biz/Modal/MediaLibraryDetail.vue';
     import { confirmDelete } from '@/Libs/alert';
-    import { acceptedFileGroups } from '@/Libs/defaults';
-    import { reactive } from 'vue';
-    import { cloneDeep } from 'lodash';
+    import { image as imageIcon } from '@/Libs/icon-class.js';
+    import { cloneDeep, map, isArray } from 'lodash';
+    import { reactive, computed } from 'vue';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFormMultipleMediaLibrary',
@@ -111,12 +120,14 @@
             BizFormField,
             BizInputError,
             BizMediaGalleryItem,
+            BizModalMediaLibraryDetail,
         },
 
         mixins: [
-            MixinHasModal,
-            MixinMediaLibrary,
+            MixinFormMediaLibrary,
         ],
+
+        inject: ['i18n'],
 
         provide() {
             return {
@@ -127,7 +138,6 @@
 
         props: {
             allowMultiple: { type: Boolean, default: false, },
-            disabled: { type: Boolean, default: false },
             dimension: { type: Object, default: () => {} },
             fieldClass: { type: [Object, Array, String], default: undefined },
             instructions: {type: Array, default: () => []},
@@ -135,19 +145,12 @@
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},
             maxFiles: { type: Number, default: 1, },
-            mediaTypes: { type: Array, default: () => ['image'] },
+            maxFileSize: { type: [String, Number], default: null, },
             mediums: { type: Array, default: () => [] },
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: Array, required: true },
+            placeholder: { type: String, default: 'Open Media Library' },
             required: { type: Boolean, default: false },
-            maxFileSize: { type: [String, Number], default: null, },
-            imagePreviewSize: {
-                type: [String, Number],
-                default: 3,
-                validator(value) {
-                    return (value >= 1 && value <= 12);
-                }
-            },
         },
 
         emits: [
@@ -157,8 +160,12 @@
 
         setup(props, {emit}) {
             const selectedMedia = reactive({
-                mediaIds: cloneDeep(props.modelValue),
-                media: cloneDeep(props.mediums),
+                mediaIds: cloneDeep(
+                    computed(() => props.modelValue).value
+                ),
+                media: cloneDeep(
+                    computed(() => props.mediums).value
+                ),
             });
 
             return {
@@ -169,34 +176,14 @@
 
         data() {
             return {
-                actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
-                icon,
-                previewImageSrc: null,
-                isModalPreviewOpen: false,
+                imageIcon,
                 mediumsPreview: this.mediums,
             };
         },
 
         computed: {
-            acceptedFileType() {
-                let fileTypes = [];
-
-                this.mediaTypes.forEach(function (type) {
-                    fileTypes = [
-                        ...fileTypes,
-                        ...acceptedFileGroups[type] ?? []
-                    ];
-                });
-
-                return fileTypes;
-            },
-
             hasMediumsPreview() {
                 return this.mediumsPreview.length > 0;
-            },
-
-            imagePreviewSizeClass() {
-                return "is-" + this.imagePreviewSize;
             },
 
             maxFileNumber() {
@@ -210,22 +197,10 @@
                         'Max file upload: ' + this.maxFileNumber
                     ]
                 ];
-            }
+            },
         },
 
         methods: {
-            onPreviewOpened(medium) {
-                this.isModalPreviewOpen = true;
-
-                this.previewImageSrc = medium.file_url;
-            },
-
-            onPreviewClosed() {
-                this.isModalPreviewOpen = false;
-
-                this.previewImageSrc = null;
-            },
-
             onDeleted(medium) {
                 const self = this;
 
@@ -253,12 +228,6 @@
                 if (indexToRemove !== -1) {
                     this.mediumsPreview.splice(indexToRemove, 1);
                 }
-            },
-
-            onShownModal() { /* @override */
-                this.setTerm('');
-
-                this.getMediaList(route(this.mediaListRouteName));
             },
 
             onSelectMedia(files = []) {
@@ -290,6 +259,26 @@
             setDefaultSelectedMedia() {
                 this.selectedMedia.mediaIds = cloneDeep(this.computedValue);
                 this.selectedMedia.media = cloneDeep(this.mediumsPreview);
+            },
+
+            updateMediaPreview(media) {
+                let cloneMedia = cloneDeep(media);
+
+                cloneMedia.thumbnail_url = null;
+
+                this.mediumsPreview = map(
+                    this.mediumsPreview, function (medium) {
+                        if (cloneMedia.id == medium.id) {
+                            if (! isArray(cloneMedia.translations)) {
+                                cloneMedia.translations = medium.translations;
+                            }
+
+                            return cloneMedia;
+                        }
+
+                        return medium;
+                    }
+                );
             },
         },
     }
