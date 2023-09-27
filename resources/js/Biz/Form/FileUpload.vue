@@ -233,8 +233,8 @@
         },
 
         methods: {
-            async onUpdateFiles(files) {
-                this.fileUploadField.files = await Promise.all(files);
+            onUpdateFiles(files) {
+                this.fileUploadField.files = files;
 
                 this.$emit('on-update-files');
             },
