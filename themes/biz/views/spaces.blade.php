@@ -23,7 +23,7 @@
                             <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
                                 <figure class="image is-250x250 is-inline-block">
                                     <x-image
-                                        src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                        src="{{ $space->getOptimizedLogoImageUrl(250, 250) }}"
                                         alt="{{ $space->name }}"
                                         width="250"
                                         height="250"
@@ -50,7 +50,7 @@
                                 <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-left">
                                         <x-image
-                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) }}"
                                             alt="{{ $space->name }}"
                                             width="250"
                                             height="250"
@@ -77,7 +77,7 @@
                                 <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                     <figure class="image is-250x250 is-pulled-right">
                                         <x-image
-                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $defaultLogoUrl }}"
+                                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) }}"
                                             alt="{{ $space->name }}"
                                             width="250"
                                             height="250"

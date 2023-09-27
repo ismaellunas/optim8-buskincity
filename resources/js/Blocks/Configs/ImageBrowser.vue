@@ -41,6 +41,7 @@
             class="component-configurable"
             :data="modalImages"
             :is-download-enabled="can.media.read"
+            :is-edit-enabled="can.media.edit"
             :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
             :search="search"
