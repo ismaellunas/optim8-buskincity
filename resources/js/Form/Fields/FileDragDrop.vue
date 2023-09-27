@@ -91,7 +91,7 @@
                             <div class="buttons is-pulled-right">
                                 <biz-button
                                     type="button"
-                                    class="is-link"
+                                    class="is-primary"
                                     @click="saveEditedFiles()"
                                 >
                                     Save
@@ -113,7 +113,7 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen"
+                v-if="isModalOpen && isImage(computedValue.files[0])"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
                 @on-update="saveEditedFiles()"
@@ -222,10 +222,10 @@
                 }
             },
 
-            async checkValueHasImage() {
+            checkValueHasImage() {
                 this.hasImage = false;
 
-                let files = await Promise.all(this.computedValue.files);
+                let files = this.computedValue.files;
 
                 files.forEach((file) => {
                     if (this.isImage(file)) {
@@ -243,14 +243,8 @@
                 );
             },
 
-            async isImage(file) {
-                if (isPromise(file)) {
-                    let promiseFile = await file;
-
-                    return promiseFile.type.startsWith("image");
-                } else {
-                    return file.type.startsWith("image");;
-                }
+            isImage(file) {
+                return file.type.startsWith("image") ?? false;
             },
 
             onUpdateFiles() {
