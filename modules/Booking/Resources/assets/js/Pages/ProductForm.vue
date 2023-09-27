@@ -73,6 +73,8 @@
             :label="i18n.upload"
             :is-download-enabled="can?.media?.read ?? false"
             :is-upload-enabled="can?.media?.add ?? false"
+            :is-edit-enabled="can?.media?.edit ?? false"
+            :is-browse-enabled="can?.media?.browse ?? false"
             :mediums="gallery"
             :dimension="dimensions.gallery"
             :allow-multiple="true"

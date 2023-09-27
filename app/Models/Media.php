@@ -253,7 +253,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $slice;
     }
 
-    public function getCanDeletedAttribute(): bool
+    public function getIsInUseAttribute(): bool
     {
         return $this->mediable->isEmpty();
     }
@@ -262,5 +262,19 @@ class Media extends CloudinaryMedia implements TranslatableContract
     {
         $this->user_id = $userId;
         $this->save();
+    }
+
+    public function transformMediaLibrary(): void
+    {
+        $this->append([
+            'is_image',
+            'thumbnail_url',
+            'display_file_name',
+            'file_name_without_extension',
+        ]);
+
+        $this->can_edit_existing_media = auth()->user()->can('update', $this);
+
+        $this->load('translations');
     }
 }

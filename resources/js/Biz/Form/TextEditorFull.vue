@@ -30,8 +30,9 @@
             :accepted-file-type="acceptedTypes"
             :data="media"
             :instructions="mediaLibraryInstructions"
-            :is-download-enabled="isDownloadEnabled"
-            :is-upload-enabled="isUploadEnabled"
+            :is-download-enabled="can?.media?.read"
+            :is-edit-enabled="can?.media?.edit"
+            :is-upload-enabled="can?.media?.add"
             :query-params="mediaListQueryParams"
             :search="search"
             :style="{zIndex: 1300}"
@@ -71,15 +72,15 @@
             MixinMediaTextEditor,
         ],
 
+        inject: ['can'],
+
         props: {
             config: {type: Object, default: () => {}},
             disabled: {type: Boolean, default: false},
             fieldClass: { type: [Object, Array, String], default: undefined },
             height: {type: Number, default: 500},
             isConfigCombined: {type: Boolean, default: false},
-            isDownloadEnabled: {type: Boolean, default: true},
             isMediaEnabled: {type: Boolean, default: true},
-            isUploadEnabled: {type: Boolean, default: true},
             label: { type: String, default: null },
             message: { type: [String, Array], default: undefined },
             modelValue: { type: [String, null], required: true },
