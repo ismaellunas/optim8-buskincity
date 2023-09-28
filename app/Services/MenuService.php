@@ -658,10 +658,9 @@ class MenuService
     private function moduleMenuBuilderClasses(): array
     {
         $classes = [];
-        $activeModules = app(ModuleService::class)->getModuleListByStatus();
 
-        foreach ($activeModules as $activeModule) {
-            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuOption';
+        foreach (app(ModuleService::class)->modules() as $activeModule) {
+            $classes[] = '\\Modules\\'. $activeModule->name .'\\Menus\\MenuOption';
         }
 
         return $classes;
