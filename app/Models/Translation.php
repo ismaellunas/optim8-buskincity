@@ -13,9 +13,10 @@ class Translation extends Model implements TranslationLoader
     use HasFactory;
 
     protected $fillable = [
-        'locale',
         'group',
         'key',
+        'locale',
+        'module',
         'value',
     ];
 

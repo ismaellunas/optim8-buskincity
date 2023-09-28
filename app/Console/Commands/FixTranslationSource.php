@@ -55,13 +55,15 @@ class FixTranslationSource extends Command
         $key,
         $source,
         $group = null,
-        $value = null
+        $value = null,
+        $module = null
     ): void {
         $translation = Translation::firstOrNew(
             [
                 'locale' => $locale,
                 'group'  => $group,
                 'key'    => $key,
+                'module' => $module,
             ],
             [
                 'value' => $value,
@@ -77,10 +79,12 @@ class FixTranslationSource extends Command
         $translation->save();
     }
 
-    private function importTranslations(string $basePath)
+    private function importTranslations(string $basePath, string $module = null)
     {
         foreach ($this->files()->directories($basePath) as $langPath) {
             $locale = basename($langPath);
+
+            if (empty($module) && $locale == 'modules') continue;
 
             foreach ($this->files()->allfiles($langPath) as $idx => $file) {
                 $info = pathinfo($file);
@@ -104,12 +108,21 @@ class FixTranslationSource extends Command
 
                 if ($translations && is_array($translations)) {
                     foreach (Arr::dot($translations) as $key => $value) {
+                        $manipulatedGroup = null;
+                        $manipulatedKey = null;
+
+                        if ($module && $group == 'terms') {
+                            $manipulatedKey = Str::snake($key);
+                            $manipulatedGroup = $module.'_term';
+                        }
+
                         $this->fixTranslation(
                             $locale,
-                            $key,
+                            $manipulatedKey ?? $key,
                             $source,
-                            $group,
+                            $manipulatedGroup ?? $group,
                             $value,
+                            $module,
                         );
                     }
                 }
@@ -137,6 +150,7 @@ class FixTranslationSource extends Command
                             $source,
                             null,
                             $value,
+                            $module,
                         );
                     }
                 }
@@ -148,11 +162,11 @@ class FixTranslationSource extends Command
     {
         foreach (app(ModuleService::class)->getAllEnabledNames() as $module) {
 
-            $basePath = lang_path()."/modules/".strtolower($module);
+            $basePath = lang_path()."/modules/".Str::snake($module);
 
             if (! is_dir($basePath)) continue;
 
-            $this->importTranslations($basePath);
+            $this->importTranslations($basePath, Str::snake($module));
         }
     }
 
