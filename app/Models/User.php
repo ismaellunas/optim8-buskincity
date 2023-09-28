@@ -240,7 +240,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getIsAdministratorAttribute(): bool
     {
-        return $this->hasRole(config('permission.role_names.admin'));
+        return (
+            $this->hasRole(config('permission.role_names.admin'))
+            || $this->isSuperAdministrator
+        );
     }
 
     public function getOriginLanguageCodeAttribute(): ?string

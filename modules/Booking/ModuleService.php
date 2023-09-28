@@ -2,42 +2,49 @@
 
 namespace Modules\Booking;
 
+use App\Contracts\ManageableModuleInterface;
+use App\Models\User;
+use App\Services\BaseModuleService;
+use App\Traits\ManageableModule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 
-class ModuleService
+class ModuleService extends BaseModuleService implements ManageableModuleInterface
 {
-    public static function adminMenus(Request $request): array
+    use ManageableModule;
+
+    public function menuPermissions(User $user): array
     {
-        $user = $request->user();
-
-        $children = collect([
-            [
-                'title' => __('Products'),
-                'link' => route('admin.booking.products.index'),
-                'isActive' => $request->routeIs('admin.booking.products.index'),
-                'isEnabled' => $user->can('viewAny', Product::class)
-            ],
-            [
-                'title' => __('Bookings'),
-                'link' => route('admin.booking.orders.index'),
-                'isActive' => $request->routeIs('admin.booking.orders.index'),
-                'isEnabled' => $user->can('viewAny', Order::class)
-            ],
-            [
-                'title' => __('Settings'),
-                'link' => route('admin.booking.settings.edit'),
-                'isActive' => $request->routeIs('admin.booking.settings.edit'),
-                'isEnabled' => $user->hasRole(['Administrator', 'Super Administrator']),
-            ],
-        ]);
-
         return [
-            'title' => __('Booking'),
-            'isActive' => $request->routeIs('admin.booking.*'),
-            'isEnabled' => $children->contains('isEnabled', true),
-            'children' => $children->all(),
+            'admin.booking.products.index' => $user->can('viewAny', Product::class),
+            'admin.booking.orders.index' => $user->can('viewAny', Order::class),
+            'admin.booking.settings.edit' => $user->isAdministrator,
+        ];
+    }
+
+    public function defaultNavigations(): array
+    {
+        return [
+            [
+                'route' => 'admin.booking.products.index',
+                'routeIs' => 'admin.booking.products.index',
+                'title' => ":Booking_term.products",
+                'default' => true,
+            ],
+            [
+                'route' => 'admin.booking.orders.index',
+                'routeIs' => 'admin.booking.orders.index',
+                'title' => ":Booking_term.bookings",
+                'default' => true,
+            ],
+            [
+                'route' => 'admin.booking.settings.edit',
+                'routeIs' => 'admin.booking.settings.edit',
+                'title' => "Settings",
+                'default' => true,
+            ],
         ];
     }
 
@@ -45,13 +52,13 @@ class ModuleService
     {
         return [
             [
-                'title' => __('Products'),
+                'title' => Str::title(__(":booking_term.products")),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => true,
             ],
             [
-                'title' => __('Bookings'),
+                'title' => Str::title(__(':booking_term.bookings')),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
                 'isEnabled' => true,
