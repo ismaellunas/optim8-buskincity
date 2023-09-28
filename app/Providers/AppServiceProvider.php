@@ -32,6 +32,7 @@ use App\Services\{
     StripeService,
     StripeSettingService,
     ThemeService,
+    TranslationManagerService,
     TranslationService,
     WidgetService,
 };
@@ -70,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         SettingService::class => SettingService::class,
         StripeService::class => StripeService::class,
         StripeSettingService::class => StripeSettingService::class,
+        TranslationManagerService::class => TranslationManagerService::class,
         TranslationService::class => TranslationService::class,
         WidgetService::class => WidgetService::class,
 
