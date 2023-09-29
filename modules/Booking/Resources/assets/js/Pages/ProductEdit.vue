@@ -68,7 +68,7 @@
                                 <biz-form-select
                                     v-model="eventForm.duration"
                                     :label="i18n.duration"
-                                    :message="error('duration', 'eventForm')"
+                                    :message="error('duration', eventErrorBag)"
                                     has-addons
                                     required
                                     is-fullwidth
@@ -98,7 +98,7 @@
                                     max="365"
                                     min="0"
                                     required
-                                    :message="error('bookable_date_range', 'eventForm')"
+                                    :message="error('bookable_date_range', eventErrorBag)"
                                 >
                                     <template #afterInput>
                                         <p class="control">
