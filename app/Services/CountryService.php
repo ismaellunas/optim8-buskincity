@@ -6,9 +6,10 @@ use App\Entities\Caches\CountryCache;
 use App\Models\Country;
 use App\Models\UserMeta;
 use App\Traits\HasCache;
-use Illuminate\Support\Collection;
 use DateTime;
 use DateTimeZone;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class CountryService
 {
@@ -135,7 +136,7 @@ class CountryService
 
             $timezoneList[] = [
                 'id' => $timezone,
-                'value' => "({$prettyOffset}) $timezone",
+                'value' => Str::replace("_", " ", "({$prettyOffset}) $timezone"),
             ];
         }
 
