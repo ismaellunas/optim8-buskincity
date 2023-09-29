@@ -213,7 +213,7 @@
                             required
                         />
 
-                        <hr class="mt-0">
+                        <hr>
 
                         <div class="columns">
                             <div class="column">
