@@ -206,20 +206,12 @@
 
                         <hr class="mt-0">
 
-                        <biz-form-select
+                        <biz-form-timezone
                             v-model="eventForm.timezone"
                             :label="i18n.timezone"
-                            :message="error('timezone', 'eventForm')"
+                            :message="error('timezone', eventErrorBag)"
                             required
-                        >
-                            <option
-                                v-for="timezoneOption in timezoneOptions"
-                                :key="timezoneOption.id"
-                                :value="timezoneOption.id"
-                            >
-                                {{ timezoneOption.value }}
-                            </option>
-                        </biz-form-select>
+                        />
 
                         <hr class="mt-0">
 
@@ -437,6 +429,7 @@
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizGmapMarker from '@/Biz/GmapMarker.vue';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
@@ -464,6 +457,7 @@
             BizFormNumberAddons,
             BizFormSelect,
             BizFormTextarea,
+            BizFormTimezone,
             BizGmapMarker,
             BizProvideInjectTab,
             BizProvideInjectTabs,
@@ -502,7 +496,6 @@
             imageMimes: { type: Array, required: true },
             product: { type: Object, required: true },
             event: { type: Object, required: true },
-            timezoneOptions: { type: Object, required: true },
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
