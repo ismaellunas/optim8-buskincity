@@ -434,15 +434,15 @@
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import BizTag from '@/Biz/Tag.vue';
+    import icon from '@/Libs/icon-class';
+    import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
     import ProductForm from './ProductForm.vue';
     import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes.vue';
-    import icon from '@/Libs/icon-class';
-    import moment from 'moment';
     import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
@@ -535,23 +535,26 @@
         },
 
         setup(props) {
+            const product = computed(() => props.product);
+            const event = computed(() => props.event);
+
             const form = {
-                name: props.product.name,
-                status: props.product.status,
-                description: props.product.description,
-                short_description: props.product.short_description,
-                roles: props.product.roles,
-                is_check_in_required: props.product.is_check_in_required,
-                gallery: props.product.gallery.map(media => media.id),
+                name: product.value.name,
+                status: product.value.status,
+                description: product.value.description,
+                short_description: product.value.short_description,
+                roles: product.value.roles,
+                is_check_in_required: product.value.is_check_in_required,
+                gallery: product.value.gallery.map(media => media.id),
             };
 
             const eventForm = {
-                location: props.event.location,
-                duration: props.event.duration,
-                bookable_date_range: props.event.bookable_date_range,
-                timezone: props.event.timezone,
-                weekly_hours: props.weeklyHours,
-                date_overrides: cloneDeep(props.dateOverrides),
+                location: event.value.location,
+                duration: event.value.duration,
+                bookable_date_range: event.value.bookable_date_range,
+                timezone: event.value.timezone,
+                weekly_hours: computed(() => props.weeklyHours).value,
+                date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
             }
 
             return {
