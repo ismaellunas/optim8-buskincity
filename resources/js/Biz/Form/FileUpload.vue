@@ -28,8 +28,8 @@
                 :max-total-file-size="maxTotalFileSizeUpload"
                 :placeholder="placeholder"
                 :required="isRequired"
-                @on-update-files="onUpdateFiles"
-                @on-add-file="$emit('on-add-file')"
+                @update-files="onUpdateFiles"
+                @add-files="onAddFiles"
             />
         </div>
 
@@ -164,9 +164,8 @@
         },
 
         emits: [
-            'on-add-file',
+            'add-files',
             'on-file-picked',
-            'on-update-files',
         ],
 
         setup(props, { emit }) {
@@ -235,8 +234,10 @@
         methods: {
             onUpdateFiles(files) {
                 this.fileUploadField.files = files;
+            },
 
-                this.$emit('on-update-files');
+            onAddFiles(addedFiles) {
+                this.$emit('add-files', addedFiles);
             },
 
             onDeleteMedium(medium) {

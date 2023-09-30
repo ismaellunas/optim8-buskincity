@@ -11,7 +11,7 @@
         :max-total-file-size="maxTotalFileSize"
         :required="required"
         :drop-validation="true"
-        @addfile="$emit('on-add-file')"
+        @addfile="onAddFile"
         @updatefiles="onUpdateFiles"
     />
 </template>
@@ -50,9 +50,16 @@
         },
 
         emits: [
-            'on-add-file',
-            'on-update-files',
+            'add-file',
+            'add-files',
+            'update-files',
         ],
+
+        data() {
+            return {
+                addedFiles: [],
+            };
+        },
 
         methods: {
             addFiles(files) {
@@ -73,11 +80,18 @@
                     uploadFiles.push(file.source);
                 });
 
-                this.$emit('on-update-files', uploadFiles);
+                this.$emit('update-files', uploadFiles);
+                this.$emit('add-files', this.addedFiles);
+
+                this.addedFiles = [];
             },
 
             reset() {
                 this.$refs.pond.removeFiles();
+            },
+
+            onAddFile(error, file) {
+                this.addedFiles.push(file.file)
             },
         },
     }

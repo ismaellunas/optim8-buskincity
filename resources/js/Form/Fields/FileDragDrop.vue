@@ -16,8 +16,7 @@
             :readonly="schema.is_readonly"
             :required="schema.is_required"
             :dimension="schema.dimension"
-            @on-update-files="onUpdateFiles"
-            @on-add-file="onAddFile()"
+            @add-files="onAddFiles"
         >
             <template #default>
                 <biz-button-icon
@@ -113,7 +112,7 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen && isImage(computedValue.files[0])"
+                v-if="isModalOpen && isImageEditorEnabled && isImage(computedValue.files[0])"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
                 @on-update="saveEditedFiles()"
@@ -133,7 +132,7 @@
     import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
-    import { useModelWrapper, isPromise } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import { cloneDeep, map } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
@@ -183,9 +182,7 @@
         data() {
             return {
                 editIcon,
-                hasImage: false,
                 isModalPreviewOpen: false,
-                isMultipleUpload: false,
                 previewImageSrc: null,
             };
         },
@@ -194,6 +191,25 @@
             notes() {
                 return this.schema.instructions
                     .concat(this.schema.notes);
+            },
+
+            hasImage() {
+                let hasImage = false;
+
+                this.computedValue.files.forEach((file) => {
+                    if (this.isImage(file)) {
+                        hasImage = true;
+                    }
+                });
+
+                return hasImage;
+            },
+
+            isMultipleUpload() {
+                return (
+                    this.schema.max_file_number > 1
+                    && this.computedValue.files.length > 1
+                );
             },
 
             isImageEditorEnabled() {
@@ -216,40 +232,8 @@
                     .$refs.file_upload.reset();
             },
 
-            onAddFile() {
-                if (this.checkValueHasImage()) {
-                    this.openModal();
-                }
-            },
-
-            checkValueHasImage() {
-                this.hasImage = false;
-
-                let files = this.computedValue.files;
-
-                files.forEach((file) => {
-                    if (this.isImage(file)) {
-                        this.hasImage = true;
-                    }
-                });
-
-                return this.hasImage;
-            },
-
-            checkValueIsMultipleUpload() {
-                this.isMultipleUpload = (
-                    this.schema.max_file_number > 1
-                    && this.computedValue.files.length > 1
-                );
-            },
-
             isImage(file) {
                 return file.type.startsWith("image") ?? false;
-            },
-
-            onUpdateFiles() {
-                this.checkValueHasImage();
-                this.checkValueIsMultipleUpload();
             },
 
             saveEditedFiles() {
@@ -272,6 +256,16 @@
                 this.computedValue.files = map(files, 'file');
 
                 this.closeModal();
+            },
+
+            onAddFiles(addedFiles) {
+                if (addedFiles.length > 0) {
+                    addedFiles.forEach((file) => {
+                        if (this.isImage(file)) {
+                            this.openModal();
+                        }
+                    });
+                }
             },
         },
     };
