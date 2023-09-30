@@ -9,9 +9,10 @@
         <component
             :is="mediaComponent"
             :media="computedListMedia"
+            :is-edit-button-for-image="true"
             :is-edit-enabled="true"
-            :is-scrolled="true"
             :is-filename-shown="isFilenameShown"
+            :is-scrolled="true"
             @on-delete-clicked="onDeleteMedium"
             @on-edit-clicked="onEditMedium"
         />
