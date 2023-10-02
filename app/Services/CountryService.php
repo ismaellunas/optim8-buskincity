@@ -130,13 +130,16 @@ class CountryService
         $timezoneList = [];
         foreach ($timezoneOffsets as $timezone => $offset) {
             $offsetPrefix = $offset < 0 ? '-' : '+';
-            $offsetFormatted = gmdate( 'H:i', abs($offset) );
+            $offsetFormatted = gmdate( 'G:i', abs($offset) );
 
-            $prettyOffset = "GMT{$offsetPrefix}{$offsetFormatted}";
+            $prettyOffset = "GMT {$offsetPrefix}{$offsetFormatted}";
 
             $timezoneList[] = [
                 'id' => $timezone,
-                'value' => Str::replace("_", " ", "({$prettyOffset}) $timezone"),
+                'value' => [
+                    'offsetValue' => $prettyOffset,
+                    'timezone' => Str::replace("_", " ", "$timezone"),
+                ],
             ];
         }
 

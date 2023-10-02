@@ -11,9 +11,9 @@
             <template #trigger>
                 <span
                     class="has-text-left"
-                    :style="{'min-width': '15rem'}"
+                    :style="{'min-width': '20rem'}"
                 >
-                    {{ selectedTimezone.value }}
+                    {{ selectedTimezone }}
                 </span>
             </template>
 
@@ -23,7 +23,7 @@
                     :key="option.id"
                     @click="timezone = option.id"
                 >
-                    {{ option.value }}
+                    {{ timezoneValueFormatter(option.value) }}
                 </biz-dropdown-item>
             </div>
         </biz-form-dropdown-search>
@@ -64,8 +64,13 @@
 
         computed: {
             selectedTimezone() {
-                return find(this.options, {id: this.timezone})
-                    ?? {};
+                const selectedTimezone = find(this.options, {id: this.timezone});
+
+                if (selectedTimezone) {
+                    return this.timezoneValueFormatter(selectedTimezone.value);
+                }
+
+                return null;
             },
         },
 
@@ -87,12 +92,21 @@
             searchOptions: debounce(function(term) {
                 if (! isEmpty(term) && term.length > 1) {
                     this.filteredOptions = filter(this.options, function (option) {
-                        return new RegExp(term, 'i').test(option.value);
+                        const termRegex = new RegExp(term, 'i');
+
+                        return (
+                            termRegex.test(option.value.offsetValue)
+                            || termRegex.test(option.value.timezone)
+                        );
                     });
                 } else {
                     this.filteredOptions = this.options;
                 }
-            }, debounceTime)
+            }, debounceTime),
+
+            timezoneValueFormatter(value) {
+                return `(${value.offsetValue}) ${value.timezone}`;
+            },
         },
     };
 </script>
