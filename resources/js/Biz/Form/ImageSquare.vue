@@ -95,7 +95,7 @@
             <template #actions>
                 <biz-button
                     type="button"
-                    class="is-link"
+                    class="is-primary"
                     :disabled="disabled"
                     @click="updateImageFile()"
                 >
