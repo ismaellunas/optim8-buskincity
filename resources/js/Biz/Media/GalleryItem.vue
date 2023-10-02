@@ -154,7 +154,6 @@
                 } else {
                     return (
                         this.isEditEnabled
-                        && this.isEditButtonForImage
                         && this.isImage
                     );
                 }
