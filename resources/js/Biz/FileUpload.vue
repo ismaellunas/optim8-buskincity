@@ -21,6 +21,7 @@
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
     import vueFilePond from 'vue-filepond';
+    import { find } from 'lodash';
 
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
     import 'filepond/dist/filepond.min.css';
@@ -58,6 +59,7 @@
         data() {
             return {
                 addedFiles: [],
+                errorFiles: [],
             };
         },
 
@@ -74,16 +76,22 @@
             },
 
             onUpdateFiles(files) {
+                const self = this;
                 let uploadFiles = [];
 
                 files.forEach(function (file) {
-                    uploadFiles.push(file.source);
+                    if (
+                        typeof find(self.errorFiles, { name: file.source.name }) === 'undefined'
+                    ) {
+                        uploadFiles.push(file.source);
+                    }
                 });
 
-                this.$emit('update-files', uploadFiles);
-                this.$emit('add-files', this.addedFiles);
+                self.$emit('update-files', uploadFiles);
+                self.$emit('add-files', self.addedFiles);
 
-                this.addedFiles = [];
+                self.addedFiles = [];
+                self.errorFiles = [];
             },
 
             reset() {
@@ -91,7 +99,11 @@
             },
 
             onAddFile(error, file) {
-                this.addedFiles.push(file.file)
+                if (! error) {
+                    this.addedFiles.push(file.file)
+                } else {
+                    this.errorFiles.push(file.file)
+                }
             },
         },
     }
