@@ -263,6 +263,8 @@
                     addedFiles.forEach((file) => {
                         if (this.isImage(file)) {
                             this.openModal();
+
+                            return;
                         }
                     });
                 }
