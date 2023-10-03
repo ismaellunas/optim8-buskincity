@@ -16,7 +16,7 @@ class CustomFieldUrl extends DefaultUrl implements PublicPageProfileUrlInterface
             )
             ->firstWhere('role_id', $this->user->role_id);
 
-        $field = Arr::get($setting, 'field', null);
+        $field = Arr::get($setting, 'field');
 
         $value = $this->user->fullName;
 
