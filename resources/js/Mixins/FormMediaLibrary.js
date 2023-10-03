@@ -8,6 +8,10 @@ export default {
         MixinMediaLibrary,
     ],
 
+    inject: {
+        i18n: { default: () => {} },
+    },
+
     props: {
         disabled: { type: Boolean, default: false },
         isBrowseEnabled: { type: Boolean, default: true },
