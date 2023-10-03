@@ -139,15 +139,16 @@
                                 successAlert(page.props.flash.message);
 
                                 self.$emit('on-success-submit');
-
+                                self.formFieldKey += 1;
                             },
                             onError: errors => {
-                                oopsAlert({isScrollToTop: false});
+                                oopsAlert({
+                                    text: 'There are errors in the form. Please check the fields marked in red for more information.',
+                                    isScrollToTop: false
+                                });
                             },
                             onFinish: (visit) => {
                                 self.onEndLoadingOverlay();
-
-                                self.formFieldKey += 1;
                             },
                         }
                     );
