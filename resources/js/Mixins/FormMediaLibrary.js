@@ -1,6 +1,7 @@
 import MixinHasModal from '@/Mixins/HasModal';
 import MixinMediaLibrary from '@/Mixins/MediaLibrary';
 import { acceptedFileGroups } from '@/Libs/defaults';
+import { confirm as confirmAlert } from '@/Libs/alert';
 
 export default {
     mixins: [
@@ -87,9 +88,29 @@ export default {
         onEditedExistingMedia(media) {
             if (this.isEditEnabled) {
                 if (media.can_edit_existing_media) {
-                    this.selectedEditedMedia = media;
+                    if (
+                        media.is_in_use
+                        || media.is_in_use_multiple
+                    ) {
+                        confirmAlert(
+                            this.i18n.edit_resource,
+                            this.i18n.warning_edit_resource,
+                            this.i18n.yes,
+                            {
+                                icon: 'warning'
+                            }
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                this.selectedEditedMedia = media;
 
-                    this.isModalEdit = true;
+                                this.isModalEdit = true;
+                            }
+                        });
+                    } else {
+                        this.selectedEditedMedia = media;
+
+                        this.isModalEdit = true;
+                    }
                 } else {
                     this.openModal();
                 }

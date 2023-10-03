@@ -257,6 +257,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
     {
         return $this->mediable->isNotEmpty();
     }
+
+    public function getIsInUseMultipleAttribute(): bool
+    {
+        return $this->mediable->count() > 1;
     }
 
     public function saveUserId(int $userId): void
@@ -272,6 +276,8 @@ class Media extends CloudinaryMedia implements TranslatableContract
             'thumbnail_url',
             'display_file_name',
             'file_name_without_extension',
+            'is_in_use',
+            'is_in_use_multiple',
         ]);
 
         $user = auth()->user();
