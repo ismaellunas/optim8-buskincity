@@ -284,7 +284,7 @@ class SettingService
         );
 
         if ($media) {
-            $this->transformMedia($media);
+            $media->transformMediaLibrary();
         }
 
         return $media;
@@ -500,7 +500,7 @@ class SettingService
         $media = $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
 
         if ($media) {
-            $this->transformMedia($media);
+            $media->transformMediaLibrary();
         }
 
         return $media;
@@ -531,7 +531,7 @@ class SettingService
         $media = $this->getMediaFromSetting('favicon_media_id');
 
         if ($media) {
-            $this->transformMedia($media);
+            $media->transformMediaLibrary();
         }
 
         return $media;
@@ -692,16 +692,6 @@ class SettingService
         $this->saveMedia('open_graph_media_id', $mediaId, 'theme_seo');
     }
 
-    private function transformMedia(Media $media): void
-    {
-        $media->append([
-            'is_image',
-            'thumbnail_url',
-            'display_file_name',
-            'optimized_image_url'
-        ]);
-    }
-
     public function adminDashboardWidgets(): Collection
     {
         $key = 'dashboard_widget_admin';
@@ -844,7 +834,7 @@ class SettingService
         $media = $this->getMediaFromSetting('post_thumbnail_media_id');
 
         if ($media) {
-            $this->transformMedia($media);
+            $media->transformMediaLibrary();
         }
 
         return $media;
@@ -855,7 +845,7 @@ class SettingService
         $media = $this->getMediaFromSetting('open_graph_media_id');
 
         if ($media) {
-            $this->transformMedia($media);
+            $media->transformMediaLibrary();
         }
 
         return $media;

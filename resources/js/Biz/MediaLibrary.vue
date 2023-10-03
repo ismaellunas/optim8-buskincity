@@ -164,7 +164,7 @@
             >
                 <biz-media-library-detail
                     :media="formMedia[index]"
-                    :allow-multiple="allowMultiple"
+                    :allow-multiple="(allowMultiple && formMedia.length > 1)"
                     :is-ajax="isAjax"
                     :is-processing="isProcessing"
                     @on-close-edit-modal="closeEditModal()"
@@ -234,13 +234,7 @@
     import { includes, isEmpty, cloneDeep } from 'lodash';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/vue3';
-
-    function generateNewTranslation() {
-        return {
-            alt: '',
-            description: '',
-        };
-    };
+    import { generateNewTranslation } from '@/Libs/media-translation';
 
     export default {
         name: 'MediaLibrary',
@@ -319,6 +313,7 @@
         },
 
         emits: [
+            'on-close-edit-modal',
             'on-media-submitted',
             'on-type-changed',
             'on-view-changed',
@@ -379,38 +374,65 @@
 
         methods: {
             openEditModal(media) {
-                this.isEditing = true;
+                const self = this;
 
                 if (media) {
-                    let form = cloneDeep(media);
-                    let translations = {};
+                    if (! media.canEdited) {
+                        confirmAlert(
+                            self.i18n.edit_resource,
+                            self.i18n.warning_edit_resource,
+                            self.i18n.are_you_sure,
+                            {
+                                icon: 'warning'
+                            }
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                self.onOpenEditModal(media);
 
-                    if (isEmpty(media.translations)) {
-                        translations[this.defaultLocale] = generateNewTranslation();
-                    } else {
-                        media.translations.forEach(translation => {
-                            translations[translation.locale] = {
-                                alt: translation.alt ?? null,
-                                description: translation.description ?? null,
-                            };
+                                self.isEditing = true;
+                            }
                         });
+                    } else {
+                        self.onOpenEditModal(media);
 
-                        if (!translations[this.defaultLocale]) {
-                            translations[this.defaultLocale] = generateNewTranslation();
-                        }
+                        self.isEditing = true;
                     }
-
-                    form.file_name = media.file_name_without_extension;
-                    form.translations = translations;
-
-                    this.formMedia.push(form);
+                } else {
+                    self.isEditing = true;
                 }
+            },
+
+            onOpenEditModal(media) {
+                let form = cloneDeep(media);
+                let translations = {};
+
+                if (isEmpty(media.translations)) {
+                    translations[this.defaultLocale] = generateNewTranslation();
+                } else {
+                    media.translations.forEach(translation => {
+                        translations[translation.locale] = {
+                            alt: translation.alt ?? null,
+                            description: translation.description ?? null,
+                        };
+                    });
+
+                    if (!translations[this.defaultLocale]) {
+                        translations[this.defaultLocale] = generateNewTranslation();
+                    }
+                }
+
+                form.file_name = media.file_name_without_extension;
+                form.translations = translations;
+
+                this.formMedia.push(form);
             },
 
             closeEditModal() {
                 this.isEditing = false;
                 this.formMedia = [];
                 this.fileUploadKey += 1;
+
+                this.$emit('on-close-edit-modal');
             },
 
             onDeleteRecord(record) {
@@ -420,7 +442,7 @@
                     confirmAlert(
                         self.i18n.delete_resource,
                         self.i18n.warning_delete_resource,
-                        'Yes',
+                        self.i18n.yes,
                         {
                             icon: 'warning'
                         }

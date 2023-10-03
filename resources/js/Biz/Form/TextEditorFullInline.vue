@@ -12,11 +12,15 @@
             :accepted-file-type="acceptedTypes"
             :data="media"
             :instructions="mediaLibraryInstructions"
+            :is-download-enabled="can?.media?.read"
+            :is-edit-enabled="can?.media?.edit"
+            :is-upload-enabled="can?.media?.add"
             :query-params="mediaListQueryParams"
             :search="search"
             :style="{zIndex: 1300}"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
+            @on-close-edit-modal="refreshMediaList"
             @on-media-selected="selectFile"
             @on-media-submitted="onMediaSubmitted"
             @on-view-changed="setView"
@@ -44,6 +48,7 @@
             MixinMediaLibrary,
             MixinMediaTextEditor,
         ],
+        inject: ['can'],
         props: {
             config: { type: Object, default: () => {} },
             modelValue: { type: [String, null], required: true },

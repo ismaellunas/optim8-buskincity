@@ -92,6 +92,10 @@ export default {
 
         search(term) {
             this.setTerm(term);
+            this.refreshImageLists();
+        },
+
+        refreshImageLists() {
             this.getImagesList(route(this.imageListRouteName));
         },
     },

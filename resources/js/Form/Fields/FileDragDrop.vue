@@ -15,6 +15,7 @@
             :placeholder="schema.placeholder"
             :readonly="schema.is_readonly"
             :required="schema.is_required"
+            :dimension="schema.dimension"
             @on-update-files="onUpdateFiles"
             @on-add-file="onAddFile()"
         >
@@ -90,7 +91,7 @@
                             <div class="buttons is-pulled-right">
                                 <biz-button
                                     type="button"
-                                    class="is-link"
+                                    class="is-primary"
                                     @click="saveEditedFiles()"
                                 >
                                     Save
@@ -112,10 +113,11 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen"
+                v-if="isModalOpen && isImage(computedValue.files[0])"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
-                @on-close="saveEditedFiles()"
+                @on-update="saveEditedFiles()"
+                @on-close="cancelEditedFiles()"
             />
         </template>
     </div>
@@ -220,10 +222,10 @@
                 }
             },
 
-            async checkValueHasImage() {
+            checkValueHasImage() {
                 this.hasImage = false;
 
-                let files = await Promise.all(this.computedValue.files);
+                let files = this.computedValue.files;
 
                 files.forEach((file) => {
                     if (this.isImage(file)) {
@@ -241,14 +243,8 @@
                 );
             },
 
-            async isImage(file) {
-                if (isPromise(file)) {
-                    let promiseFile = await file;
-
-                    return promiseFile.type.startsWith("image");
-                } else {
-                    return file.type.startsWith("image");;
-                }
+            isImage(file) {
+                return file.type.startsWith("image") ?? false;
             },
 
             onUpdateFiles() {
@@ -256,8 +252,8 @@
                 this.checkValueIsMultipleUpload();
             },
 
-            async saveEditedFiles() {
-                const newFiles = cloneDeep(await Promise.all(this.computedValue.files));
+            saveEditedFiles() {
+                const newFiles = cloneDeep(this.computedValue.files);
 
                 this.reset();
 
