@@ -255,7 +255,8 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public function getIsInUseAttribute(): bool
     {
-        return $this->mediable->isEmpty();
+        return $this->mediable->isNotEmpty();
+    }
     }
 
     public function saveUserId(int $userId): void
