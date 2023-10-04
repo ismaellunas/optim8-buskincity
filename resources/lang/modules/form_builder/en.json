@@ -11,5 +11,6 @@
     "Entry ID": ":Form_builder_term.form ID",
     "Form ID": ":Form_builder_term.form ID",
     "Thank you for filling out the form.": "Thank you for filling out the :form_builder_term.form.",
-    "Entry ID": ":Form_builder_term.entry ID"
+    "Entry ID": ":Form_builder_term.entry ID",
+    "Notifications managed by form builder module will be set to inactive.": "Notifications managed by :Form_builder_term.form_builder module will be set to inactive."
 }

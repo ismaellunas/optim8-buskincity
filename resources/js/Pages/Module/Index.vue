@@ -75,7 +75,7 @@
                                     </biz-button-link>
 
                                     <biz-button-icon
-                                        class="has-text-black"
+                                        :class="{'has-text-black': record.is_active, 'is-dark': !record.is_active}"
                                         :icon="record.is_active ? icon.toggleOn : icon.toggleOff"
                                         :title="record.is_active ? i18n.deactivate : i18n.activate"
                                         @click.prevent="confirmActivation(record)"
@@ -98,6 +98,7 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTag from '@/Biz/Tag.vue';
+    import { activationAlertConfigs } from '@/Libs/module.js';
     import { bars, down, up, edit as iconEdit, remove as iconRemove, floppyDisk, toggleOn, toggleOff } from '@/Libs/icon-class';
     import { capitalCase } from 'change-case';
     import { computed, reactive, ref, onMounted } from 'vue';
@@ -171,15 +172,19 @@
         },
 
         methods: {
-            confirmActivation(module) {
+            async confirmActivation(module) {
                 const action = module.is_active ? 'deactivate' : 'activate';
 
-                confirm('Activation', 'Are you sure you want to ' + action)
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            this.activation(module, action);
-                        }
-                    });
+                const configs = await activationAlertConfigs(route(
+                    this.baseRouteName + 'confirm-' + action,
+                    { id: module.id }
+                ));
+
+                confirm(null, null, "Yes", configs).then((result) => {
+                    if (result.isConfirmed) {
+                        this.activation(module, action);
+                    }
+                })
             },
 
             activation(module, action) {
