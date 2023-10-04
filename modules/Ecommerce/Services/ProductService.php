@@ -189,6 +189,9 @@ class ProductService
                 'file_url' => $media->file_url,
                 'is_image' => $media->isImage,
                 'thumbnail_url' => $media->thumbnailUrl,
+                'file_name_without_extension' => $media->fileNameWithoutExtension,
+                'can_edit_existing_media' => auth()->user()->can('update', $media),
+                'translations' => $media->translations,
             ]),
         ];
     }

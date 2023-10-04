@@ -23,7 +23,7 @@
         <div class="container">
             <div class="columns is-multiline is-mobile is-centered">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 398) }});">
+                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 400) }});">
                         <div class="hero-body">
                             <div class="title">&nbsp;</div>
                             <div class="subtitle">&nbsp;</div>
@@ -177,7 +177,6 @@
                                 width="48"
                                 height="48"
                                 rounded="is-rounded"
-                                is-lazyload
                             />
                         </figure>
                         <div>
