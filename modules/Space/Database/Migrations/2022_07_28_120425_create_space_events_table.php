@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('country_code', 3)->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
+            $table->tinyInteger('status')->default(0);
 
             $table
                 ->foreignId('space_id')
