@@ -36,8 +36,8 @@ class ThemeSeoController extends CrudController
                         'read' => $user->can('media.read'),
                     ]
                 ],
-                'postThumbnailMedia' => $this->settingService->getPostThumbnailMedia(),
-                'openGraphMedia' => $this->settingService->getOpenGraphMedia(),
+                'postThumbnailMedia' => $this->settingService->getPostThumbnailMediaWithTransform(),
+                'openGraphMedia' => $this->settingService->getOpenGraphMediaWithTransform(),
                 'instructions' => [
                     'postThumbnailMediaLibrary' => [
                         ...MediaService::defaultMediaLibraryInstructions(),
