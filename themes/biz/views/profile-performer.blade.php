@@ -57,8 +57,22 @@
                 </div>
 
                 <div class="column is-11-desktop is-12-tablet is-12-mobile">
-                    <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') }}</h1>
-                    <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
+                    <div class="columns is-mobile mt-5 mb-2">
+                        <div class="column is-12-desktop is-10-tablet is-10-mobile">
+                            <h1 class="title is-2">{{ $userProfile->getMeta('stage_name') }}</h1>
+                            <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
+                        </div>
+
+                        <div class="column is-2-tablet is-2-mobile is-hidden-desktop">
+                            <div class="buttons is-right">
+                                @can ('receiveDonation', $user)
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
+                                        {{ __('Donate') }}
+                                    </a>
+                                @endcan
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="columns is-multiline is-mobile mt-3">
                         <div class="column is-8-desktop is-12-tablet is-12-mobile">
@@ -72,7 +86,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="column is-4-desktop is-12-tablet is-12-mobile">
+                        <div class="column is-4-desktop is-hidden-touch">
                             <div class="buttons is-right">
                                 @can ('receiveDonation', $user)
                                     <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
