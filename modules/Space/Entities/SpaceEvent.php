@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Entities;
 
+use App\Contracts\PublishableInterface;
 use App\Services\CountryService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Space\Entities\SpaceEventTranslation;
 
-class SpaceEvent extends Model implements TranslatableContract
+class SpaceEvent extends Model implements TranslatableContract, PublishableInterface
 {
     use HasFactory;
     use Translatable;
@@ -36,6 +37,7 @@ class SpaceEvent extends Model implements TranslatableContract
         'address',
         'started_at',
         'ended_at',
+        'status',
     ];
 
     protected $casts = [
@@ -104,5 +106,16 @@ class SpaceEvent extends Model implements TranslatableContract
                 : null
             ),
         ])->filter()->implode(', ');
+    }
+
+    public function scopePublished(Builder $query)
+    {
+        return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function setAsDraft(): void
+    {
+        $this->status = self::STATUS_DRAFT;
+        $this->save();
     }
 }
