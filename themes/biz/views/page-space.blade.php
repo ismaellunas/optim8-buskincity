@@ -19,7 +19,7 @@
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <div
                         class="profile-background hero is-medium is-primary is-radius"
-                        @if ($space->cover) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 720) }});" @endif
+                        @if ($space->cover) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 400) }});" @endif
                     >
                         <div class="hero-body">
                             <div class="title">&nbsp;</div>
