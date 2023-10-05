@@ -19,13 +19,35 @@
             v-if="!isBlank(form)"
             @submit.prevent="submit"
         >
-            <biz-form-input
-                v-model="form.title"
-                :label="i18n.title"
-                maxlength="255"
-                required
-                :message="error('title', null, formErrors)"
-            />
+            <div class="columns">
+                <div class="column is-half">
+                    <biz-form-input
+                        v-model="form.title"
+                        maxlength="255"
+                        required
+                        :label="i18n.title"
+                        :message="error('title', null, formErrors)"
+                    />
+                </div>
+
+                <div class="column is-half">
+                    <biz-form-select
+                        v-model="form.status"
+                        class="is-fullwidth"
+                        name="status"
+                        :label="i18n.status"
+                        :message="error('status', null, formErrors)"
+                    >
+                        <option
+                            v-for="statusOption in eventStatusOptions"
+                            :key="statusOption.id"
+                            :value="statusOption.id"
+                        >
+                            {{ statusOption.value }}
+                        </option>
+                    </biz-form-select>
+                </div>
+            </div>
 
             <div class="columns">
                 <div class="column is-half">
@@ -53,7 +75,7 @@
             </div>
 
             <div class="columns">
-                <div class="column is-half">
+                <div class="column is-full">
                     <biz-form-checkbox-toggle
                         v-model="form.is_same_address_as_parent"
                         :text="i18n.is_same_address_as_parent"
@@ -139,6 +161,7 @@
     import BizFormDateTime from '@/Biz/Form/DateTime.vue';
     import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
@@ -159,6 +182,7 @@
             BizFormDateTime,
             BizFormFieldsetLocation,
             BizFormInput,
+            BizFormSelect,
             BizFormTextarea,
             BizFormTimezone,
             BizLanguageTab,
@@ -182,6 +206,7 @@
                 update: 'Update',
                 timezone: 'Timezone',
             }) },
+            eventStatusOptions: { default: () => []},
         },
 
         props: {
@@ -294,6 +319,7 @@
                     translations: {},
                     timezone: usePage().props.timezone,
                     is_same_address_as_parent: true,
+                    status: 0,
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();

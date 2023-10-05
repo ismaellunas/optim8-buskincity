@@ -15,6 +15,13 @@ class EventService
         int $perPage = 10
     ): AbstractPaginator {
         return SpaceEvent::orderBy('started_at', 'ASC')
+            ->select([
+                'id',
+                'title',
+                'started_at',
+                'ended_at',
+                'status',
+            ])
             ->hasSpace($space->id)
             ->when($term, function ($query, $term) {
                 $query->search($term);
@@ -28,15 +35,21 @@ class EventService
 
         $records->transform(function ($event) use ($dateFormat) {
             return [
-                'id' => $event->id,
-                'title' => $event->title,
-                'started_at' => $event->started_at->format($dateFormat),
-                'ended_at' => $event->ended_at->format($dateFormat),
+                ...$event->only([
+                    'id',
+                    'title',
+                    'status',
+                ]),
+                ...[
+                    'started_at' => $event->started_at->format($dateFormat),
+                    'ended_at' => $event->ended_at->format($dateFormat),
+                    'display_status' => $event->displayStatus,
+                ]
             ];
         });
     }
 
-    public function getEditableRecord($space, $event)
+    public function getEditableRecordXX($space, $event)
     {
         $event = SpaceEvent::hasSpace($space->id)
             ->with('translations')
@@ -58,6 +71,31 @@ class EventService
         ];
     }
 
+    public function getEditableRecord(SpaceEvent $event)
+    {
+        $event->load('translation');
+
+        return [
+            ...$event->only([
+                'id',
+                'address',
+                'city',
+                'country_code',
+                'latitude',
+                'longitude',
+                'title',
+                'timezone',
+                'is_same_address_as_parent',
+                'status',
+            ]),
+            ...[
+                'ended_at' => $event->ended_at->toIso8601String(),
+                'started_at' => $event->started_at->toIso8601String(),
+                'translations' => $event->getTranslationsArray(),
+            ]
+        ];
+    }
+
     public function createEvent($space, $inputs)
     {
         $event = new SpaceEvent();
@@ -76,6 +114,7 @@ class EventService
         $event->fill(Arr::get($inputs, 'translations', []));
         $event->timezone = Arr::get($inputs, 'timezone');
         $event->is_same_address_as_parent = Arr::get($inputs, 'is_same_address_as_parent', true);
+        $event->status = Arr::get($inputs, 'status', 0);
 
         if ($event->is_same_address_as_parent) {
             $event->address = null;
