@@ -26,6 +26,8 @@ class EventService
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })
+            ->orderBy('started_at')
+            ->orderBy('id')
             ->paginate($perPage);
     }
 
