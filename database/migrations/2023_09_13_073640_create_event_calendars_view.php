@@ -78,6 +78,7 @@ return new class extends Migration
             FROM space_events AS se
             JOIN spaces s ON s.id = se.space_id
             LEFT JOIN mediables m ON m.mediable_id = s.id AND m.mediable_type = '".Space::class."'
+            WHERE se.status = 1
         ";
 
         DB::statement(
