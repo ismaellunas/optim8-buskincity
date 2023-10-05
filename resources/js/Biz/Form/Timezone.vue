@@ -8,6 +8,10 @@
             :required="required"
             @search="searchOptions($event)"
         >
+            <template #tooltip>
+                <slot name="tooltip" />
+            </template>
+
             <template #trigger>
                 <span
                     class="has-text-left"

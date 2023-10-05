@@ -10,6 +10,10 @@
             {{ label }}
         </template>
 
+        <template #tooltip>
+            <slot name="tooltip" />
+        </template>
+
         <biz-dropdown-search
             v-bind="$attrs"
             :disabled="disabled"
