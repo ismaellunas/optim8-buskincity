@@ -11,6 +11,7 @@ use App\Traits\HasMetas;
 use App\Services\{
     IPService,
     MediaService,
+    SettingService,
     TranslationService,
     UserService,
 };
@@ -348,13 +349,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfilePageUrlAttribute(?array $parameters = []): string
     {
-        return route('frontend.profile', [
-            ...[
-                'user' => $this->unique_key,
-                'firstname_lastname' => Str::of($this->fullName)->slug()
-            ],
-            ...$parameters ?? []
-        ]);
+        $className = $this->getPublicPageProfileUrlClassName();
+
+        return (new $className($this, $parameters ?? []))->url();
+    }
+
+    private function getPublicPageProfileUrlClassName(): string
+    {
+        $profileSlugType = app(SettingService::class)->getPublicPageProfileSlugType();
+
+        $className = "App\\Entities\\PublicPageProfile\\".Str::studly($profileSlugType)."Url";
+
+        if (
+            class_exists($className)
+            && method_exists($className, 'url')
+        ) {
+            return $className;
+        }
+
+        return "App\\Entities\\PublicPageProfile\\DefaultUrl";
     }
 
     public function getQrCodeLogoNameAttribute(): string
