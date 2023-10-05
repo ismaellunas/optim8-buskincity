@@ -885,4 +885,20 @@ class SettingService
             ? []
             : json_decode($value, TRUE);
     }
+
+    public function getPublicPageProfileSlugType(): string
+    {
+        $type = $this->getKey('public_page_profile_slug_type');
+
+        if ($type == '') {
+            return 'default';
+        }
+
+        return $type;
+    }
+
+    public function getPublicPageProfileSlugCustomField(): array
+    {
+        return $this->getArrayValueByKey('public_page_profile_slug_custom_field');
+    }
 }
