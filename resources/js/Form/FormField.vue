@@ -143,7 +143,7 @@
                             },
                             onError: errors => {
                                 oopsAlert({
-                                    text: 'There are errors in the form. Please check the fields marked in red for more information.',
+                                    text: errors?.formBuilder?.default[0] ?? null,
                                     isScrollToTop: false
                                 });
                             },

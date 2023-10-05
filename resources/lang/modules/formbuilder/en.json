@@ -7,5 +7,6 @@
     "Thank you for filling out the form.": "Thank you for filling out the form.",
     "Form": "Form",
     "Entry": "Entry",
-    "Entry ID": "Entry ID"
+    "Entry ID": "Entry ID",
+    "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the form. Please check the fields marked in red for more information."
 }

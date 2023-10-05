@@ -161,12 +161,12 @@
                         this.formKey += 1;
                     })
                     .catch((error) => {
-                        oopsAlert({
-                            text: 'There are errors in the form. Please check the fields marked in red for more information.'
-                        });
-
                         this.formErrors = error.response.data.errors;
                         this.errorMessage = error.response.data.message;
+
+                        oopsAlert({
+                            text: this.formErrors?.default[0] ?? null
+                        });
 
                         this.showErrorFields();
                     })
