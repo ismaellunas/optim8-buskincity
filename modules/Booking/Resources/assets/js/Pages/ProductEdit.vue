@@ -211,7 +211,14 @@
                             :label="i18n.timezone"
                             :message="error('timezone', eventErrorBag)"
                             required
-                        />
+                        >
+                            <template #tooltip>
+                                <biz-tooltip
+                                    class="ml-1"
+                                    :message="i18n.guidelines.timezone"
+                                />
+                            </template>
+                        </biz-form-timezone>
 
                         <hr>
 
@@ -221,6 +228,11 @@
                                     <header class="card-header">
                                         <p class="card-header-title">
                                             {{ i18n.weekly_hours }}
+
+                                            <biz-tooltip
+                                                class="ml-1"
+                                                :message="i18n.guidelines.weekly_hours"
+                                            />
                                         </p>
                                     </header>
                                     <div class="card-content">
@@ -265,14 +277,19 @@
                                 <div class="card">
                                     <header class="card-header">
                                         <p class="card-header-title">
-                                            {{ i18n.date_overrides }}
+                                            {{ i18n.date_override }}
+
+                                            <biz-tooltip
+                                                class="ml-1"
+                                                :message="i18n.guidelines.date_override"
+                                            />
                                         </p>
                                     </header>
 
                                     <div class="card-content">
                                         <div class="columns is-multiline">
                                             <div class="column is-full has-text-centered">
-                                                {{ i18n.date_overrides_description }}
+                                                {{ i18n.date_override_description }}
                                             </div>
 
                                             <div class="column is-full has-text-centered">
@@ -434,6 +451,7 @@
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import BizTag from '@/Biz/Tag.vue';
+    import BizTooltip from '@/Biz/Tooltip.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
@@ -465,6 +483,7 @@
             ProductEditModalDateOverride,
             ProductForm,
             ScheduleRuleTimes,
+            BizTooltip,
         },
 
         mixins: [
