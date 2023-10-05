@@ -38,7 +38,7 @@
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import { debounceTime } from '@/Libs/defaults';
-    import { find, debounce, isEmpty, filter } from 'lodash';
+    import { find, debounce, isEmpty, filter, startsWith } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -95,6 +95,10 @@
 
             searchOptions: debounce(function(term) {
                 if (! isEmpty(term) && term.length > 1) {
+                    if (startsWith(term, '+')) {
+                        term = '\\'+term;
+                    }
+
                     this.filteredOptions = filter(this.options, function (option) {
                         const termRegex = new RegExp(term, 'i');
 
