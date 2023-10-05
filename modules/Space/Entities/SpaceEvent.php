@@ -3,6 +3,7 @@
 namespace Modules\Space\Entities;
 
 use App\Contracts\PublishableInterface;
+use App\Enums\PublishingStatus;
 use App\Services\CountryService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -111,6 +112,12 @@ class SpaceEvent extends Model implements TranslatableContract, PublishableInter
     public function scopePublished(Builder $query)
     {
         return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function getDisplayStatusAttribute(): string
+    {
+        return PublishingStatus::options()
+            ->firstWhere('id', $this->status)['value'] ?? "";
     }
 
     public function setAsDraft(): void
