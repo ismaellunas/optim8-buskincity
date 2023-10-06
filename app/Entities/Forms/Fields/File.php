@@ -300,10 +300,16 @@ class File extends BaseField
     {
         $maxFileSize = SettingService::maxFileSize();
 
-        if (
-            array_key_exists('max', $this->validation['rules'])
-            && (int)$this->validation['rules']['max'] > $maxFileSize
-        ) {
+        if (array_key_exists('max', $this->validation['rules'])) {
+            $validationRuleMax = $this->validation['rules']['max'];
+
+            if (
+                $validationRuleMax > $maxFileSize
+                || $validationRuleMax === null
+            ) {
+                $this->validation['rules']['max'] = $maxFileSize;
+            }
+        } else {
             $this->validation['rules']['max'] = $maxFileSize;
         }
     }
