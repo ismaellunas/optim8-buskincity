@@ -31,7 +31,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { cloneDeep } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { defineAsyncComponent } from 'vue';
+    import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
 
     export default {
@@ -67,12 +67,12 @@
             formStructure: { type: Object, required: true},
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             const resetForm = () => {
-                return {
+                return ref({
                     ...{ 'form_id': props.formId },
                     ...cloneDeep(props.formStructure)
-                };
+                });
             }
 
             return {
@@ -161,12 +161,12 @@
                         this.formKey += 1;
                     })
                     .catch((error) => {
-                        oopsAlert({
-                            text: 'There are errors in the form. Please check the fields marked in red for more information.'
-                        });
-
                         this.formErrors = error.response.data.errors;
                         this.errorMessage = error.response.data.message;
+
+                        oopsAlert({
+                            text: this.formErrors?.default[0] ?? null
+                        });
 
                         this.showErrorFields();
                     })
