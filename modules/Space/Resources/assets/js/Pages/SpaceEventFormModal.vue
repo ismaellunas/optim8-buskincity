@@ -319,7 +319,7 @@
                     translations: {},
                     timezone: usePage().props.timezone,
                     is_same_address_as_parent: true,
-                    status: 0,
+                    status: 'draft',
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();

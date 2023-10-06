@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Services;
 
+use App\Enums\PublishingStatus;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Arr;
 use Modules\Space\Entities\Space;
@@ -116,7 +117,7 @@ class EventService
         $event->fill(Arr::get($inputs, 'translations', []));
         $event->timezone = Arr::get($inputs, 'timezone');
         $event->is_same_address_as_parent = Arr::get($inputs, 'is_same_address_as_parent', true);
-        $event->status = Arr::get($inputs, 'status', 0);
+        $event->status = Arr::get($inputs, 'status', PublishingStatus::DRAFT->value);
 
         if ($event->is_same_address_as_parent) {
             $event->address = null;

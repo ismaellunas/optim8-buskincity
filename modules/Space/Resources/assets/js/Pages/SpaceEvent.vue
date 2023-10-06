@@ -45,7 +45,7 @@
                 <td>
                     <biz-tag
                         class="is-small is-rounded"
-                        :class="{ 'is-success': record.status }"
+                        :class="{ 'is-success': record.status == 'published' }"
                     >
                         {{ record.display_status }}
                     </biz-tag>

@@ -5,17 +5,16 @@ namespace App\Enums;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-enum PublishingStatus: int
+enum PublishingStatus: string
 {
-    case DRAFT = 0;
-    case PUBLISHED = 1;
+    case DRAFT = 'draft';
+    case PUBLISHED = 'published';
 
     public static function options(): Collection
     {
-        return collect(self::cases())
-            ->map(fn ($option) => [
-                'id' => $option->value,
-                'value' => Str::title($option->name)
-            ]);
+        return collect(self::cases())->map(fn ($option) => [
+            'id' => $option->value,
+            'value' => Str::title($option->name)
+        ]);
     }
 }
