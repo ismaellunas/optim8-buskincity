@@ -12,7 +12,7 @@
 
 <x-layouts.master>
     <x-slot name="title">
-        {{ $user->fullName . ' | ' .config('app.name') }}
+        {{ ($userProfile->getMeta('stage_name') ?? $user->fullName) . ' | ' .config('app.name') }}
     </x-slot>
 
     <x-slot name="metaDescription">
@@ -59,7 +59,7 @@
                 <div class="column is-11-desktop is-12-tablet is-12-mobile">
                     <div class="columns is-mobile mt-5 mb-2">
                         <div class="column is-12-desktop is-10-tablet is-10-mobile">
-                            <h1 class="title is-2">{{ $userProfile->getMeta('stage_name') }}</h1>
+                            <h1 class="title is-2 mb-2">{{ $userProfile->getMeta('stage_name') ?? $user->fullName }}</h1>
                             <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
                         </div>
 

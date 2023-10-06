@@ -13,6 +13,7 @@
                     :medium="medium"
                     :is-delete-enabled="isDeleteEnabled"
                     :is-download-enabled="isDownloadEnabled"
+                    :is-edit-button-for-image="isEditButtonForImage"
                     :is-edit-enabled="isEditEnabled"
                     :is-preview-enabled="isPreviewEnabled"
                     :is-filename-shown="isFilenameShown"
@@ -68,6 +69,7 @@
             columnClass: { type: Array, default: () => ['column','is-3'] },
             isDeleteEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
+            isEditButtonForImage: { type: Boolean, default: false },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
             isScrolled: { type: Boolean, default: false },
