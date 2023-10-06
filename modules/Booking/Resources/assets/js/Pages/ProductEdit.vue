@@ -480,10 +480,10 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
+            BizTooltip,
             ProductEditModalDateOverride,
             ProductForm,
             ScheduleRuleTimes,
-            BizTooltip,
         },
 
         mixins: [

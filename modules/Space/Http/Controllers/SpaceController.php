@@ -416,6 +416,9 @@ class SpaceController extends CrudController
                 'yes' => __('Yes'),
                 'timezone' => __('Timezone'),
                 'is_same_address_as_parent' => __("Is it the same address as the parent?"),
+                'guidelines' => [
+                    'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
+                ]
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
