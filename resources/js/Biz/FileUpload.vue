@@ -13,6 +13,7 @@
         :drop-validation="true"
         @addfile="onAddFile"
         @updatefiles="onUpdateFiles"
+        @removefile="onRemoveFile"
     />
 </template>
 
@@ -21,7 +22,7 @@
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
     import vueFilePond from 'vue-filepond';
-    import { find } from 'lodash';
+    import { filter } from 'lodash';
 
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
     import 'filepond/dist/filepond.min.css';
@@ -80,22 +81,19 @@
                 let uploadFiles = [];
 
                 files.forEach(function (file) {
-                    if (
-                        typeof find(self.errorFiles, { name: file.source.name }) === 'undefined'
-                    ) {
-                        uploadFiles.push(file.source);
-                    }
+                    uploadFiles.push(file.source);
                 });
 
                 self.$emit('update-files', uploadFiles);
                 self.$emit('add-files', self.addedFiles);
 
                 self.addedFiles = [];
-                self.errorFiles = [];
             },
 
             reset() {
                 this.$refs.pond.removeFiles();
+
+                this.errorFiles = [];
             },
 
             onAddFile(error, file) {
@@ -104,6 +102,15 @@
                 } else {
                     this.errorFiles.push(file.file)
                 }
+            },
+
+            onRemoveFile(error, file) {
+                this.errorFiles = filter(
+                    this.errorFiles,
+                    function (errorFile) {
+                        return errorFile.name !== file.source.name;
+                    }
+                );
             },
         },
     }

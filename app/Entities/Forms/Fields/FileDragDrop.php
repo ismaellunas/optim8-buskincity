@@ -19,8 +19,8 @@ class FileDragDrop extends File
     {
         parent::__construct($name, $data);
 
-        $this->maxFileSize = $data['validation']['rules']['max'] ?? null;
-        $this->mimes = $data['validation']['rules']['mimes'] ?? [];
+        $this->maxFileSize = $this->validation['rules']['max'];
+        $this->mimes = $this->validation['rules']['mimes'];
 
         $this->convertMimesOnValidation();
 
