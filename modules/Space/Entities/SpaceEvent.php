@@ -2,7 +2,6 @@
 
 namespace Modules\Space\Entities;
 
-use App\Contracts\PublishableInterface;
 use App\Enums\PublishingStatus;
 use App\Services\CountryService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Space\Entities\SpaceEventTranslation;
 
-class SpaceEvent extends Model implements TranslatableContract, PublishableInterface
+class SpaceEvent extends Model implements TranslatableContract
 {
     use HasFactory;
     use Translatable;
@@ -111,7 +110,7 @@ class SpaceEvent extends Model implements TranslatableContract, PublishableInter
 
     public function scopePublished(Builder $query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where('status', PublishingStatus::PUBLISHED);
     }
 
     public function getDisplayStatusAttribute(): string
@@ -122,7 +121,7 @@ class SpaceEvent extends Model implements TranslatableContract, PublishableInter
 
     public function setAsDraft(): void
     {
-        $this->status = self::STATUS_DRAFT;
+        $this->status = PublishingStatus::DRAFT->value;
         $this->save();
     }
 }
