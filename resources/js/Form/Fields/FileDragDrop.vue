@@ -68,7 +68,7 @@
                         :key="index"
                     >
                         <div
-                            v-if="isImage(file)"
+                            v-if="isValidImage(file)"
                             class="column"
                             :class="cardImageClasses"
                         >
@@ -112,7 +112,7 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen && isImageEditorEnabled && isImage(computedValue.files[0])"
+                v-if="isModalOpen && isImageEditorEnabled && isValidImage(computedValue.files[0])"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
                 @on-update="saveEditedFiles()"
@@ -133,7 +133,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { cloneDeep, map } from 'lodash';
+    import { cloneDeep, map, find } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
     export default {
@@ -184,6 +184,7 @@
                 editIcon,
                 isModalPreviewOpen: false,
                 previewImageSrc: null,
+                isSaveEditedFile: false,
             };
         },
 
@@ -236,17 +237,25 @@
                 return file.type.startsWith("image") ?? false;
             },
 
+            isValidImage(file) {
+                const errorFiles = this.$refs.file_upload
+                    .$refs.file_upload.errorFiles;
+
+                return (
+                    this.isImage(file)
+                    && typeof find(errorFiles, { name: file.name }) === 'undefined'
+                );
+            },
+
             saveEditedFiles() {
-                const newFiles = cloneDeep(this.computedValue.files);
+                let newFiles = cloneDeep(this.computedValue.files);
 
                 this.reset();
 
                 this.$refs.file_upload
                     .$refs.file_upload.addFiles(newFiles);
 
-                setTimeout(() => {
-                    this.closeModal();
-                }, 200);
+                this.isSaveEditedFile = true;
             },
 
             cancelEditedFiles() {
@@ -260,13 +269,19 @@
 
             onAddFiles(addedFiles) {
                 if (addedFiles.length > 0) {
-                    addedFiles.forEach((file) => {
-                        if (this.isImage(file)) {
-                            this.openModal();
+                    if (! this.isSaveEditedFile) {
+                        addedFiles.forEach((file) => {
+                            if (this.isImage(file)) {
+                                this.openModal();
 
-                            return;
-                        }
-                    });
+                                return;
+                            }
+                        });
+                    } else {
+                        this.closeModal();
+
+                        this.isSaveEditedFile = false;
+                    }
                 }
             },
         },
