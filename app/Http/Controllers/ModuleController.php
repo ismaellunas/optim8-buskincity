@@ -157,7 +157,7 @@ class ModuleController extends CrudController
     public function confirmActivation(Module $module)
     {
         return [
-            'title' => __("Are you sure want to deactivate :module module?", ['module' => $module->title]),
+            'title' => __("Are you sure want to activate :module module?", ['module' => $module->title]),
         ];
     }
 
