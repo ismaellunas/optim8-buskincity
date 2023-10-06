@@ -16,7 +16,7 @@
                                 :max-files="maxFiles"
                                 :max-file-size="maxFileSize"
                                 required
-                                @on-update-files="onUpdateFiles"
+                                @update-files="onUpdateFiles"
                             />
                         </div>
 
