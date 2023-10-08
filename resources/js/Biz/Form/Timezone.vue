@@ -1,36 +1,77 @@
 <template>
-    <biz-form-select
-        v-model="timezone"
-    >
-        <option
-            v-for="timezoneOption in options"
-            :key="timezoneOption.id"
-            :value="timezoneOption.id"
+    <div>
+        <biz-form-dropdown-search
+            :label="label"
+            :close-on-click="true"
+            :disabled="disabled"
+            :message="message"
+            :required="required"
+            @search="searchOptions($event)"
         >
-            {{ timezoneOption.value }}
-        </option>
-    </biz-form-select>
+            <template #trigger>
+                <span
+                    class="has-text-left"
+                    :style="{'min-width': '20rem'}"
+                >
+                    {{ selectedTimezone }}
+                </span>
+            </template>
+
+            <div style="max-height: 30rem; overflow-y: scroll">
+                <biz-dropdown-item
+                    v-for="option in filteredOptions"
+                    :key="option.id"
+                    @click="timezone = option.id"
+                >
+                    {{ timezoneValueFormatter(option.value) }}
+                </biz-dropdown-item>
+            </div>
+        </biz-form-dropdown-search>
+    </div>
 </template>
 
 <script>
-    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import { debounceTime } from '@/Libs/defaults';
+    import { find, debounce, isEmpty, filter, startsWith } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: "BizFormTimezone",
+
         components: {
-            BizFormSelect,
+            BizDropdownItem,
+            BizFormDropdownSearch,
         },
 
         props: {
+            disabled: { type: Boolean, default: false },
+            label: { type: String, default: null },
+            message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
+            required: { type: Boolean, default: false },
         },
 
         setup(props, { emit }) {
             return {
-                timezone: useModelWrapper(props, emit),
+                filteredOptions: ref([]),
                 options: ref([]),
+                timezone: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            selectedTimezone() {
+                const selectedTimezone = find(this.options, {id: this.timezone});
+
+                if (selectedTimezone) {
+                    return this.timezoneValueFormatter(selectedTimezone.value);
+                }
+
+                return null;
+            },
         },
 
         beforeMount() {
@@ -43,7 +84,32 @@
                     .get(route('admin.api.options.timezones'))
                     .then((response) => {
                         this.options = response?.data ?? [];
+
+                        this.filteredOptions = this.options;
                     });
+            },
+
+            searchOptions: debounce(function(term) {
+                if (! isEmpty(term) && term.length > 1) {
+                    if (startsWith(term, '+')) {
+                        term = '\\'+term;
+                    }
+
+                    this.filteredOptions = filter(this.options, function (option) {
+                        const termRegex = new RegExp(term, 'i');
+
+                        return (
+                            termRegex.test(option.value.offsetValue)
+                            || termRegex.test(option.value.timezone)
+                        );
+                    });
+                } else {
+                    this.filteredOptions = this.options;
+                }
+            }, debounceTime),
+
+            timezoneValueFormatter(value) {
+                return `(${value.offsetValue}) ${value.timezone}`;
             },
         },
     };
