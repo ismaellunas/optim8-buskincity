@@ -16,7 +16,7 @@
                                 :max-files="maxFiles"
                                 :max-file-size="maxFileSize"
                                 required
-                                @on-update-files="onUpdateFiles"
+                                @update-files="onUpdateFiles"
                             />
                         </div>
 
@@ -164,7 +164,7 @@
             >
                 <biz-media-library-detail
                     :media="formMedia[index]"
-                    :allow-multiple="allowMultiple"
+                    :allow-multiple="(allowMultiple && formMedia.length > 1)"
                     :is-ajax="isAjax"
                     :is-processing="isProcessing"
                     @on-close-edit-modal="closeEditModal()"

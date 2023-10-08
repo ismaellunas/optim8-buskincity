@@ -83,4 +83,15 @@ class FormValueRequest extends BaseFormRequest
 
         return $this->formLocation;
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (! empty($validator->errors()->messages())) {
+                $validator
+                    ->errors()
+                    ->add('default', __('There are errors in the form. Please check the fields marked in red for more information.'));
+            }
+        });
+    }
 }

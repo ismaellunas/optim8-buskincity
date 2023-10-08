@@ -9,9 +9,10 @@
         <component
             :is="mediaComponent"
             :media="computedListMedia"
+            :is-edit-button-for-image="true"
             :is-edit-enabled="true"
-            :is-scrolled="true"
             :is-filename-shown="isFilenameShown"
+            :is-scrolled="true"
             @on-delete-clicked="onDeleteMedium"
             @on-edit-clicked="onEditMedium"
         />
@@ -28,8 +29,8 @@
                 :max-total-file-size="maxTotalFileSizeUpload"
                 :placeholder="placeholder"
                 :required="isRequired"
-                @on-update-files="onUpdateFiles"
-                @on-add-file="$emit('on-add-file')"
+                @update-files="onUpdateFiles"
+                @add-files="onAddFiles"
             />
         </div>
 
@@ -164,9 +165,8 @@
         },
 
         emits: [
-            'on-add-file',
+            'add-files',
             'on-file-picked',
-            'on-update-files',
         ],
 
         setup(props, { emit }) {
@@ -233,10 +233,12 @@
         },
 
         methods: {
-            async onUpdateFiles(files) {
-                this.fileUploadField.files = await Promise.all(files);
+            onUpdateFiles(files) {
+                this.fileUploadField.files = files;
+            },
 
-                this.$emit('on-update-files');
+            onAddFiles(addedFiles) {
+                this.$emit('add-files', addedFiles);
             },
 
             onDeleteMedium(medium) {

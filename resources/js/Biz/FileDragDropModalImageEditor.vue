@@ -88,10 +88,19 @@
 
         methods: {
             async updateFile() {
-                this.computedMediumUrl = getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8);
-                this.computedMedium = getBlob(this.cropper, this.croppedImageType);
+                let generateMedium = await this.generateMedium();
+
+                this.computedMediumUrl = generateMedium.url;
+                this.computedMedium = generateMedium.file;
 
                 this.$emit('on-update');
+            },
+
+            async generateMedium() {
+                return {
+                    url: getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8),
+                    file: await getBlob(this.cropper, this.croppedImageType),
+                }
             },
 
             closeModal() {
