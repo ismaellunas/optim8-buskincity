@@ -92,6 +92,14 @@ class MediaService
                 'translations' => function ($q) {
                     $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
+                'mediable' => function ($q) {
+                    $q->select([
+                        'id',
+                        'media_id',
+                        'mediable_id',
+                        'mediable_type',
+                    ]);
+                },
             ])
             ->default();
 
