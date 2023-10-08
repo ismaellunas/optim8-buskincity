@@ -31,7 +31,6 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
-    import { computed, ref } from 'vue';
     import { getBlob, getCanvas } from '@/Libs/crop-helper';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -51,6 +50,7 @@
 
         emits: [
             'on-close',
+            'on-update',
             'update:medium',
             'update:mediumUrl',
         ],
@@ -88,10 +88,19 @@
 
         methods: {
             async updateFile() {
-                this.computedMediumUrl = getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8);
-                this.computedMedium = getBlob(this.cropper, this.croppedImageType);
+                let generateMedium = await this.generateMedium();
 
-                this.closeModal();
+                this.computedMediumUrl = generateMedium.url;
+                this.computedMedium = generateMedium.file;
+
+                this.$emit('on-update');
+            },
+
+            async generateMedium() {
+                return {
+                    url: getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8),
+                    file: await getBlob(this.cropper, this.croppedImageType),
+                }
             },
 
             closeModal() {

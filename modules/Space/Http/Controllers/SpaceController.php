@@ -149,8 +149,10 @@ class SpaceController extends CrudController
             'i18n' => $this->translationCreateEditPage(),
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'dimensions' => [
@@ -237,12 +239,12 @@ class SpaceController extends CrudController
 
         $coverMedia = $space->cover;
         if ($coverMedia) {
-            $this->transformMedia($coverMedia);
+            $coverMedia->transformMediaLibrary();
         }
 
         $logoMedia = $space->logo;
         if ($logoMedia) {
-            $this->transformMedia($logoMedia);
+            $logoMedia->transformMediaLibrary();
         }
 
         Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
@@ -272,8 +274,10 @@ class SpaceController extends CrudController
                 'update' => $user->can('update', $space),
                 'changeParent' => $canChangeParent,
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'page' => $page,
@@ -359,11 +363,6 @@ class SpaceController extends CrudController
     public function isUsedByMenus(Space $space, ?string $locale = null)
     {
         return app(MenuService::class)->isModelUsedByMenu($space, $locale);
-    }
-
-    private function transformMedia(Media $media): void
-    {
-        $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
     }
 
     private function translationCreateEditPage(): array

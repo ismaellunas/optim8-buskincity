@@ -11,6 +11,7 @@ use App\Models\{
     Page,
     PageTranslation,
     Post,
+    Role,
     Setting,
 };
 use App\Observers\{
@@ -20,6 +21,7 @@ use App\Observers\{
     PageObserver,
     PageTranslationObserver,
     PostObserver,
+    RoleObserver,
     SettingObserver,
 };
 use Illuminate\Auth\Events\Registered;
@@ -55,6 +57,7 @@ class EventServiceProvider extends ServiceProvider
         Page::observe(PageObserver::class);
         PageTranslation::observe(PageTranslationObserver::class);
         Post::observe(PostObserver::class);
+        Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);
     }
 }

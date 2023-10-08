@@ -15,8 +15,8 @@
             :placeholder="schema.placeholder"
             :readonly="schema.is_readonly"
             :required="schema.is_required"
-            @on-update-files="onUpdateFiles"
-            @on-add-file="onAddFile()"
+            :dimension="schema.dimension"
+            @add-files="onAddFiles"
         >
             <template #default>
                 <biz-button-icon
@@ -68,7 +68,7 @@
                         :key="index"
                     >
                         <div
-                            v-if="isImage(file)"
+                            v-if="isValidImage(file)"
                             class="column"
                             :class="cardImageClasses"
                         >
@@ -90,7 +90,7 @@
                             <div class="buttons is-pulled-right">
                                 <biz-button
                                     type="button"
-                                    class="is-link"
+                                    class="is-primary"
                                     @click="saveEditedFiles()"
                                 >
                                     Save
@@ -112,10 +112,11 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen"
+                v-if="isModalOpen && isImageEditorEnabled && isValidImage(computedValue.files[0])"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
-                @on-close="saveEditedFiles()"
+                @on-update="saveEditedFiles()"
+                @on-close="cancelEditedFiles()"
             />
         </template>
     </div>
@@ -131,8 +132,8 @@
     import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
-    import { useModelWrapper, isPromise } from '@/Libs/utils';
-    import { cloneDeep, map } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
+    import { cloneDeep, map, find } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
     export default {
@@ -181,10 +182,9 @@
         data() {
             return {
                 editIcon,
-                hasImage: false,
                 isModalPreviewOpen: false,
-                isMultipleUpload: false,
                 previewImageSrc: null,
+                isSaveEditedFile: false,
             };
         },
 
@@ -192,6 +192,25 @@
             notes() {
                 return this.schema.instructions
                     .concat(this.schema.notes);
+            },
+
+            hasImage() {
+                let hasImage = false;
+
+                this.computedValue.files.forEach((file) => {
+                    if (this.isImage(file)) {
+                        hasImage = true;
+                    }
+                });
+
+                return hasImage;
+            },
+
+            isMultipleUpload() {
+                return (
+                    this.schema.max_file_number > 1
+                    && this.computedValue.files.length > 1
+                );
             },
 
             isImageEditorEnabled() {
@@ -214,59 +233,29 @@
                     .$refs.file_upload.reset();
             },
 
-            onAddFile() {
-                if (this.checkValueHasImage()) {
-                    this.openModal();
-                }
+            isImage(file) {
+                return file.type.startsWith("image") ?? false;
             },
 
-            async checkValueHasImage() {
-                this.hasImage = false;
+            isValidImage(file) {
+                const errorFiles = this.$refs.file_upload
+                    .$refs.file_upload.errorFiles;
 
-                let files = await Promise.all(this.computedValue.files);
-
-                files.forEach((file) => {
-                    if (this.isImage(file)) {
-                        this.hasImage = true;
-                    }
-                });
-
-                return this.hasImage;
-            },
-
-            checkValueIsMultipleUpload() {
-                this.isMultipleUpload = (
-                    this.schema.max_file_number > 1
-                    && this.computedValue.files.length > 1
+                return (
+                    this.isImage(file)
+                    && typeof find(errorFiles, { name: file.name }) === 'undefined'
                 );
             },
 
-            async isImage(file) {
-                if (isPromise(file)) {
-                    let promiseFile = await file;
-
-                    return promiseFile.type.startsWith("image");
-                } else {
-                    return file.type.startsWith("image");;
-                }
-            },
-
-            onUpdateFiles() {
-                this.checkValueHasImage();
-                this.checkValueIsMultipleUpload();
-            },
-
-            async saveEditedFiles() {
-                const newFiles = cloneDeep(await Promise.all(this.computedValue.files));
+            saveEditedFiles() {
+                let newFiles = cloneDeep(this.computedValue.files);
 
                 this.reset();
 
                 this.$refs.file_upload
                     .$refs.file_upload.addFiles(newFiles);
 
-                setTimeout(() => {
-                    this.closeModal();
-                }, 200);
+                this.isSaveEditedFile = true;
             },
 
             cancelEditedFiles() {
@@ -276,6 +265,24 @@
                 this.computedValue.files = map(files, 'file');
 
                 this.closeModal();
+            },
+
+            onAddFiles(addedFiles) {
+                if (addedFiles.length > 0) {
+                    if (! this.isSaveEditedFile) {
+                        addedFiles.forEach((file) => {
+                            if (this.isImage(file)) {
+                                this.openModal();
+
+                                return;
+                            }
+                        });
+                    } else {
+                        this.closeModal();
+
+                        this.isSaveEditedFile = false;
+                    }
+                }
             },
         },
     };

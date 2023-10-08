@@ -47,8 +47,10 @@ class StripeController extends Controller
             'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ]
             ],
             'colorPrimary' => $settings->get('stripe_color_primary'),

@@ -92,8 +92,10 @@ class ProductController extends CrudController
             ],
             'can' => [
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'title' => $this->getCreateTitle(),
@@ -210,7 +212,6 @@ class ProductController extends CrudController
             'product' => $this->productService->formResource($product),
             'eventDurationOptions' => $this->productEventService->durationOptions(),
             'event' => $this->productEventService->formResource($product),
-            'timezoneOptions' => $this->countryService->getTimezoneOptions(),
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
@@ -232,8 +233,10 @@ class ProductController extends CrudController
                     'edit' => $canManageManager,
                 ],
                 'media' => [
-                    'read' => $user->can('media.read'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'instructions' => $this->getInstructions(),

@@ -826,7 +826,7 @@
     "Done": "Done",
     "Image": "Image",
     "Delete :resource": "Delete :resource",
-    "This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.": "This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.",
+    "This resource is still being used in another place. If you :action this resource, it may have an effect on that other place.": "This resource is still being used in another place. If you :action this resource, it may have an effect on that other place.",
     "Header": "Header",
     "Navigation": "Navigation",
     "Header layout": "Header layout",

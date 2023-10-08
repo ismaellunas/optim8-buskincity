@@ -80,11 +80,11 @@ class PageController extends CrudController
             ],
             'can' => [
                 'media' => [
-                    'browse' => $user->can('media.browse'),
-                    'read' => $user->can('media.read'),
-                    'edit' => $user->can('media.edit'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
                     'delete' => $user->can('media.delete'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
             ],
             'page' => new $this->model,
@@ -161,11 +161,11 @@ class PageController extends CrudController
             ],
             'can' => [
                 'media' => [
-                    'browse' => $user->can('media.browse'),
-                    'read' => $user->can('media.read'),
-                    'edit' => $user->can('media.edit'),
                     'add' => $user->can('media.add'),
+                    'browse' => $user->can('media.browse'),
                     'delete' => $user->can('media.delete'),
+                    'edit' => $user->can('media.edit'),
+                    'read' => $user->can('media.read'),
                 ],
                 'page' => [
                     'read' => $user->can('page.read'),

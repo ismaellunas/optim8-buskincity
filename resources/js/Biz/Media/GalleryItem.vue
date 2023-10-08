@@ -44,7 +44,7 @@
                 @click="$emit('on-preview-clicked', medium)"
             />
             <biz-button-icon
-                v-if="isEditEnabled"
+                v-if="isEditButtonEnabled"
                 icon="fas fa-pen"
                 title="Edit"
                 type="button"
@@ -102,6 +102,7 @@
         props: {
             isDeleteEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
+            isEditButtonForImage: { type: Boolean, default: false },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
             isSelectEnabled: { type: Boolean, default: true },
@@ -145,6 +146,17 @@
                 }
 
                 return this.medium.optimized_image_url ?? this.medium.file_url;
+            },
+
+            isEditButtonEnabled() {
+                if (! this.isEditButtonForImage) {
+                    return this.isEditEnabled;
+                } else {
+                    return (
+                        this.isEditEnabled
+                        && this.isImage
+                    );
+                }
             },
         },
     }
