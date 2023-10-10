@@ -2,15 +2,18 @@
 
 namespace Modules\Booking\Http\Controllers;
 
-use App\Services\SettingService;
 use App\Http\Controllers\CrudController;
 use App\Models\Setting;
+use App\Services\UserService;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\SettingRequest;
 
 class SettingController extends CrudController
 {
     protected $title = 'Booking Settings';
+
+    public function __construct(private UserService $userService)
+    {}
 
     public function edit()
     {
@@ -20,28 +23,25 @@ class SettingController extends CrudController
             'booking_email_cancellation',
             'allowed_early_check_in',
             'check_in_radius',
+            'booking_access_common_user',
+            'booking_access_roles',
         ])->get()->pluck('value', 'key')->all();
 
         $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
+        $settings['booking_access_common_user'] = (bool)$settings['booking_access_common_user'];
+        $settings['booking_access_roles'] = json_decode($settings['booking_access_roles']);
+
+        Inertia::share('i18n', $this->translations());
 
         return Inertia::render('Booking::Settings', $this->getData([
             'bookingSettings' => $settings,
-            'i18n' => [
-                'email' => __('Email'),
-                'check_in' => __('Check-in'),
-                'new_booking' => __('New booking'),
-                'booking_remainder' => __('Booking remainder'),
-                'booking_cancellation' => __('Booking cancellation'),
-                'available_check_in' => __('Available check-in before'),
-                'check_in_radius' => __('Check-in radius'),
-                'save' => __('Save'),
-            ],
+            'roleOptions' => $this->userService->getRoleOptions(),
         ]));
     }
 
     public function update(SettingRequest $request)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         Setting::updateOrCreate(
             ['key' => 'booking_email_new_booking'],
@@ -74,10 +74,45 @@ class SettingController extends CrudController
             ['value' => $inputs['check_in_radius']]
         );
 
+        Setting::updateOrCreate(
+            [
+                'key' => 'booking_access_common_user',
+                'group' => 'booking'
+            ],
+            ['value' => $inputs['access_common_user']]
+        );
+
+        Setting::updateOrCreate(
+            [
+                'key' => 'booking_access_roles',
+                'group' => 'booking'
+            ],
+            ['value' => json_encode($inputs['access_roles'])]
+        );
+
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __('Setting')
         ]);
 
         return back();
+    }
+
+    private function translations(): array
+    {
+        return [
+            'access_common_user' => __('Is a common user have access?'),
+            'available_check_in' => __('Available check-in before'),
+            'booking_cancellation' => __('Booking cancellation'),
+            'booking_remainder' => __('Booking remainder'),
+            'check_in_radius' => __('Check-in radius'),
+            'check_in' => __('Check-in'),
+            'choose_roles_note' => __('Choose the roles that can access the booking feature on the frontend.'),
+            'choose_roles' => __('Choose roles'),
+            'control_access' => __('Control access frontend'),
+            'email' => __('Email'),
+            'empty' => __('Empty'),
+            'new_booking' => __('New booking'),
+            'save' => __('Save'),
+        ];
     }
 }

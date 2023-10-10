@@ -37,6 +37,17 @@ class SettingRequest extends FormRequest
                 'required',
                 'in:m,km',
             ],
+            'access_common_user' => [
+                'boolean',
+            ],
+            'access_roles' => [
+                'array',
+                'nullable',
+            ],
+            'access_roles.*' => [
+                'numeric',
+                'exists:App\Models\Role,id',
+            ],
         ];
     }
 
