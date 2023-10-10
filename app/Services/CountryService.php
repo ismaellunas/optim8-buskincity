@@ -6,9 +6,10 @@ use App\Entities\Caches\CountryCache;
 use App\Models\Country;
 use App\Models\UserMeta;
 use App\Traits\HasCache;
-use Illuminate\Support\Collection;
 use DateTime;
 use DateTimeZone;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class CountryService
 {
@@ -129,13 +130,16 @@ class CountryService
         $timezoneList = [];
         foreach ($timezoneOffsets as $timezone => $offset) {
             $offsetPrefix = $offset < 0 ? '-' : '+';
-            $offsetFormatted = gmdate( 'H:i', abs($offset) );
+            $offsetFormatted = gmdate( 'G:i', abs($offset) );
 
-            $prettyOffset = "GMT{$offsetPrefix}{$offsetFormatted}";
+            $prettyOffset = "GMT {$offsetPrefix}{$offsetFormatted}";
 
             $timezoneList[] = [
                 'id' => $timezone,
-                'value' => "({$prettyOffset}) $timezone",
+                'value' => [
+                    'offsetValue' => $prettyOffset,
+                    'timezone' => Str::replace("_", " ", "$timezone"),
+                ],
             ];
         }
 

@@ -206,6 +206,7 @@
                 can: this.can,
                 i18n: this.i18n,
                 dimensions: this.dimensions,
+                eventStatusOptions: this.eventStatusOptions,
             }
         },
 
@@ -224,6 +225,7 @@
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            eventStatusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
             i18n: { type: Object, default: () => ({

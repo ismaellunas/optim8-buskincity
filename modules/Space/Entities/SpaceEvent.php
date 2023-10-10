@@ -110,7 +110,13 @@ class SpaceEvent extends Model implements TranslatableContract
 
     public function scopePublished(Builder $query)
     {
-        return $query->where('status', PublishingStatus::PUBLISHED);
+        return $query->where('status', PublishingStatus::PUBLISHED->value);
+    }
+
+    public function getDisplayStatusAttribute(): string
+    {
+        return PublishingStatus::options()
+            ->firstWhere('id', $this->status)['value'] ?? "";
     }
 
     public function setAsDraft(): void
