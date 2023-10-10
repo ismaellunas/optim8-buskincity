@@ -26,6 +26,7 @@
                     <th>{{ i18n.title }}</th>
                     <th>{{ i18n.started_at }}</th>
                     <th>{{ i18n.ended_at }}</th>
+                    <th>{{ i18n.status }}</th>
                     <th>
                         <div class="level-right">
                             {{ i18n.actions }}
@@ -41,6 +42,14 @@
                 <td>{{ record.title }}</td>
                 <td>{{ record.started_at }}</td>
                 <td>{{ record.ended_at }}</td>
+                <td>
+                    <biz-tag
+                        class="is-small is-rounded"
+                        :class="{ 'is-success': record.status == 'published' }"
+                    >
+                        {{ record.display_status }}
+                    </biz-tag>
+                </td>
                 <td>
                     <div class="level-right">
                         <biz-button
@@ -83,6 +92,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import SpaceEventFormModal from './SpaceEventFormModal.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -93,6 +103,7 @@
         components: {
             BizButton,
             BizTableIndex,
+            BizTag,
             SpaceEventFormModal,
         },
 
