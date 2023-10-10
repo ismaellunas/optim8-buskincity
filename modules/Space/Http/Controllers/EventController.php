@@ -27,7 +27,7 @@ class EventController extends Controller
         $event = $this->eventService->createEvent($space, $inputs);
 
         return [
-            'event' => $this->eventService->getEditableRecord($space, $event),
+            'event' => $this->eventService->getEditableRecord($event),
             'message' => $this->title.' created successfully!',
         ];
     }
@@ -39,14 +39,14 @@ class EventController extends Controller
         $this->eventService->updateEvent($event, $inputs);
 
         return [
-            'event' => $this->eventService->getEditableRecord($space, $event),
+            'event' => $this->eventService->getEditableRecord($event),
             'message' => $this->title.' updated successfully!',
         ];
     }
 
     public function show(Space $space, SpaceEvent $event)
     {
-        return $this->eventService->getEditableRecord($space, $event);
+        return $this->eventService->getEditableRecord($event);
     }
 
     public function destroy(Space $space, SpaceEvent $event)

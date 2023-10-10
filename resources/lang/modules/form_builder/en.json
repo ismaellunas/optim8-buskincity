@@ -11,5 +11,6 @@
     "Entry ID": ":Form_builder_term.form ID",
     "Form ID": ":Form_builder_term.form ID",
     "Thank you for filling out the form.": "Thank you for filling out the :form_builder_term.form.",
-    "Entry ID": ":Form_builder_term.entry ID"
+    "Entry ID": ":Form_builder_term.entry ID",
+    "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the :form_builder_term.form. Please check the fields marked in red for more information."
 }
