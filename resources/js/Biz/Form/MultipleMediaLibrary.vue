@@ -127,8 +127,6 @@
             MixinFormMediaLibrary,
         ],
 
-        inject: ['i18n'],
-
         provide() {
             return {
                 selectedMedia: this.selectedMedia,

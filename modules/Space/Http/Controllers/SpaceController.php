@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Http\Controllers;
 
+use App\Enums\PublishingStatus;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\IPService;
@@ -282,6 +283,7 @@ class SpaceController extends CrudController
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),
+            'eventStatusOptions' => PublishingStatus::options(),
             'maxLength' => array_merge(
                 [
                     'meta_title' => config('constants.max_length.meta_title'),
