@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Services\SettingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\OrderStatus;
 
@@ -81,6 +82,22 @@ class OrderPolicyMixin
             }
 
             return false;
+        };
+    }
+
+    public function showFrontendOrder()
+    {
+        return function(User $user) {
+            $canCommonUserAccessed = app(SettingService::class)->getAccessCommonUser();
+            $accessRoleIds = app(SettingService::class)->getAccessRoleIds();
+
+            return (
+                $user->hasRole($accessRoleIds)
+                || (
+                    $user->roles->isEmpty()
+                    && $canCommonUserAccessed
+                )
+            );
         };
     }
 }

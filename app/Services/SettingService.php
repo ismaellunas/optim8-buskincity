@@ -22,7 +22,7 @@ use Mews\Purifier\Facades\Purifier;
 
 class SettingService
 {
-    private static function getKey(string $key): string
+    protected static function getKey(string $key): string
     {
         return app(SettingCache::class)->remember($key, function () use ($key) {
             return Setting::key($key)->value('value') ?? "";

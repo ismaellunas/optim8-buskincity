@@ -8,10 +8,13 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\OrderCheckIn;
 use Modules\Booking\Policies\OrderPolicyMixin;
+use Modules\Booking\Policies\ProductPolicyMixin;
 use Modules\Booking\Services\EventService;
+use Modules\Booking\Services\SettingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
 use Modules\Ecommerce\Policies\OrderPolicy;
+use Modules\Ecommerce\Policies\ProductPolicy;
 
 class BookingServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,7 @@ class BookingServiceProvider extends ServiceProvider
 
     public $singletons = [
         EventService::class => EventService::class,
+        SettingService::class => SettingService::class,
     ];
 
     /**
@@ -58,6 +62,7 @@ class BookingServiceProvider extends ServiceProvider
         });
 
         OrderPolicy::mixin(new OrderPolicyMixin());
+        ProductPolicy::mixin(new ProductPolicyMixin());
 
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
