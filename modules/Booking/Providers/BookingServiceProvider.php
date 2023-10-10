@@ -105,6 +105,7 @@ class BookingServiceProvider extends ServiceProvider
             \Modules\Booking\Console\EventEmailReminder::class,
             \Modules\Booking\Console\SetEventOngoing::class,
             \Modules\Booking\Console\SetEventPassed::class,
+            \Modules\Booking\Console\ReplaceEventCalendarsView::class,
         ]);
     }
 
