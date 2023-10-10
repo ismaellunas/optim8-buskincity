@@ -39,7 +39,8 @@ class SpaceEventService
         ?array $scopes = null,
         $perPage = 5
     ): LengthAwarePaginator {
-        $spaceEvents = SpaceEvent::where(function ($query) use ($space, $scopes) {
+        $spaceEvents = SpaceEvent::published()
+            ->where(function ($query) use ($space, $scopes) {
                 $this->scopeRecords($query, $space, $scopes);
             })
             ->with([
