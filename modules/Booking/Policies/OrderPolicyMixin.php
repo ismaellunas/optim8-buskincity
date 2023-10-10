@@ -92,10 +92,13 @@ class OrderPolicyMixin
             $accessRoleIds = app(SettingService::class)->getAccessRoleIds();
 
             return (
-                $user->hasRole($accessRoleIds)
+                $user->isSuperAdministrator
                 || (
-                    $user->roles->isEmpty()
-                    && $canCommonUserAccessed
+                    $user->hasRole($accessRoleIds)
+                    || (
+                        $user->roles->isEmpty()
+                        && $canCommonUserAccessed
+                    )
                 )
             );
         };

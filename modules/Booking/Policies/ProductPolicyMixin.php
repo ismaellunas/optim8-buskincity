@@ -15,10 +15,13 @@ class ProductPolicyMixin
 
 
             return (
-                $user->hasRole($accessRoleIds)
+                $user->isSuperAdministrator
                 || (
-                    $user->roles->isEmpty()
-                    && $canCommonUserAccessed
+                    $user->hasRole($accessRoleIds)
+                    || (
+                        $user->roles->isEmpty()
+                        && $canCommonUserAccessed
+                    )
                 )
             );
         };
