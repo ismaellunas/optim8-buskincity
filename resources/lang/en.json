@@ -1054,5 +1054,6 @@
     "Navigations": "Navigations",
     "Active": "Active",
     "Inactive": "Inactive",
-    "Module": "Module"
+    "Module": "Module",
+    "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature."
 }

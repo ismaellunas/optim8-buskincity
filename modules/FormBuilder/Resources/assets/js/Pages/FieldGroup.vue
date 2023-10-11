@@ -3,7 +3,7 @@
         <header class="card-header pt-4 px-3">
             <biz-input
                 v-model="computedFieldGroup.title"
-                placeholder="Field Group Title"
+                :placeholder="i18n.field_group_title_placeholder"
                 class="mb-4"
                 style="width: 100%"
             />
@@ -84,6 +84,8 @@
             Textarea,
         },
 
+        inject: ['i18n'],
+
         props: {
             fieldGroup: { type: Object, required: true },
             isDebugMode: { type: Boolean, default: false },
@@ -129,7 +131,7 @@
                 let message = null;
 
                 if (this.mappedFieldIds.includes(id)) {
-                    message = 'If you remove this field, it will impact the settings of the "Automate user creation" feature.';
+                    message = this.i18n.remove_field_confirmation_text;
                 }
 
                 confirmDelete('Are you sure?', message).then((result) => {

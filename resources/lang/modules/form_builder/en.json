@@ -11,6 +11,9 @@
     "Entry ID": ":Form_builder_term.form ID",
     "Form ID": ":Form_builder_term.form ID",
     "Thank you for filling out the form.": "Thank you for filling out the :form_builder_term.form.",
-    "Entry ID": ":Form_builder_term.entry ID",
-    "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the :form_builder_term.form. Please check the fields marked in red for more information."
+    "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the :form_builder_term.form. Please check the fields marked in red for more information.",
+    "List entries": "List :form_builder_term.entries",
+    "Contact Form": "Contact :Form_builder_term.form",
+    "Field group title": ":Form_builder_term.field_group title",
+    "Editing :name Form": "Editing :name :Form_builder_term.form"
 }
