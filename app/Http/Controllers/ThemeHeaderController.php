@@ -37,7 +37,7 @@ class ThemeHeaderController extends CrudController
     {
         $user = auth()->user();
 
-        $logoMedia = $this->settingService->getLogoMediaWithTransformMediaLibrary();
+        $logoMedia = $this->settingService->getLogoForMediaLibrary();
 
         return Inertia::render(
             $this->componentName.'Edit',

@@ -296,7 +296,7 @@ class SettingService
         return $this->getLoadedKey($key);
     }
 
-    public function getLogoMediaWithTransformMediaLibrary(): ?Media
+    public function getLogoForMediaLibrary(): ?Media
     {
         $media = $this->getLogoMedia();
 
@@ -526,7 +526,7 @@ class SettingService
         return $this->getLoadedKey($key);
     }
 
-    public function getQrCodePublicPageLogoMediaWithTransform(): ?Media
+    public function getQrCodePublicPageLogoForMediaLibrary(): ?Media
     {
         $media = $this->getQrCodePublicPageLogoMedia();
 
@@ -571,7 +571,7 @@ class SettingService
         return $this->getLoadedKey($key);
     }
 
-    public function getFaviconMediaWithTransform(): ?Media
+    public function getFaviconForMediaLibrary(): ?Media
     {
         $media = $this->getFaviconMedia();
 
@@ -888,7 +888,7 @@ class SettingService
         return $this->getLoadedKey($key);
     }
 
-    public function getPostThumbnailMediaWithTransform(): ?Media
+    public function getPostThumbnailForMediaLibrary(): ?Media
     {
         $media = $this->getPostThumbnailMedia();
 
@@ -913,7 +913,7 @@ class SettingService
         return $this->getLoadedKey($key);
     }
 
-    public function getOpenGraphMediaWithTransform(): ?Media
+    public function getOpenGraphForMediaLibrary(): ?Media
     {
         $media = $this->getOpenGraphMedia();
 
