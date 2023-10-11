@@ -26,7 +26,7 @@ class TranslationUpdateRequest extends BaseFormRequest
     public function rules()
     {
         $locale = config('translatable.locales');
-        $groups = app(TranslationManagerService::class)->getGroups($this->route('module'));
+        $groups = app(TranslationManagerService::class)->getGroups($this->get('module'));
 
         $uniqueRule = $this->getUniqueRule();
 
