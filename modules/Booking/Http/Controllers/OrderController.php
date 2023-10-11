@@ -6,6 +6,7 @@ use App\Http\Controllers\CrudController;
 use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Events\EventRescheduled;
@@ -24,7 +25,7 @@ class OrderController extends CrudController
     private $productEventService;
     private $eventService;
 
-    protected $title = "Booking";
+    protected $title = ":booking_term.booking";
     protected $baseRouteName = "admin.booking.orders";
 
     public function __construct(
@@ -156,8 +157,10 @@ class OrderController extends CrudController
 
         $product = app(ProductService::class)->formResource($product);
 
+        $title = Str::title(__('Reschedule event'));
+
         return Inertia::render('Booking::OrderReschedule', $this->getData([
-            'title' => __('Reschedule Event'),
+            'title' => $title,
             'breadcrumbs' => [
                 [
                     'title' => $this->getIndexTitle(),
@@ -168,7 +171,7 @@ class OrderController extends CrudController
                     'url' => route($this->baseRouteName.'.show', $order->id),
                 ],
                 [
-                    'title' => __('Reschedule Event'),
+                    'title' => $title,
                 ],
             ],
             'order' => $this->orderService->getRecord($order),
@@ -199,7 +202,7 @@ class OrderController extends CrudController
 
         EventRescheduled::dispatch($order);
 
-        $this->generateFlashMessage('The Event has been rescheduled!');
+        $this->generateFlashMessage('The event has been rescheduled!');
 
         return redirect()->route($this->baseRouteName.'.show', [$order->id]);
     }
