@@ -70,14 +70,8 @@
                         required
                         :label="i18n.timezone"
                         :message="error('timezone', null, formErrors)"
-                    >
-                        <template #tooltip>
-                            <biz-tooltip
-                                class="ml-1"
-                                :message="i18n.guidelines.timezone"
-                            />
-                        </template>
-                    </biz-form-timezone>
+                        :tooltip-message="i18n.guidelines.timezone"
+                    />
                 </div>
             </div>
 

@@ -210,15 +210,9 @@
                             v-model="eventForm.timezone"
                             :label="i18n.timezone"
                             :message="error('timezone', eventErrorBag)"
+                            :tooltip-message="i18n.guidelines.timezone"
                             required
-                        >
-                            <template #tooltip>
-                                <biz-tooltip
-                                    class="ml-1"
-                                    :message="i18n.guidelines.timezone"
-                                />
-                            </template>
-                        </biz-form-timezone>
+                        />
 
                         <hr>
 

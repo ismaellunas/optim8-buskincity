@@ -11,7 +11,13 @@
         </template>
 
         <template #tooltip>
-            <slot name="tooltip" />
+            <slot name="tooltip">
+                <biz-tooltip
+                    v-if="tooltipMessage"
+                    class="ml-1"
+                    :message="tooltipMessage"
+                />
+            </slot>
         </template>
 
         <biz-dropdown-search
@@ -36,17 +42,19 @@
 </template>
 
 <script>
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
-    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
+    import BizTooltip from '@/Biz/Tooltip.vue';
 
     export default {
         name: 'BizFormDropdownSearch',
 
         components: {
+            BizDropdownSearch,
             BizFormField,
             BizInputError,
-            BizDropdownSearch,
+            BizTooltip,
         },
 
         inheritAttrs: false,
@@ -83,6 +91,10 @@
             isFullwidth: {
                 type: Boolean,
                 default: false
+            },
+            tooltipMessage: {
+                type: String,
+                default: null,
             },
         },
     };
