@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\BaseModuleService;
 use App\Traits\ManageableModule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
@@ -79,5 +80,10 @@ class ModuleService extends BaseModuleService implements ManageableModuleInterfa
             'latitude' => 59.3260668,
             'longitude' => 17.8419716
         ];
+    }
+
+    public static function permissions(): Collection
+    {
+        return collect(config('ecommerce.permissions'));
     }
 }

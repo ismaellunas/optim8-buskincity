@@ -6,6 +6,7 @@ use App\Contracts\ManageableModuleInterface;
 use App\Models\User;
 use App\Services\BaseModuleService;
 use App\Traits\ManageableModule;
+use Illuminate\Support\Collection;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class ModuleService extends BaseModuleService implements ManageableModuleInterface
@@ -31,9 +32,9 @@ class ModuleService extends BaseModuleService implements ManageableModuleInterfa
         ];
     }
 
-    public static function permissions()
+    public static function permissions(): Collection
     {
-        return config('formbuilder.permissions');
+        return collect(config('formbuilder.permissions'));
     }
 
     public static function activeOptions()

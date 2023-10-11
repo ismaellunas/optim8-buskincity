@@ -32,14 +32,28 @@ class RoleService
 
     public function getPermissionOptions(): array
     {
+        $modulePermissionGroups = app(ModuleService::class)->getPermissionGroups();
+
         return Permission::get(['id', 'name'])
-            ->map(function ($permission) {
+            ->map(function ($permission) use ($modulePermissionGroups) {
                 $isAll = Str::endsWith($permission->name, '*');
 
                 $groupTitle = Str::of(Str::beforeLast($permission->name, '.'))
                     ->title()
                     ->replace('_', ' ')
                     ->__toString();
+
+                $findGroup = $modulePermissionGroups->firstWhere('group', Str::snake($groupTitle));
+
+                if ($findGroup) {
+                    $key = ":{$findGroup['module']}_term.{$findGroup['group']}";
+
+                    $groupTitleTerm = __($key);
+
+                    if ($groupTitleTerm !== Str::replace(":", "", $key)) {
+                        $groupTitle = Str::title($groupTitleTerm);
+                    }
+                }
 
                 return [
                     'id' => $permission->id,

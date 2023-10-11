@@ -150,4 +150,39 @@ class ModuleService
             $module->save();
         }
     }
+
+    public function getPermissionGroups(): Collection
+    {
+        $permissionGroups = [];
+        $moduleNames = $this->getAllEnabledNames();
+
+        foreach ($moduleNames as $moduleName) {
+            $className = "\\Modules\\{$moduleName}\\ModuleService";
+
+            if (
+                class_exists($className)
+                && method_exists($className, 'permissions')
+            ) {
+                $moduleName = Str::snake($className::getName());
+
+                $groups = collect($className::permissions()->all())
+                    ->map(function ($permission) {
+                        return Str::of(Str::beforeLast($permission, '.'))
+                            ->__toString();
+                    })
+                    ->unique()
+                    ->values()
+                    ->all();
+
+                foreach ($groups as $group) {
+                    $permissionGroups[] = [
+                        'module' => $moduleName,
+                        'group' => $group
+                    ];
+                }
+            }
+        }
+
+        return collect($permissionGroups);
+    }
 }
