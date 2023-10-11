@@ -167,7 +167,6 @@
     import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
-    import BizTooltip from '@/Biz/Tooltip.vue';
     import { cloneDeep, find, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';
@@ -189,7 +188,6 @@
             BizFormTimezone,
             BizLanguageTab,
             BizModalCard,
-            BizTooltip,
         },
 
         mixins: [
