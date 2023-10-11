@@ -24,13 +24,10 @@ class ModuleService
 
     public function modules(bool $isActive = true, bool $isManagable = true): Collection
     {
-        return $this->staticRemember(
-            'managable_active_modules',
-            fn () => $this
-                ->allModules()
-                ->where('is_manageable', $isActive)
-                ->where('is_active', $isManagable)
-        );
+        return $this
+            ->allModules()
+            ->where('is_active', $isActive)
+            ->where('is_manageable', $isManagable);
     }
 
     public function isModuleActive(string $moduleName): bool
@@ -47,6 +44,14 @@ class ModuleService
         return $this->staticRemember(
             'all_enabled_module_names',
             fn () => $this->modules()->pluck('name')->all()
+        );
+    }
+
+    public function getAllDisabledNames(): array
+    {
+        return $this->staticRemember(
+            'all_disabled_module_names',
+            fn () => $this->modules(false)->pluck('name')->all()
         );
     }
 
@@ -151,10 +156,13 @@ class ModuleService
         }
     }
 
-    public function getPermissionGroups(): Collection
+    public function getAllPermissionGroups(): Collection
     {
         $permissionGroups = [];
-        $moduleNames = $this->getAllEnabledNames();
+        $moduleNames = $this->allModules()
+            ->where('is_manageable', true)
+            ->pluck('name')
+            ->all();
 
         foreach ($moduleNames as $moduleName) {
             $className = "\\Modules\\{$moduleName}\\ModuleService";
@@ -163,12 +171,9 @@ class ModuleService
                 class_exists($className)
                 && method_exists($className, 'permissions')
             ) {
-                $moduleName = Str::snake($className::getName());
-
                 $groups = collect($className::permissions()->all())
                     ->map(function ($permission) {
-                        return Str::of(Str::beforeLast($permission, '.'))
-                            ->__toString();
+                        return Str::beforeLast($permission, '.');
                     })
                     ->unique()
                     ->values()
@@ -176,7 +181,7 @@ class ModuleService
 
                 foreach ($groups as $group) {
                     $permissionGroups[] = [
-                        'module' => $moduleName,
+                        'module' => $className::getName(),
                         'group' => $group
                     ];
                 }
