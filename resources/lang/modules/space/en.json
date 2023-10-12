@@ -1,6 +1,6 @@
 {
-    "Space setting": "Space setting",
-    "Space type": "Space type",
-    "Space": "Space",
-    "Spaces": "Spaces"
+    "//Space": "Space",
+    "//Spaces": "Spaces",
+    "Space setting": ":Space_term.space setting",
+    "Space type": ":Space_term.space type"
 }

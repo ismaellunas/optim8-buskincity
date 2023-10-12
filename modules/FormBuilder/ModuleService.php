@@ -2,34 +2,38 @@
 
 namespace Modules\FormBuilder;
 
-use Illuminate\Http\Request;
+use App\Contracts\ManageableModuleInterface;
+use App\Models\User;
+use App\Services\BaseModuleService;
+use App\Traits\ManageableModule;
 use Modules\FormBuilder\Services\FormBuilderService;
 
-class ModuleService
+class ModuleService extends BaseModuleService implements ManageableModuleInterface
 {
+    use ManageableModule;
+
+    public function menuPermissions(User $user): array
+    {
+        return [
+            'admin.form-builders.index' => $user->can('form_builder.browse'),
+        ];
+    }
+
+    public function defaultNavigations(): array
+    {
+        return [
+            [
+                'route' => 'admin.form-builders.index',
+                'routeIs' => 'admin.form-builders.index',
+                'title' => __('Manage'),
+                'default' => true,
+            ],
+        ];
+    }
+
     public static function permissions()
     {
         return config('formbuilder.permissions');
-    }
-
-    public static function adminMenus(Request $request): array
-    {
-        $user = $request->user();
-        $canManageFormBuilder = $user->can('form_builder.browse');
-
-        return [
-            'title' => __('Form Builder'),
-            'isActive' => $request->routeIs('admin.form-builders.*'),
-            'isEnabled' => $canManageFormBuilder,
-            'children' => [
-                [
-                    'title' => __('Manage'),
-                    'link' => route('admin.form-builders.index'),
-                    'isActive' => $request->routeIs('admin.form-builders.index'),
-                    'isEnabled' => $canManageFormBuilder,
-                ],
-            ],
-        ];
     }
 
     public static function activeOptions()

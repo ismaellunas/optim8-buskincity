@@ -2,16 +2,14 @@
 
 namespace Modules\FormBuilder\View\Components\Builder\Content;
 
-use App\Services\ModuleService;
 use App\Services\SettingService;
 use App\View\Components\Builder\Content\BaseContent;
 use Exception;
+use Modules\FormBuilder\ModuleService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilder extends BaseContent
 {
-    private $moduleName = 'FormBuilder';
-
     public $formId = null;
     public $recaptchaSiteKey = null;
     public $schema;
@@ -27,7 +25,7 @@ class FormBuilder extends BaseContent
     {
         parent::__construct($entity);
 
-        if (!$this->isModuleActive()) {
+        if (! app(ModuleService::class)->isModuleActive()) {
             throw new Exception(__('Form Builder module is not activated!'));
         }
 
@@ -59,11 +57,6 @@ class FormBuilder extends BaseContent
                 }
             }
         }
-    }
-
-    private function isModuleActive(): bool
-    {
-        return app(ModuleService::class)->isModuleActive($this->moduleName);
     }
 
     private function getRecaptchaSiteKey(): ?string

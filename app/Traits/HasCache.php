@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Closure;
+
 trait HasCache
 {
     protected $caches = [];
@@ -19,5 +21,14 @@ trait HasCache
     protected function getLoadedKey($key): mixed
     {
         return $this->caches[$key];
+    }
+
+    protected function staticRemember(string $key, mixed $callback): mixed
+    {
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey($key, $callback());
+        }
+
+        return $this->getLoadedKey($key);
     }
 }
