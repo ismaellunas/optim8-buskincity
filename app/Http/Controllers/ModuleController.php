@@ -151,6 +151,10 @@ class ModuleController extends CrudController
 
         app(ModuleCache::class)->flush();
         app(MenuCache::class)->flush();
+
+        $this->generateFlashMessage("The :resource order was updated!", [
+            'resource' => Str::lower(__('Module')),
+        ]);
     }
 
 
