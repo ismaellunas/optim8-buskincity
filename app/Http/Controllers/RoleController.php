@@ -94,11 +94,6 @@ class RoleController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit', $role->id);
     }
 
-    public function show(Role $role)
-    {
-        //
-    }
-
     public function edit(Role $role)
     {
         $role->load('permissions');

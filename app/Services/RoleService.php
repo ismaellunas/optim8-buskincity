@@ -31,74 +31,83 @@ class RoleService
         return $records;
     }
 
-    private function getPermissionGroups(): Collection
+    private function getAllPermissionGroups(): Collection
     {
+        $permissionGroups = collect();
+
         $appModuleService = app(ModuleService::class);
 
-        $permissionGroups = [];
-        $moduleNames = $appModuleService->getAllEnabledNames();
+        $moduleNames = $appModuleService->allModules()
+            ->where('is_manageable', true)
+            ->pluck('name');
 
         foreach ($moduleNames as $moduleName) {
             $moduleService = $appModuleService->getServiceClass($moduleName);
 
             if (method_exists($moduleService, 'permissions')) {
-                $moduleName = Str::snake($moduleService->getName());
-
                 $groups = $moduleService
                     ->permissions()
                     ->map(function ($permission) {
-                        return Str::of(Str::beforeLast($permission, '.'))
-                            ->__toString();
+                        return Str::beforeLast($permission, '.');
                     })
                     ->unique()
                     ->values()
                     ->all();
 
                 foreach ($groups as $group) {
-                    $permissionGroups[] = [
-                        'module' => $moduleName,
+                    $permissionGroups->push([
+                        'module' => $moduleService->getName(),
                         'group' => $group
-                    ];
+                    ]);
                 }
             }
         }
 
-        return collect($permissionGroups);
+        return $permissionGroups;
     }
-
 
     public function getPermissionOptions(): array
     {
-        $modulePermissionGroups = $this->getPermissionGroups();
+        $moduleService = app(ModuleService::class);
+
+        $modulePermissionGroups = $this->getAllPermissionGroups();
+
+        $disabledModuleNames = $moduleService->modules(false)->pluck('name');
 
         return Permission::get(['id', 'name'])
             ->map(function ($permission) use ($modulePermissionGroups) {
                 $isAll = Str::endsWith($permission->name, '*');
+                $groupTitle = Str::beforeLast($permission->name, '.');
+                $module = null;
 
-                $groupTitle = Str::of(Str::beforeLast($permission->name, '.'))
-                    ->title()
-                    ->replace('_', ' ')
-                    ->__toString();
-
-                $foundGroup = $modulePermissionGroups->firstWhere('group', Str::snake($groupTitle));
+                $foundGroup = $modulePermissionGroups->firstWhere('group', $groupTitle);
 
                 if ($foundGroup) {
-                    $key = ":{$foundGroup['module']}_term.{$foundGroup['group']}";
+                    $module = $foundGroup['module'];
+                    $prefix = Str::snake($module).'_term';
+                    $key = ":{$prefix}.{$foundGroup['group']}";
 
                     $groupTitleTerm = __($key);
 
                     if ($groupTitleTerm !== Str::replace(":", "", $key)) {
-                        $groupTitle = Str::title($groupTitleTerm);
+                        $groupTitle = $groupTitleTerm;
                     }
                 }
 
                 return [
                     'id' => $permission->id,
                     'value' => $permission->name,
-                    'groupTitle' => $groupTitle,
                     'isAll' => $isAll,
                     'title' => $isAll ? 'All' : Str::of(Str::afterLast($permission->name, '.'))->title()->replace('_', ' '),
+                    'module' => $module,
+                    'groupTitle' => Str::of($groupTitle)
+                        ->title()
+                        ->replace('_', ' ')
+                        ->__toString(),
                 ];
+            })
+            ->filter(function ($permission) use ($disabledModuleNames) {
+                return $disabledModuleNames->doesntContain($permission['module']);
             })
             ->groupBy('groupTitle')
             ->all();

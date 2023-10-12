@@ -25,13 +25,10 @@ class ModuleService
 
     public function modules(bool $isActive = true, bool $isManagable = true): Collection
     {
-        return $this->staticRemember(
-            'managable_active_modules',
-            fn () => $this
-                ->allModules()
-                ->where('is_manageable', $isActive)
-                ->where('is_active', $isManagable)
-        );
+        return $this
+            ->allModules()
+            ->where('is_active', $isActive)
+            ->where('is_manageable', $isManagable);
     }
 
     public function isModuleActive(string $moduleName): bool

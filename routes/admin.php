@@ -97,7 +97,8 @@ Route::middleware(array_filter([
     Route::post('users/password-reset/send', SendUserPasswordResetEmailController::class)
         ->name('users.password-reset.send');
 
-    Route::resource('/roles', RoleController::class);
+    Route::resource('/roles', RoleController::class)
+        ->except(['show']);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
