@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Providers;
 
+use App\Listeners\SanitizeDisabledComponentsOnPageTranslations;
 use App\Listeners\UnassignModulePermissions;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Booking\Events\EventBooked;
@@ -39,6 +40,7 @@ class EventServiceProvider extends ServiceProvider
             UnassignAllProductManagers::class,
             SetPublishedProductsToDraft::class,
             CancelUpcomingOrOngoingBookings::class,
+            SanitizeDisabledComponentsOnPageTranslations::class,
         ],
     ];
 

@@ -331,4 +331,12 @@ class EventsCalendarService
 
         return (float) $this->defaultZoom();
     }
+
+    public function isEnabled(): bool
+    {
+        return (
+            app(BookingModuleService::class)->isModuleActive()
+            || app(SpaceModuleService::class)->isModuleActive()
+        );
+    }
 }

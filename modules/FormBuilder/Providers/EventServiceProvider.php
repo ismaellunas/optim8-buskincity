@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder\Providers;
 
+use App\Listeners\SanitizeDisabledComponentsOnPageTranslations;
 use App\Listeners\UnassignModulePermissions;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\FormBuilder\Entities\Form;
@@ -27,6 +28,7 @@ class EventServiceProvider extends ServiceProvider
         ModuleDeactivated::class => [
             UnassignModulePermissions::class,
             DeactivateAllNotificationSettings::class,
+            SanitizeDisabledComponentsOnPageTranslations::class,
         ],
     ];
 
