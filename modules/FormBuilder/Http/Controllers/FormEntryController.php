@@ -84,7 +84,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __('Form Builders'),
+                    'title' => __(':Form_builder_term.form_builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
@@ -157,7 +157,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __('Form Builders'),
+                    'title' => __(':Form_builder_term.form_builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
