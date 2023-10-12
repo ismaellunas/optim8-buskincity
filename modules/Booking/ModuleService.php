@@ -3,17 +3,25 @@
 namespace Modules\Booking;
 
 use App\Contracts\ManageableModuleInterface;
+use App\Contracts\ToggleableModuleStatusInterface;
 use App\Models\User;
 use App\Services\BaseModuleService;
+use App\Traits\ActivateableModuleStatus;
 use App\Traits\ManageableModule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Modules\Booking\Events\ModuleDeactivated;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 
-class ModuleService extends BaseModuleService implements ManageableModuleInterface
+class ModuleService extends BaseModuleService implements
+    ManageableModuleInterface,
+    ToggleableModuleStatusInterface
 {
     use ManageableModule;
+    use ActivateableModuleStatus;
 
     public function menuPermissions(User $user): array
     {
@@ -78,6 +86,36 @@ class ModuleService extends BaseModuleService implements ManageableModuleInterfa
         return [
             'latitude' => 59.3260668,
             'longitude' => 17.8419716
+        ];
+    }
+
+    public static function permissions(): Collection
+    {
+        return app(EcommerceModuleService::class)->permissions();
+    }
+
+    public function adminPermissions(): array
+    {
+        return [
+            'product.*',
+            'order.*',
+        ];
+    }
+
+    public function deactivationEventClass(): ?string
+    {
+        return ModuleDeactivated::class;
+    }
+
+    public function deactivationMessages(): array
+    {
+        return [
+            __("All permissions assigned to users from the :module module will be unassigned from those users.", [
+                'module' => $this->model()->title,
+            ]),
+            __("Product items managed by :module module will be set to draft.", ['module' => $this->model()->title]),
+            __("Any upcoming and ongoing booked product items will be canceled."),
+            __("Users who are assigned as managers will be unassigned from product."),
         ];
     }
 }
