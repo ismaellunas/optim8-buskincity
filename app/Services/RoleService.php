@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class RoleService
@@ -30,9 +31,45 @@ class RoleService
         return $records;
     }
 
+    private function getPermissionGroups(): Collection
+    {
+        $appModuleService = app(ModuleService::class);
+
+        $permissionGroups = [];
+        $moduleNames = $appModuleService->getAllEnabledNames();
+
+        foreach ($moduleNames as $moduleName) {
+            $moduleService = $appModuleService->getServiceClass($moduleName);
+
+            if (method_exists($moduleService, 'permissions')) {
+                $moduleName = Str::snake($moduleService->getName());
+
+                $groups = $moduleService
+                    ->permissions()
+                    ->map(function ($permission) {
+                        return Str::of(Str::beforeLast($permission, '.'))
+                            ->__toString();
+                    })
+                    ->unique()
+                    ->values()
+                    ->all();
+
+                foreach ($groups as $group) {
+                    $permissionGroups[] = [
+                        'module' => $moduleName,
+                        'group' => $group
+                    ];
+                }
+            }
+        }
+
+        return collect($permissionGroups);
+    }
+
+
     public function getPermissionOptions(): array
     {
-        $modulePermissionGroups = app(ModuleService::class)->getPermissionGroups();
+        $modulePermissionGroups = $this->getPermissionGroups();
 
         return Permission::get(['id', 'name'])
             ->map(function ($permission) use ($modulePermissionGroups) {
@@ -43,10 +80,10 @@ class RoleService
                     ->replace('_', ' ')
                     ->__toString();
 
-                $findGroup = $modulePermissionGroups->firstWhere('group', Str::snake($groupTitle));
+                $foundGroup = $modulePermissionGroups->firstWhere('group', Str::snake($groupTitle));
 
-                if ($findGroup) {
-                    $key = ":{$findGroup['module']}_term.{$findGroup['group']}";
+                if ($foundGroup) {
+                    $key = ":{$foundGroup['module']}_term.{$foundGroup['group']}";
 
                     $groupTitleTerm = __($key);
 
