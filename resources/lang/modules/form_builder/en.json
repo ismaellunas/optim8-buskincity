@@ -12,7 +12,7 @@
     "Form ID": ":Form_builder_term.form ID",
     "Thank you for filling out the form.": "Thank you for filling out the :form_builder_term.form.",
     "Entry ID": ":Form_builder_term.entry ID",
-    "Notifications managed by form builder module will be set to inactive.": "Notifications managed by :Form_builder_term.form_builder module will be set to inactive.",
+    "Notifications managed by form builder module will be set to inactive.": "Notifications managed by :form_builder_term.form_builder module will be set to inactive.",
     "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the :form_builder_term.form. Please check the fields marked in red for more information.",
     "There are errors in the form. Please check the fields marked in red for more information.": "There are errors in the :form_builder_term.form. Please check the fields marked in red for more information.",
     "List entries": "List :form_builder_term.entries",
