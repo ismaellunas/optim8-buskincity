@@ -56,7 +56,7 @@ return new class extends Migration
         ";
 
         $spaceEventQuery = "
-            SELECT
+            SELECT DISTINCT ON (se.id)
                 'space_event' AS type,
                 se.id,
                 NULL AS user_id,
@@ -78,7 +78,7 @@ return new class extends Migration
                 json_build_object('space_id', s.id) AS entity_ids
             FROM space_events AS se
             JOIN spaces s ON s.id = se.space_id
-            LEFT JOIN mediables m ON m.mediable_id = s.id AND m.mediable_type = '".Space::class."'
+            LEFT JOIN mediables m ON m.mediable_id = s.id AND m.mediable_type = '".Space::class."' AND m.type = 'logo'
             WHERE se.status = '".PublishingStatus::PUBLISHED->value."'
         ";
 
