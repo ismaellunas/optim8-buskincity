@@ -8,6 +8,7 @@ use App\Models\Module;
 use App\Services\ModuleService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Booking\Events\ModuleDeactivated;
 
 class ModuleController extends CrudController
 {
@@ -71,6 +72,8 @@ class ModuleController extends CrudController
             'title' => __("Title"),
             'update' => __("Update"),
             'cancel' => __("Cancel"),
+            'activation_confirmation_title' => __("Activation"),
+            'activation_confirmation_message' => __("Are you sure want to activate :module module?", ['module' => $module->title]),
         ]);
 
         return Inertia::render('Module/Edit', $this->editData($module, [
@@ -95,6 +98,8 @@ class ModuleController extends CrudController
     {
         $this->moduleService->activate($module);
 
+        $this->moduleService->onActivated($module);
+
         $this->moduleCache->flush();
 
         $this->generateFlashMessage("The action ran successfully!");
@@ -103,6 +108,8 @@ class ModuleController extends CrudController
     public function deactivate(Request $request, Module $module)
     {
         $this->moduleService->deactivate($module);
+
+        $this->moduleService->onDeactivated($module);
 
         $this->moduleCache->flush();
 
@@ -144,5 +151,21 @@ class ModuleController extends CrudController
 
         app(ModuleCache::class)->flush();
         app(MenuCache::class)->flush();
+    }
+
+
+    public function confirmActivation(Module $module)
+    {
+        return [
+            'title' => __("Are you sure want to activate :module module?", ['module' => $module->title]),
+        ];
+    }
+
+    public function confirmDeactivation(Module $module)
+    {
+        return [
+            'title' => __("Are you sure want to deactivate :module module?", ['module' => $module->title]),
+            'messages' => $this->moduleService->deactivationMessages($module),
+        ];
     }
 }

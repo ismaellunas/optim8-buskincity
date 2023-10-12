@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\ToggleableModuleStatusInterface;
 use App\Entities\Caches\ModuleCache;
 use App\Models\Module;
 use App\Traits\HasCache;
@@ -120,6 +121,27 @@ class ModuleService
         return $module->save();
     }
 
+    public function onActivated(Module $module)
+    {
+        $moduleService = $this->getServiceClass($module);
+
+        if ($moduleService instanceof ToggleableModuleStatusInterface) {
+            $moduleService->activated();
+        }
+    }
+
+    public function onDeactivated(Module $module)
+    {
+        $moduleService = $this->getServiceClass($module);
+
+        if (
+            $moduleService instanceof ToggleableModuleStatusInterface
+            && $eventClass = $moduleService->deactivationEventClass()
+        ) {
+            $eventClass::dispatch($module);
+        }
+    }
+
     public function getNavigations(Module $module): array
     {
         $moduleService = $this->getServiceClass($module);
@@ -184,5 +206,20 @@ class ModuleService
         }
 
         return collect($permissionGroups);
+    }
+
+    public function deactivationMessages(Module $module): array
+    {
+        $moduleService = $this->getServiceClass($module);
+        $messages = [];
+
+        if (
+            $moduleService
+            && $moduleService instanceof ToggleableModuleStatusInterface
+        ) {
+            $messages = $moduleService->deactivationMessages();
+        }
+
+        return $messages;
     }
 }
