@@ -7,8 +7,8 @@ use App\Entities\Caches\ModuleCache;
 use App\Models\Module;
 use App\Services\ModuleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Modules\Booking\Events\ModuleDeactivated;
 
 class ModuleController extends CrudController
 {
@@ -98,9 +98,9 @@ class ModuleController extends CrudController
     {
         $this->moduleService->activate($module);
 
-        $this->moduleService->onActivated($module);
-
         $this->moduleCache->flush();
+
+        $this->moduleService->onActivated($module);
 
         $this->generateFlashMessage("The action ran successfully!");
     }
@@ -109,9 +109,9 @@ class ModuleController extends CrudController
     {
         $this->moduleService->deactivate($module);
 
-        $this->moduleService->onDeactivated($module);
-
         $this->moduleCache->flush();
+
+        $this->moduleService->onDeactivated($module);
 
         $this->generateFlashMessage("The action ran successfully!");
     }
