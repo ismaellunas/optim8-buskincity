@@ -41,5 +41,5 @@
     "Reschedule event": "Reschedule :booking_term.event",
     "The event has been rescheduled!": "The :booking_term.event has been rescheduled!",
     "Event booking": "Event :booking_term.booking",
-    "Booking event confirmation": ":Booking_term.booking event confirmation"
+    "Booking event confirmation": ":Booking_term.booking :booking_term.event confirmation"
 }
