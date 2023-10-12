@@ -1058,5 +1058,6 @@
     "Activation": "Activation",
     "Are you sure want to activate :module module?": "Are you sure want to activate :module module?",
     "Are you sure want to deactivate :module module?": "Are you sure want to deactivate :module module?",
-    "All permissions assigned to users from the :module module will be unassigned from those users.": "All permissions assigned to users from the :module module will be unassigned from those users."
+    "All permissions assigned to users from the :module module will be unassigned from those users.": "All permissions assigned to users from the :module module will be unassigned from those users.",
+    "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature."
 }

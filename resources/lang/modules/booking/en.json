@@ -36,5 +36,10 @@
     "Is it the same address as the parent?": "Is it the same address as the parent?",
     "Product items managed by booking module will be set to draft.": ":Booking_term.product items managed by :module module will be set to draft.",
     "Any upcoming and ongoing booked product items will be canceled.": "Any upcoming and ongoing booked :booking_term.product items will be canceled.",
-    "Users who are assigned as managers will be unassigned from product.": "Users who are assigned as managers will be unassigned from :booking_term.product."
+    "Users who are assigned as managers will be unassigned from product.": "Users who are assigned as managers will be unassigned from :booking_term.product.",
+    "The event has been canceled!": "The :booking_term.event has been canceled!",
+    "Reschedule event": "Reschedule :booking_term.event",
+    "The event has been rescheduled!": "The :booking_term.event has been rescheduled!",
+    "Event booking": "Event :booking_term.booking",
+    "Booking event confirmation": ":Booking_term.booking :booking_term.event confirmation"
 }
