@@ -90,6 +90,9 @@ class ModuleService extends BaseModuleService implements
                 'module' => $this->model()->title,
             ]),
             __("Notifications managed by form builder module will be set to inactive."),
+            __("Page builder components currently in use that are related to the :Module module will be deleted.", [
+                'module' => $this->model()->title,
+            ]),
         ];
     }
 

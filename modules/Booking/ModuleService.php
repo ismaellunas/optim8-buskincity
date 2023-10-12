@@ -116,6 +116,9 @@ class ModuleService extends BaseModuleService implements
             __("Product items managed by :module module will be set to draft.", ['module' => $this->model()->title]),
             __("Any upcoming and ongoing booked product items will be canceled."),
             __("Users who are assigned as managers will be unassigned from product."),
+            __("Page builder components currently in use that are related to the :module module will be deleted.", [
+                'module' => $this->model()->title,
+            ]),
         ];
     }
 }
