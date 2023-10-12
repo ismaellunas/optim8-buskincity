@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class RoleService
@@ -30,12 +31,48 @@ class RoleService
         return $records;
     }
 
+    private function getAllPermissionGroups(): Collection
+    {
+        $permissionGroups = collect();
+
+        $appModuleService = app(ModuleService::class);
+
+        $moduleNames = $appModuleService->allModules()
+            ->where('is_manageable', true)
+            ->pluck('name');
+
+        foreach ($moduleNames as $moduleName) {
+            $moduleService = $appModuleService->getServiceClass($moduleName);
+
+            if (method_exists($moduleService, 'permissions')) {
+                $groups = $moduleService
+                    ->permissions()
+                    ->map(function ($permission) {
+                        return Str::beforeLast($permission, '.');
+                    })
+                    ->unique()
+                    ->values()
+                    ->all();
+
+                foreach ($groups as $group) {
+                    $permissionGroups->push([
+                        'module' => $moduleService->getName(),
+                        'group' => $group
+                    ]);
+                }
+            }
+        }
+
+        return $permissionGroups;
+    }
+
     public function getPermissionOptions(): array
     {
         $moduleService = app(ModuleService::class);
 
-        $modulePermissionGroups = $moduleService->getAllPermissionGroups();
-        $disabledModuleNames = $moduleService->getAllDisabledNames();
+        $modulePermissionGroups = $this->getAllPermissionGroups();
+
+        $disabledModuleNames = $moduleService->modules(false)->pluck('name');
 
         return Permission::get(['id', 'name'])
             ->map(function ($permission) use ($modulePermissionGroups) {
@@ -43,12 +80,12 @@ class RoleService
                 $groupTitle = Str::beforeLast($permission->name, '.');
                 $module = null;
 
-                $findGroup = $modulePermissionGroups->firstWhere('group', $groupTitle);
+                $foundGroup = $modulePermissionGroups->firstWhere('group', $groupTitle);
 
-                if ($findGroup) {
-                    $module = $findGroup['module'];
+                if ($foundGroup) {
+                    $module = $foundGroup['module'];
                     $prefix = Str::snake($module).'_term';
-                    $key = ":{$prefix}.{$findGroup['group']}";
+                    $key = ":{$prefix}.{$foundGroup['group']}";
 
                     $groupTitleTerm = __($key);
 
@@ -70,7 +107,7 @@ class RoleService
                 ];
             })
             ->filter(function ($permission) use ($disabledModuleNames) {
-                return ! in_array($permission['module'], $disabledModuleNames);
+                return $disabledModuleNames->doesntContain($permission['module']);
             })
             ->groupBy('groupTitle')
             ->all();

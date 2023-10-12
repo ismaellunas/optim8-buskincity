@@ -157,6 +157,12 @@ Route::middleware(array_filter([
 
             Route::post('/{module}/deactivate', [ModuleController::class, 'deactivate'])
                 ->name('deactivate');
+
+            Route::get('/{module}/confirm-activation', [ModuleController::class, 'confirmActivation'])
+                ->name('confirm-activate');
+
+            Route::get('/{module}/confirm-deactivation', [ModuleController::class, 'confirmDeactivation'])
+                ->name('confirm-deactivate');
         });
 
         Route::middleware('can:system.language')->group(function () {

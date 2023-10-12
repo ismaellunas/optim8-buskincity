@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\ToggleableModuleStatusInterface;
 use App\Entities\Caches\ModuleCache;
 use App\Models\Module;
 use App\Traits\HasCache;
@@ -44,14 +45,6 @@ class ModuleService
         return $this->staticRemember(
             'all_enabled_module_names',
             fn () => $this->modules()->pluck('name')->all()
-        );
-    }
-
-    public function getAllDisabledNames(): array
-    {
-        return $this->staticRemember(
-            'all_disabled_module_names',
-            fn () => $this->modules(false)->pluck('name')->all()
         );
     }
 
@@ -125,6 +118,27 @@ class ModuleService
         return $module->save();
     }
 
+    public function onActivated(Module $module)
+    {
+        $moduleService = $this->getServiceClass($module);
+
+        if ($moduleService instanceof ToggleableModuleStatusInterface) {
+            $moduleService->activated();
+        }
+    }
+
+    public function onDeactivated(Module $module)
+    {
+        $moduleService = $this->getServiceClass($module);
+
+        if (
+            $moduleService instanceof ToggleableModuleStatusInterface
+            && $eventClass = $moduleService->deactivationEventClass()
+        ) {
+            $eventClass::dispatch($module);
+        }
+    }
+
     public function getNavigations(Module $module): array
     {
         $moduleService = $this->getServiceClass($module);
@@ -156,38 +170,18 @@ class ModuleService
         }
     }
 
-    public function getAllPermissionGroups(): Collection
+    public function deactivationMessages(Module $module): array
     {
-        $permissionGroups = [];
-        $moduleNames = $this->allModules()
-            ->where('is_manageable', true)
-            ->pluck('name')
-            ->all();
+        $moduleService = $this->getServiceClass($module);
+        $messages = [];
 
-        foreach ($moduleNames as $moduleName) {
-            $className = "\\Modules\\{$moduleName}\\ModuleService";
-
-            if (
-                class_exists($className)
-                && method_exists($className, 'permissions')
-            ) {
-                $groups = collect($className::permissions()->all())
-                    ->map(function ($permission) {
-                        return Str::beforeLast($permission, '.');
-                    })
-                    ->unique()
-                    ->values()
-                    ->all();
-
-                foreach ($groups as $group) {
-                    $permissionGroups[] = [
-                        'module' => $className::getName(),
-                        'group' => $group
-                    ];
-                }
-            }
+        if (
+            $moduleService
+            && $moduleService instanceof ToggleableModuleStatusInterface
+        ) {
+            $messages = $moduleService->deactivationMessages();
         }
 
-        return collect($permissionGroups);
+        return $messages;
     }
 }

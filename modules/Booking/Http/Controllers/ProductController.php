@@ -375,7 +375,7 @@ class ProductController extends CrudController
                 'add_date' => __('Add :resource', ['resource' => __('Date')]),
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
-                'choose_product_manager' => __('Choose :booking_term.product manager'),
+                'choose_product_manager' => __('Choose product manager'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

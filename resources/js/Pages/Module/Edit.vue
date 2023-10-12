@@ -65,8 +65,9 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import EditTabs from './EditTabs.vue';
-    import { confirmDelete, confirm, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { computed, ref, onMounted } from 'vue';
+    import { confirmDelete, confirm, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { activationAlertConfigs } from '@/Libs/module.js';
     import { router, useForm, usePage } from '@inertiajs/vue3';
 
     export default {
@@ -123,13 +124,17 @@
                 });
             },
 
-            confirmActivation(action) {
-                confirm('Activation', 'Are you sure you want to ...')
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            this.activation(action);
-                        }
-                    });
+            async confirmActivation(action) {
+                const configs = await activationAlertConfigs(route(
+                    this.baseRouteName + 'confirm-' + action,
+                    { id: this.record.id }
+                ));
+
+                confirm(null, null, "Yes", configs).then((result) => {
+                    if (result.isConfirmed) {
+                        this.activation(action);
+                    }
+                })
             },
 
             activation(action) {

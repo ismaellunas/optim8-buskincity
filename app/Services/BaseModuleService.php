@@ -23,7 +23,7 @@ abstract class BaseModuleService
     public function model(): Module
     {
         return app(ModuleService::class)
-            ->modules()
+            ->allModules()
             ->firstWhere('name', '=', $this->getName());
     }
 
