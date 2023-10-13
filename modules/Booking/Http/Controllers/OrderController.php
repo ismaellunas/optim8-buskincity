@@ -122,7 +122,7 @@ class OrderController extends CrudController
                     'title' => $productName,
                 ],
             ],
-            'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
+            'title' => $this->title().': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
             'checkInTime' => $checkIn
                 ? $checkIn

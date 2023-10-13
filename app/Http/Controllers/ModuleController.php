@@ -7,8 +7,8 @@ use App\Entities\Caches\ModuleCache;
 use App\Models\Module;
 use App\Services\ModuleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Modules\Booking\Events\ModuleDeactivated;
 
 class ModuleController extends CrudController
 {
@@ -49,12 +49,12 @@ class ModuleController extends CrudController
                         'url' => route($this->baseRouteName.'index'),
                     ],
                     [
-                        'title' => $this->getEditTitle(),
+                        'title' => Str::title(__($module->title)),
                     ],
                 ],
                 'tabs' => $this->moduleService->tabs($module),
                 'title' => __('Editing :title :resource', [
-                    'title' => $module->name,
+                    'title' => Str::title(__($module->title)),
                     'resource' => $this->title
                 ]),
             ],

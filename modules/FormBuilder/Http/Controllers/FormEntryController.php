@@ -149,7 +149,7 @@ class FormEntryController extends CrudController
             );
         }
 
-        $title = __(':Form_builder_term.entry - :formName # :entryId', [
+        $title = __(':Form_builder_term.entry: :formName # :entryId', [
             'formName' => $formBuilder->name,
             'entryId' => $formEntry->id,
         ]);
