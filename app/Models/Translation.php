@@ -18,6 +18,7 @@ class Translation extends Model implements TranslationLoader
         'locale',
         'module',
         'value',
+        'source',
     ];
 
     public function saveFromInputs(array $inputs)
