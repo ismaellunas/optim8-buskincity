@@ -2,12 +2,14 @@
 
 namespace Modules\Space\Http\Requests;
 
+use App\Enums\PublishingStatus;
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
 use App\Rules\CountryCode;
 use App\Rules\MaxWords;
 use App\Rules\Timezone;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Validation\Rule;
 use Modules\Space\Entities\SpaceEventTranslation;
 
 class SpaceEventRequest extends BaseFormRequest
@@ -58,6 +60,10 @@ class SpaceEventRequest extends BaseFormRequest
                 'required_if:is_same_address_as_parent,false',
                 new CountryCode()
             ],
+            'status' => [
+                'required',
+                Rule::in(PublishingStatus::options()->pluck('id')),
+            ]
         ]);
     }
 
