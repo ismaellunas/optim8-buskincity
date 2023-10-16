@@ -102,6 +102,9 @@ class ModuleService extends BaseModuleService implements
             __("Users who are assigned as managers will be unassigned from space module."),
             __("Pages managed by space will be set to draft."),
             __("Events managed by space will be set to draft."),
+            __("Page builder components currently in use that are related to the :module module will be deleted.", [
+                'module' => $this->model()->title,
+            ]),
         ];
     }
 }

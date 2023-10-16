@@ -3,14 +3,12 @@
 namespace App\View\Components\Builder\Content;
 
 use App\Services\IPService;
-use App\Services\ModuleService;
 use App\Services\SettingService;
 use Modules\Booking\ModuleService as BookingModuleService;
+use Modules\Booking\Services\EventsCalendarService;
 
 class EventsCalendar extends BaseContent
 {
-    private $moduleName = 'Booking';
-
     public $googleApiKey;
     public $isEnabled;
     public $initPosition;
@@ -25,7 +23,11 @@ class EventsCalendar extends BaseContent
     {
         parent::__construct($entity);
 
-        $this->isEnabled = $this->isModuleActive();
+        $this->isEnabled = app(EventsCalendarService::class)->isEnabled();
+
+        if (! $this->isEnabled) {
+            return;
+        }
 
         $this->googleApiKey = app(SettingService::class)->getGoogleApi();
 
@@ -50,10 +52,5 @@ class EventsCalendar extends BaseContent
             'getEvents' => route('api.booking.events-calendar.index', [], false),
             'getLocationOptions' => route('api.booking.events-calendar.location-options', [], false),
         ];
-    }
-
-    private function isModuleActive(): bool
-    {
-        return app(ModuleService::class)->isModuleActive($this->moduleName);
     }
 }

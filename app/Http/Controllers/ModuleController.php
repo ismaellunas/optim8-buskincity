@@ -98,9 +98,9 @@ class ModuleController extends CrudController
     {
         $this->moduleService->activate($module);
 
-        $this->moduleService->onActivated($module);
-
         $this->moduleCache->flush();
+
+        $this->moduleService->onActivated($module);
 
         $this->generateFlashMessage("The action ran successfully!");
     }
@@ -109,9 +109,9 @@ class ModuleController extends CrudController
     {
         $this->moduleService->deactivate($module);
 
-        $this->moduleService->onDeactivated($module);
-
         $this->moduleCache->flush();
+
+        $this->moduleService->onDeactivated($module);
 
         $this->generateFlashMessage("The action ran successfully!");
     }
@@ -151,6 +151,10 @@ class ModuleController extends CrudController
 
         app(ModuleCache::class)->flush();
         app(MenuCache::class)->flush();
+
+        $this->generateFlashMessage("The :resource order was updated!", [
+            'resource' => Str::lower(__('Module')),
+        ]);
     }
 
 
