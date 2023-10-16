@@ -20,9 +20,3 @@
         },
     };
 </script>
-
-<style>
-    .label > div {
-        display: initial;
-    }
-</style>
