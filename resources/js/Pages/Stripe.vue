@@ -300,6 +300,12 @@
             MixinHasPageErrors,
         ],
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
