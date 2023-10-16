@@ -298,12 +298,14 @@ class TranslationManagerService
         string $locale,
         string $group = null,
         bool $replace = false,
-        string $source = null
+        string $source = null,
+        string $module = null
     ): bool {
         $translation = Translation::firstOrNew([
             'locale' => $locale,
             'group'  => $group,
             'key'    => $key,
+            'module' => $module,
         ]);
 
         if ($replace || !$translation->value) {
