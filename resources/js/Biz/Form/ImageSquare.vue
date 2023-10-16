@@ -95,7 +95,7 @@
             <template #actions>
                 <biz-button
                     type="button"
-                    class="is-link"
+                    class="is-primary"
                     :disabled="disabled"
                     @click="updateImageFile()"
                 >
@@ -117,7 +117,7 @@
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
-    import { includes, last, pull } from 'lodash';
+    import { includes, last } from 'lodash';
 
     export default {
         name: 'BizFormImageSquare',

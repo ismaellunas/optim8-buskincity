@@ -25,35 +25,31 @@
                 <div class="columns">
                     <div class="column py-0">
                         <biz-button-icon
-                            icon="fas fa-undo-alt"
-                            icon-class="is-small"
                             title="Rotate Counterclockwise"
                             type="button"
                             :disabled="isProcessing"
+                            :icon="icon.rotateLeft"
                             @click="rotateLeft"
                         />
                         <biz-button-icon
-                            icon="fas fa-redo-alt"
-                            icon-class="is-small"
                             title="Rotate Clockwise"
                             type="button"
                             :disabled="isProcessing"
+                            :icon="icon.rotateRight"
                             @click="rotateRight"
                         />
                         <biz-button-icon
-                            icon="fas fa-arrows-alt-h"
-                            icon-class="is-small"
                             title="Flip Horizontal"
                             type="button"
                             :disabled="isProcessing"
+                            :icon="icon.flipHorizontal"
                             @click="flipX($event)"
                         />
                         <biz-button-icon
-                            icon="fas fa-arrows-alt-v"
-                            icon-class="is-small"
                             title="Flip Vertical"
                             type="button"
                             :disabled="isProcessing"
+                            :icon="icon.flipVertical"
                             @click="flipY($event)"
                         />
                     </div>
@@ -86,7 +82,9 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { merge } from 'lodash';
+    import { computed } from 'vue';
+    import { defaultCropperOptions } from '@/Libs/defaults';
+    import { flipHorizontal, flipVertical, rotateLeft, rotateRight } from '@/Libs/icon-class';
 
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
@@ -116,56 +114,68 @@
         ],
 
         setup(props, { emit }) {
-            const defaultCropperOptions = {
-                autoCrop: true,
-                autoCropArea: 1,
-                checkCrossOrigin: true,
-                cropBoxMovable: false,
-                cropBoxResizable: false,
-                dragMode: "move",
-                initialAspectRatio: 1,
-                minContainerHeight: 400,
-            };
-
             return {
-                mergedCropperOptions: merge(
-                    defaultCropperOptions,
-                    props.cropperOptions
-                ),
+                mergedCropperOptions: {
+                    ...defaultCropperOptions,
+                    ...{
+                        autoCrop: true,
+                        autoCropArea: 1,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        initialAspectRatio: 1,
+                        zoomable: true,
+                    },
+                    ...computed(() => props.cropperOptions).value
+                },
                 previewFileSrc: useModelWrapper(props, emit),
+                icon: {
+                    flipHorizontal,
+                    flipVertical,
+                    rotateLeft,
+                    rotateRight,
+                },
             };
         },
 
         data() {
             return {
+                imageCropper: null,
                 imageData: null,
             }
         },
 
+        mounted() {
+            this.imageCropper = this.$refs.cropper;
+        },
+
         methods: {
             rotateRight() {
-                this.$refs.cropper.rotate(90);
+                this.imageCropper.rotate(90);
             },
+
             rotateLeft() {
-                this.$refs.cropper.rotate(-90);
+                this.imageCropper.rotate(-90);
             },
+
             flipY(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.$refs.cropper.scaleY(scale);
+                this.imageCropper.scaleY(scale);
                 dom.setAttribute('data-scale', scale);
             },
+
             flipX(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
-                this.$refs.cropper.scaleX(scale);
+                this.imageCropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
             },
+
             updateImageData() {
                 if (this.isDebugMode) {
-                    this.imageData = this.$refs.cropper.getData(true)
+                    this.imageData = this.imageCropper.getData(true)
                 }
             },
         },
