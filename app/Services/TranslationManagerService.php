@@ -237,7 +237,6 @@ class TranslationManagerService
 
         $groupedKeys = $this->getGroupedKeys($groups, $term);
 
-        $groupedKeys = $this->getGroupedKeys($groups, $term);
         $localeWithReferences = $this->getLocaleWithReferences($locales);
 
         $allTranslations = $this->getTranslations($localeWithReferences, $groups, $term);
