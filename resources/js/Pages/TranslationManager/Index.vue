@@ -321,7 +321,7 @@
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTextarea from '@/Biz/Textarea.vue';
     import { debounce, find } from 'lodash';
-    import { computed, reactive, ref } from 'vue';
+    import { computed, ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { router, useForm } from '@inertiajs/vue3';
@@ -423,7 +423,7 @@
         },
 
         setup(props) {
-            const additionalQueryParams = reactive({});
+            const additionalQueryParams = ref({});
 
             const queryParams = computed({
                 get: () => ({
@@ -431,7 +431,7 @@
                     ...props.pageQueryParams
                 }),
                 set(newParams) {
-                    additionalQueryParams = newParams;
+                    additionalQueryParams.value = newParams;
                 },
             });
 
