@@ -99,4 +99,12 @@ class SpacePolicy
             ->whereHas('type', fn ($query) => $query->where('id', $typeId))
             ->exists();
     }
+
+    public function bookAProduct(User $user, Space $space)
+    {
+        return (
+            $user->hasRole($space->product->roles)
+            && $space->product->exists()
+        );
+    }
 }

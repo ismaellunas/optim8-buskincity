@@ -47,11 +47,32 @@
                     <p class="is-size-7">{{ $space->address }}</p>
 
                     <div class="columns is-multiline is-mobile mt-3">
-                        <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                        <div class="column is-8-desktop is-12-tablet is-12-mobile">
                             <div class="content has-text-justified">
                                 <p>{{ $space->description }}</p>
                             </div>
                         </div>
+
+                        @can ('bookAProduct', $space)
+                            <div class="column is-4-desktop is-hidden-touch has-text-right">
+                                <a class="button is-primary">
+                                    {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
+                                </a>
+                            </div>
+
+                            <div
+                                class="columns is-mobile mb-1 is-hidden-desktop"
+                                style="position: fixed; z-index: 9999; bottom: 0; width: 100%;"
+                            >
+                                <div class="column is-12 p-0">
+                                    <div class="notification is-primary m-2 has-text-centered">
+                                        <a class="button is-white is-outlined">
+                                            {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
                     </div>
 
                     @if ($space->contacts)
