@@ -11,6 +11,7 @@ export const buildingCheck = iconFormatter('fa-building-circle-check');
 export const calendarCirclePlus = iconFormatter('fa-calendar-circle-plus');
 export const camera = iconFormatter('fa-camera');
 export const checkCircle = iconFormatter('fa-check-circle');
+export const circleQuestion = iconFormatter('fa-circle-question');
 export const city = iconFormatter('fa-city');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
@@ -80,6 +81,7 @@ export default {
     calendarCirclePlus,
     camera,
     checkCircle,
+    circleQuestion,
     city,
     clear,
     close,

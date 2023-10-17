@@ -168,7 +168,6 @@
             cardContentClass() {
                 return concat(
                     this.configContent?.size,
-                    this.configContent?.alignment
                 ).filter(Boolean);
             },
             cardClasses() {

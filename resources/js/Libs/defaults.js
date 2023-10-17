@@ -91,3 +91,11 @@ export const loadingOptions = {
 };
 
 export const canvasWidth = 1920;
+
+export const defaultCropperOptions = {
+    checkCrossOrigin: true,
+    dragMode: "move",
+    minContainerHeight: 400,
+    toggleDragModeOnDblclick: false,
+    viewMode: 1,
+};
