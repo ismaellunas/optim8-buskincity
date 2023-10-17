@@ -1,10 +1,13 @@
 <template>
     <label class="label">
         <slot />
+
         <sup
             v-if="isRequired"
             class="has-text-danger"
         >*</sup>
+
+        <slot name="tooltip" />
     </label>
 </template>
 

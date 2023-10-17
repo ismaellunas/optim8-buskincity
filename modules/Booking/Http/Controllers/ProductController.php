@@ -370,12 +370,17 @@ class ProductController extends CrudController
                 'schedule' => __('Schedule'),
                 'timezone' => __('Timezone'),
                 'weekly_hours' => __('Weekly hours'),
-                'date_overrides' => __('Date override'),
-                'date_overrides_description' => __('Add dates when your availability changes from your weekly hours'),
+                'date_override' => __('Date override'),
+                'date_override_description' => __('Add dates when your availability changes from your weekly hours'),
                 'add_date' => __('Add :resource', ['resource' => __('Date')]),
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
+                'guidelines' => [
+                    'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
+                    'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
+                    'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),
+                ]
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
