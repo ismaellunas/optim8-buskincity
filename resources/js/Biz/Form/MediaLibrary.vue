@@ -120,8 +120,6 @@
             MixinFormMediaLibrary,
         ],
 
-        inject: ['i18n'],
-
         provide() {
             return {
                 injectMediaDimension: this.dimension,
