@@ -2,7 +2,7 @@
 
 namespace Modules\Booking\Services;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 
@@ -12,7 +12,7 @@ class ProductSpaceService
     {
         return Space::select(['id', 'name'])
             ->whereDoesntHave('product', function (Builder $query) use ($exceptId) {
-                $query->whereNotIn('productable_id', [$exceptId]);
+                $query->where('productable_id', '!=',  $exceptId);
             })
             ->orderBy('name')
             ->get()
