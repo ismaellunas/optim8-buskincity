@@ -4,7 +4,6 @@ namespace Modules\FormBuilder\View\Components\Builder\Content;
 
 use App\Services\SettingService;
 use App\View\Components\Builder\Content\BaseContent;
-use Exception;
 use Modules\FormBuilder\ModuleService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
@@ -15,6 +14,7 @@ class FormBuilder extends BaseContent
     public $schema;
     public $form;
     public array $fieldGroups = [];
+    public bool $isEnabled = false;
 
     /**
      * Create a new component instance.
@@ -25,8 +25,10 @@ class FormBuilder extends BaseContent
     {
         parent::__construct($entity);
 
-        if (! app(ModuleService::class)->isModuleActive()) {
-            throw new Exception(__('Form Builder module is not activated!'));
+        $this->isEnabled = app(ModuleService::class)->isModuleActive();
+
+        if (! $this->isEnabled) {
+            return;
         }
 
         $this->formId = $entity['config']['form']['id'] ?? null;

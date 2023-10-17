@@ -31,6 +31,17 @@ class ModuleService
             ->where('is_manageable', $isManagable);
     }
 
+    public function disabledModules(): Collection
+    {
+        return $this->staticRemember(
+            'disabled_modules',
+            fn () => $this
+                ->allModules()
+                ->where('is_active', false)
+                ->where('is_manageable', true)
+        );
+    }
+
     public function isModuleActive(string $moduleName): bool
     {
         $moduleName = Str::studly($moduleName);
@@ -59,6 +70,18 @@ class ModuleService
         }
 
         return null;
+    }
+
+    public function getServiceClasses(Collection $modules): Collection
+    {
+        return $modules
+            ->map(fn ($module) => $this->getServiceClass($module))
+            ->filter();
+    }
+
+    public function getEnabledModuleServiceClasses(): Collection
+    {
+        return $this->getServiceClasses(collect($this->getAllEnabledNames()));
     }
 
     public function getRecords(

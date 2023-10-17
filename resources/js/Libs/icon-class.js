@@ -41,6 +41,7 @@ export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
 export const list = iconFormatter('fa-th-list');
 export const locationMark = iconFormatter('fa-location-dot');
+export const mapLocationDot = iconFormatter('fa-map-location-dot');
 export const mobile = iconFormatter('fa-mobile');
 export const move = iconFormatter('fa-arrows-alt');
 export const plusCircle = iconFormatter('fa-plus-circle');
@@ -111,6 +112,7 @@ export default {
     image,
     list,
     locationMark,
+    mapLocationDot,
     mobile,
     move,
     plusCircle,

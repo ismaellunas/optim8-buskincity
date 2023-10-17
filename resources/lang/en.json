@@ -588,6 +588,7 @@
     "The :resource was deleted!": "The :resource was deleted!",
     "The :resource was restored!": "The :resource was restored!",
     "The :resource was updated!": "The :resource was updated!",
+    "The :resource order was updated!": "The :resource order was updated!",
     "The action ran successfully!": "The action ran successfully!",
     "The file was deleted!": "The file was deleted!",
     "The given :attribute has appeared in a data leak. Please choose a different :attribute.": "The given :attribute has appeared in a data leak. Please choose a different :attribute.",
@@ -1060,5 +1061,6 @@
     "Are you sure want to activate :module module?": "Are you sure want to activate :module module?",
     "Are you sure want to deactivate :module module?": "Are you sure want to deactivate :module module?",
     "All permissions assigned to users from the :module module will be unassigned from those users.": "All permissions assigned to users from the :module module will be unassigned from those users.",
-    "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature."
+    "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.",
+    "Page builder components currently in use that are related to the :module module will be deleted.": "Page builder components currently in use that are related to the :module module will be deleted."
 }

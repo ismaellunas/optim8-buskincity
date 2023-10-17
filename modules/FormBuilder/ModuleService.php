@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder;
 
+use App\Contracts\HasModulePageBuilderComponentInterface;
 use App\Contracts\ManageableModuleInterface;
 use App\Contracts\ToggleableModuleStatusInterface;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Modules\FormBuilder\Services\FormBuilderService;
 
 class ModuleService extends BaseModuleService implements
     ManageableModuleInterface,
+    HasModulePageBuilderComponentInterface,
     ToggleableModuleStatusInterface
 {
     use ManageableModule;
@@ -88,6 +90,20 @@ class ModuleService extends BaseModuleService implements
                 'module' => $this->model()->title,
             ]),
             __("Notifications managed by form builder module will be set to inactive."),
+            __("Page builder components currently in use that are related to the :Module module will be deleted.", [
+                'module' => $this->model()->title,
+            ]),
+        ];
+    }
+
+    public function getModulePageBuilderComponents(): array
+    {
+        return [
+            [
+                'name' => 'FormBuilder',
+                'path' => "../../../../modules/FormBuilder/Resources/assets/js/ComponentStructures/form-builder.js",
+                'is_enabled' => $this->isModuleActive(),
+            ],
         ];
     }
 }

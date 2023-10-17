@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Providers;
 
+use App\Listeners\SanitizeDisabledComponentsOnPageTranslations;
 use App\Listeners\UnassignModulePermissions;
 use App\Observers\PageObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
             UnassignAllSpaceManagers::class,
             SetPublishedEventsDrafts::class,
             SetPublishedPageTranslationsDrafts::class,
+            SanitizeDisabledComponentsOnPageTranslations::class,
         ],
     ];
 
