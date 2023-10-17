@@ -9,6 +9,7 @@ use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProdu
 use Modules\Booking\Http\Controllers\Frontend\UpcomingEventController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
+use Modules\Booking\Http\Controllers\ProductSpaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,10 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
 
     Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
         ->name('products.allowed-dates')
+        ->can('update', 'product');
+
+    Route::put('/products/{product}/space', [ProductSpaceController::class, 'update'])
+        ->name('products.spaces.update')
         ->can('update', 'product');
 
     Route::resource('/orders', OrderController::class)

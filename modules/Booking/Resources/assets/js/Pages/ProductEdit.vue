@@ -412,6 +412,30 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
+
+            <biz-provide-inject-tab
+                id="product-space"
+                title="Space"
+                class="mb-6"
+            >
+                <form
+                    class="box"
+                    @submit.prevent="submitSpace()"
+                >
+                    <product-space-form
+                        v-model="spaceForm.space_id"
+                        :space-options="spaceOptions"
+                    />
+
+                    <div class="field is-grouped is-grouped-right mt-4">
+                        <div class="control">
+                            <biz-button class="is-link">
+                                {{ i18n.update }}
+                            </biz-button>
+                        </div>
+                    </div>
+                </form>
+            </biz-provide-inject-tab>
         </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
@@ -446,6 +470,7 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import BizTag from '@/Biz/Tag.vue';
     import BizTooltip from '@/Biz/Tooltip.vue';
+    import ProductSpaceForm from './ProductSpaceForm.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
@@ -478,6 +503,7 @@
             ProductEditModalDateOverride,
             ProductForm,
             ScheduleRuleTimes,
+            ProductSpaceForm,
         },
 
         mixins: [
@@ -520,6 +546,8 @@
             productManagerBaseRoute: { type: String, required: true },
             rules: { type: Object, required: true },
             instructions: {type: Object, default: () => {}},
+            spaceOptions: { type: Array, default: () => [] },
+            space: { type: Object, required: true },
             i18n: { type: Object, default: () => ({
                 details : 'Details',
                 cancel : 'Cancel',
@@ -550,6 +578,7 @@
         setup(props) {
             const product = computed(() => props.product);
             const event = computed(() => props.event);
+            const space = computed(() => props.space);
 
             const form = {
                 name: product.value.name,
@@ -568,11 +597,16 @@
                 timezone: event.value.timezone,
                 weekly_hours: computed(() => props.weeklyHours).value,
                 date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
-            }
+            };
+
+            const spaceForm = {
+                space_id: space.value.id,
+            };
 
             return {
                 form: useForm(form),
                 eventForm: useForm(eventForm),
+                spaceForm: useForm(spaceForm),
                 icon,
                 eventErrors: ref({}),
                 eventErrorBag: 'updateEvent',
@@ -917,6 +951,25 @@
                     this.addTimeRange(index);
                 }
             },
+
+            submitSpace() {
+                const self = this;
+
+                const url = route(
+                    self.baseRouteName+'.spaces.update',
+                    self.product.id
+                );
+
+                self.spaceForm.put(url, {
+                    replace: true,
+                    onStart: () => self.onStartLoadingOverlay(),
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError: () => { oopsAlert() },
+                    onFinish: () => self.onEndLoadingOverlay()
+                });
+            }
         },
     };
 </script>

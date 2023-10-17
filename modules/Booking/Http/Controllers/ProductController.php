@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
@@ -33,7 +34,8 @@ class ProductController extends CrudController
     public function __construct(
         private ProductService $productService,
         private ProductEventService $productEventService,
-        private CountryService $countryService
+        private ProductSpaceService $productSpaceService,
+        private CountryService $countryService,
     ) {
         $this->authorizeResource(Product::class, 'product');
     }
@@ -194,6 +196,8 @@ class ProductController extends CrudController
 
         $product->load('eventSchedule.weeklyHours.times');
 
+        $formSpace = $this->productSpaceService->formResource($product);
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
                 [
@@ -244,6 +248,8 @@ class ProductController extends CrudController
             'dimensions' => [
                 'gallery' => config('constants.dimensions.gallery'),
             ],
+            'space' => $formSpace,
+            'spaceOptions' => $this->productSpaceService->getSpaceOptions($formSpace['id']),
         ]));
     }
 
