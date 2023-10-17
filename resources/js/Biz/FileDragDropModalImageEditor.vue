@@ -98,7 +98,7 @@
 
             async generateMedium() {
                 return {
-                    url: await getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8),
+                    url: getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8),
                     file: await getBlob(this.cropper, this.croppedImageType),
                 }
             },

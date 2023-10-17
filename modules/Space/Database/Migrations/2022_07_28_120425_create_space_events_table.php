@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\PublishingStatus;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('country_code', 3)->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
+            $table->string('status', 23)->default(PublishingStatus::DRAFT->value);
 
             $table
                 ->foreignId('space_id')
