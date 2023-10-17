@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PublishingStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Modules\Booking\Enums\BookingStatus;
@@ -78,6 +79,7 @@ return new class extends Migration
             FROM space_events AS se
             JOIN spaces s ON s.id = se.space_id
             LEFT JOIN mediables m ON m.mediable_id = s.id AND m.mediable_type = '".Space::class."' AND m.type = 'logo'
+            WHERE se.status = '".PublishingStatus::PUBLISHED->value."'
         ";
 
         DB::statement(

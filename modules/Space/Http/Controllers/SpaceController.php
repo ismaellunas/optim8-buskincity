@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Http\Controllers;
 
+use App\Enums\PublishingStatus;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\IPService;
@@ -282,6 +283,7 @@ class SpaceController extends CrudController
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),
+            'eventStatusOptions' => PublishingStatus::options(),
             'maxLength' => array_merge(
                 [
                     'meta_title' => config('constants.max_length.meta_title'),
@@ -416,6 +418,9 @@ class SpaceController extends CrudController
                 'yes' => __('Yes'),
                 'timezone' => __('Timezone'),
                 'is_same_address_as_parent' => __("Is it the same address as the parent?"),
+                'guidelines' => [
+                    'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
+                ]
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

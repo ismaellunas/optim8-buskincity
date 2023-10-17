@@ -16,7 +16,7 @@
                                 :max-files="maxFiles"
                                 :max-file-size="maxFileSize"
                                 required
-                                @on-update-files="onUpdateFiles"
+                                @update-files="onUpdateFiles"
                             />
                         </div>
 
@@ -377,7 +377,7 @@
                 const self = this;
 
                 if (media) {
-                    if (! media.canEdited) {
+                    if (media.is_in_use) {
                         confirmAlert(
                             self.i18n.edit_resource,
                             self.i18n.warning_edit_resource,
@@ -438,7 +438,7 @@
             onDeleteRecord(record) {
                 const self = this;
 
-                if (!record.canDeleted) {
+                if (record.is_in_use) {
                     confirmAlert(
                         self.i18n.delete_resource,
                         self.i18n.warning_delete_resource,
