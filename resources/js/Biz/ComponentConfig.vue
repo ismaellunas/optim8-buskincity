@@ -2,7 +2,7 @@
     <biz-card class-card-content="px-1 py-2">
         <template #headerTitle>
             <h4 class="title is-4">
-                {{ entity.componentName }}
+                {{ entity.title ?? entity.componentName }}
             </h4>
         </template>
 
