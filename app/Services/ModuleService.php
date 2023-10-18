@@ -51,6 +51,25 @@ class ModuleService
             ->contains(fn ($name) => $name == $moduleName);
     }
 
+    public function isAvailableByModules(string|array $moduleName, $operator = "OR"): bool
+    {
+        $moduleNames = collect($moduleName)
+            ->map(fn ($module) => Str::studly($module));
+
+        $activeModuleNames = $this->getAllEnabledNames();
+
+        $diff = $moduleNames->diff($activeModuleNames);
+
+        if (
+            ($operator == "AND" && $diff->isEmpty())
+            || ($operator == "OR" && $diff->count() < $moduleNames->count())
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getAllEnabledNames(): Collection
     {
         return $this->staticRemember(
