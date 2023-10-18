@@ -6,6 +6,10 @@
             :is-required="isRequired"
         >
             <slot name="label" />
+
+            <template #tooltip>
+                <slot name="tooltip" />
+            </template>
         </biz-label>
 
         <slot />
