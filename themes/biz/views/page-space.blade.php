@@ -55,7 +55,10 @@
 
                         @can ('bookAProduct', $space)
                             <div class="column is-4-desktop is-hidden-touch has-text-right">
-                                <a class="button is-primary">
+                                <a
+                                    href="{{ route('booking.products.show', $space->product->id) }}"
+                                    class="button is-primary"
+                                >
                                     {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
                                 </a>
                             </div>
@@ -66,7 +69,10 @@
                             >
                                 <div class="column is-12 p-0">
                                     <div class="notification is-primary m-2 has-text-centered">
-                                        <a class="button is-white is-outlined">
+                                        <a
+                                            href="{{ route('booking.products.show', $space->product->id) }}"
+                                            class="button is-white is-outlined"
+                                        >
                                             {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
                                         </a>
                                     </div>
