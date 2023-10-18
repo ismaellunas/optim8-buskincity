@@ -1,6 +1,6 @@
 <template>
     <biz-form-dropdown-search
-        label="Select space"
+        :label="i18n.select_space"
         :close-on-click="true"
         @search="searchOptions($event)"
     >
@@ -25,7 +25,7 @@
 
         <template #note>
             <p class="help is-info">
-                The product can only have one space.
+                {{ i18n.select_space_note }}
             </p>
         </template>
     </biz-form-dropdown-search>
@@ -38,6 +38,7 @@
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { ref, computed } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: "ProductSpaceForm",
@@ -53,17 +54,21 @@
         },
 
         setup(props, { emit }) {
+            const i18n = computed(() => usePage().props.i18n).value;
+            const options = [{ id: null, value: i18n.select }]
+                .concat(computed(() => props.spaceOptions).value);
+
             return {
-                filteredOptions: ref(
-                    computed(() => props.spaceOptions).value
-                ),
+                options: options,
+                filteredOptions: ref(options),
                 space: useModelWrapper(props, emit),
+                i18n: i18n,
             };
         },
 
         computed: {
             selectedSpace() {
-                const selectedSpace = find(this.spaceOptions, {id: this.space});
+                const selectedSpace = find(this.options, {id: this.space});
 
                 if (selectedSpace) {
                     return selectedSpace.value;
@@ -76,13 +81,13 @@
         methods: {
             searchOptions: debounce(function(term) {
                 if (! isEmpty(term) && term.length > 1) {
-                    this.filteredOptions = filter(this.spaceOptions, function (option) {
+                    this.filteredOptions = filter(this.options, function (option) {
                         const termRegex = new RegExp(term, 'i');
 
                         return new RegExp(term, 'i').test(option.value);
                     });
                 } else {
-                    this.filteredOptions = this.spaceOptions;
+                    this.filteredOptions = this.options;
                 }
             }, debounceTime),
         },
