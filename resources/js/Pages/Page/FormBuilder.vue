@@ -162,7 +162,7 @@
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import blockColumns from '@/ComponentStructures/columns';
-    import { cloneDeep, each, isEmpty, map } from 'lodash';
+    import { cloneDeep, each, has, isEmpty, map } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
     import { reactive } from "vue";
     import { usePage } from '@inertiajs/vue3';
@@ -419,7 +419,10 @@
             onClickHeaderCard(isContentShown, index) {
                 if (isContentShown) {
                     for (let i = 0; i < 3; i++) {
-                        if (i != index) {
+                        if (
+                            i != index
+                            && has(this.$refs, [`component-${i}`, 'isContentShown'])
+                        ) {
                             this.$refs[`component-${i}`].isContentShown = false;
                         }
                     }
