@@ -10,7 +10,13 @@ class ProductSpaceService
 {
     public function getSpaceOptions(int $exceptId = null): array
     {
+        $user = auth()->user();
+        $spaceIds = $user->spaces->pluck('id')->all();
+
         return Space::select(['id', 'name'])
+            ->when($spaceIds, function (Builder $query, $spaceIds) {
+                $query->whereIn('id', $spaceIds);
+            })
             ->whereDoesntHave('product', function (Builder $query) use ($exceptId) {
                 $query->where('productable_id', '!=',  $exceptId);
             })
