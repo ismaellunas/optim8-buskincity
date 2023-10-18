@@ -123,17 +123,15 @@ class LanguageService
 
         if (! $originLanguage) {
             $originLanguage = $defaultLocale ?? $this->getOriginFromIP()->code;
-
-            $this->setOriginLanguage($originLanguage);
         }
 
         if (
             ! app(TranslationService::class)->isSupportedLocale($originLanguage)
         ) {
             $originLanguage = defaultLocale();
-
-            $this->setOriginLanguage($originLanguage);
         }
+
+        $this->setOriginLanguage($originLanguage);
 
         return $originLanguage;
     }
