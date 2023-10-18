@@ -49,12 +49,12 @@ class ModuleController extends CrudController
                         'url' => route($this->baseRouteName.'index'),
                     ],
                     [
-                        'title' => $this->getEditTitle(),
+                        'title' => Str::title(__($module->title)),
                     ],
                 ],
                 'tabs' => $this->moduleService->tabs($module),
                 'title' => __('Editing :title :resource', [
-                    'title' => $module->name,
+                    'title' => Str::title(__($module->title)),
                     'resource' => $this->title
                 ]),
             ],

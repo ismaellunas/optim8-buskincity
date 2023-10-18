@@ -46,11 +46,12 @@ class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
     {
         foreach ($translations as $translation) {
             $this->translationManagerService->saveTranslation(
-                $translation['key'],
-                $translation['value'],
-                $translation['locale'],
-                $translation['group'],
-                true,
+                key: $translation['key'],
+                value: $translation['value'],
+                locale: $translation['locale'],
+                group: $translation['group'],
+                module: $translation['module'] ?? null,
+                replace: true,
             );
         }
 

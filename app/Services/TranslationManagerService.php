@@ -237,7 +237,6 @@ class TranslationManagerService
 
         $groupedKeys = $this->getGroupedKeys($groups, $term);
 
-        $groupedKeys = $this->getGroupedKeys($groups, $term);
         $localeWithReferences = $this->getLocaleWithReferences($locales);
 
         $allTranslations = $this->getTranslations($localeWithReferences, $groups, $term);
@@ -298,12 +297,14 @@ class TranslationManagerService
         string $locale,
         string $group = null,
         bool $replace = false,
-        string $source = null
+        string $source = null,
+        string $module = null
     ): bool {
         $translation = Translation::firstOrNew([
             'locale' => $locale,
             'group'  => $group,
             'key'    => $key,
+            'module' => $module,
         ]);
 
         if ($replace || !$translation->value) {

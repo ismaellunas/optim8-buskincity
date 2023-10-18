@@ -10,13 +10,15 @@
                 <div class="column">
                     <div class="buttons is-right">
                         <biz-button-download
-                            :url="route(baseRouteName + '.export', {locale: locale, groups})"
+                            v-if="false"
+                            :url="route(baseRouteName + '.export', {locale: locale, groups, module})"
                             class="export-translation mr-2"
                         >
                             {{ i18n.export }}
                         </biz-button-download>
 
                         <biz-button
+                            v-if="false"
                             class="import-translation mr-2"
                             @click="openModal"
                         >

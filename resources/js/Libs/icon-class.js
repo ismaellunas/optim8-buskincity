@@ -18,7 +18,7 @@ export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
 export const crop = iconFormatter('fa-crop');
 export const desktop = iconFormatter('fa-desktop');
-export const down = iconFormatter('fa-down');
+export const down = iconFormatter('fa-arrow-down');
 export const download = iconFormatter('fa-download');
 export const edit = iconFormatter('fa-pen');
 export const ellipsis = iconFormatter('fa-ellipsis-h');
@@ -62,7 +62,7 @@ export const tablet = iconFormatter('fa-tablet');
 export const toggleOff = iconFormatter('fa-toggle-off');
 export const toggleOn = iconFormatter('fa-toggle-on');
 export const unsuspend = iconFormatter('fa-hands-helping');
-export const up = iconFormatter('fa-up');
+export const up = iconFormatter('fa-arrow-up');
 export const upload = iconFormatter('fa-upload');
 export const user = iconFormatter('fa-user');
 

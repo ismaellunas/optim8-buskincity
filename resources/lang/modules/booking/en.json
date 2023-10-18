@@ -13,7 +13,7 @@
     "Booking settings": ":Booking_term.booking settings",
     "New booking": "New :booking_term.booking",
     "Booking remainder": ":Booking_term.booking remainder",
-    "Booking cancellation": "Booking_term.booking cancellation",
+    "Booking cancellation": ":Booking_term.booking cancellation",
     "Available check-in before": "Available check-in before",
     "Check-in radius": "Check-in radius",
     "Reschedule": "Reschedule",
