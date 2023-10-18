@@ -5,10 +5,12 @@ namespace Modules\Space\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Space\Entities\Space;
+use Illuminate\Support\Traits\Macroable;
 
 class SpacePolicy
 {
     use HandlesAuthorization;
+    use Macroable;
 
     public function viewAny(User $user)
     {
@@ -98,17 +100,5 @@ class SpacePolicy
             })
             ->whereHas('type', fn ($query) => $query->where('id', $typeId))
             ->exists();
-    }
-
-    public function bookAProduct(User $user, Space $space)
-    {
-        if (! $space->product) {
-            return false;
-        }
-
-        return (
-            $user->hasRole($space->product->roles)
-            && $space->product->exists()
-        );
     }
 }
