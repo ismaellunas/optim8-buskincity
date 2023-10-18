@@ -22,8 +22,12 @@ class ProductSpaceController extends CrudController
         if ($spaceId) {
             $product->productable_type = "Modules\Space\Entities\Space";
             $product->productable_id = $spaceId;
-            $product->save();
+        } else {
+            $product->productable_type = null;
+            $product->productable_id = null;
         }
+
+        $product->save();
 
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => $this->title
