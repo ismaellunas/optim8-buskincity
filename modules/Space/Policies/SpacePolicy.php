@@ -102,6 +102,10 @@ class SpacePolicy
 
     public function bookAProduct(User $user, Space $space)
     {
+        if (! $space->product) {
+            return false;
+        }
+
         return (
             $user->hasRole($space->product->roles)
             && $space->product->exists()

@@ -25,6 +25,7 @@ use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Space\Entities\Space;
 
 class ProductController extends CrudController
 {
@@ -241,6 +242,9 @@ class ProductController extends CrudController
                     'browse' => $user->can('media.browse'),
                     'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
+                ],
+                'space' => [
+                    'viewAny' => $user->can('viewAny', Space::class),
                 ],
             ],
             'instructions' => $this->getInstructions(),

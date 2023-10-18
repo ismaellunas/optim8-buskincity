@@ -416,7 +416,7 @@
             <biz-provide-inject-tab
                 id="product-space"
                 title="Space"
-                class="mb-6"
+                :is-rendered="can.space.viewAny"
             >
                 <form
                     class="box"
