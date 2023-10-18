@@ -123,7 +123,13 @@
                 const promises = [];
 
                 forEach(usePage().props.modulePageBuilderComponents, (moduleComponent) => {
-                    promises.push(import(moduleComponent.path.slice(3)));
+                    if (moduleComponent?.in_module) {
+                        promises.push(import(
+                            `../../../modules/${moduleComponent.in_module}/Resources/assets/js/ComponentStructures/${moduleComponent.filename}.js`
+                        ));
+                    } else {
+                        promises.push(import(`../ComponentStructures/${moduleComponent.filename}.js`));
+                    }
                 });
 
                 const components = await Promise.all(promises);

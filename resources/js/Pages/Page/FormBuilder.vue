@@ -277,10 +277,22 @@
 
         beforeMount() {
             each(usePage().props.modulePageBuilderComponents, async (blockOption) => {
-                const component = await import(blockOption.path);
-                const componentName = (component.default.componentName);
+                let component = null;
+                let filename = null;
 
-                this.moduleComponents[componentName] = component.default;
+                if (blockOption?.in_module) {
+                    component = await import(
+                        `../../../../modules/${blockOption.in_module}/Resources/assets/js/ComponentStructures/${blockOption.filename}.js`
+                    );
+                } else {
+                    component = await import(`../../ComponentStructures/${blockOption.filename}.js`);
+                }
+
+                if (component) {
+                    const componentName = (component.default.componentName);
+
+                    this.moduleComponents[componentName] = component.default;
+                }
             });
         },
 
