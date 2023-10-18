@@ -11,6 +11,7 @@ use App\Models\{
     Setting,
 };
 use App\Services\StorageService;
+use App\Traits\HasCache;
 use Illuminate\Support\{
     Carbon,
     Collection,
@@ -22,6 +23,8 @@ use Mews\Purifier\Facades\Purifier;
 
 class SettingService
 {
+    use HasCache;
+
     protected static function getKey(string $key): string
     {
         return app(SettingCache::class)->remember($key, function () use ($key) {
@@ -279,9 +282,23 @@ class SettingService
 
     public function getLogoMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting(
-            config("constants.theme_header.header_logo_media.key")
-        );
+        $key = 'logo_media';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                $this->getMediaFromSetting(
+                    config("constants.theme_header.header_logo_media.key")
+                )
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getLogoForMediaLibrary(): ?Media
+    {
+        $media = $this->getLogoMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -497,7 +514,21 @@ class SettingService
 
     public function getQrCodePublicPageLogoMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
+        $key = 'qr_code_public_page_logo_media';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                $this->getMediaFromSetting('qrcode_public_page_logo_media_id')
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getQrCodePublicPageLogoForMediaLibrary(): ?Media
+    {
+        $media = $this->getQrCodePublicPageLogoMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -528,7 +559,21 @@ class SettingService
 
     public function getFaviconMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('favicon_media_id');
+        $key = 'favicon_media';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                $this->getMediaFromSetting('favicon_media_id')
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getFaviconForMediaLibrary(): ?Media
+    {
+        $media = $this->getFaviconMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -831,7 +876,21 @@ class SettingService
 
     public function getPostThumbnailMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
+        $key = 'post_thumbnail_media';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                $this->getMediaFromSetting('post_thumbnail_media_id')
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getPostThumbnailForMediaLibrary(): ?Media
+    {
+        $media = $this->getPostThumbnailMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -842,7 +901,21 @@ class SettingService
 
     public function getOpenGraphMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('open_graph_media_id');
+        $key = 'open_graph_media';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                $this->getMediaFromSetting('open_graph_media_id')
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getOpenGraphForMediaLibrary(): ?Media
+    {
+        $media = $this->getOpenGraphMedia();
 
         if ($media) {
             $media->transformMediaLibrary();

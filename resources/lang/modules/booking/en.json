@@ -35,5 +35,7 @@
     "Is it the same address as the parent?": "Is it the same address as the parent?",
     "Is a common user have access?": "Is a common user have access?",
     "Choose the roles that can access the booking feature on the frontend.": "Choose the roles that can access the booking feature on the frontend.",
-    "Control access frontend": "Control access frontend"
+    "Control access frontend": "Control access frontend",
+    "Specify the available event hours that can be booked by performers on a weekly basis.": "Specify the available event hours that can be booked by performers on a weekly basis.",
+    "Use this field to manually select a specific date, overriding the weekly event hours.": "Use this field to manually select a specific date, overriding the weekly event hours."
 }

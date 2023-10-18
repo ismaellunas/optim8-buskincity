@@ -155,6 +155,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { useModelWrapper } from '@/Libs/utils';
+    import { defaultCropperOptions } from '@/Libs/defaults';
     import { isEmpty } from 'lodash';
     import { checkCircle, crop, flipHorizontal, flipVertical, rotateLeft, rotateRight } from '@/Libs/icon-class';
     import { ref } from 'vue';
@@ -258,17 +259,9 @@
                 );
             },
             cropperOptions() {
-                const defaultOptions = {
-                    checkCrossOrigin: true,
-                    dragMode: "move",
-                    minContainerHeight: 400,
-                    toggleDragModeOnDblclick: false,
-                    viewMode: 1,
-                };
-
                 if (this.hasDimension) {
                     return {
-                        ...defaultOptions,
+                        ...defaultCropperOptions,
                         ...{
                             autoCrop: true,
                             autoCropArea: this.ratio > 0.95 ? 0.95 : this.ratio,
@@ -281,7 +274,7 @@
                 }
 
                 return {
-                    ...defaultOptions,
+                    ...defaultCropperOptions,
                     ...{
                         autoCrop: false,
                         autoCropArea: 0.9,
