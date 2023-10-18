@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Entities\LifetimeCookie;
 use App\Services\LanguageService;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckOriginLanguage
+class AdjustOriginLanguage
 {
     /**
      * Handle an incoming request.

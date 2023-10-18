@@ -218,7 +218,7 @@ Route::prefix(Localization::setLocale())
             ->name('homepage')
             ->middleware('redirectOriginLanguage');
 
-        Route::middleware('checkOriginLanguage')->group(function () {
+        Route::middleware('adjustOriginLanguage')->group(function () {
             Route::get(LaravelLocalization::transRoute('blog.index'), [PostController::class, 'index'])
                 ->name('blog.index');
 
