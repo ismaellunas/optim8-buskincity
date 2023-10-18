@@ -1,33 +1,31 @@
 <template>
-    <div>
-        <biz-form-dropdown-search
-            :label="label"
-            :close-on-click="true"
-            :disabled="disabled"
-            :message="message"
-            :required="required"
-            @search="searchOptions($event)"
-        >
-            <template #trigger>
-                <span
-                    class="has-text-left"
-                    :style="{'min-width': '20rem'}"
-                >
-                    {{ selectedTimezone }}
-                </span>
-            </template>
+    <biz-form-dropdown-search
+        :label="label"
+        :close-on-click="true"
+        :disabled="disabled"
+        :message="message"
+        :required="required"
+        @search="searchOptions($event)"
+    >
+        <template #trigger>
+            <span
+                class="has-text-left"
+                :style="{'min-width': '20rem'}"
+            >
+                {{ selectedTimezone }}
+            </span>
+        </template>
 
-            <div style="max-height: 30rem; overflow-y: scroll">
-                <biz-dropdown-item
-                    v-for="option in filteredOptions"
-                    :key="option.id"
-                    @click="timezone = option.id"
-                >
-                    {{ timezoneValueFormatter(option.value) }}
-                </biz-dropdown-item>
-            </div>
-        </biz-form-dropdown-search>
-    </div>
+        <div style="max-height: 30rem; overflow-y: scroll">
+            <biz-dropdown-item
+                v-for="option in filteredOptions"
+                :key="option.id"
+                @click="timezone = option.id"
+            >
+                {{ timezoneValueFormatter(option.value) }}
+            </biz-dropdown-item>
+        </div>
+    </biz-form-dropdown-search>
 </template>
 
 <script>
