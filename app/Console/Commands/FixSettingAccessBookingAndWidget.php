@@ -38,9 +38,8 @@ class FixSettingAccessBookingAndWidget extends Command
 
     private function provideAccessBookingSetting(): void
     {
-        $roleIds = collect(
-                app(UserService::class)->getRoleOptions()
-            )
+        $roleIds = app(UserService::class)
+            ->getRoleOptions()
             ->pluck('id')
             ->all();
 

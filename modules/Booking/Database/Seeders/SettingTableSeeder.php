@@ -15,9 +15,8 @@ class SettingTableSeeder extends Seeder
      */
     public function run()
     {
-        $roleIds = collect(
-                app(UserService::class)->getRoleOptions()
-            )
+        $roleIds = app(UserService::class)
+            ->getRoleOptions()
             ->pluck('id')
             ->all();
 
