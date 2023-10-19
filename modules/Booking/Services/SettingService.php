@@ -2,9 +2,9 @@
 
 namespace Modules\Booking\Services;
 
-use App\Services\SettingService as AppSettingService;
+use App\Services\BaseSettingService;
 
-class SettingService extends AppSettingService
+class SettingService extends BaseSettingService
 {
     public function getAccessCommonUser(): bool
     {
