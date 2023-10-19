@@ -22,9 +22,15 @@ class PageTranslationObserver extends AppPageTranslationObserver
             $pageTranslation->isDirty('status')
             && $pageTranslation->getOriginal('status') == PageTranslation::STATUS_PUBLISHED
         ) {
+            $locale = null;
+
+            if ($pageTranslation->page->hasPublishedTranslation) {
+                $locale = $pageTranslation->locale;
+            }
+
             app(MenuService::class)->removeModelFromMenus(
                 $pageTranslation->page->space,
-                $pageTranslation->locale
+                $locale
             );
         }
     }
