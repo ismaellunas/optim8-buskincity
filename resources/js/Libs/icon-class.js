@@ -4,6 +4,7 @@ export const add = iconFormatter('fa-plus');
 export const angleDown = iconFormatter('fa-angle-down');
 export const angleUp = iconFormatter('fa-angle-up');
 export const back = iconFormatter('fa-arrow-left');
+export const bars = iconFormatter('fa-bars');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
 export const buildingCheck = iconFormatter('fa-building-circle-check');
@@ -68,6 +69,7 @@ export default {
     angleDown,
     angleUp,
     back,
+    bars,
     bracketCurly,
     bracketCurlyRight,
     buildingCheck,
