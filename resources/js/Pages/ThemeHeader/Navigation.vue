@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <form @submit.prevent="onSubmit">
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
@@ -53,7 +53,7 @@
             @close="closeDuplicateModal()"
             @duplicate-menu-item="duplicateMenuItem"
         />
-    </section>
+    </form>
 </template>
 
 <script>
@@ -251,21 +251,24 @@
                 this.openModal();
             },
 
-            updateMenuItems() {
+            onSubmit() {
                 const self = this;
-                this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
-                    preserveScroll: true,
-                    onStart: visit => {
-                        self.onStartLoadingOverlay();
-                    },
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                        this.updateLastDataMenuItems();
-                    },
-                    onFinish: visit => {
-                        self.onEndLoadingOverlay();
-                    }
-                });
+                this.menuForm.post(
+                    route(this.baseRouteName+'.navigation.update'),
+                    {
+                        preserveScroll: true,
+                        errorBag: 'navigation',
+                        onStart: visit => {
+                            self.onStartLoadingOverlay();
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                            this.updateLastDataMenuItems();
+                        },
+                        onFinish: visit => {
+                            self.onEndLoadingOverlay();
+                        }
+                    });
             },
 
             duplicateMenuItem(menuItem) {
