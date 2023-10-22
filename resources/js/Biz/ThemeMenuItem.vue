@@ -1,67 +1,58 @@
 <template>
-    <div class="panel-block p-4 has-background-white">
-        <div class="level">
-            <div
-                class="level-left"
-                :class="isChild ? 'pl-4' : ''"
-            >
-                <span class="panel-icon handle-menu">
-                    <i
-                        class="fas fa-bars"
-                        aria-hidden="true"
-                    />
-                </span>
-                <span
-                    v-if="menuItem.children.length > 0"
-                    class="panel-icon"
-                >
-                    <i
-                        class="fas fa-caret-down"
-                        aria-hidden="true"
-                    />
-                </span>
+    <div :class="cardClasses">
+        <div class="card-content p-2">
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item handle-menu is-clickable">
+                        <biz-icon :icon="icon.bars" />
+                    </div>
 
-                {{ menuItem.title }}
+                    <div class="level-item">
+                        {{ menuItem.title }}
 
-                <biz-tag
-                    v-for="translation in menuItem.translations"
-                    :key="translation.id"
-                    class="is-info px-2 ml-1 is-small"
-                >
-                    {{ translation.locale?.toUpperCase() }}
-                </biz-tag>
-            </div>
+                        <biz-tag
+                            v-for="translation in menuItem.translations"
+                            :key="translation.id"
+                            class="is-info px-2 ml-1 is-small"
+                        >
+                            {{ translation.locale?.toUpperCase() }}
+                        </biz-tag>
+                    </div>
+                </div>
 
-            <div class="level-right">
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click.prevent="$emit('duplicate-menu-item', menuItem)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.copy" />
-                    </span>
-                </biz-button>
+                <div class="level-right">
+                    <div class="level-item">
+                        <biz-button
+                            class="is-ghost has-text-black"
+                            type="button"
+                            @click.prevent="$emit('duplicate-menu-item', menuItem)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.copy" />
+                            </span>
+                        </biz-button>
 
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', menuItem)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.edit" />
-                    </span>
-                </biz-button>
+                        <biz-button
+                            class="is-ghost has-text-black"
+                            type="button"
+                            @click="$emit('edit-row', menuItem)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.edit" />
+                            </span>
+                        </biz-button>
 
-                <biz-button
-                    class="is-ghost has-text-black ml-1"
-                    type="button"
-                    @click="$emit('delete-row', menuItemIndex)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.remove" />
-                    </span>
-                </biz-button>
+                        <biz-button
+                            class="is-ghost has-text-black ml-1"
+                            type="button"
+                            @click="$emit('delete-row', menuItemIndex)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.remove" />
+                            </span>
+                        </biz-button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -70,6 +61,7 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizTag from '@/Biz/Tag.vue';
+    import BizIcon from '@/Biz/Icon.vue';
     import icon from '@/Libs/icon-class';
 
     export default {
@@ -78,6 +70,7 @@
         components: {
             BizButton,
             BizTag,
+            BizIcon,
         },
 
         props:{
@@ -114,15 +107,13 @@
                 icon,
             };
         },
+
+        computed: {
+            cardClasses() {
+                return {
+                    'card': true,
+                };
+            },
+        },
     };
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .level {
-        width: 100%;
-    }
-</style>

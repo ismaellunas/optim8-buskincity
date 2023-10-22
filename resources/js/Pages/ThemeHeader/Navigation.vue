@@ -2,11 +2,13 @@
     <form @submit.prevent="onSubmit">
         <div class="columns">
             <div class="column">
-                <div class="is-pulled-left">
-                    <b>
-                        {{ i18n.menu_items }}
-                    </b>
-                </div>
+                <span class="has-text-weight-bold">
+                    {{ i18n.menu_items }}
+                </span>
+
+                <p class="help is-info">
+                    {{ i18n.menu_items_note }}
+                </p>
             </div>
             <div class="column">
                 <biz-language-tab
@@ -24,12 +26,31 @@
                     :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @change="checkNestedMenuItems"
                     @duplicate-menu-item="openDuplicateModal"
                     @edit-row="editRow"
-                    @open-form-modal="openFormModal()"
                     @update-last-data-menu-items="updateLastDataMenuItems"
                 />
+            </div>
+        </div>
+
+        <div class="field is-grouped is-justify-content-space-between">
+            <div class="control">
+                <biz-button-icon
+                    type="button"
+                    class="is-primary"
+                    :icon="iconAdd"
+                    @click="openFormModal()"
+                >
+                    <span>
+                        {{ sentenceCase(i18n.add_menu_item) }}
+                    </span>
+                </biz-button-icon>
+            </div>
+
+            <div class="control">
+                <biz-button class="is-primary">
+                    {{ i18n.save }}
+                </biz-button>
             </div>
         </div>
 
@@ -60,18 +81,25 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
     import NavigationFormMenu from './NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
     import { usePage, useForm } from '@inertiajs/vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
+    import { computed } from 'vue';
+    import { sentenceCase } from 'change-case';
+    import { add as iconAdd } from '@/Libs/icon-class';
 
     export default {
         name: 'ThemeHeaderNavigation',
 
         components: {
             BizLanguageTab,
+            BizButton,
+            BizButtonIcon,
             NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
@@ -81,12 +109,6 @@
             MixinHasModal,
             MixinHasLoader,
         ],
-
-        inject: {
-            i18n: { default: () => ({
-                menu_items : 'Menu items',
-            }) }
-        },
 
         props: {
             menu: {
@@ -108,10 +130,8 @@
                 baseRouteName: usePage().props.baseRouteName ?? null,
                 localeOptions: usePage().props.languageOptions ?? [],
                 defaultLocale: usePage().props.defaultLanguage,
-                tabs: {
-                    layout: { title: 'Layout'},
-                    navigation: {title: 'Navigation'},
-                },
+                i18n: computed(() => usePage().props.i18n),
+                iconAdd,
             }
         },
 
@@ -188,20 +208,6 @@
                 this.selectedMenuItem = {};
                 this.menuItemErrors = {};
                 this.isModalDuplicateOpen = false;
-            },
-
-            checkNestedMenuItems() {
-                let self = this;
-                forEach(self.menuForm.menu_items, function(menuItem) {
-                    forEach(menuItem.children, function(child) {
-                        if (child['children'].length > 0) {
-                            self.menuForm.menu_items = self.lastDataMenuItems;
-                            oopsAlert(null, "Cannot add nested menu more than 2");
-                        }
-                    });
-                });
-
-                self.updateLastDataMenuItems();
             },
 
             updateLastDataMenuItems() {
@@ -308,6 +314,8 @@
                         self.menuItemErrors = error.response.data.errors;
                     });
             },
+
+            sentenceCase,
         }
     };
 </script>

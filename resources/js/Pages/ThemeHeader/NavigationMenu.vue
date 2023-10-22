@@ -5,7 +5,8 @@
         item-key="id"
         tag="nav"
         :animation="300"
-        :class="panelClasses"
+        :class="areaClasses"
+        :style="areaStyles"
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
@@ -33,22 +34,6 @@
                 />
             </div>
         </template>
-
-        <template #footer>
-            <a
-                v-if="!isChild"
-                class="panel-block p-4 has-background-white border-top has-text-link"
-                @click.prevent="$emit('open-form-modal')"
-            >
-                <span class="panel-icon handle-menu has-text-link">
-                    <i
-                        :class="icon.add"
-                        aria-hidden="true"
-                    />
-                </span>
-                {{ sentenceCase(i18n.add_menu_item) }}
-            </a>
-        </template>
     </draggable>
 </template>
 
@@ -58,7 +43,6 @@
     import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { sentenceCase } from 'change-case';
 
     export default {
         name: 'NavigationMenu',
@@ -97,7 +81,6 @@
             'duplicate-menu-item',
             'edit-row',
             'menu-items',
-            'open-form-modal',
             'update-last-data-menu-items'
         ],
 
@@ -114,11 +97,24 @@
         },
 
         computed: {
-            panelClasses() {
+            areaClasses() {
                 return {
-                    'child-panel': this.isChild,
-                    'panel': true,
-                    'pl-4': true,
+                    'p-2': true,
+                    'is-rounded': true,
+                    'ml-5': this.isChild,
+                    'mb-2': this.isChild,
+                };
+            },
+
+            areaStyles() {
+                if (! this.isChild) {
+                    return {};
+                }
+
+                return {
+                    'min-height': '40px',
+                    'border': '1px solid #ccc',
+                    'border-style': 'dashed',
                 };
             },
         },
@@ -152,27 +148,6 @@
             updateLastDataMenuItems() {
                 this.$emit('update-last-data-menu-items');
             },
-
-            sentenceCase,
         },
     }
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .panel {
-        min-height: 20px;
-    }
-
-    .child-panel {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-    }
-
-    .border-top {
-        border-top: 1px solid rgb(236, 236, 236);
-    }
-</style>
