@@ -118,6 +118,7 @@ class ThemeHeaderController extends CrudController
                 'create' => __('Create'),
                 'update' => __('Update'),
                 'duplicate' => __('Duplicate'),
+                'menu_items_note' => __('This menu will be shown on the navbar, and the menu item settings can be draggable.'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
