@@ -162,7 +162,7 @@
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import blockColumns from '@/ComponentStructures/columns';
-    import { cloneDeep, each, isEmpty, map } from 'lodash';
+    import { cloneDeep, each, has, isEmpty, map } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
     import { reactive } from "vue";
     import { usePage } from '@inertiajs/vue3';
@@ -277,10 +277,22 @@
 
         beforeMount() {
             each(usePage().props.modulePageBuilderComponents, async (blockOption) => {
-                const component = await import(blockOption.path);
-                const componentName = (component.default.componentName);
+                let component = null;
+                let filename = null;
 
-                this.moduleComponents[componentName] = component.default;
+                if (blockOption?.in_module) {
+                    component = await import(
+                        `../../../../modules/${blockOption.in_module}/Resources/assets/js/ComponentStructures/${blockOption.filename}.js`
+                    );
+                } else {
+                    component = await import(`../../ComponentStructures/${blockOption.filename}.js`);
+                }
+
+                if (component) {
+                    const componentName = (component.default.componentName);
+
+                    this.moduleComponents[componentName] = component.default;
+                }
             });
         },
 
@@ -407,7 +419,10 @@
             onClickHeaderCard(isContentShown, index) {
                 if (isContentShown) {
                     for (let i = 0; i < 3; i++) {
-                        if (i != index) {
+                        if (
+                            i != index
+                            && has(this.$refs, [`component-${i}`, 'isContentShown'])
+                        ) {
                             this.$refs[`component-${i}`].isContentShown = false;
                         }
                     }
