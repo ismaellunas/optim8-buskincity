@@ -253,7 +253,6 @@
             },
 
             updateLastDataMenuItems() {
-                console.log('update');
                 this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
@@ -381,7 +380,6 @@
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
                         self.menuItemErrors = error.response.data.errors;
                     });
             },
