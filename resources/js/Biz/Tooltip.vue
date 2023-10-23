@@ -1,5 +1,6 @@
 <template>
     <v-tooltip
+        style="display: inline"
         :placement="placement"
         :triggers="triggers"
         :auto-hide="true"
