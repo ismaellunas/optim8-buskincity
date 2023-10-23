@@ -18,19 +18,24 @@
                     :menu-item-index="index"
                     :menu-item="element"
                     :selected-locale="selectedLocale"
+                    :is-up-button-disabled="index == 0"
+                    :is-down-button-disabled="index == (menuItems.length - 1)"
                     @delete-row="deleteRow"
                     @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="$emit('edit-row', $event)"
+                    @move-menu-item="moveMenuItem"
+                    @add-child-menu-item="$emit('add-child-menu-item', $event)"
                 />
 
                 <navigation-menu
-                    v-if="!isChild"
+                    v-if="! isChild"
                     :menu-items="element.children"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
+                    @change="$emit('check-nested-menu-items')"
+                    @check-nested-menu-items="$emit('check-nested-menu-items')"
                     @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="editRow"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </template>
@@ -43,6 +48,8 @@
     import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
+    import { useModelWrapper } from '@/Libs/utils';
+    import { computed } from 'vue';
 
     export default {
         name: 'NavigationMenu',
@@ -78,15 +85,18 @@
         },
 
         emits: [
+            'add-child-menu-item',
+            'check-nested-menu-items',
             'duplicate-menu-item',
             'edit-row',
             'menu-items',
-            'update-last-data-menu-items'
         ],
 
-        setup() {
+        setup(props, {emit}) {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
+                computedMenuItems: useModelWrapper(props, emit, 'menuItems'),
+                i18n: computed(() => usePage().props.i18n),
             };
         },
 
@@ -125,17 +135,18 @@
 
             deleteRow(index) {
                 const self = this;
-                const menuItems = this.menuItems;
+                const menuItems = self.menuItems;
                 let message = "";
 
                 if (menuItems[index].children.length > 0) {
-                    message = "A nested menu will deleted too."
+                    message = self.i18n.menu_items_delete;
                 }
 
-                confirmDelete("Are you sure?", message).then((result) => {
+                confirmDelete(self.i18n.are_you_sure, message).then((result) => {
                     if (result.isConfirmed) {
                         self.$emit('menu-items', menuItems.splice(index, 1));
-                        self.updateLastDataMenuItems();
+
+                        self.$emit('check-nested-menu-items');
                     }
                 });
             },
@@ -144,8 +155,34 @@
                 this.$emit('duplicate-menu-item', menuItem);
             },
 
-            updateLastDataMenuItems() {
-                this.$emit('update-last-data-menu-items');
+            moveMenuItem(type, index) {
+                switch (type) {
+                case 'up':
+                    this.moveMenuItemUp(index);
+                    break;
+
+                case 'down':
+                    this.moveMenuItemDown(index);
+                    break;
+                }
+
+                this.$emit('check-nested-menu-items');
+            },
+
+            moveMenuItemUp(index) {
+                if (index > 0 && index < this.computedMenuItems.length) {
+                    const item = this.computedMenuItems[index];
+                    this.computedMenuItems.splice(index, 1);
+                    this.computedMenuItems.splice(index - 1, 0, item);
+                }
+            },
+
+            moveMenuItemDown(index) {
+                if (index >= 0 && index < this.computedMenuItems.length - 1) {
+                    const item = this.computedMenuItems[index];
+                    this.computedMenuItems.splice(index, 1);
+                    this.computedMenuItems.splice(index + 1, 0, item);
+                }
             },
         },
     }

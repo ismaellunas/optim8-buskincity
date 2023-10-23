@@ -6,29 +6,42 @@
                     {{ i18n.menu_items }}
                 </span>
 
-                <p class="help is-info">
-                    {{ i18n.menu_items_note }}
-                </p>
+                <biz-tooltip :message="i18n.menu_items_note" />
             </div>
             <div class="column">
                 <biz-language-tab
                     class="is-right"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @on-change-locale="onChangeLocale"
+                    @on-change-locale="changeLocale"
                 />
             </div>
         </div>
-        <div class="columns">
-            <div class="column">
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <biz-button-icon
+                    type="button"
+                    class="is-primary"
+                    :icon="iconAdd"
+                    @click="openFormMenuModal('front')"
+                >
+                    <span>
+                        {{ sentenceCase(i18n.add_menu_item) }}
+                    </span>
+                </biz-button-icon>
+            </div>
+
+            <div class="column is-12">
                 <navigation-menu
                     :is-child="false"
                     :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @duplicate-menu-item="openDuplicateModal"
+                    @add-child-menu-item="addChildMenuItem"
+                    @change="checkNestedMenuItems"
+                    @check-nested-menu-items="checkNestedMenuItems"
+                    @duplicate-menu-item="openFormDuplicateModal"
                     @edit-row="editRow"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </div>
@@ -39,7 +52,7 @@
                     type="button"
                     class="is-primary"
                     :icon="iconAdd"
-                    @click="openFormModal()"
+                    @click="openFormMenuModal()"
                 >
                     <span>
                         {{ sentenceCase(i18n.add_menu_item) }}
@@ -67,29 +80,30 @@
         />
 
         <navigation-form-duplicate
-            v-if="isModalDuplicateOpen"
+            v-if="isFormDuplicateModalOpen"
             :errors="menuItemErrors"
             :locale-options="localeOptions"
             :menu-item="selectedMenuItem"
-            @close="closeDuplicateModal()"
+            @close="closeFormDuplicateModal()"
             @duplicate-menu-item="duplicateMenuItem"
         />
     </form>
 </template>
 
 <script>
-    import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import BizTooltip from '@/Biz/Tooltip.vue';
     import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
     import NavigationFormMenu from './NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
     import { usePage, useForm } from '@inertiajs/vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
-    import { computed } from 'vue';
+    import { computed, ref } from 'vue';
     import { sentenceCase } from 'change-case';
     import { add as iconAdd } from '@/Libs/icon-class';
 
@@ -97,17 +111,18 @@
         name: 'ThemeHeaderNavigation',
 
         components: {
-            BizLanguageTab,
             BizButton,
             BizButtonIcon,
+            BizLanguageTab,
+            BizTooltip,
             NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
         },
 
         mixins: [
-            MixinHasModal,
             MixinHasLoader,
+            MixinHasModal,
         ],
 
         props: {
@@ -126,31 +141,31 @@
         },
 
         setup() {
+            let defaultLocale = usePage().props.defaultLanguage;
+
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
-                localeOptions: usePage().props.languageOptions ?? [],
-                defaultLocale: usePage().props.defaultLanguage,
+                defaultLocale,
                 i18n: computed(() => usePage().props.i18n),
                 iconAdd,
+                localeOptions: usePage().props.languageOptions ?? [],
+                selectedLocale: ref(defaultLocale),
             }
         },
 
         data() {
             return {
-                activeTab: 'navigation',
-                isModalDuplicateOpen: false,
+                isFormDuplicateModalOpen: false,
                 lastDataMenuItems: [],
                 menuForm: {},
-                selectedLocale: this.defaultLocale,
-                selectedMenuItem: {},
                 menuItemErrors: {},
+                selectedMenuItem: {},
                 validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },
 
         mounted() {
-            this.menuForm = this.getMenuForm(this.selectedLocale);
-            this.updateLastDataMenuItems();
+            this.setMenuForm(this.selectedLocale);
         },
 
         methods: {
@@ -158,41 +173,45 @@
                 return this.menuForm.isDirty;
             },
 
-            getMenuForm(locale) {
-                return useForm({
+            setMenuForm(locale) {
+                this.menuForm = useForm({
                     locale: locale,
                     menu_items: cloneDeep(this.headerMenus[locale]),
                 });
+
+                this.updateLastDataMenuItems();
             },
 
-            onChangeLocale(locale) {
+            changeLocale(locale) {
                 if (this.menuForm.isDirty) {
                     confirmLeaveProgress().then((result) => {
-                        if (result.isDismissed) {
-                            return false;
-                        } else if (result.isConfirmed) {
-                            this.selectedLocale = locale;
+                        if (result.isConfirmed) {
                             this.menuForm.reset();
-                            this.menuForm = this.getMenuForm(locale);
 
-                            this.updateLastDataMenuItems();
+                            this.onChangeLocale(locale);
                         }
                     });
                 } else {
-                    this.selectedLocale = locale;
-
-                    this.menuForm = this.getMenuForm(locale);
-                    this.updateLastDataMenuItems();
+                    this.onChangeLocale(locale);
                 }
             },
 
-            openFormModal() {
-                this.selectedMenuItem = {};
-                this.menuItemErrors = {};
-                this.isModalOpen = true;
+            onChangeLocale(locale) {
+                this.selectedLocale = locale;
+
+                this.setMenuForm(locale);
             },
 
-            openDuplicateModal(menuItem) {
+            openFormMenuModal(dataPosition = null) {
+                this.selectedMenuItem = {};
+                this.menuItemErrors = {};
+
+                this.addMenuItemPosition = dataPosition;
+
+                this.openModal();
+            },
+
+            openFormDuplicateModal(menuItem) {
                 const cloneMenuItem = cloneDeep(menuItem);
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['parent_id'] = null;
@@ -201,16 +220,40 @@
 
                 this.selectedMenuItem = cloneMenuItem;
                 this.menuItemErrors = {};
-                this.isModalDuplicateOpen = true;
+
+                this.isFormDuplicateModalOpen = true;
             },
 
-            closeDuplicateModal() {
+            closeFormDuplicateModal() {
                 this.selectedMenuItem = {};
                 this.menuItemErrors = {};
-                this.isModalDuplicateOpen = false;
+
+                this.isFormDuplicateModalOpen = false;
+            },
+
+            async validateNestedMenuItems() {
+                const self = this;
+
+                forEach(self.menuForm.menu_items, function(menuItem) {
+                    forEach(menuItem.children, function(child) {
+                        if (child['children'].length > 0) {
+                            self.menuForm.menu_items = self.lastDataMenuItems;
+                            oopsAlert({
+                                text: "Cannot add more than 2 levels of nested menus.",
+                            });
+                        }
+                    });
+                });
+            },
+
+            async checkNestedMenuItems() {
+                await this.validateNestedMenuItems();
+
+                this.updateLastDataMenuItems();
             },
 
             updateLastDataMenuItems() {
+                console.log('update');
                 this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
@@ -221,6 +264,7 @@
                     .then(() => {
                         self.updateSelectedMenu(menuItem);
                         self.updateLastDataMenuItems();
+
                         self.closeModal();
                     })
                     .catch((error) => {
@@ -238,11 +282,35 @@
 
             addMenuItem(menuItem) {
                 const self = this;
+
                 axios.post(self.validationRoute, menuItem)
                     .then(() => {
-                        self.menuForm.menu_items.push(
-                            cloneDeep(menuItem)
-                        );
+                        if (self.selectedParentIndex) {
+                            self
+                                .menuForm
+                                .menu_items[self.selectedParentIndex]
+                                .children
+                                .push(
+                                    cloneDeep(menuItem)
+                                );
+                        } else {
+                            switch (self.addMenuItemPosition) {
+                            case 'front':
+                                self.menuForm.menu_items.unshift(
+                                    cloneDeep(menuItem)
+                                );
+                                break;
+
+                            default:
+                                self.menuForm.menu_items.push(
+                                    cloneDeep(menuItem)
+                                );
+                                break;
+                            }
+                        }
+
+                        self.selectedParentIndex = null;
+
                         self.updateLastDataMenuItems();
                         self.closeModal();
                     })
@@ -251,29 +319,30 @@
                     });
             },
 
+            addChildMenuItem(parentIndex) {
+                this.selectedParentIndex = parentIndex;
+
+                this.openFormMenuModal();
+            },
+
             editRow(menuItem) {
                 this.selectedMenuItem = menuItem;
                 this.menuItemErrors = {};
+
                 this.openModal();
             },
 
             onSubmit() {
                 const self = this;
-                this.menuForm.post(
-                    route(this.baseRouteName+'.navigation.update'),
+
+                self.menuForm.post(
+                    route(self.baseRouteName+'.navigation.update'),
                     {
                         preserveScroll: true,
                         errorBag: 'navigation',
-                        onStart: visit => {
-                            self.onStartLoadingOverlay();
-                        },
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                            this.updateLastDataMenuItems();
-                        },
-                        onFinish: visit => {
-                            self.onEndLoadingOverlay();
-                        }
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onSuccess: (page) => successAlert(page.props.flash.message),
+                        onFinish: () => self.onEndLoadingOverlay(),
                     });
             },
 
@@ -291,26 +360,28 @@
                                 } else if(result.isConfirmed) {
                                     self.selectedLocale = menuItem['locale'];
 
-                                    self.menuForm = self.getMenuForm(menuItem['locale']);
+                                    self.setMenuForm(menuItem['locale']);
+
                                     self.menuForm.menu_items.push(menuItem);
 
-                                    self.closeDuplicateModal();
-                                    self.updateLastDataMenuItems();
+                                    self.closeFormDuplicateModal();
                                 }
                             });
                         } else {
                             if (self.selectedLocale !== menuItem['locale']) {
                                 self.selectedLocale = menuItem['locale'];
-                                self.menuForm = self.getMenuForm(menuItem['locale']);
+
+                                this.setMenuForm(menuItem['locale']);
                             }
 
                             self.menuForm.menu_items.push(menuItem);
 
-                            self.closeDuplicateModal();
+                            self.closeFormDuplicateModal();
                             self.updateLastDataMenuItems();
                         }
                     })
                     .catch((error) => {
+                        console.log(error);
                         self.menuItemErrors = error.response.data.errors;
                     });
             },
