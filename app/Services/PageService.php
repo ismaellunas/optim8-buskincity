@@ -232,7 +232,7 @@ class PageService
         return collect()->push(
             [
                 'name' => 'EventsCalendar',
-                'path' => "../../ComponentStructures/events-calendar.js",
+                'filename' => "events-calendar",
                 'is_enabled' => app(EventsCalendarService::class)->isEnabled(),
             ],
         );
