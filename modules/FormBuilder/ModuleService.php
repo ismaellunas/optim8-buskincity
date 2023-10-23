@@ -101,7 +101,8 @@ class ModuleService extends BaseModuleService implements
         return [
             [
                 'name' => 'FormBuilder',
-                'path' => "../../../../modules/FormBuilder/Resources/assets/js/ComponentStructures/form-builder.js",
+                'in_module' => 'FormBuilder',
+                'filename' => "form-builder",
                 'is_enabled' => $this->isModuleActive(),
             ],
         ];
