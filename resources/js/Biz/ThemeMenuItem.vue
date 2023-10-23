@@ -1,5 +1,5 @@
 <template>
-    <div :class="cardClasses">
+    <div class="card">
         <div class="card-content p-2">
             <div class="level">
                 <div class="level-left">
@@ -106,14 +106,6 @@
             return {
                 icon,
             };
-        },
-
-        computed: {
-            cardClasses() {
-                return {
-                    'card': true,
-                };
-            },
         },
     };
 </script>

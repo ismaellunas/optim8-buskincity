@@ -103,6 +103,7 @@
                     'is-rounded': true,
                     'ml-5': this.isChild,
                     'mb-2': this.isChild,
+                    'draggable-area': this.isChild,
                 };
             },
 
@@ -113,8 +114,6 @@
 
                 return {
                     'min-height': '40px',
-                    'border': '1px solid #ccc',
-                    'border-style': 'dashed',
                 };
             },
         },
