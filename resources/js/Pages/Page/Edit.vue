@@ -178,9 +178,9 @@
 
                         if (isUsedByMenu) {
                             const confirmResult = await confirmDelete(
-                                'Are You Sure?',
-                                "This page update may affect the navigation menu on the Theme Header and Footer.",
-                                'Yes'
+                                this.i18n.are_you_sure,
+                                this.i18n.affected_menu_warning,
+                                this.i18n.yes,
                             );
 
                             return !!confirmResult.value;
