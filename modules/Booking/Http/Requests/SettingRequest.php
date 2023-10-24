@@ -2,7 +2,9 @@
 
 namespace Modules\Booking\Http\Requests;
 
+use App\Services\UserService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SettingRequest extends FormRequest
 {
@@ -16,6 +18,11 @@ class SettingRequest extends FormRequest
         $emailRules = [
             'max:5000',
         ];
+
+        $roleIds = app(UserService::class)
+            ->getRoleOptions()
+            ->pluck('id')
+            ->all();
 
         return [
             'email_new_booking' => $emailRules,
@@ -46,7 +53,7 @@ class SettingRequest extends FormRequest
             ],
             'access_roles.*' => [
                 'numeric',
-                'exists:App\Models\Role,id',
+                Rule::in($roleIds),
             ],
         ];
     }
