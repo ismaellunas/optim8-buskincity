@@ -376,7 +376,7 @@ class ProductController extends CrudController
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
-                'guidelines' => [
+                'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
                     'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),

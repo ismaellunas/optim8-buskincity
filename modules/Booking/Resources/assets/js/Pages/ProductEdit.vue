@@ -150,7 +150,7 @@
                             v-model="eventForm.timezone"
                             :label="i18n.timezone"
                             :message="error('timezone', eventErrorBag)"
-                            :tooltip-message="i18n.guidelines.timezone"
+                            :tooltip-message="i18n.tips.timezone"
                             required
                         />
 
@@ -165,7 +165,7 @@
 
                                             <biz-tooltip
                                                 class="ml-1"
-                                                :message="i18n.guidelines.weekly_hours"
+                                                :message="i18n.tips.weekly_hours"
                                             />
                                         </p>
                                     </header>
@@ -215,7 +215,7 @@
 
                                             <biz-tooltip
                                                 class="ml-1"
-                                                :message="i18n.guidelines.date_override"
+                                                :message="i18n.tips.date_override"
                                             />
                                         </p>
                                     </header>
