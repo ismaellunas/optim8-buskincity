@@ -58,18 +58,20 @@ class ModuleService extends BaseModuleService implements
 
     public static function frontendMenus(Request $request): array
     {
+        $user = $request->user();
+
         return [
             [
                 'title' => Str::title(__(":booking_term.products")),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
-                'isEnabled' => true,
+                'isEnabled' => $user->can('showFrontendProduct', Product::class),
             ],
             [
                 'title' => Str::title(__(':booking_term.bookings')),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
-                'isEnabled' => true,
+                'isEnabled' => $user->can('showFrontendOrder', Order::class),
             ],
         ];
     }
