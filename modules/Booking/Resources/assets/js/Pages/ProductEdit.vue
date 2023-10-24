@@ -120,23 +120,6 @@
                             :error-bag-name="eventErrorBag"
                             :error-key="locationFieldsetErrorKeys"
                         />
-
-                        <div class="columns is-multiline">
-                            <div
-                                v-if="isMapOpen"
-                                class="column is-8"
-                            >
-                                <div class="card">
-                                    <div class="card-content p-2">
-                                        <biz-gmap-marker
-                                            v-model="eventForm.location"
-                                            :api-key="googleApiKey"
-                                            :init-position="geoLocation"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="box">
@@ -380,7 +363,6 @@
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTimezone from '@/Biz/Form/Timezone.vue';
-    import BizGmapMarker from '@/Biz/GmapMarker.vue';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import BizTag from '@/Biz/Tag.vue';
@@ -408,7 +390,6 @@
             BizFormNumberAddons,
             BizFormSelect,
             BizFormTimezone,
-            BizGmapMarker,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
@@ -441,7 +422,6 @@
             dimensions: { type: Object, default: () => {} },
             roleOptions: { type: Array, required: true },
             defaultCountryCode: { type: String, required: true },
-            countryOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
             imageMimes: { type: Array, required: true },
@@ -450,9 +430,7 @@
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
-            geoLocation: { type: Object, required: true },
             managers: { type: Array, default: () => [] },
-            googleApiKey: { type: String, default: null },
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
             productManagerBaseRoute: { type: String, required: true },
@@ -506,7 +484,6 @@
             return {
                 activeTab: 0,
                 selectedDateOverrideBatch: null,
-                isMapOpen: false,
                 productManagers: this.managers,
                 unusedDates: [],
             };
@@ -795,10 +772,6 @@
                         });
                     }
                 })
-            },
-
-            toggleMap() {
-                this.isMapOpen = !this.isMapOpen;
             },
 
             submitManager() {

@@ -206,7 +206,6 @@ class ProductController extends CrudController
             ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
-            'countryOptions' => $this->countryService->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
