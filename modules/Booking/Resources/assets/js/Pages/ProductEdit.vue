@@ -111,75 +111,15 @@
                             </div>
                         </div>
 
-                        <div class="columns">
-                            <div class="column is-6">
-                                <biz-form-textarea
-                                    v-model="eventForm.location.address"
-                                    :label="i18n.address"
-                                    placeholder="Address"
-                                    rows="5"
-                                    maxlength="500"
-                                    :message="error('location.address', eventErrorBag)"
-                                />
-
-                                <biz-form-input
-                                    v-model="eventForm.location.city"
-                                    :label="i18n.city"
-                                    maxlength="64"
-                                    required
-                                    :message="error('location.city', eventErrorBag)"
-                                />
-
-                                <biz-form-select
-                                    v-model="eventForm.location.country_code"
-                                    :label="i18n.country"
-                                    required
-                                >
-                                    <option
-                                        v-for="countryOption in countryOptions"
-                                        :key="countryOption.id"
-                                        :value="countryOption.id"
-                                    >
-                                        {{ countryOption.value }}
-                                    </option>
-                                </biz-form-select>
-                            </div>
-
-                            <div class="column is-5">
-                                <div class="columns is-multiline">
-                                    <div class="column is-12">
-                                        <biz-form-input
-                                            v-model="eventForm.location.latitude"
-                                            :label="i18n.latitude"
-                                            :message="error('location.latitude', eventErrorBag)"
-                                        />
-                                    </div>
-                                    <div class="column is-12">
-                                        <biz-form-input
-                                            v-model="eventForm.location.longitude"
-                                            :label="i18n.longitude"
-                                            :message="error('location.longitude', eventErrorBag)"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="column is-1">
-                                <div class="field">
-                                    <label class="label">
-                                        {{ i18n.map }}
-                                    </label>
-                                    <span class="control">
-                                        <biz-button-icon
-                                            type="button"
-                                            class="is-primary"
-                                            :icon="icon.locationMark"
-                                            @click="toggleMap"
-                                        />
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <biz-form-fieldset-location
+                            v-model:address="eventForm.location.address"
+                            v-model:city="eventForm.location.city"
+                            v-model:country-code="eventForm.location.country_code"
+                            v-model:latitude="eventForm.location.latitude"
+                            v-model:longitude="eventForm.location.longitude"
+                            :error-bag-name="eventErrorBag"
+                            :error-key="locationFieldsetErrorKeys"
+                        />
 
                         <div class="columns is-multiline">
                             <div
@@ -436,10 +376,9 @@
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormAssignUser from '@/Biz/Form/AssignUser.vue';
-    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
-    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizGmapMarker from '@/Biz/GmapMarker.vue';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
@@ -465,10 +404,9 @@
             BizCheckbox,
             BizErrorNotifications,
             BizFormAssignUser,
-            BizFormInput,
+            BizFormFieldsetLocation,
             BizFormNumberAddons,
             BizFormSelect,
-            BizFormTextarea,
             BizFormTimezone,
             BizGmapMarker,
             BizProvideInjectTab,
@@ -568,14 +506,23 @@
                 timezone: event.value.timezone,
                 weekly_hours: computed(() => props.weeklyHours).value,
                 date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
-            }
+            };
+
+            const locationFieldsetErrorKeys = {
+                address: 'location.address',
+                city: 'location.city',
+                countryCode: 'location.country_code',
+                latitude: 'location.latitude',
+                longitude: 'location.longitude'
+            };
 
             return {
                 form: useForm(form),
+                eventErrorBag: 'updateEvent',
+                eventErrors: ref({}),
                 eventForm: useForm(eventForm),
                 icon,
-                eventErrors: ref({}),
-                eventErrorBag: 'updateEvent',
+                locationFieldsetErrorKeys,
             };
         },
 
