@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use Closure;
-
 trait HasCache
 {
     protected $caches = [];
