@@ -53,13 +53,22 @@ class MenuUrl extends BaseMenu implements MenuInterface
     public function getUrl(): string
     {
         try {
-            $pageTranslation = $this->getModel()->menuItemable->page->translateOrDefault($this->locale);
+            $pageTranslation = $this->getModel()
+                ->menuItemable
+                ->page
+                ->translateOrDefault($this->locale);
+
+            if (! $pageTranslation->isPublished) {
+                $pageTranslation = $pageTranslation
+                    ->page
+                    ->translate(defaultLocale());
+            }
+
+            return route('frontend.spaces.show', [
+                'slugs' => $pageTranslation->getSlugs(),
+            ]);
         } catch (\Throwable $th) {
             return $this->fallbackUrl();
         }
-
-        return route('frontend.spaces.show', [
-            'slugs' => $pageTranslation->getSlugs(),
-        ]);
     }
 }
