@@ -12,17 +12,56 @@ class ProductSpaceService
     {
         $user = auth()->user();
         $spaceIds = $user->spaces->pluck('id')->all();
+        $spaces = null;
 
-        return Space::select(['id', 'name'])
-            ->when($spaceIds, function (Builder $query, $spaceIds) {
-                $query->whereIn('id', $spaceIds);
+        if (! empty($spaceIds)) {
+            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $spaceIds)->get();
+        }
+
+        $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
+
+        $isExceptIdEnabled = (
+            $spaces
+            && $exceptId
+        );
+
+        return Space::select($columnNames)
+            ->with('product')
+            ->when($spaces, function (Builder $query, $spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
+                }
             })
-            ->whereDoesntHave('product', function (Builder $query) use ($exceptId) {
-                $query->where('productable_id', '!=',  $exceptId);
+            ->when($isExceptIdEnabled, function (Builder $query) use ($exceptId) {
+                $query->orWhereHas('product', function ($query) use ($exceptId) {
+                    $query->where('productable_id', $exceptId);
+                });
             })
-            ->orderBy('name')
+            ->withDepth()
+            ->defaultOrder()
             ->get()
-            ->asOptions('id', 'name')
+            ->map(function ($space) use ($exceptId) {
+                $note = null;
+                $hasSpaceProduct = (
+                    !! $space->product
+                    && $space->product->productable_id != $exceptId
+                );
+
+                if ($hasSpaceProduct) {
+                    $note = __('Already in use in :product', [
+                        'product' => $space->product->displayName,
+                    ]);
+                }
+
+                return [
+                    'id' => $space->id,
+                    'value' => $space->name,
+                    'depth' => $space->depth,
+                    'is_disabled' => $hasSpaceProduct,
+                    'note' => $note,
+                ];
+            })
             ->all();
     }
 
