@@ -76,9 +76,10 @@
                 :selected-media="selectedMedia"
                 @close="onCloseModalMediaLibrary"
                 @on-clicked-pagination="getMediaList"
+                @on-close-edit-modal="refreshMediaListByPageActive()"
                 @on-media-submitted="onUpdateMedia"
-                @on-view-changed="setView"
                 @on-multiple-media-selected="onSelectMedia"
+                @on-view-changed="setView"
             />
 
             <biz-modal-media-library-detail
