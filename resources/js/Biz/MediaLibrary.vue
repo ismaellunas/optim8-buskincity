@@ -183,7 +183,7 @@
                         <div class="buttons is-right">
                             <biz-button
                                 type="button"
-                                class="is-primary"
+                                class="is-primary component-configurable"
                                 @click="onSubmit()"
                             >
                                 {{ i18n.save }}
@@ -191,6 +191,7 @@
 
                             <biz-button
                                 type="button"
+                                class="component-configurable"
                                 @click="closeEditModal"
                             >
                                 {{ i18n.cancel }}

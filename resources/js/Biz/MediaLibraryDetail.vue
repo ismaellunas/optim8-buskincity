@@ -77,6 +77,7 @@
                 <div class="buttons">
                     <biz-button
                         type="button"
+                        class="component-configurable"
                         :disabled="isProcessing"
                         @click="closeModal"
                     >
