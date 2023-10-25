@@ -70,7 +70,10 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromLoginRoute' : null,
 ]))->group(function () {
 
-    Route::prefix('products')->name('products.')->group(function () {
+    Route::prefix('products')
+        ->name('products.')
+        ->middleware('can:showFrontendProduct,Modules\Ecommerce\Entities\Product')
+        ->group(function () {
 
         Route::get('/', [FrontendProductController::class, 'index'])
             ->name('index')
@@ -89,28 +92,32 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
             ->can('showFrontendProductEvent', 'product');
     });
 
-    Route::resource('/orders', Frontend\OrderController::class)
-        ->only(['index', 'show']);
+    Route::middleware('can:showFrontendOrder,Modules\Ecommerce\Entities\Order')
+        ->group(function () {
+            Route::resource('/orders', Frontend\OrderController::class)
+                ->only(['index', 'show'])
+                ->middleware('can:showFrontendOrder,Modules\Ecommerce\Entities\Order',);
 
-    Route::prefix('orders')->name('orders.')->group(function () {
+            Route::prefix('orders')->name('orders.')->group(function () {
 
-        Route::get('/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
-            ->name('reschedule')
-            ->can('rescheduleBooking', 'order');
+                Route::get('/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
+                    ->name('reschedule')
+                    ->can('rescheduleBooking', 'order');
 
-        Route::post('/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
-            ->name('reschedule.update');
+                Route::post('/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
+                    ->name('reschedule.update');
 
-        Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
-            ->name('cancel')
-            ->can('cancelBooking', 'order');
+                Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
+                    ->name('cancel')
+                    ->can('cancelBooking', 'order');
 
-        Route::post('/{order}/check-in', Modules\Booking\Http\Controllers\Frontend\CheckInController::class)
-            ->name('check-in');
+                Route::post('/{order}/check-in', Modules\Booking\Http\Controllers\Frontend\CheckInController::class)
+                    ->name('check-in');
 
-        Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
-            ->name('book-event');
-    });
+                Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
+                    ->name('book-event');
+            });
+        });
 });
 
 Route::prefix('api/booking')
