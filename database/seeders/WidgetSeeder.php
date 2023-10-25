@@ -88,7 +88,7 @@ class WidgetSeeder extends Seeder
                     ],
                     [
                         'id' => Str::uuid(),
-                        'widget' => "App\Entities\Widgets\DefaultWidget",
+                        'widget' => "Modules\Booking\Widgets\BookProductWidget",
                         'module' => 'Booking',
                         'title' => 'Book a :booking_term.product',
                         'order' => 4,

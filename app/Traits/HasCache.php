@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use Closure;
-
 trait HasCache
 {
     protected $caches = [];
@@ -28,7 +26,6 @@ trait HasCache
         if (! $this->hasLoadedKey($key)) {
             $this->setLoadedKey($key, $callback());
         }
-
         return $this->getLoadedKey($key);
     }
 }

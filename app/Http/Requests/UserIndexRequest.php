@@ -25,9 +25,10 @@ class UserIndexRequest extends FormRequest
      */
     public function rules()
     {
-        $roleIds = collect(app(UserService::class)->getRoleOptions())
+        $roleIds = app(UserService::class)
+            ->getRoleOptions()
             ->pluck('id')
-            ->toArray();
+            ->all();
 
         return [
             'term' => [

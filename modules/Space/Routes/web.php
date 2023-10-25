@@ -74,7 +74,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
 });
 
 Route::prefix(Localization::setLocale())
-    ->middleware(['localizationRedirect', 'redirectIfModuleIsDisabled:Space'])
+    ->middleware(['redirectIfModuleIsDisabled:Space', 'localizationRedirect', 'adjustOriginLanguage'])
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->group(function () {
         Route::get(LaravelLocalization::transRoute('frontend.spaces.index'), [FrontendSpaceController::class, 'index'])
