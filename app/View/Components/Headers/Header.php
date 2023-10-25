@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Headers;
 
+use App\Services\LanguageService;
 use App\Services\MenuService;
 use App\Services\SettingService;
 use App\Services\TranslationService;
@@ -26,7 +27,9 @@ class Header extends Component
         $currentLanguage = currentLocale();
 
         $this->logo = $logo;
-        $this->currentLanguage = $currentLanguage;
+        $this->currentLanguage = app(LanguageService::class)->getOriginLanguageFromCookie(
+            $currentLanguage
+        );
         $this->menus = $menuService->getFrontendUserMenus(request()) ?? [];
         $this->headerLayout = $settingService->getHeaderLayout();
         $this->languageOptions = collect(app(TranslationService::class)->getLocaleOptions())

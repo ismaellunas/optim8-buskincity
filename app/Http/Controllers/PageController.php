@@ -321,6 +321,7 @@ class PageController extends CrudController
                 'duplicate_translation' => __('Duplicate :resource', ['resource' => __('Translation')]),
                 'select_translation' => __('Select :resource', ['resource' => __('Translation')]),
                 'page_preview' => __('Page preview'),
+                'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];
