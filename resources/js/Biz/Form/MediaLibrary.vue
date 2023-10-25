@@ -70,7 +70,7 @@
                 :instructions="instructions"
                 @close="closeModal"
                 @on-clicked-pagination="getMediaList"
-                @on-close-edit-modal="refreshMediaList()"
+                @on-close-edit-modal="refreshMediaListByPageActive()"
                 @on-media-selected="onSelectMedia"
                 @on-media-submitted="onUpdateMedia"
                 @on-view-changed="setView"
