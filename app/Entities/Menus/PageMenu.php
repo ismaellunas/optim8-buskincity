@@ -50,15 +50,23 @@ class PageMenu extends BaseMenu implements MenuInterface
     public function getUrl(): string
     {
         try {
-            $pageTranslation = $this->getModel()->menuItemable->translateOrDefault($this->locale);
+            $pageTranslation = $this->getModel()
+                ->menuItemable
+                ->translateOrDefault($this->locale);
+
+            if (! $pageTranslation->isPublished) {
+                $pageTranslation = $pageTranslation
+                    ->page
+                    ->translate(defaultLocale());
+            }
+
+            return $this->getTranslatedUrl(
+                route('frontend.pages.show', [
+                    'page_translation' => $pageTranslation->slug,
+                ])
+            );
         } catch (\Throwable $th) {
             return $this->fallbackUrl();
         }
-
-        return $this->getTranslatedUrl(
-            route('frontend.pages.show', [
-                'page_translation' => $pageTranslation->slug,
-            ])
-        );
     }
 }

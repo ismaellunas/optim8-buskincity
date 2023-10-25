@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import { defineAsyncComponent } from 'vue';
+    import { defineAsyncComponent, computed } from 'vue';
 
     export default {
         name: 'BizWidgetColumns',
@@ -26,10 +26,10 @@
         },
 
         setup(props) {
-
             const asyncComponents = {};
+            const widgets = computed(() => props.widgets);
 
-            props.widgets.forEach((widget) => {
+            widgets.value.forEach((widget) => {
                 if (widget.module == 'Booking' && widget.componentModule) {
                     asyncComponents[widget.componentModule] = defineAsyncComponent(() => import(
                         `../../../../modules/Booking/Resources/assets/js/Widgets/${widget.componentModule}.vue`)

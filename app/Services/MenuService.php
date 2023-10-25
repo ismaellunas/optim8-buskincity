@@ -478,7 +478,9 @@ class MenuService
         $user = $request->user();
 
         $dropdownRightMenus = [];
-        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie(
+            currentLocale()
+        );
 
         if ($user) {
             $language =  $user->languageCode;
@@ -545,7 +547,9 @@ class MenuService
     {
         $user = $request->user();
 
-        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie(
+            currentLocale()
+        );
 
         if ($user) {
             $language =  $user->languageCode;

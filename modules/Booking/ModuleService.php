@@ -43,18 +43,20 @@ class ModuleService
 
     public static function frontendMenus(Request $request): array
     {
+        $user = $request->user();
+
         return [
             [
                 'title' => __('Products'),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
-                'isEnabled' => true,
+                'isEnabled' => $user->can('showFrontendProduct', Product::class),
             ],
             [
                 'title' => __('Bookings'),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
-                'isEnabled' => true,
+                'isEnabled' => $user->can('showFrontendOrder', Order::class),
             ],
         ];
     }
