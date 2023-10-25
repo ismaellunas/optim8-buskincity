@@ -34,5 +34,7 @@
     "Coming soon! We are brewing a new feature that will allow you to see nearby city events and performances. Have questions?": "Coming soon! We are brewing a new feature that will allow you to see nearby city events and performances. Have questions?",
     "Is it the same address as the parent?": "Is it the same address as the parent?",
     "Specify the available event hours that can be booked by performers on a weekly basis.": "Specify the available event hours that can be booked by performers on a weekly basis.",
-    "Use this field to manually select a specific date, overriding the weekly event hours.": "Use this field to manually select a specific date, overriding the weekly event hours."
+    "Use this field to manually select a specific date, overriding the weekly event hours.": "Use this field to manually select a specific date, overriding the weekly event hours.",
+    "Book this :typeName": "Book this :typeName",
+    "Already in use in :product": "Already in use in :product"
 }
