@@ -3,12 +3,13 @@
 namespace Modules\Booking\Services;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 
 class ProductSpaceService
 {
-    public function getSpaceOptions(int $exceptId = null): array
+    public function getSpaceOptions(int $exceptId = null): Collection
     {
         $user = auth()->user();
         $spaceIds = $user->spaces->pluck('id')->all();
@@ -61,8 +62,7 @@ class ProductSpaceService
                     'is_disabled' => $hasSpaceProduct,
                     'note' => $note,
                 ];
-            })
-            ->all();
+            });
     }
 
     public function formResource(Product $product): array

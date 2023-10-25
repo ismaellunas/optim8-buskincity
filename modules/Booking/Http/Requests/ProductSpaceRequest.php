@@ -3,6 +3,8 @@
 namespace Modules\Booking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Modules\Booking\Services\ProductSpaceService;
 
 class ProductSpaceRequest extends FormRequest
 {
@@ -13,10 +15,15 @@ class ProductSpaceRequest extends FormRequest
      */
     public function rules()
     {
+        $spaceIds = app(ProductSpaceService::class)
+            ->getSpaceOptions($this->route('product')->productable_id)
+            ->filter(fn ($space) => ! $space['is_disabled'])
+            ->pluck('id');
+
         return [
             'space_id' => [
                 'nullable',
-                'exists:Modules\Space\Entities\Space,id'
+                Rule::in($spaceIds),
             ],
         ];
     }
