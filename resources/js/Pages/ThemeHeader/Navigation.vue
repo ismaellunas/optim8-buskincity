@@ -284,7 +284,7 @@
 
                 axios.post(self.validationRoute, menuItem)
                     .then(() => {
-                        if (self.selectedParentIndex) {
+                        if (self.selectedParentIndex !== null) {
                             self
                                 .menuForm
                                 .menu_items[self.selectedParentIndex]
