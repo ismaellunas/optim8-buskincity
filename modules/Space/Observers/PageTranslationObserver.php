@@ -4,6 +4,8 @@ namespace Modules\Space\Observers;
 
 use App\Entities\Caches\MenuCache;
 use App\Observers\PageTranslationObserver as AppPageTranslationObserver;
+use App\Services\MenuService;
+use Modules\Space\Entities\PageTranslation;
 
 class PageTranslationObserver extends AppPageTranslationObserver
 {
