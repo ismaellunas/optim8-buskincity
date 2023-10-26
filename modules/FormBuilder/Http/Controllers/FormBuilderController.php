@@ -146,7 +146,7 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $formBuilder->id);
         }
 
-        $this->automateUserCreationService->removeUntrackedRules($formBuilder);
+        $this->automateUserCreationService->syncRules($formBuilder);
 
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => __(':form_builder_term.form')
