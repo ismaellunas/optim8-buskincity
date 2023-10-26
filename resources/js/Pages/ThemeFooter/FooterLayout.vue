@@ -34,18 +34,15 @@
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'FooterLayout',
 
-        inject: {
-            i18n: { default: () => ({
-                footer_layout : 'Footer layout',
-                standard : 'Standard',
-                layout : 'Layout',
-            }) },
-        },
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props: {
             modelValue: {
