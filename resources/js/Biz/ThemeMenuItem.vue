@@ -7,14 +7,14 @@
                         <div class="buttons">
                             <biz-button-icon
                                 type="button"
-                                :icon="icon.up"
+                                :icon="icon.arrowUp"
                                 :disabled="isUpButtonDisabled"
                                 @click="$emit('move-menu-item', 'up', menuItemIndex)"
                             />
 
                             <biz-button-icon
                                 type="button"
-                                :icon="icon.down"
+                                :icon="icon.arrowDown"
                                 :disabled="isDownButtonDisabled"
                                 @click="$emit('move-menu-item', 'down', menuItemIndex)"
                             />
@@ -36,38 +36,40 @@
 
                 <div class="level-right">
                     <div class="level-item">
-                        <biz-button-icon
-                            v-if="! isChild"
-                            :icon="icon.add"
-                            icon-class="is-small"
-                            type="button"
-                            class="is-ghost has-text-black"
-                            @click.prevent="$emit('add-child-menu-item', menuItemIndex)"
-                        />
+                        <div class="buttons">
+                            <biz-button-icon
+                                v-if="isAddButtonEnabled"
+                                :icon="icon.add"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click.prevent="$emit('add-child-menu-item', menuItemIndex)"
+                            />
 
-                        <biz-button-icon
-                            :icon="icon.copy"
-                            icon-class="is-small"
-                            type="button"
-                            class="is-ghost has-text-black"
-                            @click.prevent="$emit('duplicate-menu-item', menuItem)"
-                        />
+                            <biz-button-icon
+                                :icon="icon.copy"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click.prevent="$emit('duplicate-menu-item', menuItem)"
+                            />
 
-                        <biz-button-icon
-                            :icon="icon.edit"
-                            icon-class="is-small"
-                            type="button"
-                            class="is-ghost has-text-black"
-                            @click="$emit('edit-row', menuItem)"
-                        />
+                            <biz-button-icon
+                                :icon="icon.edit"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click="$emit('edit-row', menuItem)"
+                            />
 
-                        <biz-button-icon
-                            :icon="icon.remove"
-                            icon-class="is-small"
-                            type="button"
-                            class="is-ghost has-text-black"
-                            @click="$emit('delete-row', menuItemIndex)"
-                        />
+                            <biz-button-icon
+                                :icon="icon.remove"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click="$emit('delete-row', menuItemIndex)"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +113,7 @@
             },
             isUpButtonDisabled: { type: Boolean, default: false },
             isDownButtonDisabled: { type: Boolean, default: false },
+            isAddButtonEnabled: { type: Boolean, default: false },
         },
 
         emits: [

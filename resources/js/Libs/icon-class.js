@@ -3,6 +3,8 @@ export const iconType = 'fa-light';
 export const add = iconFormatter('fa-plus');
 export const angleDown = iconFormatter('fa-angle-down');
 export const angleUp = iconFormatter('fa-angle-up');
+export const arrowDown = iconFormatter('fa-arrow-down');
+export const arrowUp = iconFormatter('fa-arrow-up');
 export const back = iconFormatter('fa-arrow-left');
 export const bars = iconFormatter('fa-bars');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
@@ -18,7 +20,6 @@ export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
 export const crop = iconFormatter('fa-crop');
 export const desktop = iconFormatter('fa-desktop');
-export const down = iconFormatter('fa-down');
 export const download = iconFormatter('fa-download');
 export const edit = iconFormatter('fa-pen');
 export const ellipsis = iconFormatter('fa-ellipsis-h');
@@ -58,7 +59,6 @@ export const sortUp = iconFormatter('fa-sort-up');
 export const suspend = iconFormatter('fa-ban');
 export const tablet = iconFormatter('fa-tablet');
 export const unsuspend = iconFormatter('fa-hands-helping');
-export const up = iconFormatter('fa-up');
 export const upload = iconFormatter('fa-upload');
 export const user = iconFormatter('fa-user');
 
@@ -70,6 +70,8 @@ export default {
     add,
     angleDown,
     angleUp,
+    arrowDown,
+    arrowUp,
     back,
     bars,
     bracketCurly,
@@ -85,7 +87,6 @@ export default {
     copy,
     crop,
     desktop,
-    down,
     download,
     edit,
     ellipsis,
@@ -125,7 +126,6 @@ export default {
     suspend,
     tablet,
     unsuspend,
-    up,
     upload,
     user,
 }
