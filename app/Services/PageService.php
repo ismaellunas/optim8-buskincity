@@ -41,7 +41,7 @@ class PageService
 
     private static function getModuleEntityClassName(string $componentName): ?string
     {
-        foreach (app(ModuleService::class)->getAllEnabledNames() as $moduleName) {
+        foreach (app(ModuleService::class)->getEnabledNames() as $moduleName) {
             $className = '\\Modules\\'.$moduleName.'\\Entities\\PageBuilderComponents\\' . $componentName;
 
             if (class_exists($className)) {

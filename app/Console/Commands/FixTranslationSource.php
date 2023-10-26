@@ -172,12 +172,7 @@ class FixTranslationSource extends Command
 
     private function importModuleTranslations()
     {
-        $modules = app(ModuleService::class)
-            ->allModules()
-            ->filter(fn ($module) => $module->is_manageable)
-            ->pluck('name');
-
-        foreach ($modules as $module) {
+        foreach (app(ModuleService::class)->getEnabledNames() as $module) {
 
             $basePath = lang_path()."/modules/".Str::snake($module);
 

@@ -47,14 +47,44 @@ class ModuleService
         $moduleName = Str::studly($moduleName);
 
         return $this
-            ->allModules()
-            ->contains(fn ($module) => $module->is_active && $module->name == $moduleName);
+            ->getAllEnabledNames()
+            ->contains(fn ($name) => $name == $moduleName);
     }
 
-    public function getAllEnabledNames(): array
+    public function isAvailableByModules(string|array $moduleName, $operator = "OR"): bool
+    {
+        $moduleNames = collect($moduleName)
+            ->map(fn ($module) => Str::studly($module));
+
+        $activeModuleNames = $this->getAllEnabledNames();
+
+        $diff = $moduleNames->diff($activeModuleNames);
+
+        if (
+            ($operator == "AND" && $diff->isEmpty())
+            || ($operator == "OR" && $diff->count() < $moduleNames->count())
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getAllEnabledNames(): Collection
     {
         return $this->staticRemember(
             'all_enabled_module_names',
+            fn () => $this
+                ->allModules()
+                ->filter(fn ($module) => $module->is_active)
+                ->pluck('name')
+        );
+    }
+
+    public function getEnabledNames(): array
+    {
+        return $this->staticRemember(
+            'enabled_managed_module_names',
             fn () => $this->modules()->pluck('name')->all()
         );
     }
@@ -81,7 +111,7 @@ class ModuleService
 
     public function getEnabledModuleServiceClasses(): Collection
     {
-        return $this->getServiceClasses(collect($this->getAllEnabledNames()));
+        return $this->getServiceClasses(collect($this->getEnabledNames()));
     }
 
     public function getRecords(
