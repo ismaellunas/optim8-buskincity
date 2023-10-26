@@ -24,7 +24,7 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontController,
     ThemeFooterController,
-    ThemeFooterMenuController,
+    ThemeFooterNavigationController,
     ThemeHeaderController,
     ThemeHeaderNavigationController,
     ThemeSeoController,
@@ -117,7 +117,7 @@ Route::middleware(array_filter([
         Route::prefix('footer')->name('footer.')->group(function () {
             Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
             Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
-            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
+            Route::post('/menu-item', [ThemeFooterNavigationController::class, 'update'])->name('navigation.update');
         });
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');

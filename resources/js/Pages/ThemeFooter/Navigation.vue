@@ -303,7 +303,7 @@
             onSubmit() {
                 const self = this;
 
-                this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
+                this.menuForm.post(route(this.baseRouteName+'.navigation.update'), {
                     preserveScroll: true,
                     onStart: () => self.onStartLoadingOverlay(),
                     onSuccess: (page) => successAlert(page.props.flash.message),
