@@ -134,10 +134,9 @@ class ProductService
 
     public function roleOptions(): Collection
     {
-        return collect(array_merge(
-            [['id' => null, 'value' => '- '.__('Select').' -']],
-            app(UserService::class)->getRoleOptions()
-        ));
+        return collect()
+            ->push(['id' => null, 'value' => '- '.__('Select').' -'])
+            ->merge(app(UserService::class)->getRoleOptions());
     }
 
     public function upload(
