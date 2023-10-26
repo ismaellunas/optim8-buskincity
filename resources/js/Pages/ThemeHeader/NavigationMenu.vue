@@ -3,7 +3,6 @@
         class="has-background-light"
         handle=".handle-menu"
         item-key="id"
-        tag="nav"
         :animation="300"
         :class="areaClasses"
         :style="areaStyles"
@@ -20,6 +19,7 @@
                     :selected-locale="selectedLocale"
                     :is-up-button-disabled="index == 0"
                     :is-down-button-disabled="index == (menuItems.length - 1)"
+                    :is-add-button-enabled="! isChild"
                     @delete-row="deleteRow"
                     @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="$emit('edit-row', $event)"
@@ -43,13 +43,14 @@
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import Draggable from "vuedraggable";
-    import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import icon from '@/Libs/icon-class';
+    import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
-    import { computed } from 'vue';
+    import { moveItemUp, moveItemDown } from '@/Libs/menu-builder';
 
     export default {
         name: 'NavigationMenu',
@@ -59,11 +60,9 @@
             ThemeMenuItem,
         },
 
-        inject: {
-            i18n: { default: () => ({
-                add_menu_item : 'Add new menu item',
-            }) }
-        },
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props: {
             isChild: {
@@ -96,12 +95,6 @@
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
                 computedMenuItems: useModelWrapper(props, emit, 'menuItems'),
-                i18n: computed(() => usePage().props.i18n),
-            };
-        },
-
-        data() {
-            return {
                 icon,
             };
         },
@@ -158,31 +151,15 @@
             moveMenuItem(type, index) {
                 switch (type) {
                 case 'up':
-                    this.moveMenuItemUp(index);
+                    moveItemUp(index, this.computedMenuItems);
                     break;
 
                 case 'down':
-                    this.moveMenuItemDown(index);
+                    moveItemDown(index, this.computedMenuItems);
                     break;
                 }
 
                 this.$emit('check-nested-menu-items');
-            },
-
-            moveMenuItemUp(index) {
-                if (index > 0 && index < this.computedMenuItems.length) {
-                    const item = this.computedMenuItems[index];
-                    this.computedMenuItems.splice(index, 1);
-                    this.computedMenuItems.splice(index - 1, 0, item);
-                }
-            },
-
-            moveMenuItemDown(index) {
-                if (index >= 0 && index < this.computedMenuItems.length - 1) {
-                    const item = this.computedMenuItems[index];
-                    this.computedMenuItems.splice(index, 1);
-                    this.computedMenuItems.splice(index + 1, 0, item);
-                }
             },
         },
     }
