@@ -231,7 +231,7 @@
     import MediaForm from '@/Pages/Media/Form.vue';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { extensionToMimes, buildFormData } from '@/Libs/utils';
+    import { extensionToMimes, buildFormData, emitter } from '@/Libs/utils';
     import { includes, isEmpty, cloneDeep } from 'lodash';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/vue3';
@@ -371,6 +371,16 @@
             isFormMediaEmpty() {
                 return this.formMedia.length == 0;
             },
+        },
+
+        mounted() {
+            const self = this;
+
+            emitter.on('on-save-as-image', () => {
+                self.isEditing = false;
+                self.formMedia = [];
+                self.fileUploadKey += 1;
+            });
         },
 
         methods: {

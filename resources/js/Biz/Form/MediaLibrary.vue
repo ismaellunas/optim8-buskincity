@@ -100,7 +100,7 @@
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizModalMediaLibraryDetail from '@/Biz/Modal/MediaLibraryDetail.vue';
     import { image as imageIcon } from '@/Libs/icon-class.js';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, emitter } from '@/Libs/utils';
     import { isEmpty, cloneDeep, isArray } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
 
@@ -159,6 +159,14 @@
             hasMediumPreview() {
                 return !isEmpty(this.mediumPreview);
             },
+        },
+
+        mounted() {
+            const self = this;
+
+            emitter.on('on-save-as-image', () => {
+                self.refreshMediaList();
+            });
         },
 
         methods: {

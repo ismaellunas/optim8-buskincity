@@ -137,7 +137,7 @@
     import { getBlob, getCanvas } from '@/Libs/crop-helper';
     import { startsWith } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, emitter } from '@/Libs/utils';
 
     export default {
         name: 'BizMediaLibraryDetail',
@@ -328,7 +328,7 @@
 
                         successAlert(page.props.flash.message);
 
-                        self.$emit('on-close-edit-modal');
+                        emitter.emit('on-save-as-image');
                     },
                     onError: (errors) => {
                         oopsAlert();
