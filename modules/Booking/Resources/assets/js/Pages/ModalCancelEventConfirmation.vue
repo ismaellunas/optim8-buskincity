@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th><biz-icon :icon="bookingIcon.timezone" /></th>
-                <td>{{ event.timezone }}</td>
+                <td>{{ event.display_timezone }}</td>
             </tr>
             <tr>
                 <th><biz-icon :icon="bookingIcon.calendar" /></th>

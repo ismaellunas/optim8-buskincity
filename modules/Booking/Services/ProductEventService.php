@@ -74,7 +74,8 @@ class ProductEventService
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
             'location' => $product->locations[0] ?? null,
-            'timezone' => $schedule->timezone ?? null,
+            'timezone' => $schedule->timezone,
+            'display_timezone' => $schedule->displayTimezone,
         ];
     }
 
