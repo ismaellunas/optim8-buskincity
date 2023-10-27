@@ -20,19 +20,19 @@
 
         <biz-table is-fullwidth>
             <tr>
-                <th><biz-icon :icon="bookingIcon.duration" /></th>
+                <th><biz-icon :icon="icon.duration" /></th>
                 <td>{{ event.duration }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="bookingIcon.timezone" /></th>
+                <th><biz-icon :icon="icon.timezone" /></th>
                 <td>{{ event.timezone }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="bookingIcon.calendar" /></th>
+                <th><biz-icon :icon="icon.calendar" /></th>
                 <td><b>{{ rescheduleDateTime }}</b></td>
             </tr>
             <tr>
-                <th><s><biz-icon :icon="bookingIcon.calendar" /></s></th>
+                <th><s><biz-icon :icon="icon.calendar" /></s></th>
                 <td><s>{{ event.start_end_time }}, {{ event.date }}</s></td>
             </tr>
         </biz-table>
@@ -70,7 +70,7 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
-    import bookingIcon from '@booking/Libs/booking-icon';
+    import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { durationDateTimeText } from '@booking/Libs/event';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -113,7 +113,7 @@
             );
 
             return {
-                bookingIcon,
+                icon: { calendar, duration, timezone },
                 rescheduleDateTime,
                 message: useModelWrapper(props, emit),
             };
