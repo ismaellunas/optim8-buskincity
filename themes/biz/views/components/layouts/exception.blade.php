@@ -11,24 +11,13 @@
         @include('favicon')
 
         <!-- Fonts -->
-        @include('head-fonts', ['fontUrls' => $fontUrls])
-
         <link rel="stylesheet" href="{{ $appCssUrl }}">
+
+        @include('head-fonts', ['fontUrls' => $fontUrls])
 
         @stack('styles')
 
-        @env ('production')
-            <!-- Scripts -->
-            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
-        @endenv
-
-        @env ('local')
-            @if (config('constants.fontawesome_local'))
-                @vite(['resources/js/fontawesome.js'])
-            @else
-                <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
-            @endif
-        @endenv
+        @include('fontawesome')
 
         @stack('scripts')
 
