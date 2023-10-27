@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ModuleDeactivated;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Services\ModuleService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,17 +23,17 @@ class UnassignModulePermissions implements ShouldQueue
             ->getServiceClass($event->module->name);
 
         if (method_exists($moduleService, 'permissions')) {
-            $permissions = $moduleService->permissions();
+            $permissionNames = $moduleService->permissions();
+
+            $permissionModels = Permission::whereIn('name', $permissionNames)->get();
 
             Role::whereHas(
                 'permissions',
-                fn ($query) => $query->whereIn('name', $permissions)
+                fn ($query) => $query->whereIn('name', $permissionNames)
             )
                 ->get()
-                ->each(function ($role) use ($permissions) {
-                    foreach ($permissions as $permission) {
-                        $role->revokePermissionTo($permission);
-                    }
+                ->each(function ($role) use ($permissionModels) {
+                    $role->revokePermissionTo($permissionModels);
                 });
         }
     }

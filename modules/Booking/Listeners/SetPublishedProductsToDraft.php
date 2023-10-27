@@ -12,17 +12,25 @@ class SetPublishedProductsToDraft implements ShouldQueue
 {
     use InteractsWithQueue;
 
+    private $chunk = 200;
+
     public function __construct(protected ProductEventService $productEventService)
     {}
 
     public function handle(ModuleDeactivated $event)
     {
-        $this
+        $chunkedProducts = $this
             ->productEventService
             ->getPublishedProducts()
-            ->each(function ($product) {
+            ->chunk($this->chunk);
+
+        foreach ($chunkedProducts as $products) {
+            $products->load('metas');
+
+            $products->each(function ($product) {
                 $product->status = ProductStatus::DRAFT;
                 $product->save();
             });
+        }
     }
 }
