@@ -7,7 +7,6 @@ use App\Services\CountryService;
 use App\Services\IPService;
 use App\Services\ModuleService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
