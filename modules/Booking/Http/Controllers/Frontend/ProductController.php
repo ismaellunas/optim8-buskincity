@@ -56,6 +56,9 @@ class ProductController extends CrudController
             ),
             'countryOptions' => $this->productEventService->getFrontendCountryOptions(),
             'cityOptions' => $this->productEventService->getFrontendCityOptions(),
+            'i18n' => [
+                'book_now' => __('Book now'),
+            ],
         ]));
     }
 
