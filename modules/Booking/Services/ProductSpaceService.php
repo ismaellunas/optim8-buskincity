@@ -12,8 +12,12 @@ class ProductSpaceService
     public function getSpaceOptions(int $exceptId = null): Collection
     {
         $user = auth()->user();
-        $spaceIds = $user->spaces->pluck('id')->all();
+        $spaceIds = [];
         $spaces = null;
+
+        if ($user->isSpaceManager()) {
+            $spaceIds = $user->spaces->pluck('id')->all();
+        }
 
         if (! empty($spaceIds)) {
             $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $spaceIds)->get();
