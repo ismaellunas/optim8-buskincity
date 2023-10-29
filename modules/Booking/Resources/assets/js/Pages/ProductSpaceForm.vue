@@ -15,7 +15,7 @@
 
         <div style="max-height: 30rem; overflow-y: scroll">
             <template
-                v-for="(option, index) in filteredOptions"
+                v-for="option in filteredOptions"
                 :key="option.id"
             >
                 <biz-dropdown-item
