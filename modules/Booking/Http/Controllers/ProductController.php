@@ -211,7 +211,6 @@ class ProductController extends CrudController
             ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
-            'countryOptions' => $this->countryService->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
@@ -389,7 +388,7 @@ class ProductController extends CrudController
                 'space' => __('Space'),
                 'select_space' => __('Select space'),
                 'select_space_note' => __('The product can only have one space.'),
-                'guidelines' => [
+                'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
                     'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),

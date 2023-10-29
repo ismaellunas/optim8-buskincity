@@ -42,7 +42,9 @@
             <biz-form-fieldset-geo-location
                 v-model:latitude="modelLatitude"
                 v-model:longitude="modelLongitude"
+                :error-key="errorKey"
                 :required="isMapRequired"
+                :error-bag-name="errorBagName"
                 @apply="applyMarker"
             />
         </div>
