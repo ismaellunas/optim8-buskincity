@@ -24,6 +24,7 @@ class DatabaseBasicSeeder extends Seeder
             TranslationSeeder::class,
             UserAndPermissionSeeder::class,
             LanguageSettingSeeder::class,
+            MenuBasicSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();
