@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
     {
         Model::unguard();
 
-        $permissions = collect(ModuleService::permissions());
+        $permissions = ModuleService::permissions();
 
         foreach ($permissions as $permission) {
             Permission::create([

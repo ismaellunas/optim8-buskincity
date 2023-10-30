@@ -10,6 +10,7 @@ use Modules\Booking\Entities\OrderCheckIn;
 use Modules\Booking\Policies\OrderPolicyMixin;
 use Modules\Booking\Policies\ProductPolicyMixin;
 use Modules\Booking\Services\EventService;
+use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Services\SettingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
@@ -30,6 +31,7 @@ class BookingServiceProvider extends ServiceProvider
 
     public $singletons = [
         EventService::class => EventService::class,
+        ProductEventService::class => ProductEventService::class,
         SettingService::class => SettingService::class,
     ];
 
