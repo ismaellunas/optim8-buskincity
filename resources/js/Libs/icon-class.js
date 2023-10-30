@@ -1,4 +1,4 @@
-import icons from "./icon-list.json";
+import icons from "../Json/icon-list.json";
 import { last } from 'lodash';
 
 export function iconFormatter(iconClasses) {
