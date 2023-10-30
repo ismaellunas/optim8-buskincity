@@ -93,7 +93,7 @@ class HandleInertiaRequests extends Middleware
                 return $this->removeSensitiveDataExposure($sharedUserData);
             },
             'userOriginLanguage' => $request->user()->origin_language_code ?? null,
-            'modules' => app(ModuleService::class)->getAllEnabledNames() ?? [],
+            'modules' => app(ModuleService::class)->getEnabledNames() ?? [],
         ]);
     }
 

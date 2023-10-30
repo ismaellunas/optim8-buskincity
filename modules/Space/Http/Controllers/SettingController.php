@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class SettingController extends CrudController
 {
-    protected $title = "Space Setting";
+    protected $title = "Space setting";
 
     public function index()
     {
