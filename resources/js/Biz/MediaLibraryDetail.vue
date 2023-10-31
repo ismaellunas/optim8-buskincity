@@ -300,7 +300,18 @@
             },
 
             saveAsImageConfirm(cropper) {
-                confirmAlert("Are you sure?", "You will create a new image")
+                confirmAlert(
+                    "Are you sure?",
+                    "You will create a new image",
+                    "Yes",
+                    {
+                        customClass: {
+                            container: 'high-z-index',
+                            confirmButton: 'component-configurable',
+                            cancelButton: 'component-configurable',
+                        }
+                    }
+                )
                     .then((result) => result.isConfirmed ? this.saveAsImage(cropper) : false);
             },
 
