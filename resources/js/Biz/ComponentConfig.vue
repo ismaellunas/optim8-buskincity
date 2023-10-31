@@ -128,7 +128,7 @@
                             `../../../modules/${moduleComponent.in_module}/Resources/assets/js/ComponentStructures/${moduleComponent.filename}.js`
                         ));
                     } else {
-                        promises.push(import(`../ComponentStructures/${moduleComponent.filename}.js`));
+                        promises.push(import(`../ComponentStructures/modules/${moduleComponent.filename}.js`));
                     }
                 });
 
