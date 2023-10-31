@@ -113,7 +113,7 @@
             <div class="columns is-multiline is-mobile mt-5">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <h2 class="title is-3">
-                        Event Booking
+                        {{ startCase(i18n.event_booking) }}
                     </h2>
                 </div>
 
@@ -161,7 +161,7 @@
         >
             <template #header>
                 <p class="modal-card-title has-text-weight-bold">
-                    Booking Event Confirmation
+                    {{ startCase(i18n.booking_event_confirmation) }}
                 </p>
 
                 <button
@@ -233,6 +233,7 @@
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
     import { ref, computed } from 'vue';
+    import { startCase } from 'lodash';
 
     export default {
         components: {
@@ -359,6 +360,8 @@
                         }
                     );
             },
+
+            startCase,
         },
     };
 </script>

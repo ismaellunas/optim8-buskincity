@@ -10,7 +10,7 @@ use App\Http\Controllers\CrudController;
 
 class SpaceTypeController extends CrudController
 {
-    protected $title = "Space Type";
+    protected $title = "Space type";
 
     public function __construct()
     {
