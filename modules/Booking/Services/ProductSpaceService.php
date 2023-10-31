@@ -15,7 +15,7 @@ class ProductSpaceService
         $spaceIds = [];
         $spaces = null;
 
-        if ($user->isManagerOnlyAccess()) {
+        if ($user->isSpaceManagerOnlyAccess()) {
             $spaceIds = $user->spaces->pluck('id')->all();
         }
 
