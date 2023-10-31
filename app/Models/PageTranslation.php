@@ -271,4 +271,10 @@ class PageTranslation extends BaseModel implements PublishableInterface
 
         return false;
     }
+
+    public function setAsDraft()
+    {
+        $this->status = self::STATUS_DRAFT;
+        $this->save();
+    }
 }

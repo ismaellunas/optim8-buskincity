@@ -6,6 +6,7 @@ use App\Services\CountryService;
 use App\Helpers\GoogleMap;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -510,5 +511,15 @@ class ProductEventService
                 ];
             })
             ->all();
+    }
+
+    public function getPublishedProducts(): EloquentCollection
+    {
+        return Product::published()->type('Event')->get();
+    }
+
+    public function getManagedProducts(): EloquentCollection
+    {
+        return Product::type('Event')->whereHas('managers')->get();
     }
 }

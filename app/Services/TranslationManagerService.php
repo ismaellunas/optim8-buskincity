@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Translation;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class TranslationManagerService
 {
@@ -12,6 +13,7 @@ class TranslationManagerService
         string $locale = null,
         array $groups = null,
         string $term = null,
+        string $module = null,
         int $perPage = 15
     ): LengthAwarePaginator {
 
@@ -19,7 +21,7 @@ class TranslationManagerService
             $locale = defaultLocale();
         }
 
-        $groupAndKeys = $this->getGroupAndKeys($groups, $term);
+        $groupAndKeys = $this->getGroupAndKeys($groups, $term, $module);
 
         $records = $groupAndKeys->paginate($perPage);
 
@@ -130,25 +132,54 @@ class TranslationManagerService
         );
     }
 
-    public function getGroups(): array
+    public function getGroups(string $module = null): array
     {
+        $moduleGroups = Translation::distinct('group')
+            ->when($module, function ($query, $module) {
+                $query->where('module', $module);
+            }, function ($query) {
+                $query->whereNull('module');
+            })
+            ->get(['group'])
+            ->pluck('group');
+
         return collect(config('constants.translations.groups'))
             ->keys()
+            ->merge($moduleGroups)
+            ->unique()
+            ->filter()
             ->all();
+    }
+
+    public function groupOptions(string $module = null): Collection
+    {
+        return collect($this->getGroups($module))
+            ->map(function ($group) {
+                return [
+                    'id' => $group,
+                    'value' => Str::of($group)->replace('_', ' ')->ucfirst(),
+                ];
+            });
     }
 
     private function getGroupAndKeys(
         array $groups = null,
-        string $term = null
+        string $term = null,
+        string $module = null
     ): Collection {
-        return Translation::select('key', 'group')
+        return Translation::select('key', 'group', 'module')
             ->when($groups, function ($query, $groups) {
                 $query->groups($groups);
             })
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })
-            ->groupBy('key', 'group')
+            ->when($module, function ($query, $module) {
+                $query->where('module', $module);
+            }, function ($query) {
+                $query->whereNull('module');
+            })
+            ->groupBy('key', 'group', 'module')
             ->orderBy('group', 'asc')
             ->get();
     }
@@ -206,7 +237,6 @@ class TranslationManagerService
 
         $groupedKeys = $this->getGroupedKeys($groups, $term);
 
-        $groupedKeys = $this->getGroupedKeys($groups, $term);
         $localeWithReferences = $this->getLocaleWithReferences($locales);
 
         $allTranslations = $this->getTranslations($localeWithReferences, $groups, $term);
@@ -267,12 +297,14 @@ class TranslationManagerService
         string $locale,
         string $group = null,
         bool $replace = false,
-        string $source = null
+        string $source = null,
+        string $module = null
     ): bool {
         $translation = Translation::firstOrNew([
             'locale' => $locale,
             'group'  => $group,
             'key'    => $key,
+            'module' => $module,
         ]);
 
         if ($replace || !$translation->value) {
@@ -284,5 +316,19 @@ class TranslationManagerService
         }
 
         return $translation->save();
+    }
+
+    public function moduleOptions(): Collection
+    {
+        $moduleOptions = Translation::distinct('module')
+            ->whereNotNull('module')
+            ->get(['module'])
+            ->map(fn ($translation) => [
+                'id' => $translation->module,
+                'value' => Str::of($translation->module)->replace('_', ' ')->ucfirst(),
+            ])
+            ->prepend(['id' => null, 'value' => 'No module']);
+
+        return $moduleOptions;
     }
 }

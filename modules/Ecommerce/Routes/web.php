@@ -17,6 +17,7 @@ Route::prefix('admin/ecommerce')->name('admin.ecommerce.')->middleware(array_fil
     'auth:sanctum',
     'can:system.dashboard',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+    'verifyModule:Booking',
 ]))->group(function () {
     Route::prefix('products')->name('products.')->group(function() {
         Route::middleware('can:manageManager,Modules\Ecommerce\Entities\Product')->group(function () {

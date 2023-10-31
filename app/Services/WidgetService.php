@@ -41,7 +41,7 @@ class WidgetService
 
     protected function moduleWidgets(): array
     {
-        $modules = app(ModuleService::class)->getAllEnabledNames();
+        $modules = app(ModuleService::class)->getEnabledNames();
 
         $widgets = [];
 

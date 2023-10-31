@@ -23,10 +23,9 @@ class SitemapService
     private function moduleSitemapClasses(): array
     {
         $classes = [];
-        $modules = app(ModuleService::class)->getModuleListByStatus(true);
 
-        foreach ($modules as $module) {
-            $classes[] = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
+        foreach (app(ModuleService::class)->modules() as $module) {
+            $classes[] = '\\Modules\\'.$module->name.'\\Sitemaps\\Sitemap';
         }
 
         return $classes;

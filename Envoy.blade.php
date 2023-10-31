@@ -90,10 +90,23 @@
     git-push
 @endstory
 
+@story('heroku:populate-data-basic')
+    check-deploy-environment
+    heroku:seed-basic
+@endstory
+
 @task('heroku:migration')
     @if (! $skipMigration)
         heroku run -r {{ $git_remote }} -- php artisan migrate --force
     @endif
+@endtask
+
+@task('heroku:seed-basic')
+    heroku run -r {{ $git_remote }} -- php artisan db:seed --class=DatabaseBasicSeeder --force
+    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=SpaceDatabaseBasicSeeder Space --force
+    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce --force
+    heroku run -r {{ $git_remote }} -- php artisan module:seed Booking --force
+    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder --force
 @endtask
 
 @task('heroku:clean-after-deploy')
@@ -102,7 +115,9 @@
 @endtask
 
 @task('heroku:add-translations')
-    heroku run -r {{ $git_remote }} php artisan fix:translation-source
+    @if (! $skipFixTranslations)
+        heroku run -r {{ $git_remote }} -- php artisan fix:translation-source
+    @endif
 @endtask
 
 @task('heroku:restart')

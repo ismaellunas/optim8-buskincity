@@ -109,13 +109,14 @@ class TranslationManagerController extends CrudController
             $this->getData([
                 'defaultLocale' => $defaultLocale,
                 'referenceLocale' => $this->referenceLocale,
-                'groupOptions' => config('constants.translations.groups'),
+                'groupOptions' => $this->translationManagerService->groupOptions($request->module),
                 'localeOptions' => collect($this->translationService->getLocaleOptions())
                     ->sortBy('name', SORT_NATURAL)
                     ->values()
                     ->all(),
+                'moduleOptions' => $this->translationManagerService->moduleOptions(),
                 'pageQueryParams' => array_filter(
-                    $request->only('locale', 'groups', 'term')
+                    $request->only('locale', 'groups', 'term', 'module')
                 ),
                 'bags' => [
                     'import' => 'translationImport',
@@ -124,6 +125,7 @@ class TranslationManagerController extends CrudController
                     $request->locale,
                     $request->groups,
                     $request->term,
+                    $request->module,
                     $this->recordsPerPage,
                 ),
                 'instructions' => [
@@ -147,6 +149,7 @@ class TranslationManagerController extends CrudController
                     'file' => __('File'),
                     'submit' => __('Submit'),
                     'cancel' => __('Cancel'),
+                    'module' => __('Module'),
                 ],
             ])
         );

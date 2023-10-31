@@ -97,7 +97,7 @@
 
                     @if ($post->author)
                         @php
-                            $authorDescription = $post->author->getTranslatableMeta('short_description', $currentLanguage);
+                            $authorDescription = $post->author->getTranslatableMeta('short_description', $currentLanguage) ?? "";
                             $hasReadMore = (Str::length($authorDescription) > 200);
                         @endphp
                         <div class="box is-shadowless has-background-light mt-6">

@@ -41,11 +41,16 @@ abstract class CrudController extends Controller
 
     protected function getIndexTitle(): string
     {
-        return Str::plural($this->title());
+        return Str::of($this->title())
+            ->plural()
+            ->title()
+            ->value();
     }
 
     protected function title(): string
     {
-        return __($this->title);
+        return Str::title(
+            __($this->title)
+        );
     }
 }
