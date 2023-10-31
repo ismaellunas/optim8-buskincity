@@ -15,9 +15,33 @@ class PageTranslationObserver
         }
     }
 
+    protected function removeFromMenus(PageTranslation $pageTranslation)
+    {
+        if (
+            $pageTranslation->isDirty('status')
+            && $pageTranslation->getOriginal('status') == PageTranslation::STATUS_PUBLISHED
+        ) {
+            $locale = null;
+
+            if ($pageTranslation->page->hasPublishedTranslation) {
+                $locale = $pageTranslation->locale;
+            }
+
+            app(MenuService::class)->removeModelFromMenus(
+                $pageTranslation->page,
+                $locale
+            );
+        }
+    }
+
     public function saved(PageTranslation $pageTranslation)
     {
         $this->flushMenuCache($pageTranslation);
+    }
+
+    public function updated(PageTranslation $pageTranslation)
+    {
+        $this->removeFromMenus($pageTranslation);
     }
 
     public function saving(PageTranslation $pageTranslation)

@@ -15,6 +15,7 @@ class DatabaseBasicSeeder extends Seeder
     public function run()
     {
         $this->call([
+            ModuleSeeder::class,
             GlobalOptionSeeder::class,
             CountrySeeder::class,
             RoleSeeder::class,
