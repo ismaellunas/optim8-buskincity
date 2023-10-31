@@ -161,14 +161,6 @@
             },
         },
 
-        mounted() {
-            const self = this;
-
-            emitter.on('on-save-as-image', () => {
-                self.refreshMediaList();
-            });
-        },
-
         methods: {
             onDeleted() {
                 const self = this;

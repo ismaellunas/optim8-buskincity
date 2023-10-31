@@ -2,7 +2,6 @@ import MixinHasModal from '@/Mixins/HasModal';
 import MixinMediaLibrary from '@/Mixins/MediaLibrary';
 import { acceptedFileGroups } from '@/Libs/defaults';
 import { confirm as confirmAlert } from '@/Libs/alert';
-import { find } from 'lodash';
 
 export default {
     mixins: [
@@ -121,15 +120,5 @@ export default {
         closeEditModal() {
             this.isModalEdit = false;
         },
-
-        refreshMediaListByPageActive() {
-            let url = find(this.media.links, 'active').url ?? null;
-
-            if (url) {
-                this.getMediaList(url);
-            } else {
-                this.refreshMediaList();
-            }
-        }
     },
 }
