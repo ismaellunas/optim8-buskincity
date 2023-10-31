@@ -243,7 +243,7 @@ class ProductController extends CrudController
                     'read' => $user->can('media.read'),
                 ],
                 'space' => [
-                    'viewAny' => $user->can('viewAny', Space::class),
+                    'manageProductSpace' => $user->can('manageProductSpace', Space::class),
                 ],
             ],
             'instructions' => $this->getInstructions(),
