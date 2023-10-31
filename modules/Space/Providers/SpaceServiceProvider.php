@@ -50,7 +50,7 @@ class SpaceServiceProvider extends ServiceProvider
             ;
         });
 
-        User::macro('isSpaceManager', function () {
+        User::macro('isManagerOnlyAccess', function () {
             return $this->spaces->isNotEmpty()
                 && ! $this->can('space.viewAny')
                 && (
