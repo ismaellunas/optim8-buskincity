@@ -70,7 +70,7 @@
                         required
                         :label="i18n.timezone"
                         :message="error('timezone', null, formErrors)"
-                        :tooltip-message="i18n.guidelines.timezone"
+                        :tooltip-message="i18n.tips.timezone"
                     />
                 </div>
             </div>

@@ -228,20 +228,7 @@
             eventStatusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
-            i18n: { type: Object, default: () => ({
-                space: 'Space',
-                event: 'Event',
-                manager: 'Manager',
-                page: 'Page',
-                cancel: 'Cancel',
-                create: 'Create',
-                update: 'Update',
-                are_you_sure: 'Are you sure?',
-                page_preview: 'Page preview',
-                remove_page_confirmation: 'This action will also remove the page on the navigation menu.',
-                yes: 'Yes',
-                choose_manager: 'Choose manager',
-            }) },
+            i18n: { type: Object, default: () => {} },
             typeOptions: { type: Object, default: () => {} },
         },
 
@@ -459,7 +446,7 @@
                         if (await this.isUsedByMenu()) {
                             const confirmResult = await confirmDelete(
                                 this.i18n.are_you_sure,
-                                this.i18n.remove_page_confirmation,
+                                this.i18n.affected_menu_warning,
                                 this.i18n.yes
                             );
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     ErrorLogController,
     LanguageController,
     MediaController,
+    ModuleController,
     PageController,
     PasswordResetLinkController,
     PostController,
@@ -96,7 +97,8 @@ Route::middleware(array_filter([
     Route::post('users/password-reset/send', SendUserPasswordResetEmailController::class)
         ->name('users.password-reset.send');
 
-    Route::resource('/roles', RoleController::class);
+    Route::resource('/roles', RoleController::class)
+        ->except(['show']);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -131,6 +133,38 @@ Route::middleware(array_filter([
     });
 
     Route::name('settings.')->prefix('settings')->group(function () {
+        Route::name('modules.')->prefix('/modules')->middleware('role:Super Administrator')->group(function () {
+            Route::get('/', [ModuleController::class, 'index'])
+                ->name('index');
+
+            Route::post('/update-order', [ModuleController::class, 'updateOrder'])
+                ->name('update-order');
+
+            Route::get('/{module}', [ModuleController::class, 'edit'])
+                ->name('edit');
+
+            Route::put('/{module}', [ModuleController::class, 'update'])
+                ->name('update');
+
+            Route::get('/{module}/navigations', [modulecontroller::class, 'editNavigations'])
+                ->name('navigations.edit');
+
+            Route::put('/{module}/navigations', [ModuleController::class, 'updateNavigations'])
+                ->name('navigations.update');
+
+            Route::post('/{module}/activate', [ModuleController::class, 'activate'])
+                ->name('activate');
+
+            Route::post('/{module}/deactivate', [ModuleController::class, 'deactivate'])
+                ->name('deactivate');
+
+            Route::get('/{module}/confirm-activation', [ModuleController::class, 'confirmActivation'])
+                ->name('confirm-activate');
+
+            Route::get('/{module}/confirm-deactivation', [ModuleController::class, 'confirmDeactivation'])
+                ->name('confirm-deactivate');
+        });
+
         Route::middleware('can:system.language')->group(function () {
             Route::get('/languages', [LanguageController::class, 'edit'])
                 ->name('languages.edit');

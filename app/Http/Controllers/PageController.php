@@ -11,6 +11,7 @@ use App\Models\{
 use App\Services\{
     MediaService,
     MenuService,
+    ModuleService,
     PageService,
     StorageService,
 };
@@ -20,16 +21,15 @@ use Inertia\Inertia;
 
 class PageController extends CrudController
 {
-
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
-    protected $pageService;
     protected $title = "Page";
 
-    public function __construct(PageService $pageService)
-    {
+    public function __construct(
+        private PageService $pageService,
+        private ModuleService $moduleService
+    ) {
         $this->authorizeResource(Page::class, 'page');
-        $this->pageService = $pageService;
     }
 
     /**
@@ -110,6 +110,7 @@ class PageController extends CrudController
                 'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                 'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
             ],
+            'modulePageBuilderComponents' => $this->pageService->getEnabledModuleComponents(),
         ]));
     }
 
@@ -197,6 +198,7 @@ class PageController extends CrudController
                 'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                 'videoMediaLibrary' => MediaService::videoMediaLibraryInstructions(),
             ],
+            'modulePageBuilderComponents' => $this->pageService->getEnabledModuleComponents(),
         ]));
     }
 
@@ -321,6 +323,7 @@ class PageController extends CrudController
                 'duplicate_translation' => __('Duplicate :resource', ['resource' => __('Translation')]),
                 'select_translation' => __('Select :resource', ['resource' => __('Translation')]),
                 'page_preview' => __('Page preview'),
+                'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

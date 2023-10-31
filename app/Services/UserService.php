@@ -153,7 +153,7 @@ class UserService
         });
     }
 
-    public function getRoleOptions(): array
+    public function getRoleOptions(): Collection
     {
         return Role::withoutSuperAdmin()
             ->get(['id', 'name'])
@@ -162,8 +162,7 @@ class UserService
                     'id' => $role->id,
                     'value' => $role->name,
                 ];
-            })
-            ->all();
+            });
     }
 
     public static function hashPassword($password): string

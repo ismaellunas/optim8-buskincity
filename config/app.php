@@ -181,7 +181,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         App\Providers\SocialstreamServiceProvider::class,
         App\Providers\LocalizationServiceProvider::class,
-        Spatie\TranslationLoader\TranslationServiceProvider::class,
+        App\Providers\TranslationServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Axlon\PostalCodeValidation\ValidationServiceProvider::class,
         Webwizo\Shortcodes\ShortcodesServiceProvider::class,

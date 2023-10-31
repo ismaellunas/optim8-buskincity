@@ -1,6 +1,11 @@
 {
-    "Space setting": "Space setting",
-    "Space type": "Space type",
-    "Space": "Space",
-    "Spaces": "Spaces"
+    "//Space": "Space",
+    "//Spaces": "Spaces",
+    "Space setting": ":Space_term.space setting",
+    "Space type": ":Space_term.space type",
+    "Users who are assigned as managers will be unassigned from space module.": "Users who are assigned as managers will be unassigned from :space_term.space module.",
+    "Pages managed by space will be set to draft.": "Pages managed by :space_term.space will be set to draft.",
+    "Events managed by space will be set to draft.": "Events managed by :space_term.space will be set to draft.",
+    "Select space": "Select :space_term.space",
+    "The product can only have one space.": "The product can only have one :space_term.space."
 }

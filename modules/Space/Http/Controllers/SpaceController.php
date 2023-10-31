@@ -4,7 +4,6 @@ namespace Modules\Space\Http\Controllers;
 
 use App\Enums\PublishingStatus;
 use App\Http\Controllers\CrudController;
-use App\Models\Media;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
@@ -24,7 +23,7 @@ class SpaceController extends CrudController
 {
     protected $model = Space::class;
     protected $baseRouteName = 'admin.spaces';
-    protected $title = "Space";
+    protected $title = ":space_term.space";
 
     public function __construct(
         private SpaceService $spaceService,
@@ -79,6 +78,7 @@ class SpaceController extends CrudController
             'records' => $records,
             'pageQueryParams' => (object) array_filter($request->only('term', 'parent', 'types')),
             'typeOptions' => $this->spaceService->typeOptions(),
+            'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
                 'select_parent' => __('Select parent'),
@@ -180,7 +180,7 @@ class SpaceController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => __($this->title)
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
@@ -324,7 +324,7 @@ class SpaceController extends CrudController
         $space->saveFromInputs($inputs);
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => __($this->title)
+            'resource' => $this->title()
         ]);
 
         return back();
@@ -335,7 +335,7 @@ class SpaceController extends CrudController
         $space->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => __($this->title)
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.index');
@@ -371,7 +371,7 @@ class SpaceController extends CrudController
     {
         return [
             ...[
-                'space' => __('Space'),
+                'space' => __(':Space_term.space'),
                 'event' => __('Event'),
                 'manager' => __('Manager'),
                 'page' => __('Page'),
@@ -414,11 +414,11 @@ class SpaceController extends CrudController
                 'meta_title' => __('Meta title'),
                 'meta_description' => __('Meta description'),
                 'page_preview' => __('Page preview'),
-                'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
                 'timezone' => __('Timezone'),
                 'is_same_address_as_parent' => __("Is it the same address as the parent?"),
-                'guidelines' => [
+                'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
+                'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                 ]
             ],

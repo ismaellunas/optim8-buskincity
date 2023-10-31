@@ -417,6 +417,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.settings.cookie-consent.*'),
                             'isEnabled' => $user->can('system.cookie_consent'),
                         ],
+                        [
+                            'title' => __('Module'),
+                            'link' => route('admin.settings.modules.index'),
+                            'isActive' => $request->routeIs('admin.settings.modules.*'),
+                            'isEnabled' => $user->isSuperAdministrator,
+                        ],
                     ],
                 ],
                 [
@@ -478,7 +484,9 @@ class MenuService
         $user = $request->user();
 
         $dropdownRightMenus = [];
-        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie(
+            currentLocale()
+        );
 
         if ($user) {
             $language =  $user->languageCode;
@@ -545,7 +553,9 @@ class MenuService
     {
         $user = $request->user();
 
-        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie(
+            currentLocale()
+        );
 
         if ($user) {
             $language =  $user->languageCode;
@@ -652,10 +662,9 @@ class MenuService
     private function moduleMenuBuilderClasses(): array
     {
         $classes = [];
-        $activeModules = app(ModuleService::class)->getModuleListByStatus();
 
-        foreach ($activeModules as $activeModule) {
-            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuOption';
+        foreach (app(ModuleService::class)->modules() as $activeModule) {
+            $classes[] = '\\Modules\\'. $activeModule->name .'\\Menus\\MenuOption';
         }
 
         return $classes;
@@ -727,20 +736,20 @@ class MenuService
 
     private function moduleMenus(Request $request, $method = 'admin'): array
     {
-        $modules = app(ModuleService::class)->getAllEnabledNames();
+        $methodName = $method.'Menus';
 
         $menus = [];
 
-        foreach ($modules as $module) {
-            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
+        $appModuleService = app(ModuleService::class);
 
-            $methodName = $method.'Menus';
+        $orderedModules = $appModuleService->modules()->sortBy('order');
 
-            if (
-                class_exists($moduleService)
-                && method_exists($moduleService, $methodName)
-            ) {
-                $menus[] = $moduleService::$methodName($request);
+        foreach ($orderedModules as $module) {
+
+            $moduleService = $appModuleService->getServiceClass($module);
+
+            if (method_exists($moduleService, $methodName)) {
+                $menus[] = $moduleService->$methodName($request);
             }
         }
 

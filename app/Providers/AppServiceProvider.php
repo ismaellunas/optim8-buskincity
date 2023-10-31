@@ -12,6 +12,7 @@ use App\Entities\Caches\{
     CountryCache,
     GlobalOptionCache,
     MenuCache,
+    ModuleCache,
     SettingCache,
     TranslationCache
 };
@@ -32,6 +33,7 @@ use App\Services\{
     StripeService,
     StripeSettingService,
     ThemeService,
+    TranslationManagerService,
     TranslationService,
     WidgetService,
 };
@@ -52,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
         CountryCache::class => CountryCache::class,
         GlobalOptionCache::class => GlobalOptionCache::class,
         MenuCache::class => MenuCache::class,
+        ModuleCache::class => ModuleCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
 
@@ -70,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
         SettingService::class => SettingService::class,
         StripeService::class => StripeService::class,
         StripeSettingService::class => StripeSettingService::class,
+        TranslationManagerService::class => TranslationManagerService::class,
         TranslationService::class => TranslationService::class,
         WidgetService::class => WidgetService::class,
 
