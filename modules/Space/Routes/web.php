@@ -25,6 +25,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'verified',
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
+    'verifyModule:Space',
 ])->group(function () {
     Route::resource('spaces', SpaceController::class)
         ->except(['show']);
@@ -73,7 +74,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
 });
 
 Route::prefix(Localization::setLocale())
-    ->middleware(['localizationRedirect', 'adjustOriginLanguage'])
+    ->middleware(['redirectIfModuleIsDisabled:Space', 'localizationRedirect', 'adjustOriginLanguage'])
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->group(function () {
         Route::get(LaravelLocalization::transRoute('frontend.spaces.index'), [FrontendSpaceController::class, 'index'])
@@ -86,7 +87,7 @@ Route::prefix(Localization::setLocale())
 Route::prefix('api/space')
     ->name('api.space.')
     ->withoutMiddleware(HandleInertiaRequests::class)
-    ->middleware('throttle:api')
+    ->middleware(['throttle:api', 'verifyModule:Space'])
     ->group(function () {
         Route::get('space-events/{encryptedSpaceId}', [SpaceEventController::class, 'events'])
             ->name('space-events');

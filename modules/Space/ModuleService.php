@@ -2,37 +2,55 @@
 
 namespace Modules\Space;
 
+use App\Contracts\ManageableModuleInterface;
+use App\Contracts\ToggleableModuleStatusInterface;
 use App\Models\GlobalOption;
+use App\Models\User;
+use App\Services\BaseModuleService;
 use App\Services\StorageService;
-use Illuminate\Http\Request;
+use App\Traits\ActivateableModuleStatus;
+use App\Traits\ManageableModule;
 use Illuminate\Support\Collection;
 use Modules\Space\Entities\Space;
+use Modules\Space\Events\ModuleDeactivated;
 
-class ModuleService
+class ModuleService extends BaseModuleService implements
+    ManageableModuleInterface,
+    ToggleableModuleStatusInterface
 {
-    public static function adminMenus(Request $request): array
-    {
-        $user = $request->user();
-        $canManageSpace = $user->can('viewAny', Space::class);
+    use ManageableModule;
+    use ActivateableModuleStatus;
 
+    public function menuPermissions(User $user): array
+    {
         return [
-            'title' => __("Space"),
-            'isActive' => $request->routeIs('admin.spaces.*'),
-            'isEnabled' => $canManageSpace,
-            'children' => [
-                [
-                    'title' => __('Manage'),
-                    'link' => route('admin.spaces.index'),
-                    'isActive' => $request->routeIs('admin.spaces.index'),
-                    'isEnabled' => $canManageSpace,
-                ],
-                [
-                    'title' => __('Settings'),
-                    'link' => route('admin.spaces.settings.index'),
-                    'isActive' => $request->routeIs('admin.spaces.settings.index'),
-                    'isEnabled' => $user->can('viewAny', GlobalOption::class),
-                ],
+            'admin.spaces.index' => $user->can('viewAny', Space::class),
+            'admin.spaces.settings.index' => $user->can('viewAny', GlobalOption::class),
+        ];
+    }
+
+    public function defaultNavigations(): array
+    {
+        return [
+            [
+                'route' => 'admin.spaces.index',
+                'routeIs' => 'admin.spaces.index',
+                'title' => __('Manage'),
+                'default' => true,
             ],
+            [
+                'route' => 'admin.spaces.settings.index',
+                'routeIs' => 'admin.spaces.settings.index',
+                'title' => __('Settings'),
+                'default' => true,
+            ]
+        ];
+    }
+
+    public function adminPermissions(): array
+    {
+        return [
+            'space.*',
         ];
     }
 
@@ -68,5 +86,25 @@ class ModuleService
     public static function maxParentDepth(): int
     {
         return 2;
+    }
+
+    public function deactivationEventClass(): ?string
+    {
+        return ModuleDeactivated::class;
+    }
+
+    public function deactivationMessages(): array
+    {
+        return [
+            __("All permissions assigned to users for :module module will be unassigned from users in the system.", [
+                'module' => $this->model()->title,
+            ]),
+            __("Users who are assigned as managers will be unassigned from space module."),
+            __("Pages managed by space will be set to draft."),
+            __("Events managed by space will be set to draft."),
+            __("Page builder components currently in use that are related to the :module module will be deleted.", [
+                'module' => $this->model()->title,
+            ]),
+        ];
     }
 }

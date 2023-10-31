@@ -2,13 +2,21 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Permission;
+use App\Services\RoleService;
 use Illuminate\Validation\Rule;
 
 class RoleRequest extends BaseFormRequest
 {
     public function rules()
     {
+        $permissions = [];
+
+        collect(app(RoleService::class)->getPermissionOptions())
+            ->each
+            ->each(function ($perm) use (&$permissions) {
+                $permissions[] = $perm['value'];
+            });
+
         return [
             'name' => [
                 'required',
@@ -17,7 +25,7 @@ class RoleRequest extends BaseFormRequest
             ],
             'permissions' => [
                 'array',
-                Rule::in(Permission::get('name')->pluck('name')->all()),
+                Rule::in($permissions),
             ]
         ];
     }

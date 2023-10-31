@@ -27,6 +27,7 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
     'verified',
     'can:system.dashboard',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+    'verifyModule:Booking',
 ]))->group(function () {
 
     Route::resource('products', ProductController::class)
@@ -62,12 +63,20 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
     Route::get('/orders/{order}/available-times/{date}', [OrderController::class, 'availableTimes'])
         ->name('orders.available-times')
         ->can('rescheduleBooking', 'order');
+
+    Route::middleware('role:'.config('permission.admin_or_super_admin'))->group(function () {
+        Route::get('/settings', 'SettingController@edit')
+            ->name('settings.edit');
+        Route::post('/settings/update', 'SettingController@update')
+            ->name('settings.update');
+    });
 });
 
 Route::prefix('booking')->name('booking.')->middleware(array_filter([
     'auth:sanctum',
     'verified',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromLoginRoute' : null,
+    'verifyModule:Booking',
 ]))->group(function () {
 
     Route::prefix('products')
@@ -125,16 +134,23 @@ Route::prefix('api/booking')
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->middleware('throttle:api')
     ->group(function () {
-        Route::prefix('events-calendar')->name('events-calendar.')->group(function () {
-            Route::get('/', [EventsCalendarController::class, 'index'])
-                ->name('index');
-            Route::get('location-options', [EventsCalendarController::class, 'getLocationOptions'])
-                ->name('location-options');
+
+        Route::prefix('events-calendar')
+            ->name('events-calendar.')
+            ->middleware('verifyModule:Booking,Space,OR')
+            ->group(function () {
+                Route::get('/', [EventsCalendarController::class, 'index'])
+                    ->name('index');
+
+                Route::get('location-options', [EventsCalendarController::class, 'getLocationOptions'])
+                    ->name('location-options');
         });
 
-        Route::get('widget/latest-bookings', [ApiWidgetController::class, 'getLatestBookings'])
-            ->name('widget.latest-bookings');
+        Route::middleware('verifyModule:Booking')->group(function () {
+            Route::get('widget/latest-bookings', [ApiWidgetController::class, 'getLatestBookings'])
+                ->name('widget.latest-bookings');
 
-        Route::get('upcoming-events/{userUniqueKey}', [UpcomingEventController::class, 'events'])
-            ->name('upcoming-events');
+            Route::get('upcoming-events/{userUniqueKey}', [UpcomingEventController::class, 'events'])
+                ->name('upcoming-events');
+        });
 });

@@ -29,7 +29,7 @@ use Modules\Space\Entities\Space;
 
 class ProductController extends CrudController
 {
-    protected $title = "Product";
+    protected $title = ":booking_term.product";
     protected $baseRouteName = "admin.booking.products";
 
     public function __construct(
@@ -183,7 +183,7 @@ class ProductController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
@@ -288,7 +288,7 @@ class ProductController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
@@ -301,7 +301,7 @@ class ProductController extends CrudController
         $product->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         $user->load('products');
@@ -366,8 +366,8 @@ class ProductController extends CrudController
                 'cancel' => __('Cancel'),
                 'create' => __('Create'),
                 'update' => __('Update'),
-                'product' => __('Product'),
-                'event' => __('Event'),
+                'product' => __(':Booking_term.product'),
+                'event' => __(':Booking_term.'),
                 'manager' => __('Manager'),
                 'duration' => __('Duration'),
                 'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),

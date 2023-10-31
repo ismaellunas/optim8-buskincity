@@ -3,12 +3,12 @@
 namespace Modules\Space\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\GlobalOption;
-use App\Services\ModuleService;
 use Illuminate\Support\Arr;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
+use Modules\FormBuilder\ModuleService as FormBuilderModuleService;
 use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService as SpaceModuleService;
 use Modules\Space\Services\SpaceService;
 
 class TotalCitiesWidget implements WidgetInterface
@@ -55,7 +55,7 @@ class TotalCitiesWidget implements WidgetInterface
     public function canBeAccessed(): bool
     {
         return (
-            app(ModuleService::class)->isModuleActive('space')
+            app(SpaceModuleService::class)->isModuleActive()
             && auth()->user()->can('totalSpaceByTypeWidget', [Space::class, $this->cityType])
         );
     }
@@ -83,7 +83,7 @@ class TotalCitiesWidget implements WidgetInterface
     private function moduleResponseForm(): array
     {
         if (
-            ! app(ModuleService::class)->isModuleActive('formbuilder')
+            ! app(FormBuilderModuleService::class)->isModuleActive()
             || ! auth()->user()->can('viewAny', Form::class)
             || ! $this->formId
         ) {
