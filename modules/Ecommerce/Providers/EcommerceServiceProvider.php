@@ -9,10 +9,8 @@ use Lunar\Base\OrderReferenceGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Console\UpgradingLunarRemoveGetCandyTables;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Policies\SpacePolicyMixin;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
-use Modules\Space\Policies\SpacePolicy;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -57,8 +55,6 @@ class EcommerceServiceProvider extends ServiceProvider
                     && ! $this->IsAdministrator
                 );
         });
-
-        SpacePolicy::mixin(new SpacePolicyMixin());
     }
 
     /**
