@@ -20,7 +20,9 @@ class ProductSpaceService
         }
 
         if (! empty($spaceIds)) {
-            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $spaceIds)->get();
+            $spaces = $user
+                ->spaces
+                ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));
         }
 
         $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
