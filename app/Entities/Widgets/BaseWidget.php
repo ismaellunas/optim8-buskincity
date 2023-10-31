@@ -72,8 +72,11 @@ abstract class BaseWidget
 
     public function canBeAccessed(): bool
     {
-        $isEnabled = $this->storedSetting['is_enabled'] ?? true
-            && $this->checkModuleIsActivated();
+        $isEnabled = (
+           ($this->storedSetting['is_enabled'] ?? true)
+            && $this->checkModuleIsActivated()
+        );
+
         $role = $this->storedSetting['setting']['visibility']['role'] ?? [];
 
         if (! empty($role)) {
@@ -100,12 +103,10 @@ abstract class BaseWidget
 
     private function checkModuleIsActivated(): bool
     {
-        $module = $this->storedSetting['module'];
+        $module = $this->storedSetting['module'] ?? null;
 
-        if (! $module) {
-            return true;
-        }
-
-        return app(ModuleService::class)->isModuleActive($module);
+        return (! $module)
+            ? true
+            : app(ModuleService::class)->isModuleActive($module);
     }
 }

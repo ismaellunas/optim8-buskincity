@@ -23,6 +23,7 @@ class CreateTranslationsTable extends Migration {
             $table->text('key');
             $table->text('value')->nullable();
             $table->string('source', 127)->nullable();
+            $table->string('module', 32)->nullable();
             $table->timestamps();
         });
 	}

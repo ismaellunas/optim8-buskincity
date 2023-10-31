@@ -218,4 +218,11 @@ class Page extends Model implements TranslatableContract
 
         return route('frontend.pages.show', $pageTranslationSlug);
     }
+
+    public function getHasPublishedTranslationAttribute(): bool
+    {
+        return $this->translations
+            ->where('status', PageTranslation::STATUS_PUBLISHED)
+            ->isNotEmpty();
+    }
 }

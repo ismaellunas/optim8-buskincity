@@ -88,9 +88,9 @@ class WidgetSeeder extends Seeder
                     ],
                     [
                         'id' => Str::uuid(),
-                        'widget' => "App\Entities\Widgets\DefaultWidget",
+                        'widget' => "Modules\Booking\Widgets\BookProductWidget",
                         'module' => 'Booking',
-                        'title' => 'Book a product',
+                        'title' => 'Book a :booking_term.product',
                         'order' => 4,
                         'grid' => [
                             'desktop' => 6,
@@ -110,7 +110,7 @@ class WidgetSeeder extends Seeder
                         'id' => Str::uuid(),
                         'widget' => "Modules\Booking\Widgets\MyBookingWidget",
                         'module' => 'Booking',
-                        'title' => 'My bookings',
+                        'title' => 'My :booking_term.bookings',
                         'order' => 6,
                         'grid' => [
                             'desktop' => 12,
@@ -119,7 +119,7 @@ class WidgetSeeder extends Seeder
                         ],
                         'setting' => [],
                         'i18n' => [
-                            'product' => 'Product',
+                            'product' => ':Booking_term.product',
                             'city' => 'City',
                             'country' => 'Country',
                             'time' => 'Time',

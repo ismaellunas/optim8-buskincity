@@ -41,11 +41,11 @@ class SettingNotificationController extends CrudController
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'breadcrumbs' => [
                 [
-                    'title' => __('Form Builders'),
+                    'title' => __(':Form_builder_term.form_builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
-                    'title' => __('Edit Form Builder'),
+                    'title' => __('Edit :resource', ['resource' => ':form_builder_term.form_builder']),
                     'url' => route('admin.form-builders.edit', $formBuilder->id),
                 ],
                 [
@@ -91,11 +91,11 @@ class SettingNotificationController extends CrudController
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'breadcrumbs' => [
                 [
-                    'title' => __('Form Builders'),
+                    'title' => __(':Form_builder_term.form_builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
-                    'title' => __('Edit Form Builder'),
+                    'title' => __('Edit :resource', ['resource' => ':form_builder_term.form_builder']),
                     'url' => route('admin.form-builders.edit', $formBuilder->id),
                 ],
                 [
