@@ -414,10 +414,10 @@ class SpaceController extends CrudController
                 'meta_title' => __('Meta title'),
                 'meta_description' => __('Meta description'),
                 'page_preview' => __('Page preview'),
-                'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
                 'timezone' => __('Timezone'),
                 'is_same_address_as_parent' => __("Is it the same address as the parent?"),
+                'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
                 'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                 ]
