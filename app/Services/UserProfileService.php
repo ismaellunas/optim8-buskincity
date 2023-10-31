@@ -6,9 +6,9 @@ use App\Models\{
     Media,
     User
 };
-use App\Services\ModuleService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Modules\Booking\ModuleService;
 
 class UserProfileService
 {
@@ -129,6 +129,6 @@ class UserProfileService
 
     public function isModuleBookingActivated(): bool
     {
-        return app(ModuleService::class)->isModuleActive('Booking');
+        return app(ModuleService::class)->isModuleActive();
     }
 }

@@ -36,14 +36,14 @@
                                         <div class="buttons">
                                             <biz-button-icon
                                                 type="button"
-                                                :icon="icon.arrowUp"
+                                                :icon="icon.up"
                                                 :disabled="index == 0"
                                                 @click="moveSocialMedia('up', index)"
                                             />
 
                                             <biz-button-icon
                                                 type="button"
-                                                :icon="icon.arrowDown"
+                                                :icon="icon.down"
                                                 :disabled="index == (computedSocialMedia.length - 1)"
                                                 @click="moveSocialMedia('down', index)"
                                             />

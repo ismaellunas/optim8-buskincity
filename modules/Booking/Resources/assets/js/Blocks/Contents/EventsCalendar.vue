@@ -7,7 +7,13 @@
 
         <div class="box is-shadowless">
             <div class="columns is-flex is-vcentered">
-                <div class="column">
+                <div class="column is-half has-text-centered">
+                    <div class="box">
+                        <i :class="[icon.mapLocationDot, 'fa-8x']" />
+                    </div>
+                </div>
+
+                <div class="column is-half">
                     <div class="columns">
                         <div class="column">
                             <input
@@ -26,9 +32,10 @@
                                         placeholder="From"
                                         disabled
                                     >
-                                    <span class="icon is-small is-left">
-                                        <biz-icon :icon="iconCalendar" />
-                                    </span>
+                                    <biz-icon
+                                        class="is-small is-left"
+                                        :icon="icon.calendarCirclePlus"
+                                    />
                                 </p>
                             </div>
                         </div>
@@ -42,7 +49,7 @@
                                         disabled
                                     >
                                     <span class="icon is-small is-left">
-                                        <biz-icon :icon="iconCalendar" />
+                                        <biz-icon :icon="icon.calendarCirclePlus" />
                                     </span>
                                 </p>
                             </div>
@@ -56,20 +63,28 @@
                     >
                         <figure class="media-left">
                             <p class="image is-64x64">
-                                <img src="https://bulma.io/images/placeholders/128x128.png">
+                                <img
+                                    class="is-rounded"
+                                    src="https://bulma.io/images/placeholders/128x128.png"
+                                >
                             </p>
                         </figure>
                         <div class="media-content">
                             <div class="content has-text-grey-light">
+                                <strong>Title</strong>
                                 <p>
-                                    <strong>Title</strong>
-                                    <br>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
+                                    Lorem ipsum dolor sit amet, ...
+                                    <br>Proin ornare magna eros, ...
+                                    <br>...
                                 </p>
                             </div>
                         </div>
                     </article>
+                </div>
+            </div>
 
+            <div class="columns">
+                <div class="column">
                     <nav
                         class="mt-4 pagination is-centered is-small"
                         role="navigation"
@@ -104,12 +119,6 @@
                         </ul>
                     </nav>
                 </div>
-
-                <div class="column has-text-centered">
-                    <div class="box">
-                        <i class="fa-light fa-map-location-dot fa-10x" />
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -121,7 +130,7 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizIcon from '@/Biz/Icon.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
-    import { calendarCirclePlus as iconCalendar } from '@/Libs/icon-class';
+    import { calendarCirclePlus, mapLocationDot } from '@/Libs/icon-class';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -148,7 +157,10 @@
             return {
                 config: props.modelValue.config,
                 entity: useModelWrapper(props, emit),
-                iconCalendar,
+                icon: {
+                    calendarCirclePlus,
+                    mapLocationDot
+                },
             };
         },
     }

@@ -3,8 +3,6 @@ export const iconType = 'fa-light';
 export const add = iconFormatter('fa-plus');
 export const angleDown = iconFormatter('fa-angle-down');
 export const angleUp = iconFormatter('fa-angle-up');
-export const arrowDown = iconFormatter('fa-arrow-down');
-export const arrowUp = iconFormatter('fa-arrow-up');
 export const back = iconFormatter('fa-arrow-left');
 export const bars = iconFormatter('fa-bars');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
@@ -20,6 +18,7 @@ export const close = iconFormatter('fa-xmark');
 export const copy = iconFormatter('fa-copy');
 export const crop = iconFormatter('fa-crop');
 export const desktop = iconFormatter('fa-desktop');
+export const down = iconFormatter('fa-arrow-down');
 export const download = iconFormatter('fa-download');
 export const edit = iconFormatter('fa-pen');
 export const ellipsis = iconFormatter('fa-ellipsis-h');
@@ -35,12 +34,14 @@ export const fileVideo = iconFormatter('fa-file-video');
 export const fileWord = iconFormatter('fa-file-word');
 export const flipHorizontal = iconFormatter('fa-arrows-left-right');
 export const flipVertical = iconFormatter('fa-arrows-up-down');
+export const floppyDisk = iconFormatter('fa-floppy-disk');
 export const globe = iconFormatter('fa-globe');
 export const grid = iconFormatter('fa-th');
 export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
 export const list = iconFormatter('fa-th-list');
 export const locationMark = iconFormatter('fa-location-dot');
+export const mapLocationDot = iconFormatter('fa-map-location-dot');
 export const mobile = iconFormatter('fa-mobile');
 export const move = iconFormatter('fa-arrows-alt');
 export const plusCircle = iconFormatter('fa-plus-circle');
@@ -58,7 +59,10 @@ export const sortDown = iconFormatter('fa-sort-down');
 export const sortUp = iconFormatter('fa-sort-up');
 export const suspend = iconFormatter('fa-ban');
 export const tablet = iconFormatter('fa-tablet');
+export const toggleOff = iconFormatter('fa-toggle-off');
+export const toggleOn = iconFormatter('fa-toggle-on');
 export const unsuspend = iconFormatter('fa-hands-helping');
+export const up = iconFormatter('fa-arrow-up');
 export const upload = iconFormatter('fa-upload');
 export const user = iconFormatter('fa-user');
 
@@ -70,8 +74,6 @@ export default {
     add,
     angleDown,
     angleUp,
-    arrowDown,
-    arrowUp,
     back,
     bars,
     bracketCurly,
@@ -87,6 +89,7 @@ export default {
     copy,
     crop,
     desktop,
+    down,
     download,
     edit,
     ellipsis,
@@ -102,12 +105,14 @@ export default {
     fileWord,
     flipHorizontal,
     flipVertical,
+    floppyDisk,
     globe,
     grid,
     idCard,
     image,
     list,
     locationMark,
+    mapLocationDot,
     mobile,
     move,
     plusCircle,
@@ -125,7 +130,10 @@ export default {
     sortUp,
     suspend,
     tablet,
+    toggleOff,
+    toggleOn,
     unsuspend,
+    up,
     upload,
     user,
 }

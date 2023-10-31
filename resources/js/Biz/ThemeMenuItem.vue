@@ -7,14 +7,14 @@
                         <div class="buttons">
                             <biz-button-icon
                                 type="button"
-                                :icon="icon.arrowUp"
+                                :icon="icon.up"
                                 :disabled="isUpButtonDisabled"
                                 @click="$emit('move-menu-item', 'up', menuItemIndex)"
                             />
 
                             <biz-button-icon
                                 type="button"
-                                :icon="icon.arrowDown"
+                                :icon="icon.down"
                                 :disabled="isDownButtonDisabled"
                                 @click="$emit('move-menu-item', 'down', menuItemIndex)"
                             />

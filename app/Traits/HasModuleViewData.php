@@ -9,7 +9,7 @@ trait HasModuleViewData
 {
     protected function getModulesViewData($method = 'Admin'): array
     {
-        $modules = app(ModuleService::class)->getAllEnabledNames();
+        $modules = app(ModuleService::class)->getEnabledNames();
 
         $data = [];
 

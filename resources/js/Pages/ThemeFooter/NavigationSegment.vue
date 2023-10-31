@@ -33,14 +33,14 @@
                                     <div class="buttons">
                                         <biz-button-icon
                                             type="button"
-                                            :icon="icon.arrowUp"
+                                            :icon="icon.up"
                                             :disabled="index == 0"
                                             @click="moveSegment('up', index)"
                                         />
 
                                         <biz-button-icon
                                             type="button"
-                                            :icon="icon.arrowDown"
+                                            :icon="icon.down"
                                             :disabled="index == (computedMenuItems.length - 1)"
                                             @click="moveSegment('down', index)"
                                         />

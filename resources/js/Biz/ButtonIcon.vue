@@ -5,7 +5,9 @@
             :icon="icon"
         />
 
-        <slot />
+        <slot>
+            <span v-if="label">{{ label }}</span>
+        </slot>
     </biz-button>
 </template>
 
@@ -24,6 +26,7 @@
         props: {
             icon: { type: [Array, Object, String], default: '' },
             iconClass: { type: [Array, Object, String], default: '' },
+            label: { type: [String, Number, null], default: '' },
         },
     };
 </script>
