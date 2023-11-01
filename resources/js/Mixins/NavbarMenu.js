@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import { isEmpty } from 'lodash';
 
 function setActiveMenu(e) {
@@ -62,7 +62,7 @@ export default {
 
     methods: {
         switchToTeam(team) {
-            this.$inertia.put(route('current-team.update'), {
+            router.put(route('current-team.update'), {
                 'team_id': team.id
             }, {
                 preserveState: false
@@ -71,7 +71,7 @@ export default {
 
         logout() {
             if (route().current('admin*')) {
-                this.$inertia.post(route('logout'));
+                router.post(route('logout'));
             } else {
                 this.$refs.logout.submit();
             }
