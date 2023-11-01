@@ -52,7 +52,6 @@ export default {
     },
 
     unmounted() {
-        const self = this;
         const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
         for (let i = 0; i < navbarDropdown.length; i++) {
@@ -86,7 +85,6 @@ export default {
         },
 
         eventDropdownMenu() {
-            const self = this;
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
             for (let i = 0; i < navbarDropdown.length; i++) {
