@@ -12,14 +12,9 @@ class ProductSpaceService
     public function getSpaceOptions(int $exceptId = null): Collection
     {
         $user = auth()->user();
-        $spaceIds = [];
         $spaces = null;
 
         if ($user->isSpaceManagerOnlyAccess()) {
-            $spaceIds = $user->spaces->pluck('id')->all();
-        }
-
-        if (! empty($spaceIds)) {
             $spaces = $user
                 ->spaces
                 ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));
