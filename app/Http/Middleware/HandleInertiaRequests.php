@@ -94,6 +94,8 @@ class HandleInertiaRequests extends Middleware
             },
             'userOriginLanguage' => $request->user()->origin_language_code ?? null,
             'modules' => app(ModuleService::class)->getEnabledNames() ?? [],
+            'headerLayout' => $this->settingService->getHeaderLayout(),
+            'socialMediaMenus' => $this->getSocialMediaMenus($request),
         ]);
     }
 
@@ -151,6 +153,22 @@ class HandleInertiaRequests extends Middleware
                 return [];
             } else {
                 return app(MenuService::class)->getFrontendUserFooterMenus($request);
+            }
+        }
+
+        return [];
+    }
+
+    private function getSocialMediaMenus($request): array
+    {
+        $user = $request->user();
+
+        if ($user) {
+            if (
+                ! $request->routeIs('admin.*')
+                && ! $user->can('system.dashboard')
+            ) {
+                return app(MenuService::class)->getSocialMediaMenus($request);
             }
         }
 
