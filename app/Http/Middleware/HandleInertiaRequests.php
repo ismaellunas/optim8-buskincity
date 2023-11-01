@@ -145,15 +145,12 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
-        if ($user) {
-            if (
-                $request->routeIs('admin.*')
-                && $user->can('system.dashboard')
-            ) {
-                return [];
-            } else {
-                return app(MenuService::class)->getFrontendUserFooterMenus($request);
-            }
+        if (
+            $user
+            && ! $request->routeIs('admin.*')
+            && ! $user->can('system.dashboard')
+        ) {
+            return app(MenuService::class)->getFrontendUserFooterMenus($request);
         }
 
         return [];
@@ -163,13 +160,12 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
-        if ($user) {
-            if (
-                ! $request->routeIs('admin.*')
-                && ! $user->can('system.dashboard')
-            ) {
-                return app(MenuService::class)->getSocialMediaMenus($request);
-            }
+        if (
+            $user
+            && ! $request->routeIs('admin.*')
+            && ! $user->can('system.dashboard')
+        ) {
+            return app(MenuService::class)->getSocialMediaMenus($request);
         }
 
         return [];
