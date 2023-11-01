@@ -18,22 +18,25 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Space\Entities\Space;
 
 class ProductController extends CrudController
 {
-    protected $title = "Product";
+    protected $title = ":booking_term.product";
     protected $baseRouteName = "admin.booking.products";
 
     public function __construct(
         private ProductService $productService,
         private ProductEventService $productEventService,
-        private CountryService $countryService
+        private ProductSpaceService $productSpaceService,
+        private CountryService $countryService,
     ) {
         $this->authorizeResource(Product::class, 'product');
     }
@@ -180,7 +183,7 @@ class ProductController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
@@ -194,6 +197,8 @@ class ProductController extends CrudController
 
         $product->load('eventSchedule.weeklyHours.times');
 
+        $formSpace = $this->productSpaceService->formResource($product);
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
                 [
@@ -206,7 +211,6 @@ class ProductController extends CrudController
             ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
-            'countryOptions' => $this->countryService->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
@@ -238,12 +242,17 @@ class ProductController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
                 ],
+                'space' => [
+                    'manageProductSpace' => $user->can('manageProductSpace', Space::class),
+                ],
             ],
             'instructions' => $this->getInstructions(),
             'i18n' => $this->translationCreateEditPage(),
             'dimensions' => [
                 'gallery' => config('constants.dimensions.gallery'),
             ],
+            'space' => $formSpace,
+            'spaceOptions' => $this->productSpaceService->getSpaceOptions($formSpace['id']),
         ]));
     }
 
@@ -279,7 +288,7 @@ class ProductController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
@@ -292,7 +301,7 @@ class ProductController extends CrudController
         $product->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         $user->load('products');
@@ -357,8 +366,8 @@ class ProductController extends CrudController
                 'cancel' => __('Cancel'),
                 'create' => __('Create'),
                 'update' => __('Update'),
-                'product' => __('Product'),
-                'event' => __('Event'),
+                'product' => __(':Booking_term.product'),
+                'event' => __(':Booking_term.'),
                 'manager' => __('Manager'),
                 'duration' => __('Duration'),
                 'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),
@@ -376,11 +385,14 @@ class ProductController extends CrudController
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
-                'guidelines' => [
+                'space' => __('Space'),
+                'select_space' => __('Select space'),
+                'select_space_note' => __('The product can only have one space.'),
+                'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
                     'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),
-                ]
+                ],
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

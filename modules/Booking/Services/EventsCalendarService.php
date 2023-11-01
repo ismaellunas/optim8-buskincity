@@ -5,7 +5,6 @@ namespace Modules\Booking\Services;
 use App\Models\User;
 use App\Services\CountryService;
 use App\Services\IPService;
-use App\Services\ModuleService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -13,7 +12,9 @@ use Illuminate\Support\Str;
 use KMLaravel\GeographicalCalculator\Classes\Geo;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\EventCalendar;
+use Modules\Booking\ModuleService as BookingModuleService;
 use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService as SpaceModuleService;
 
 class EventsCalendarService
 {
@@ -49,14 +50,13 @@ class EventsCalendarService
 
     private function availableTypes(): array
     {
-        $moduleService = app(ModuleService::class);
         $types = [];
 
-        if ($moduleService->isModuleActive('Booking')) {
+        if (app(BookingModuleService::class)->isModuleActive()) {
             $types[] = 'booked_event';
         }
 
-        if ($moduleService->isModuleActive('Space')) {
+        if (app(SpaceModuleService::class)->isModuleActive()) {
             $types[] = 'space_event';
         }
 
@@ -329,5 +329,13 @@ class EventsCalendarService
         }
 
         return (float) $this->defaultZoom();
+    }
+
+    public function isEnabled(): bool
+    {
+        return (
+            app(BookingModuleService::class)->isModuleActive()
+            || app(SpaceModuleService::class)->isModuleActive()
+        );
     }
 }

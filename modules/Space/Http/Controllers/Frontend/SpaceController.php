@@ -102,33 +102,48 @@ class SpaceController extends Controller
 
     private function showGuest(PageTranslation $pageTranslation)
     {
-        $slug = $pageTranslation->slug;
-
-        if ($pageTranslation->locale != $this->locale) {
-            $pageTranslation = $this->page->translate($this->locale, true);
-        }
+        $locale = $this->locale;
+        $page = $this->page;
 
         if (
-            $pageTranslation
-            && !$pageTranslation->isDraft
+            ! $page->hasTranslation($locale)
+            || ! $page->translate($locale)->isPublished
         ) {
-            return $this->redirectOrShowPage($pageTranslation, $slug);
+            return $this->goToPageWithDefaultLocaleOrFallback($page);
+        }
+
+        return $this->redirectOrShowPage($pageTranslation);
+    }
+
+    private function goToPageWithDefaultLocaleOrFallback(Page $page)
+    {
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
+
+        if (
+            $page->hasTranslation($defaultLocale)
+            && $page->translate($defaultLocale)->isPublished
+        ) {
+
+            return $this->showPage($page->translate($defaultLocale));
+
         }
 
         throw new PageNotFoundException();
     }
 
-    private function redirectOrShowPage(
-        PageTranslation $pageTranslation,
-        string $oldSlug
-    ) {
-        if ($pageTranslation->slug === $oldSlug) {
-            return $this->showPage($pageTranslation);
+    private function redirectOrShowPage(PageTranslation $pageTranslation)
+    {
+        $locale = $this->locale;
+        $oldSlug = $pageTranslation->slug;
+        $page = $this->page;
+
+        if ($page->translate($locale)->slug !== $oldSlug) {
+            return redirect()->route('frontend.spaces.show', [
+                $page->translate($locale)->slug
+            ]);
         }
 
-        return redirect()->route('frontend.spaces.show', [
-            $pageTranslation->slug
-        ]);
+        return $this->showPage($pageTranslation);
     }
 
     private function showPage(PageTranslation $pageTranslation)

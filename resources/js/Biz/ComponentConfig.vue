@@ -68,15 +68,14 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
     import configs from '@/ComponentStructures/configs';
-    import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import { camelCase, merge, forEach } from 'lodash';
     import { close as iconClose } from '@/Libs/icon-class';
+    import { computed, reactive, onBeforeMount } from 'vue';
     import { defineAsyncComponent } from 'vue';
-    import { isBlank } from '@/Libs/utils';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
-
         components: {
             BizButtonIcon,
             BizCard,
@@ -102,31 +101,58 @@
         },
 
         setup(props, { emit }) {
+            const moduleConfigs = reactive({});
+
             const entity = useModelWrapper(props, emit);
 
-            let allConfig = merge(configs, moduleConfigs);
-            let componentConfig = allConfig[ camelCase(entity.value.componentName) ];
+            const allConfigs = computed(() => merge(configs, moduleConfigs));
 
-            for (const [groupKey, group] of Object.entries(componentConfig)) {
-                for (const [key, value] of Object.entries(group)) {
-                    if (entity.value.config[groupKey] === undefined) {
-                        entity.value.config[groupKey] = {};
+            onBeforeMount(async () => {
+                const promises = [];
+
+                forEach(usePage().props.modulePageBuilderComponents, (moduleComponent) => {
+                    if (moduleComponent?.in_module) {
+                        promises.push(import(
+                            `../../../modules/${moduleComponent.in_module}/Resources/assets/js/ComponentStructures/${moduleComponent.filename}.js`
+                        ));
+                    } else {
+                        promises.push(import(`../ComponentStructures/modules/${moduleComponent.filename}.js`));
+                    }
+                });
+
+                const components = await Promise.all(promises);
+
+                if (components) {
+                    forEach(components, (component) => {
+                        moduleConfigs[camelCase(component.default.componentName)] = component.config;
+                    })
+                }
+
+                const componentConfig = allConfigs.value[camelCase(entity.value.componentName)];
+
+                for (const [groupKey, group] of Object.entries(componentConfig)) {
+                    for (const [key, value] of Object.entries(group)) {
+                        if (entity.value.config[groupKey] === undefined) {
+                            entity.value.config[groupKey] = {};
+                        }
                     }
                 }
-            }
+            });
 
             return {
-                entity,
-                computedStructure: useModelWrapper(props, emit, 'structure'),
+                allConfigs,
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                computedStructure: useModelWrapper(props, emit, 'structure'),
+                entity,
                 iconClose,
+                isBlank,
+                moduleConfigs,
             };
         },
 
         computed: {
             configOptions() {
-                let componentConfigs = merge(configs, moduleConfigs);
-                return componentConfigs[ camelCase(this.entity.componentName) ];
+                return this.allConfigs[ camelCase(this.entity.componentName) ];
             },
 
             numberOfOptions() {
@@ -135,8 +161,6 @@
         },
 
         methods: {
-            isBlank: isBlank,
-
             onClickHeaderCard(isContentShown, index) {
                 const self = this;
 

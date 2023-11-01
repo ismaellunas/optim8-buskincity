@@ -20,15 +20,8 @@ use Illuminate\Support\Facades\Vite;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
 
-class SettingService
+class SettingService extends BaseSettingService
 {
-    private static function getKey(string $key): string
-    {
-        return app(SettingCache::class)->remember($key, function () use ($key) {
-            return Setting::key($key)->value('value') ?? "";
-        });
-    }
-
     public function saveKey(string $key, mixed $value, string $group = null): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
@@ -279,9 +272,17 @@ class SettingService
 
     public function getLogoMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting(
-            config("constants.theme_header.header_logo_media.key")
+        return $this->staticRemember(
+            'logo_media',
+            fn () => $this->getMediaFromSetting(
+                config("constants.theme_header.header_logo_media.key")
+            )
         );
+    }
+
+    public function getLogoForMediaLibrary(): ?Media
+    {
+        $media = $this->getLogoMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -497,7 +498,15 @@ class SettingService
 
     public function getQrCodePublicPageLogoMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
+        return $this->staticRemember(
+            'qr_code_public_page_logo_media',
+            fn () => $this->getMediaFromSetting('qrcode_public_page_logo_media_id')
+        );
+    }
+
+    public function getQrCodePublicPageLogoForMediaLibrary(): ?Media
+    {
+        $media = $this->getQrCodePublicPageLogoMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -528,7 +537,15 @@ class SettingService
 
     public function getFaviconMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('favicon_media_id');
+        return $this->staticRemember(
+            'favicon_media',
+            fn () => $this->getMediaFromSetting('favicon_media_id')
+        );
+    }
+
+    public function getFaviconForMediaLibrary(): ?Media
+    {
+        $media = $this->getFaviconMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -837,7 +854,15 @@ class SettingService
 
     public function getPostThumbnailMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
+        return $this->staticRemember(
+            'post_thumbnail_media',
+            fn () => $this->getMediaFromSetting('post_thumbnail_media_id')
+        );
+    }
+
+    public function getPostThumbnailForMediaLibrary(): ?Media
+    {
+        $media = $this->getPostThumbnailMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -848,7 +873,15 @@ class SettingService
 
     public function getOpenGraphMedia(): ?Media
     {
-        $media = $this->getMediaFromSetting('open_graph_media_id');
+       return $this->staticRemember(
+            'open_graph_media',
+            fn () => $this->getMediaFromSetting('open_graph_media_id')
+        );
+    }
+
+    public function getOpenGraphForMediaLibrary(): ?Media
+    {
+        $media = $this->getOpenGraphMedia();
 
         if ($media) {
             $media->transformMediaLibrary();
@@ -881,15 +914,6 @@ class SettingService
     public function getFrontendWidgetLists(): array
     {
         return $this->getArrayValueByKey('dashboard_widget');
-    }
-
-    public function getArrayValueByKey(string $key): array
-    {
-        $value = $this->getKey($key);
-
-        return is_null($value) || $value == ""
-            ? []
-            : json_decode($value, TRUE);
     }
 
     public function getPublicPageProfileSlugType(): string

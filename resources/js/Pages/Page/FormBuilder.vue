@@ -159,14 +159,13 @@
     import BizCard from '@/Biz/Card.vue';
     import BizComponentConfig from '@/Biz/ComponentConfig.vue';
     import BlockColumns from '@/Blocks/Columns.vue';
-    import ModuleComponentStructures from '@/Modules/ComponentStructures';
     import ComponentStructures from '@/ComponentStructures';
-    import blockColumns from '@/ComponentStructures/columns';
     import Draggable from "vuedraggable";
-    import { cloneDeep, isEmpty } from 'lodash';
+    import blockColumns from '@/ComponentStructures/columns';
+    import { cloneDeep, each, has, isEmpty, map } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { isModuleActive } from '@/Libs/module';
-    import { pascalCase } from 'change-case';
+    import { reactive } from "vue";
+    import { usePage } from '@inertiajs/vue3';
     import {
         isBlank,
         generateElementId,
@@ -206,6 +205,7 @@
             return {
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 data: useModelWrapper(props, emit),
+                moduleComponents: reactive({}),
             };
         },
 
@@ -215,26 +215,16 @@
                 isDebugMode: false,
             };
         },
+
         computed: {
             availableComponents() {
-                let components = [];
-                for (const property in ComponentStructures) {
-                    components.push(ComponentStructures[property]);
-                }
-
-                return components;
+                return map(ComponentStructures, (property) => property);
             },
+
             availableModuleComponents() {
-                let components = [];
-
-                for (const property in ModuleComponentStructures) {
-                    if (isModuleActive(pascalCase(property))) {
-                        components.push(ModuleComponentStructures[property]);
-                    }
-                }
-
-                return components;
+                return map(this.moduleComponents, (component) => component);
             },
+
             availableBlocks() {
                 const maxColumnNumber = 6;
                 let blocks = [];
@@ -284,6 +274,28 @@
                     && isEmpty(this.data.structures);
             },
         },
+
+        beforeMount() {
+            each(usePage().props.modulePageBuilderComponents, async (blockOption) => {
+                let component = null;
+                let filename = null;
+
+                if (blockOption?.in_module) {
+                    component = await import(
+                        `../../../../modules/${blockOption.in_module}/Resources/assets/js/ComponentStructures/${blockOption.filename}.js`
+                    );
+                } else {
+                    component = await import(`../../ComponentStructures/modules/${blockOption.filename}.js`);
+                }
+
+                if (component) {
+                    const componentName = (component.default.componentName);
+
+                    this.moduleComponents[componentName] = component.default;
+                }
+            });
+        },
+
         created() {
             // NOTE fix page.data
             if (!this.data?.media) {
@@ -407,7 +419,10 @@
             onClickHeaderCard(isContentShown, index) {
                 if (isContentShown) {
                     for (let i = 0; i < 3; i++) {
-                        if (i != index) {
+                        if (
+                            i != index
+                            && has(this.$refs, [`component-${i}`, 'isContentShown'])
+                        ) {
                             this.$refs[`component-${i}`].isContentShown = false;
                         }
                     }

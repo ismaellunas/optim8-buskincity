@@ -6,7 +6,7 @@
                 type="number"
                 step="any"
                 :label="i18n.latitude"
-                :message="error(mergedErrorKey.latitude, null, errorBag)"
+                :message="error(mergedErrorKey.latitude, errorBagName, errorBag)"
                 :required="required"
             />
         </div>
@@ -37,7 +37,7 @@
                 type="number"
                 step="any"
                 :label="i18n.longitude"
-                :message="error(mergedErrorKey.longitude, null, errorBag)"
+                :message="error(mergedErrorKey.longitude, errorBagName, errorBag)"
                 :required="required"
             />
         </div>
@@ -125,7 +125,8 @@
             longitude: { type: [Number, String, null], default: null },
             googleApiKey: { type: String, default: null },
             required: { type: Boolean, default: false },
-            errorBag: { type: Object, default: () => {} },
+            errorBag: { type: [Object, null], default: null },
+            errorBagName: { type: [String, null], default: 'default' },
             errorKey: { type: Object, default: () => {} },
             textApply: { type: String, default: 'Apply'},
             textCancel: { type: String, default: 'Cancel'},
