@@ -285,7 +285,7 @@
                         `../../../../modules/${blockOption.in_module}/Resources/assets/js/ComponentStructures/${blockOption.filename}.js`
                     );
                 } else {
-                    component = await import(`../../ComponentStructures/${blockOption.filename}.js`);
+                    component = await import(`../../ComponentStructures/modules/${blockOption.filename}.js`);
                 }
 
                 if (component) {
