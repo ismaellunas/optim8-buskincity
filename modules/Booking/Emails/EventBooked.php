@@ -68,7 +68,7 @@ class EventBooked extends Mailable
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
                 'template' => Purifier::clean($template, 'email'),
-                'timezone' => $schedule->timezone,
+                'timezone' => $schedule->displayTimezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
             ]);
     }
