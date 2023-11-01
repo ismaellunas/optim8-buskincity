@@ -79,4 +79,16 @@ class ProductSpaceService
             'id' => $space->id ?? null,
         ];
     }
+
+    public function unAssignSpaceFromProducts(): void
+    {
+        $products = Product::where('productable_type', 'Modules\Space\Entities\Space')->get();
+
+        foreach ($products as $product) {
+            $product->productable_type = null;
+            $product->productable_id = null;
+
+            $product->save();
+        }
+    }
 }
