@@ -26,7 +26,7 @@
                 <biz-button-icon
                     v-if="isImage"
                     :class="[actionClass, 'is-info']"
-                    icon="fas fa-expand"
+                    :icon="icon.expand"
                     title="Preview"
                     type="button"
                     @click="$emit('on-preview-clicked', medium)"
@@ -34,7 +34,7 @@
                 <biz-button-icon
                     v-if="isEditEnabled"
                     :class="[actionClass, 'is-primary']"
-                    icon="fas fa-pen"
+                    :icon="icon.edit"
                     title="Edit"
                     type="button"
                     @click="$emit('on-edit-clicked', medium)"
@@ -42,7 +42,7 @@
                 <biz-button-icon
                     v-if="isDeleteEnabled"
                     :class="[actionClass, 'is-danger']"
-                    icon="far fa-trash-alt"
+                    :icon="icon.remove"
                     title="Delete"
                     type="button"
                     @click="$emit('on-delete-clicked', medium)"
@@ -70,6 +70,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
     import { isEmpty } from 'lodash';
+    import { expand, edit, remove } from '@/Libs/icon-class';
 
     export default {
         name: 'MediaListItem',
@@ -103,8 +104,9 @@
             'on-preview-clicked',
         ],
 
-        data() {
+        setup() {
             return {
+                icon: { expand, edit, remove },
                 actionClass: "is-borderless is-shadowless is-inverted",
             };
         },
