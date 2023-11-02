@@ -176,15 +176,15 @@
 
             <biz-table is-fullwidth>
                 <tr>
-                    <th><biz-icon :icon="bookingIcon.duration" /></th>
+                    <th><biz-icon :icon="icon.duration" /></th>
                     <td>{{ event.duration }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="bookingIcon.timezone" /></th>
+                    <th><biz-icon :icon="icon.timezone" /></th>
                     <td>{{ event.timezone }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="bookingIcon.calendar" /></th>
+                    <th><biz-icon :icon="icon.calendar" /></th>
                     <td><b>{{ bookedAt }}</b></td>
                 </tr>
             </biz-table>
@@ -227,12 +227,12 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import bookingIcon from '@booking/Libs/booking-icon';
     import moment from 'moment';
+    import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/vue3';
     import { ref } from 'vue';
     import { startCase } from 'lodash';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -281,7 +281,7 @@
             };
 
             return {
-                bookingIcon,
+                icon: { calendar, duration, timezone },
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),

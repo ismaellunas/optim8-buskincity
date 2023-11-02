@@ -20,15 +20,15 @@
 
         <biz-table is-fullwidth>
             <tr>
-                <th><biz-icon :icon="bookingIcon.duration" /></th>
+                <th><biz-icon :icon="icon.duration" /></th>
                 <td>{{ event.duration }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="bookingIcon.timezone" /></th>
+                <th><biz-icon :icon="icon.timezone" /></th>
                 <td>{{ event.timezone }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="bookingIcon.calendar" /></th>
+                <th><biz-icon :icon="icon.calendar" /></th>
                 <td>{{ event.start_end_time }}, {{ event.date }}</td>
             </tr>
         </biz-table>
@@ -70,9 +70,9 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTable from '@/Biz/Table.vue';
-    import bookingIcon from '@booking/Libs/booking-icon';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { capitalCase } from 'change-case';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
@@ -105,7 +105,7 @@
 
         setup(props, { emit }) {
             return {
-                bookingIcon,
+                icon: { calendar, duration, timezone },
                 message: useModelWrapper(props, emit),
             };
         },

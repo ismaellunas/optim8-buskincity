@@ -176,7 +176,7 @@ class SettingService extends BaseSettingService
             ->all();
     }
 
-    public function getKeys()
+    public function getKeys(): array
     {
         $keys = $this->getSettingsByGroup('key.', true);
         $defaultKeys = collect(config('constants.settings.keys'));
@@ -633,6 +633,12 @@ class SettingService extends BaseSettingService
     public function getTinyMCEKey(): string
     {
         return $this->getKey('tinymce_api_key');
+    }
+
+    public function getFontawesomeKitName(): string
+    {
+        $kitName = $this->getKey('fontawesome_kit_name');
+        return !empty($kitName) ? $kitName : env('FONTAWESOME_KIT_NAME', "");
     }
 
     public function getDomainRedirections(): array
