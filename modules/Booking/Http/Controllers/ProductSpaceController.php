@@ -9,7 +9,7 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductSpaceController extends CrudController
 {
-    protected $title = ':Booking_term.product :space_term.space';
+    protected $title = ':Space_term.space';
 
     public function update(ProductSpaceRequest $request, Product $product)
     {
