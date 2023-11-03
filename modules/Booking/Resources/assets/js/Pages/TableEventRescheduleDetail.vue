@@ -1,15 +1,15 @@
 <template>
     <biz-table is-fullwidth>
         <tr>
-            <th><biz-icon :icon="bookingIcon.duration" /></th>
+            <th><biz-icon :icon="icon.duration" /></th>
             <td>{{ event.duration }}</td>
         </tr>
         <tr>
-            <th><biz-icon :icon="bookingIcon.calendar" /></th>
+            <th><biz-icon :icon="icon.calendar" /></th>
             <td>{{ event.start_end_time }}, {{ event.date }}</td>
         </tr>
         <tr>
-            <th><biz-icon :icon="bookingIcon.timezone" /></th>
+            <th><biz-icon :icon="icon.timezone" /></th>
             <td>{{ event.display_timezone }}</td>
         </tr>
     </biz-table>
@@ -18,7 +18,7 @@
 <script>
     import BizIcon from '@/Biz/Icon.vue';
     import BizTable from '@/Biz/Table.vue';
-    import bookingIcon from '@booking/Libs/booking-icon';
+    import { calendar, duration, timezone } from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -33,7 +33,7 @@
 
         setup() {
             return {
-                bookingIcon,
+                icon: { calendar, duration, timezone },
             };
         },
     };

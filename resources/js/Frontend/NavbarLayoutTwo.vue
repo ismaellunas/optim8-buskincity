@@ -5,7 +5,7 @@
         aria-label="main navigation"
     >
         <div class="container">
-            <div class="navbar-brand">
+            <div class="navbar-brand is-hidden-desktop">
                 <a
                     class="navbar-item"
                     :href="navLogo.link"
@@ -82,8 +82,7 @@
 
                         <div class="level-item">
                             <a
-                                id="logo"
-                                class="navbar-item force-center"
+                                class="navbar-item force-center is-hidden-touch"
                                 :href="navLogo.link"
                             >
                                 <img :src="logoUrl">
@@ -182,7 +181,7 @@
                     </template>
                 </div>
 
-                <div class="navbar-end">
+                <div class="navbar-end navbar-end-layout-2">
                     <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2">
                         <a class="navbar-link">
                             {{ $page.props.user.full_name }}
@@ -272,41 +271,3 @@
         },
     }
 </script>
-
-<style>
-    @media screen and (min-width: 1024px){
-        .navbar-brand{
-            display: none;
-        }
-    }
-
-    .navbar-center{
-        flex-grow: 1;
-        justify-content: center;
-        text-align: center;
-        display: flex;
-    }
-
-    @media screen and (max-width: 1023px){
-        #logo{
-            display: none;
-        }
-        .force-center{
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
-
-
-    @media screen and (min-width: 1024px){
-        .navbar-brand{
-            display: none;
-        }
-        .navbar-end {
-            padding: 20px;
-            right: 0;
-            position: absolute;
-        }
-    }
-</style>

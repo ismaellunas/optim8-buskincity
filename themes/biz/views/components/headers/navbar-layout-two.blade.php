@@ -2,7 +2,7 @@
 
 <nav class="navbar has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="container">
-        <div class="navbar-brand">
+        <div class="navbar-brand is-hidden-desktop">
             <a class="navbar-item" href="{{ $menus['navLogo']['link'] }}">
                 <figure class="image">
                     <x-image
@@ -84,8 +84,7 @@
 
                     <div class="level-item">
                         <a
-                            id="logo"
-                            class="navbar-item force-center"
+                            class="navbar-item force-center is-hidden-touch"
                             href="{{ $menus['navLogo']['link'] }}"
                         >
                             <figure class="image">
@@ -141,7 +140,7 @@
                 </div>
             </div>
 
-            <div class="navbar-end is-hidden-touch">
+            <div class="navbar-end navbar-end-layout-2 is-hidden-touch">
                 @guest
                     <div class="navbar-item">
                         <div class="buttons">
@@ -229,7 +228,7 @@
                 @endforeach
             </div>
 
-            <div class="navbar-end is-hidden-desktop">
+            <div class="navbar-end navbar-end-layout-2 is-hidden-desktop">
                 @guest
                     <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                         <a href="#" class="navbar-link">{{ strtoupper($currentLanguage) }}</a>
@@ -304,44 +303,4 @@
         document.getElementById('form-logout').submit();
     }
 </script>
-@endpush
-
-@push('bottom_styles')
-<style>
-    @media screen and (min-width: 1024px){
-        .navbar-brand{
-            display: none;
-        }
-    }
-
-    .navbar-center{
-        flex-grow: 1;
-        justify-content: center;
-        text-align: center;
-        display: flex;
-    }
-
-    @media screen and (max-width: 1023px){
-        #logo{
-            display: none;
-        }
-        .force-center{
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
-
-
-    @media screen and (min-width: 1024px){
-        .navbar-brand{
-            display: none;
-        }
-        .navbar-end {
-            padding: 20px;
-            right: 0;
-            position: absolute;
-        }
-    }
-</style>
 @endpush
