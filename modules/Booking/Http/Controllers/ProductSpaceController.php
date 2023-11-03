@@ -9,7 +9,7 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductSpaceController extends CrudController
 {
-    protected $title = 'Product Space';
+    protected $title = ':Space_term.space';
 
     public function update(ProductSpaceRequest $request, Product $product)
     {
@@ -26,7 +26,7 @@ class ProductSpaceController extends CrudController
         $product->save();
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title
+            'resource' => $this->title()
         ]);
 
         return back();

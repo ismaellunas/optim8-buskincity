@@ -121,6 +121,10 @@ class ModuleService extends BaseModuleService implements
             __("Page builder components currently in use that are related to the :module module will be deleted.", [
                 'module' => $this->model()->title,
             ]),
+            __("Spaces will be unassigned from the :resource in the :module module.", [
+                'resource' => __(':booking_term.products'),
+                'module' => $this->model()->title,
+            ])
         ];
     }
 }

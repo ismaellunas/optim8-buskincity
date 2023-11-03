@@ -11,6 +11,7 @@ use App\Services\StorageService;
 use App\Traits\ActivateableModuleStatus;
 use App\Traits\ManageableModule;
 use Illuminate\Support\Collection;
+use Modules\Booking\ModuleService as BookingModuleService;
 use Modules\Space\Entities\Space;
 use Modules\Space\Events\ModuleDeactivated;
 
@@ -105,6 +106,10 @@ class ModuleService extends BaseModuleService implements
             __("Page builder components currently in use that are related to the :module module will be deleted.", [
                 'module' => $this->model()->title,
             ]),
+            __("Spaces will be unassigned from the :resource in the :module module.", [
+                'resource' => __(':booking_term.products'),
+                'module' => app(BookingModuleService::class)->model()->title,
+            ])
         ];
     }
 }
