@@ -62,7 +62,7 @@ class EventReminder extends Mailable
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),
                 'productName' => $productName,
                 'startedTime' => $eventDateTime->format('H:i'),
-                'timezone' => $schedule->timezone,
+                'timezone' => $schedule->displayTimezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
             ]);
     }

@@ -46,5 +46,8 @@
     "Reschedule event": "Reschedule :booking_term.event",
     "The event has been rescheduled!": "The :booking_term.event has been rescheduled!",
     "Event booking": "Event :booking_term.booking",
-    "Booking event confirmation": ":Booking_term.booking :booking_term.event confirmation"
+    "Booking event confirmation": ":Booking_term.booking :booking_term.event confirmation",
+    "Specify the available event hours that can be booked by performers on a weekly basis.": "Specify the available event hours that can be booked by performers on a weekly basis.",
+    "Book this :typeName": "Book this :typeName",
+    "Already in use in :product": "Already in use in :product"
 }

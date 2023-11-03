@@ -1,131 +1,227 @@
 [
     {
         "name": "500px",
-        "class": "fa-brands fa-500px"
+        "class": "fa-brands fa-500px",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "accessible icon",
-        "class": "fa-brands fa-accessible-icon"
+        "class": "fa-brands fa-accessible-icon",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "accusoft",
-        "class": "fa-brands fa-accusoft"
+        "class": "fa-brands fa-accusoft",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "adn",
-        "class": "fa-brands fa-adn"
+        "class": "fa-brands fa-adn",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "adversal",
-        "class": "fa-brands fa-adversal"
+        "class": "fa-brands fa-adversal",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "affiliatetheme",
-        "class": "fa-brands fa-affiliatetheme"
+        "class": "fa-brands fa-affiliatetheme",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "airbnb",
-        "class": "fa-brands fa-airbnb"
+        "class": "fa-brands fa-airbnb",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "algolia",
-        "class": "fa-brands fa-algolia"
+        "class": "fa-brands fa-algolia",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "alipay",
-        "class": "fa-brands fa-alipay"
+        "class": "fa-brands fa-alipay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "amazon",
-        "class": "fa-brands fa-amazon"
+        "class": "fa-brands fa-amazon",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "amazon pay",
-        "class": "fa-brands fa-amazon-pay"
+        "class": "fa-brands fa-amazon-pay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "amilia",
-        "class": "fa-brands fa-amilia"
+        "class": "fa-brands fa-amilia",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "android",
-        "class": "fa-brands fa-android"
+        "class": "fa-brands fa-android",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "angellist",
-        "class": "fa-brands fa-angellist"
+        "class": "fa-brands fa-angellist",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "angrycreative",
-        "class": "fa-brands fa-angrycreative"
+        "class": "fa-brands fa-angrycreative",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "angular",
-        "class": "fa-brands fa-angular"
+        "class": "fa-brands fa-angular",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "app store",
-        "class": "fa-brands fa-app-store"
+        "class": "fa-brands fa-app-store",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "app store-ios",
-        "class": "fa-brands fa-app-store-ios"
+        "class": "fa-brands fa-app-store-ios",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "apper",
-        "class": "fa-brands fa-apper"
+        "class": "fa-brands fa-apper",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "apple",
-        "class": "fa-brands fa-apple"
+        "class": "fa-brands fa-apple",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "apple pay",
-        "class": "fa-brands fa-apple-pay"
+        "class": "fa-brands fa-apple-pay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "artstation",
-        "class": "fa-brands fa-artstation"
+        "class": "fa-brands fa-artstation",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "asymmetrik",
-        "class": "fa-brands fa-asymmetrik"
+        "class": "fa-brands fa-asymmetrik",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "atlassian",
-        "class": "fa-brands fa-atlassian"
+        "class": "fa-brands fa-atlassian",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "audible",
-        "class": "fa-brands fa-audible"
+        "class": "fa-brands fa-audible",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "autoprefixer",
-        "class": "fa-brands fa-autoprefixer"
+        "class": "fa-brands fa-autoprefixer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "avianex",
-        "class": "fa-brands fa-avianex"
+        "class": "fa-brands fa-avianex",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "aviato",
-        "class": "fa-brands fa-aviato"
+        "class": "fa-brands fa-aviato",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "aws",
-        "class": "fa-brands fa-aws"
+        "class": "fa-brands fa-aws",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bandcamp",
-        "class": "fa-brands fa-bandcamp"
+        "class": "fa-brands fa-bandcamp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "battle net",
-        "class": "fa-brands fa-battle-net"
+        "class": "fa-brands fa-battle-net",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "behance",
-        "class": "fa-brands fa-behance"
+        "class": "fa-brands fa-behance",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "behance square",
@@ -133,323 +229,563 @@
     },
     {
         "name": "bimobject",
-        "class": "fa-brands fa-bimobject"
+        "class": "fa-brands fa-bimobject",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bitbucket",
-        "class": "fa-brands fa-bitbucket"
+        "class": "fa-brands fa-bitbucket",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bitcoin",
-        "class": "fa-brands fa-bitcoin"
+        "class": "fa-brands fa-bitcoin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bity",
-        "class": "fa-brands fa-bity"
+        "class": "fa-brands fa-bity",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "black tie",
-        "class": "fa-brands fa-black-tie"
+        "class": "fa-brands fa-black-tie",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "blackberry",
-        "class": "fa-brands fa-blackberry"
+        "class": "fa-brands fa-blackberry",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "blogger",
-        "class": "fa-brands fa-blogger"
+        "class": "fa-brands fa-blogger",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "blogger b",
-        "class": "fa-brands fa-blogger-b"
+        "class": "fa-brands fa-blogger-b",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bluetooth",
-        "class": "fa-brands fa-bluetooth"
+        "class": "fa-brands fa-bluetooth",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bluetooth b",
-        "class": "fa-brands fa-bluetooth-b"
+        "class": "fa-brands fa-bluetooth-b",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "bootstrap",
-        "class": "fa-brands fa-bootstrap"
+        "class": "fa-brands fa-bootstrap",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "btc",
-        "class": "fa-brands fa-btc"
+        "class": "fa-brands fa-btc",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "buffer",
-        "class": "fa-brands fa-buffer"
+        "class": "fa-brands fa-buffer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "buromobelexperte",
-        "class": "fa-brands fa-buromobelexperte"
+        "class": "fa-brands fa-buromobelexperte",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "buy n-large",
-        "class": "fa-brands fa-buy-n-large"
+        "class": "fa-brands fa-buy-n-large",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "buysellads",
-        "class": "fa-brands fa-buysellads"
+        "class": "fa-brands fa-buysellads",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "canadian maple-leaf",
-        "class": "fa-brands fa-canadian-maple-leaf"
+        "class": "fa-brands fa-canadian-maple-leaf",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc amazon-pay",
-        "class": "fa-brands fa-cc-amazon-pay"
+        "class": "fa-brands fa-cc-amazon-pay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc amex",
-        "class": "fa-brands fa-cc-amex"
+        "class": "fa-brands fa-cc-amex",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc apple-pay",
-        "class": "fa-brands fa-cc-apple-pay"
+        "class": "fa-brands fa-cc-apple-pay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc diners-club",
-        "class": "fa-brands fa-cc-diners-club"
+        "class": "fa-brands fa-cc-diners-club",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc discover",
-        "class": "fa-brands fa-cc-discover"
+        "class": "fa-brands fa-cc-discover",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc jcb",
-        "class": "fa-brands fa-cc-jcb"
+        "class": "fa-brands fa-cc-jcb",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc mastercard",
-        "class": "fa-brands fa-cc-mastercard"
+        "class": "fa-brands fa-cc-mastercard",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc paypal",
-        "class": "fa-brands fa-cc-paypal"
+        "class": "fa-brands fa-cc-paypal",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc stripe",
-        "class": "fa-brands fa-cc-stripe"
+        "class": "fa-brands fa-cc-stripe",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cc visa",
-        "class": "fa-brands fa-cc-visa"
+        "class": "fa-brands fa-cc-visa",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "centercode",
-        "class": "fa-brands fa-centercode"
+        "class": "fa-brands fa-centercode",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "centos",
-        "class": "fa-brands fa-centos"
+        "class": "fa-brands fa-centos",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "chrome",
-        "class": "fa-brands fa-chrome"
+        "class": "fa-brands fa-chrome",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "chromecast",
-        "class": "fa-brands fa-chromecast"
+        "class": "fa-brands fa-chromecast",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cloudflare",
-        "class": "fa-brands fa-cloudflare"
+        "class": "fa-brands fa-cloudflare",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cloudscale",
-        "class": "fa-brands fa-cloudscale"
+        "class": "fa-brands fa-cloudscale",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cloudsmith",
-        "class": "fa-brands fa-cloudsmith"
+        "class": "fa-brands fa-cloudsmith",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cloudversify",
-        "class": "fa-brands fa-cloudversify"
+        "class": "fa-brands fa-cloudversify",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "codepen",
-        "class": "fa-brands fa-codepen"
+        "class": "fa-brands fa-codepen",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "codiepie",
-        "class": "fa-brands fa-codiepie"
+        "class": "fa-brands fa-codiepie",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "confluence",
-        "class": "fa-brands fa-confluence"
+        "class": "fa-brands fa-confluence",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "connectdevelop",
-        "class": "fa-brands fa-connectdevelop"
+        "class": "fa-brands fa-connectdevelop",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "contao",
-        "class": "fa-brands fa-contao"
+        "class": "fa-brands fa-contao",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cotton bureau",
-        "class": "fa-brands fa-cotton-bureau"
+        "class": "fa-brands fa-cotton-bureau",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cpanel",
-        "class": "fa-brands fa-cpanel"
+        "class": "fa-brands fa-cpanel",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons",
-        "class": "fa-brands fa-creative-commons"
+        "class": "fa-brands fa-creative-commons",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-by",
-        "class": "fa-brands fa-creative-commons-by"
+        "class": "fa-brands fa-creative-commons-by",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-nc",
-        "class": "fa-brands fa-creative-commons-nc"
+        "class": "fa-brands fa-creative-commons-nc",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-nc-eu",
-        "class": "fa-brands fa-creative-commons-nc-eu"
+        "class": "fa-brands fa-creative-commons-nc-eu",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-nc-jp",
-        "class": "fa-brands fa-creative-commons-nc-jp"
+        "class": "fa-brands fa-creative-commons-nc-jp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-nd",
-        "class": "fa-brands fa-creative-commons-nd"
+        "class": "fa-brands fa-creative-commons-nd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-pd",
-        "class": "fa-brands fa-creative-commons-pd"
+        "class": "fa-brands fa-creative-commons-pd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-pd-alt",
-        "class": "fa-brands fa-creative-commons-pd-alt"
+        "class": "fa-brands fa-creative-commons-pd-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-remix",
-        "class": "fa-brands fa-creative-commons-remix"
+        "class": "fa-brands fa-creative-commons-remix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-sa",
-        "class": "fa-brands fa-creative-commons-sa"
+        "class": "fa-brands fa-creative-commons-sa",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-sampling",
-        "class": "fa-brands fa-creative-commons-sampling"
+        "class": "fa-brands fa-creative-commons-sampling",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-sampling-plus",
-        "class": "fa-brands fa-creative-commons-sampling-plus"
+        "class": "fa-brands fa-creative-commons-sampling-plus",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-share",
-        "class": "fa-brands fa-creative-commons-share"
+        "class": "fa-brands fa-creative-commons-share",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "creative commons-zero",
-        "class": "fa-brands fa-creative-commons-zero"
+        "class": "fa-brands fa-creative-commons-zero",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "critical role",
-        "class": "fa-brands fa-critical-role"
+        "class": "fa-brands fa-critical-role",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "css3",
-        "class": "fa-brands fa-css3"
+        "class": "fa-brands fa-css3",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "css3 alt",
-        "class": "fa-brands fa-css3-alt"
+        "class": "fa-brands fa-css3-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "cuttlefish",
-        "class": "fa-brands fa-cuttlefish"
+        "class": "fa-brands fa-cuttlefish",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "d and-d",
-        "class": "fa-brands fa-d-and-d"
+        "class": "fa-brands fa-d-and-d",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "d and-d-beyond",
-        "class": "fa-brands fa-d-and-d-beyond"
+        "class": "fa-brands fa-d-and-d-beyond",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dailymotion",
-        "class": "fa-brands fa-dailymotion"
+        "class": "fa-brands fa-dailymotion",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dashcube",
-        "class": "fa-brands fa-dashcube"
+        "class": "fa-brands fa-dashcube",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "deezer",
-        "class": "fa-brands fa-deezer"
+        "class": "fa-brands fa-deezer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "delicious",
-        "class": "fa-brands fa-delicious"
+        "class": "fa-brands fa-delicious",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "deploydog",
-        "class": "fa-brands fa-deploydog"
+        "class": "fa-brands fa-deploydog",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "deskpro",
-        "class": "fa-brands fa-deskpro"
+        "class": "fa-brands fa-deskpro",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dev",
-        "class": "fa-brands fa-dev"
+        "class": "fa-brands fa-dev",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "deviantart",
-        "class": "fa-brands fa-deviantart"
+        "class": "fa-brands fa-deviantart",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dhl",
-        "class": "fa-brands fa-dhl"
+        "class": "fa-brands fa-dhl",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "diaspora",
-        "class": "fa-brands fa-diaspora"
+        "class": "fa-brands fa-diaspora",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "digg",
-        "class": "fa-brands fa-digg"
+        "class": "fa-brands fa-digg",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "digital ocean",
-        "class": "fa-brands fa-digital-ocean"
+        "class": "fa-brands fa-digital-ocean",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "discord",
-        "class": "fa-brands fa-discord"
+        "class": "fa-brands fa-discord",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "discourse",
-        "class": "fa-brands fa-discourse"
+        "class": "fa-brands fa-discourse",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dochub",
-        "class": "fa-brands fa-dochub"
+        "class": "fa-brands fa-dochub",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "docker",
-        "class": "fa-brands fa-docker"
+        "class": "fa-brands fa-docker",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "draft2digital",
-        "class": "fa-brands fa-draft2digital"
+        "class": "fa-brands fa-draft2digital",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dribbble",
-        "class": "fa-brands fa-dribbble"
+        "class": "fa-brands fa-dribbble",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dribbble square",
@@ -457,83 +793,143 @@
     },
     {
         "name": "dropbox",
-        "class": "fa-brands fa-dropbox"
+        "class": "fa-brands fa-dropbox",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "drupal",
-        "class": "fa-brands fa-drupal"
+        "class": "fa-brands fa-drupal",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "dyalog",
-        "class": "fa-brands fa-dyalog"
+        "class": "fa-brands fa-dyalog",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "earlybirds",
-        "class": "fa-brands fa-earlybirds"
+        "class": "fa-brands fa-earlybirds",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ebay",
-        "class": "fa-brands fa-ebay"
+        "class": "fa-brands fa-ebay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "edge",
-        "class": "fa-brands fa-edge"
+        "class": "fa-brands fa-edge",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "edge legacy",
-        "class": "fa-brands fa-edge-legacy"
+        "class": "fa-brands fa-edge-legacy",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "elementor",
-        "class": "fa-brands fa-elementor"
+        "class": "fa-brands fa-elementor",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ello",
-        "class": "fa-brands fa-ello"
+        "class": "fa-brands fa-ello",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ember",
-        "class": "fa-brands fa-ember"
+        "class": "fa-brands fa-ember",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "empire",
-        "class": "fa-brands fa-empire"
+        "class": "fa-brands fa-empire",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "envira",
-        "class": "fa-brands fa-envira"
+        "class": "fa-brands fa-envira",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "erlang",
-        "class": "fa-brands fa-erlang"
+        "class": "fa-brands fa-erlang",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ethereum",
-        "class": "fa-brands fa-ethereum"
+        "class": "fa-brands fa-ethereum",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "etsy",
-        "class": "fa-brands fa-etsy"
+        "class": "fa-brands fa-etsy",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "evernote",
-        "class": "fa-brands fa-evernote"
+        "class": "fa-brands fa-evernote",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "expeditedssl",
-        "class": "fa-brands fa-expeditedssl"
+        "class": "fa-brands fa-expeditedssl",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "facebook",
-        "class": "fa-brands fa-facebook"
+        "class": "fa-brands fa-facebook",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "facebook f",
-        "class": "fa-brands fa-facebook-f"
+        "class": "fa-brands fa-facebook-f",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "facebook messenger",
-        "class": "fa-brands fa-facebook-messenger"
+        "class": "fa-brands fa-facebook-messenger",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "facebook square",
@@ -541,55 +937,94 @@
     },
     {
         "name": "fantasy flight-games",
-        "class": "fa-brands fa-fantasy-flight-games"
+        "class": "fa-brands fa-fantasy-flight-games",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fedex",
-        "class": "fa-brands fa-fedex"
+        "class": "fa-brands fa-fedex",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fedora",
-        "class": "fa-brands fa-fedora"
+        "class": "fa-brands fa-fedora",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "figma",
-        "class": "fa-brands fa-figma"
+        "class": "fa-brands fa-figma",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "firefox",
-        "class": "fa-brands fa-firefox"
+        "class": "fa-brands fa-firefox",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "firefox browser",
-        "class": "fa-brands fa-firefox-browser"
+        "class": "fa-brands fa-firefox-browser",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "first order",
-        "class": "fa-brands fa-first-order"
+        "class": "fa-brands fa-first-order",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "first order-alt",
-        "class": "fa-brands fa-first-order-alt"
+        "class": "fa-brands fa-first-order-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "firstdraft",
-        "class": "fa-brands fa-firstdraft"
+        "class": "fa-brands fa-firstdraft",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "flickr",
-        "class": "fa-brands fa-flickr"
+        "class": "fa-brands fa-flickr",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "flipboard",
-        "class": "fa-brands fa-flipboard"
+        "class": "fa-brands fa-flipboard",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fly",
-        "class": "fa-brands fa-fly"
+        "class": "fa-brands fa-fly",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "font awesome",
-        "class": "fa-brands fa-font-awesome"
+        "class": "fa-brands fa-font-awesome",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "font awesome-alt",
@@ -601,67 +1036,115 @@
     },
     {
         "name": "fonticons",
-        "class": "fa-brands fa-fonticons"
+        "class": "fa-brands fa-fonticons",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fonticons fi",
-        "class": "fa-brands fa-fonticons-fi"
+        "class": "fa-brands fa-fonticons-fi",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fort awesome",
-        "class": "fa-brands fa-fort-awesome"
+        "class": "fa-brands fa-fort-awesome",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fort awesome-alt",
-        "class": "fa-brands fa-fort-awesome-alt"
+        "class": "fa-brands fa-fort-awesome-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "forumbee",
-        "class": "fa-brands fa-forumbee"
+        "class": "fa-brands fa-forumbee",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "foursquare",
-        "class": "fa-brands fa-foursquare"
+        "class": "fa-brands fa-foursquare",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "free code-camp",
-        "class": "fa-brands fa-free-code-camp"
+        "class": "fa-brands fa-free-code-camp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "freebsd",
-        "class": "fa-brands fa-freebsd"
+        "class": "fa-brands fa-freebsd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "fulcrum",
-        "class": "fa-brands fa-fulcrum"
+        "class": "fa-brands fa-fulcrum",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "galactic republic",
-        "class": "fa-brands fa-galactic-republic"
+        "class": "fa-brands fa-galactic-republic",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "galactic senate",
-        "class": "fa-brands fa-galactic-senate"
+        "class": "fa-brands fa-galactic-senate",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "get pocket",
-        "class": "fa-brands fa-get-pocket"
+        "class": "fa-brands fa-get-pocket",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gg",
-        "class": "fa-brands fa-gg"
+        "class": "fa-brands fa-gg",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gg circle",
-        "class": "fa-brands fa-gg-circle"
+        "class": "fa-brands fa-gg-circle",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "git",
-        "class": "fa-brands fa-git"
+        "class": "fa-brands fa-git",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "git alt",
-        "class": "fa-brands fa-git-alt"
+        "class": "fa-brands fa-git-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "git square",
@@ -669,11 +1152,17 @@
     },
     {
         "name": "github",
-        "class": "fa-brands fa-github"
+        "class": "fa-brands fa-github",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "github alt",
-        "class": "fa-brands fa-github-alt"
+        "class": "fa-brands fa-github-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "github square",
@@ -681,59 +1170,101 @@
     },
     {
         "name": "gitkraken",
-        "class": "fa-brands fa-gitkraken"
+        "class": "fa-brands fa-gitkraken",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gitlab",
-        "class": "fa-brands fa-gitlab"
+        "class": "fa-brands fa-gitlab",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gitter",
-        "class": "fa-brands fa-gitter"
+        "class": "fa-brands fa-gitter",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "glide",
-        "class": "fa-brands fa-glide"
+        "class": "fa-brands fa-glide",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "glide g",
-        "class": "fa-brands fa-glide-g"
+        "class": "fa-brands fa-glide-g",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gofore",
-        "class": "fa-brands fa-gofore"
+        "class": "fa-brands fa-gofore",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "goodreads",
-        "class": "fa-brands fa-goodreads"
+        "class": "fa-brands fa-goodreads",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "goodreads g",
-        "class": "fa-brands fa-goodreads-g"
+        "class": "fa-brands fa-goodreads-g",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google",
-        "class": "fa-brands fa-google"
+        "class": "fa-brands fa-google",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google drive",
-        "class": "fa-brands fa-google-drive"
+        "class": "fa-brands fa-google-drive",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google pay",
-        "class": "fa-brands fa-google-pay"
+        "class": "fa-brands fa-google-pay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google play",
-        "class": "fa-brands fa-google-play"
+        "class": "fa-brands fa-google-play",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google plus",
-        "class": "fa-brands fa-google-plus"
+        "class": "fa-brands fa-google-plus",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google plus-g",
-        "class": "fa-brands fa-google-plus-g"
+        "class": "fa-brands fa-google-plus-g",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "google plus-square",
@@ -741,35 +1272,59 @@
     },
     {
         "name": "google wallet",
-        "class": "fa-brands fa-google-wallet"
+        "class": "fa-brands fa-google-wallet",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gratipay",
-        "class": "fa-brands fa-gratipay"
+        "class": "fa-brands fa-gratipay",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "grav",
-        "class": "fa-brands fa-grav"
+        "class": "fa-brands fa-grav",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gripfire",
-        "class": "fa-brands fa-gripfire"
+        "class": "fa-brands fa-gripfire",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "grunt",
-        "class": "fa-brands fa-grunt"
+        "class": "fa-brands fa-grunt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "guilded",
-        "class": "fa-brands fa-guilded"
+        "class": "fa-brands fa-guilded",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "gulp",
-        "class": "fa-brands fa-gulp"
+        "class": "fa-brands fa-gulp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hacker news",
-        "class": "fa-brands fa-hacker-news"
+        "class": "fa-brands fa-hacker-news",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hacker news-square",
@@ -777,51 +1332,87 @@
     },
     {
         "name": "hackerrank",
-        "class": "fa-brands fa-hackerrank"
+        "class": "fa-brands fa-hackerrank",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hips",
-        "class": "fa-brands fa-hips"
+        "class": "fa-brands fa-hips",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hire a-helper",
-        "class": "fa-brands fa-hire-a-helper"
+        "class": "fa-brands fa-hire-a-helper",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hive",
-        "class": "fa-brands fa-hive"
+        "class": "fa-brands fa-hive",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hooli",
-        "class": "fa-brands fa-hooli"
+        "class": "fa-brands fa-hooli",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hornbill",
-        "class": "fa-brands fa-hornbill"
+        "class": "fa-brands fa-hornbill",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hotjar",
-        "class": "fa-brands fa-hotjar"
+        "class": "fa-brands fa-hotjar",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "houzz",
-        "class": "fa-brands fa-houzz"
+        "class": "fa-brands fa-houzz",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "html5",
-        "class": "fa-brands fa-html5"
+        "class": "fa-brands fa-html5",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "hubspot",
-        "class": "fa-brands fa-hubspot"
+        "class": "fa-brands fa-hubspot",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ideal",
-        "class": "fa-brands fa-ideal"
+        "class": "fa-brands fa-ideal",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "imdb",
-        "class": "fa-brands fa-imdb"
+        "class": "fa-brands fa-imdb",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "innosoft",
@@ -829,7 +1420,10 @@
     },
     {
         "name": "instagram",
-        "class": "fa-brands fa-instagram"
+        "class": "fa-brands fa-instagram",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "instagram square",
@@ -837,63 +1431,108 @@
     },
     {
         "name": "instalod",
-        "class": "fa-brands fa-instalod"
+        "class": "fa-brands fa-instalod",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "intercom",
-        "class": "fa-brands fa-intercom"
+        "class": "fa-brands fa-intercom",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "internet explorer",
-        "class": "fa-brands fa-internet-explorer"
+        "class": "fa-brands fa-internet-explorer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "invision",
-        "class": "fa-brands fa-invision"
+        "class": "fa-brands fa-invision",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ioxhost",
-        "class": "fa-brands fa-ioxhost"
+        "class": "fa-brands fa-ioxhost",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "itch io",
-        "class": "fa-brands fa-itch-io"
+        "class": "fa-brands fa-itch-io",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "itunes",
-        "class": "fa-brands fa-itunes"
+        "class": "fa-brands fa-itunes",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "itunes note",
-        "class": "fa-brands fa-itunes-note"
+        "class": "fa-brands fa-itunes-note",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "java",
-        "class": "fa-brands fa-java"
+        "class": "fa-brands fa-java",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "jedi order",
-        "class": "fa-brands fa-jedi-order"
+        "class": "fa-brands fa-jedi-order",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "jenkins",
-        "class": "fa-brands fa-jenkins"
+        "class": "fa-brands fa-jenkins",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "jira",
-        "class": "fa-brands fa-jira"
+        "class": "fa-brands fa-jira",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "joget",
-        "class": "fa-brands fa-joget"
+        "class": "fa-brands fa-joget",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "joomla",
-        "class": "fa-brands fa-joomla"
+        "class": "fa-brands fa-joomla",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "js",
-        "class": "fa-brands fa-js"
+        "class": "fa-brands fa-js",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "js square",
@@ -901,39 +1540,66 @@
     },
     {
         "name": "jsfiddle",
-        "class": "fa-brands fa-jsfiddle"
+        "class": "fa-brands fa-jsfiddle",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "kaggle",
-        "class": "fa-brands fa-kaggle"
+        "class": "fa-brands fa-kaggle",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "keybase",
-        "class": "fa-brands fa-keybase"
+        "class": "fa-brands fa-keybase",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "keycdn",
-        "class": "fa-brands fa-keycdn"
+        "class": "fa-brands fa-keycdn",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "kickstarter",
-        "class": "fa-brands fa-kickstarter"
+        "class": "fa-brands fa-kickstarter",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "kickstarter k",
-        "class": "fa-brands fa-kickstarter-k"
+        "class": "fa-brands fa-kickstarter-k",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "korvue",
-        "class": "fa-brands fa-korvue"
+        "class": "fa-brands fa-korvue",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "laravel",
-        "class": "fa-brands fa-laravel"
+        "class": "fa-brands fa-laravel",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "lastfm",
-        "class": "fa-brands fa-lastfm"
+        "class": "fa-brands fa-lastfm",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "lastfm square",
@@ -941,71 +1607,122 @@
     },
     {
         "name": "leanpub",
-        "class": "fa-brands fa-leanpub"
+        "class": "fa-brands fa-leanpub",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "less",
-        "class": "fa-brands fa-less"
+        "class": "fa-brands fa-less",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "line",
-        "class": "fa-brands fa-line"
+        "class": "fa-brands fa-line",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "linkedin",
-        "class": "fa-brands fa-linkedin"
+        "class": "fa-brands fa-linkedin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "linkedin in",
-        "class": "fa-brands fa-linkedin-in"
+        "class": "fa-brands fa-linkedin-in",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "linode",
-        "class": "fa-brands fa-linode"
+        "class": "fa-brands fa-linode",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "linux",
-        "class": "fa-brands fa-linux"
+        "class": "fa-brands fa-linux",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "lyft",
-        "class": "fa-brands fa-lyft"
+        "class": "fa-brands fa-lyft",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "magento",
-        "class": "fa-brands fa-magento"
+        "class": "fa-brands fa-magento",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mailchimp",
-        "class": "fa-brands fa-mailchimp"
+        "class": "fa-brands fa-mailchimp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mandalorian",
-        "class": "fa-brands fa-mandalorian"
+        "class": "fa-brands fa-mandalorian",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "markdown",
-        "class": "fa-brands fa-markdown"
+        "class": "fa-brands fa-markdown",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mastodon",
-        "class": "fa-brands fa-mastodon"
+        "class": "fa-brands fa-mastodon",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "maxcdn",
-        "class": "fa-brands fa-maxcdn"
+        "class": "fa-brands fa-maxcdn",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mdb",
-        "class": "fa-brands fa-mdb"
+        "class": "fa-brands fa-mdb",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "medapps",
-        "class": "fa-brands fa-medapps"
+        "class": "fa-brands fa-medapps",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "medium",
-        "class": "fa-brands fa-medium"
+        "class": "fa-brands fa-medium",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "medium m",
@@ -1013,91 +1730,157 @@
     },
     {
         "name": "medrt",
-        "class": "fa-brands fa-medrt"
+        "class": "fa-brands fa-medrt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "meetup",
-        "class": "fa-brands fa-meetup"
+        "class": "fa-brands fa-meetup",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "megaport",
-        "class": "fa-brands fa-megaport"
+        "class": "fa-brands fa-megaport",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mendeley",
-        "class": "fa-brands fa-mendeley"
+        "class": "fa-brands fa-mendeley",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "microblog",
-        "class": "fa-brands fa-microblog"
+        "class": "fa-brands fa-microblog",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "microsoft",
-        "class": "fa-brands fa-microsoft"
+        "class": "fa-brands fa-microsoft",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mix",
-        "class": "fa-brands fa-mix"
+        "class": "fa-brands fa-mix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mixcloud",
-        "class": "fa-brands fa-mixcloud"
+        "class": "fa-brands fa-mixcloud",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mixer",
-        "class": "fa-brands fa-mixer"
+        "class": "fa-brands fa-mixer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "mizuni",
-        "class": "fa-brands fa-mizuni"
+        "class": "fa-brands fa-mizuni",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "modx",
-        "class": "fa-brands fa-modx"
+        "class": "fa-brands fa-modx",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "monero",
-        "class": "fa-brands fa-monero"
+        "class": "fa-brands fa-monero",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "napster",
-        "class": "fa-brands fa-napster"
+        "class": "fa-brands fa-napster",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "neos",
-        "class": "fa-brands fa-neos"
+        "class": "fa-brands fa-neos",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "nimblr",
-        "class": "fa-brands fa-nimblr"
+        "class": "fa-brands fa-nimblr",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "node",
-        "class": "fa-brands fa-node"
+        "class": "fa-brands fa-node",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "node js",
-        "class": "fa-brands fa-node-js"
+        "class": "fa-brands fa-node-js",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "npm",
-        "class": "fa-brands fa-npm"
+        "class": "fa-brands fa-npm",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ns8",
-        "class": "fa-brands fa-ns8"
+        "class": "fa-brands fa-ns8",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "nutritionix",
-        "class": "fa-brands fa-nutritionix"
+        "class": "fa-brands fa-nutritionix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "octopus deploy",
-        "class": "fa-brands fa-octopus-deploy"
+        "class": "fa-brands fa-octopus-deploy",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "odnoklassniki",
-        "class": "fa-brands fa-odnoklassniki"
+        "class": "fa-brands fa-odnoklassniki",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "odnoklassniki square",
@@ -1105,91 +1888,157 @@
     },
     {
         "name": "old republic",
-        "class": "fa-brands fa-old-republic"
+        "class": "fa-brands fa-old-republic",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "opencart",
-        "class": "fa-brands fa-opencart"
+        "class": "fa-brands fa-opencart",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "openid",
-        "class": "fa-brands fa-openid"
+        "class": "fa-brands fa-openid",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "opera",
-        "class": "fa-brands fa-opera"
+        "class": "fa-brands fa-opera",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "optin monster",
-        "class": "fa-brands fa-optin-monster"
+        "class": "fa-brands fa-optin-monster",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "orcid",
-        "class": "fa-brands fa-orcid"
+        "class": "fa-brands fa-orcid",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "osi",
-        "class": "fa-brands fa-osi"
+        "class": "fa-brands fa-osi",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "page4",
-        "class": "fa-brands fa-page4"
+        "class": "fa-brands fa-page4",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pagelines",
-        "class": "fa-brands fa-pagelines"
+        "class": "fa-brands fa-pagelines",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "palfed",
-        "class": "fa-brands fa-palfed"
+        "class": "fa-brands fa-palfed",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "patreon",
-        "class": "fa-brands fa-patreon"
+        "class": "fa-brands fa-patreon",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "paypal",
-        "class": "fa-brands fa-paypal"
+        "class": "fa-brands fa-paypal",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "perbyte",
-        "class": "fa-brands fa-perbyte"
+        "class": "fa-brands fa-perbyte",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "periscope",
-        "class": "fa-brands fa-periscope"
+        "class": "fa-brands fa-periscope",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "phabricator",
-        "class": "fa-brands fa-phabricator"
+        "class": "fa-brands fa-phabricator",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "phoenix framework",
-        "class": "fa-brands fa-phoenix-framework"
+        "class": "fa-brands fa-phoenix-framework",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "phoenix squadron",
-        "class": "fa-brands fa-phoenix-squadron"
+        "class": "fa-brands fa-phoenix-squadron",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "php",
-        "class": "fa-brands fa-php"
+        "class": "fa-brands fa-php",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pied piper",
-        "class": "fa-brands fa-pied-piper"
+        "class": "fa-brands fa-pied-piper",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pied piper-alt",
-        "class": "fa-brands fa-pied-piper-alt"
+        "class": "fa-brands fa-pied-piper-alt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pied piper-hat",
-        "class": "fa-brands fa-pied-piper-hat"
+        "class": "fa-brands fa-pied-piper-hat",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pied piper-pp",
-        "class": "fa-brands fa-pied-piper-pp"
+        "class": "fa-brands fa-pied-piper-pp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pied piper-square",
@@ -1197,11 +2046,17 @@
     },
     {
         "name": "pinterest",
-        "class": "fa-brands fa-pinterest"
+        "class": "fa-brands fa-pinterest",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pinterest p",
-        "class": "fa-brands fa-pinterest-p"
+        "class": "fa-brands fa-pinterest-p",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pinterest square",
@@ -1209,71 +2064,122 @@
     },
     {
         "name": "playstation",
-        "class": "fa-brands fa-playstation"
+        "class": "fa-brands fa-playstation",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "product hunt",
-        "class": "fa-brands fa-product-hunt"
+        "class": "fa-brands fa-product-hunt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "pushed",
-        "class": "fa-brands fa-pushed"
+        "class": "fa-brands fa-pushed",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "python",
-        "class": "fa-brands fa-python"
+        "class": "fa-brands fa-python",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "qq",
-        "class": "fa-brands fa-qq"
+        "class": "fa-brands fa-qq",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "quinscape",
-        "class": "fa-brands fa-quinscape"
+        "class": "fa-brands fa-quinscape",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "quora",
-        "class": "fa-brands fa-quora"
+        "class": "fa-brands fa-quora",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "r project",
-        "class": "fa-brands fa-r-project"
+        "class": "fa-brands fa-r-project",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "raspberry pi",
-        "class": "fa-brands fa-raspberry-pi"
+        "class": "fa-brands fa-raspberry-pi",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ravelry",
-        "class": "fa-brands fa-ravelry"
+        "class": "fa-brands fa-ravelry",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "react",
-        "class": "fa-brands fa-react"
+        "class": "fa-brands fa-react",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "reacteurope",
-        "class": "fa-brands fa-reacteurope"
+        "class": "fa-brands fa-reacteurope",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "readme",
-        "class": "fa-brands fa-readme"
+        "class": "fa-brands fa-readme",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "rebel",
-        "class": "fa-brands fa-rebel"
+        "class": "fa-brands fa-rebel",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "red river",
-        "class": "fa-brands fa-red-river"
+        "class": "fa-brands fa-red-river",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "reddit",
-        "class": "fa-brands fa-reddit"
+        "class": "fa-brands fa-reddit",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "reddit alien",
-        "class": "fa-brands fa-reddit-alien"
+        "class": "fa-brands fa-reddit-alien",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "reddit square",
@@ -1281,115 +2187,199 @@
     },
     {
         "name": "redhat",
-        "class": "fa-brands fa-redhat"
+        "class": "fa-brands fa-redhat",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "renren",
-        "class": "fa-brands fa-renren"
+        "class": "fa-brands fa-renren",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "replyd",
-        "class": "fa-brands fa-replyd"
+        "class": "fa-brands fa-replyd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "researchgate",
-        "class": "fa-brands fa-researchgate"
+        "class": "fa-brands fa-researchgate",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "resolving",
-        "class": "fa-brands fa-resolving"
+        "class": "fa-brands fa-resolving",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "rev",
-        "class": "fa-brands fa-rev"
+        "class": "fa-brands fa-rev",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "rocketchat",
-        "class": "fa-brands fa-rocketchat"
+        "class": "fa-brands fa-rocketchat",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "rockrms",
-        "class": "fa-brands fa-rockrms"
+        "class": "fa-brands fa-rockrms",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "rust",
-        "class": "fa-brands fa-rust"
+        "class": "fa-brands fa-rust",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "safari",
-        "class": "fa-brands fa-safari"
+        "class": "fa-brands fa-safari",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "salesforce",
-        "class": "fa-brands fa-salesforce"
+        "class": "fa-brands fa-salesforce",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sass",
-        "class": "fa-brands fa-sass"
+        "class": "fa-brands fa-sass",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "schlix",
-        "class": "fa-brands fa-schlix"
+        "class": "fa-brands fa-schlix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "scribd",
-        "class": "fa-brands fa-scribd"
+        "class": "fa-brands fa-scribd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "searchengin",
-        "class": "fa-brands fa-searchengin"
+        "class": "fa-brands fa-searchengin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sellcast",
-        "class": "fa-brands fa-sellcast"
+        "class": "fa-brands fa-sellcast",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sellsy",
-        "class": "fa-brands fa-sellsy"
+        "class": "fa-brands fa-sellsy",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "servicestack",
-        "class": "fa-brands fa-servicestack"
+        "class": "fa-brands fa-servicestack",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "shirtsinbulk",
-        "class": "fa-brands fa-shirtsinbulk"
+        "class": "fa-brands fa-shirtsinbulk",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "shopify",
-        "class": "fa-brands fa-shopify"
+        "class": "fa-brands fa-shopify",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "shopware",
-        "class": "fa-brands fa-shopware"
+        "class": "fa-brands fa-shopware",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "simplybuilt",
-        "class": "fa-brands fa-simplybuilt"
+        "class": "fa-brands fa-simplybuilt",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sistrix",
-        "class": "fa-brands fa-sistrix"
+        "class": "fa-brands fa-sistrix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sith",
-        "class": "fa-brands fa-sith"
+        "class": "fa-brands fa-sith",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sketch",
-        "class": "fa-brands fa-sketch"
+        "class": "fa-brands fa-sketch",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "skyatlas",
-        "class": "fa-brands fa-skyatlas"
+        "class": "fa-brands fa-skyatlas",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "skype",
-        "class": "fa-brands fa-skype"
+        "class": "fa-brands fa-skype",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "slack",
-        "class": "fa-brands fa-slack"
+        "class": "fa-brands fa-slack",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "slack hash",
@@ -1397,11 +2387,17 @@
     },
     {
         "name": "slideshare",
-        "class": "fa-brands fa-slideshare"
+        "class": "fa-brands fa-slideshare",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "snapchat",
-        "class": "fa-brands fa-snapchat"
+        "class": "fa-brands fa-snapchat",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "snapchat ghost",
@@ -1413,47 +2409,80 @@
     },
     {
         "name": "soundcloud",
-        "class": "fa-brands fa-soundcloud"
+        "class": "fa-brands fa-soundcloud",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sourcetree",
-        "class": "fa-brands fa-sourcetree"
+        "class": "fa-brands fa-sourcetree",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "speakap",
-        "class": "fa-brands fa-speakap"
+        "class": "fa-brands fa-speakap",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "speaker deck",
-        "class": "fa-brands fa-speaker-deck"
+        "class": "fa-brands fa-speaker-deck",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "spotify",
-        "class": "fa-brands fa-spotify"
+        "class": "fa-brands fa-spotify",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "squarespace",
-        "class": "fa-brands fa-squarespace"
+        "class": "fa-brands fa-squarespace",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stack exchange",
-        "class": "fa-brands fa-stack-exchange"
+        "class": "fa-brands fa-stack-exchange",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stack overflow",
-        "class": "fa-brands fa-stack-overflow"
+        "class": "fa-brands fa-stack-overflow",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stackpath",
-        "class": "fa-brands fa-stackpath"
+        "class": "fa-brands fa-stackpath",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "staylinked",
-        "class": "fa-brands fa-staylinked"
+        "class": "fa-brands fa-staylinked",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "steam",
-        "class": "fa-brands fa-steam"
+        "class": "fa-brands fa-steam",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "steam square",
@@ -1461,63 +2490,108 @@
     },
     {
         "name": "steam symbol",
-        "class": "fa-brands fa-steam-symbol"
+        "class": "fa-brands fa-steam-symbol",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "sticker mule",
-        "class": "fa-brands fa-sticker-mule"
+        "class": "fa-brands fa-sticker-mule",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "strava",
-        "class": "fa-brands fa-strava"
+        "class": "fa-brands fa-strava",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stripe",
-        "class": "fa-brands fa-stripe"
+        "class": "fa-brands fa-stripe",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stripe s",
-        "class": "fa-brands fa-stripe-s"
+        "class": "fa-brands fa-stripe-s",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "studiovinari",
-        "class": "fa-brands fa-studiovinari"
+        "class": "fa-brands fa-studiovinari",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stumbleupon",
-        "class": "fa-brands fa-stumbleupon"
+        "class": "fa-brands fa-stumbleupon",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "stumbleupon circle",
-        "class": "fa-brands fa-stumbleupon-circle"
+        "class": "fa-brands fa-stumbleupon-circle",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "superpowers",
-        "class": "fa-brands fa-superpowers"
+        "class": "fa-brands fa-superpowers",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "supple",
-        "class": "fa-brands fa-supple"
+        "class": "fa-brands fa-supple",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "suse",
-        "class": "fa-brands fa-suse"
+        "class": "fa-brands fa-suse",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "swift",
-        "class": "fa-brands fa-swift"
+        "class": "fa-brands fa-swift",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "symfony",
-        "class": "fa-brands fa-symfony"
+        "class": "fa-brands fa-symfony",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "teamspeak",
-        "class": "fa-brands fa-teamspeak"
+        "class": "fa-brands fa-teamspeak",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "telegram",
-        "class": "fa-brands fa-telegram"
+        "class": "fa-brands fa-telegram",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "telegram plane",
@@ -1525,39 +2599,66 @@
     },
     {
         "name": "tencent weibo",
-        "class": "fa-brands fa-tencent-weibo"
+        "class": "fa-brands fa-tencent-weibo",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "the red-yeti",
-        "class": "fa-brands fa-the-red-yeti"
+        "class": "fa-brands fa-the-red-yeti",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "themeco",
-        "class": "fa-brands fa-themeco"
+        "class": "fa-brands fa-themeco",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "themeisle",
-        "class": "fa-brands fa-themeisle"
+        "class": "fa-brands fa-themeisle",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "think peaks",
-        "class": "fa-brands fa-think-peaks"
+        "class": "fa-brands fa-think-peaks",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "tiktok",
-        "class": "fa-brands fa-tiktok"
+        "class": "fa-brands fa-tiktok",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "trade federation",
-        "class": "fa-brands fa-trade-federation"
+        "class": "fa-brands fa-trade-federation",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "trello",
-        "class": "fa-brands fa-trello"
+        "class": "fa-brands fa-trello",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "tumblr",
-        "class": "fa-brands fa-tumblr"
+        "class": "fa-brands fa-tumblr",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "tumblr square",
@@ -1565,11 +2666,17 @@
     },
     {
         "name": "twitch",
-        "class": "fa-brands fa-twitch"
+        "class": "fa-brands fa-twitch",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "twitter",
-        "class": "fa-brands fa-twitter"
+        "class": "fa-brands fa-twitter",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "twitter square",
@@ -1577,75 +2684,129 @@
     },
     {
         "name": "x twitter",
-        "class": "fa-brands fa-x-twitter"
+        "class": "fa-brands fa-x-twitter",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "typo3",
-        "class": "fa-brands fa-typo3"
+        "class": "fa-brands fa-typo3",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "uber",
-        "class": "fa-brands fa-uber"
+        "class": "fa-brands fa-uber",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ubuntu",
-        "class": "fa-brands fa-ubuntu"
+        "class": "fa-brands fa-ubuntu",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "uikit",
-        "class": "fa-brands fa-uikit"
+        "class": "fa-brands fa-uikit",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "umbraco",
-        "class": "fa-brands fa-umbraco"
+        "class": "fa-brands fa-umbraco",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "uncharted",
-        "class": "fa-brands fa-uncharted"
+        "class": "fa-brands fa-uncharted",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "uniregistry",
-        "class": "fa-brands fa-uniregistry"
+        "class": "fa-brands fa-uniregistry",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "unity",
-        "class": "fa-brands fa-unity"
+        "class": "fa-brands fa-unity",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "unsplash",
-        "class": "fa-brands fa-unsplash"
+        "class": "fa-brands fa-unsplash",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "untappd",
-        "class": "fa-brands fa-untappd"
+        "class": "fa-brands fa-untappd",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ups",
-        "class": "fa-brands fa-ups"
+        "class": "fa-brands fa-ups",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "usb",
-        "class": "fa-brands fa-usb"
+        "class": "fa-brands fa-usb",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "usps",
-        "class": "fa-brands fa-usps"
+        "class": "fa-brands fa-usps",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "ussunnah",
-        "class": "fa-brands fa-ussunnah"
+        "class": "fa-brands fa-ussunnah",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vaadin",
-        "class": "fa-brands fa-vaadin"
+        "class": "fa-brands fa-vaadin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "viacoin",
-        "class": "fa-brands fa-viacoin"
+        "class": "fa-brands fa-viacoin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "viadeo",
-        "class": "fa-brands fa-viadeo"
+        "class": "fa-brands fa-viadeo",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "viadeo square",
@@ -1653,11 +2814,17 @@
     },
     {
         "name": "viber",
-        "class": "fa-brands fa-viber"
+        "class": "fa-brands fa-viber",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vimeo",
-        "class": "fa-brands fa-vimeo"
+        "class": "fa-brands fa-vimeo",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vimeo square",
@@ -1665,47 +2832,80 @@
     },
     {
         "name": "vimeo v",
-        "class": "fa-brands fa-vimeo-v"
+        "class": "fa-brands fa-vimeo-v",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vine",
-        "class": "fa-brands fa-vine"
+        "class": "fa-brands fa-vine",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vk",
-        "class": "fa-brands fa-vk"
+        "class": "fa-brands fa-vk",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vnv",
-        "class": "fa-brands fa-vnv"
+        "class": "fa-brands fa-vnv",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "vuejs",
-        "class": "fa-brands fa-vuejs"
+        "class": "fa-brands fa-vuejs",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "watchman monitoring",
-        "class": "fa-brands fa-watchman-monitoring"
+        "class": "fa-brands fa-watchman-monitoring",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "waze",
-        "class": "fa-brands fa-waze"
+        "class": "fa-brands fa-waze",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "weebly",
-        "class": "fa-brands fa-weebly"
+        "class": "fa-brands fa-weebly",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "weibo",
-        "class": "fa-brands fa-weibo"
+        "class": "fa-brands fa-weibo",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "weixin",
-        "class": "fa-brands fa-weixin"
+        "class": "fa-brands fa-weixin",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "whatsapp",
-        "class": "fa-brands fa-whatsapp"
+        "class": "fa-brands fa-whatsapp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "whatsapp square",
@@ -1713,63 +2913,108 @@
     },
     {
         "name": "whmcs",
-        "class": "fa-brands fa-whmcs"
+        "class": "fa-brands fa-whmcs",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wikipedia w",
-        "class": "fa-brands fa-wikipedia-w"
+        "class": "fa-brands fa-wikipedia-w",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "windows",
-        "class": "fa-brands fa-windows"
+        "class": "fa-brands fa-windows",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wix",
-        "class": "fa-brands fa-wix"
+        "class": "fa-brands fa-wix",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wizards of-the-coast",
-        "class": "fa-brands fa-wizards-of-the-coast"
+        "class": "fa-brands fa-wizards-of-the-coast",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wodu",
-        "class": "fa-brands fa-wodu"
+        "class": "fa-brands fa-wodu",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wolf pack-battalion",
-        "class": "fa-brands fa-wolf-pack-battalion"
+        "class": "fa-brands fa-wolf-pack-battalion",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wordpress",
-        "class": "fa-brands fa-wordpress"
+        "class": "fa-brands fa-wordpress",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wordpress simple",
-        "class": "fa-brands fa-wordpress-simple"
+        "class": "fa-brands fa-wordpress-simple",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wpbeginner",
-        "class": "fa-brands fa-wpbeginner"
+        "class": "fa-brands fa-wpbeginner",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wpexplorer",
-        "class": "fa-brands fa-wpexplorer"
+        "class": "fa-brands fa-wpexplorer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wpforms",
-        "class": "fa-brands fa-wpforms"
+        "class": "fa-brands fa-wpforms",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "wpressr",
-        "class": "fa-brands fa-wpressr"
+        "class": "fa-brands fa-wpressr",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "xbox",
-        "class": "fa-brands fa-xbox"
+        "class": "fa-brands fa-xbox",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "xing",
-        "class": "fa-brands fa-xing"
+        "class": "fa-brands fa-xing",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "xing square",
@@ -1777,39 +3022,66 @@
     },
     {
         "name": "y combinator",
-        "class": "fa-brands fa-y-combinator"
+        "class": "fa-brands fa-y-combinator",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yahoo",
-        "class": "fa-brands fa-yahoo"
+        "class": "fa-brands fa-yahoo",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yammer",
-        "class": "fa-brands fa-yammer"
+        "class": "fa-brands fa-yammer",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yandex",
-        "class": "fa-brands fa-yandex"
+        "class": "fa-brands fa-yandex",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yandex international",
-        "class": "fa-brands fa-yandex-international"
+        "class": "fa-brands fa-yandex-international",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yarn",
-        "class": "fa-brands fa-yarn"
+        "class": "fa-brands fa-yarn",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yelp",
-        "class": "fa-brands fa-yelp"
+        "class": "fa-brands fa-yelp",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "yoast",
-        "class": "fa-brands fa-yoast"
+        "class": "fa-brands fa-yoast",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "youtube",
-        "class": "fa-brands fa-youtube"
+        "class": "fa-brands fa-youtube",
+        "free": [
+            "solid"
+        ]
     },
     {
         "name": "youtube square",
@@ -1817,6 +3089,9 @@
     },
     {
         "name": "zhihu",
-        "class": "fa-brands fa-zhihu"
+        "class": "fa-brands fa-zhihu",
+        "free": [
+            "solid"
+        ]
     }
 ]

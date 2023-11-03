@@ -47,11 +47,6 @@
             return {
                 iconClasses: fontawesomeAllClasses.concat(fontawesomeBrandClasses),
                 icon: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
                 removeIcon,
             };
         },

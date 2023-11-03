@@ -67,23 +67,11 @@
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
-    import BizIcon from '@/Biz/Icon.vue';
-    import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
-    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
-    import ConfigColumns from '@/Blocks/Configs/ConfigColumns.vue';
-    import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser.vue';
-    import ConfigInput from '@/Blocks/Configs/Input.vue';
-    import ConfigInputIcon from '@/Blocks/Configs/InputIcon.vue';
-    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
-    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
-    import ConfigSelect from '@/Blocks/Configs/Select.vue';
-    import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple.vue';
-    import TRBL from '@/Blocks/Configs/TRBL.vue';
-    import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
     import configs from '@/ComponentStructures/configs';
     import { camelCase, merge, forEach } from 'lodash';
     import { close as iconClose } from '@/Libs/icon-class';
     import { computed, reactive, onBeforeMount } from 'vue';
+    import { defineAsyncComponent } from 'vue';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { usePage } from '@inertiajs/vue3';
 
@@ -91,19 +79,19 @@
         components: {
             BizButtonIcon,
             BizCard,
-            BizIcon,
-            ConfigCheckbox,
-            ConfigCheckboxes,
-            ConfigImageBrowser,
-            ConfigInput,
-            ConfigInputIcon,
-            ConfigNumberAddons,
-            ConfigRowSection,
-            ConfigColumns,
-            ConfigSelect,
-            ConfigSelectMultiple,
-            TRBL,
-            TRBLInput,
+            BizIcon: defineAsyncComponent(() => import('../Biz/Icon.vue')),
+            ConfigCheckbox: defineAsyncComponent(() => import('../Blocks/Configs/Checkbox.vue')),
+            ConfigCheckboxes: defineAsyncComponent(() => import('../Blocks/Configs/Checkboxes.vue')),
+            ConfigColumns: defineAsyncComponent(() => import('../Blocks/Configs/ConfigColumns.vue')),
+            ConfigImageBrowser: defineAsyncComponent(() => import('../Blocks/Configs/ImageBrowser.vue')),
+            ConfigInput: defineAsyncComponent(() => import('../Blocks/Configs/Input.vue')),
+            ConfigInputIcon: defineAsyncComponent(() => import('../Blocks/Configs/InputIcon.vue')),
+            ConfigNumberAddons: defineAsyncComponent(() => import('../Blocks/Configs/NumberAddons.vue')),
+            ConfigRowSection: defineAsyncComponent(() => import('../Blocks/Configs/ConfigRowSection.vue')),
+            ConfigSelect: defineAsyncComponent(() => import('../Blocks/Configs/Select.vue')),
+            ConfigSelectMultiple: defineAsyncComponent(() => import('../Blocks/Configs/SelectMultiple.vue')),
+            TRBL: defineAsyncComponent(() => import('../Blocks/Configs/TRBL.vue')),
+            TRBLInput: defineAsyncComponent(() => import('../Blocks/Configs/TRBLInput.vue')),
         },
 
         props: {
@@ -128,7 +116,7 @@
                             `../../../modules/${moduleComponent.in_module}/Resources/assets/js/ComponentStructures/${moduleComponent.filename}.js`
                         ));
                     } else {
-                        promises.push(import(`../ComponentStructures/${moduleComponent.filename}.js`));
+                        promises.push(import(`../ComponentStructures/modules/${moduleComponent.filename}.js`));
                     }
                 });
 

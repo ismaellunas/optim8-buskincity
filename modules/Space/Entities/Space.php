@@ -269,4 +269,9 @@ class Space extends BaseModel implements TranslatableContract
             ),
         ])->filter()->implode(', ');
     }
+
+    public function getTypeNameAttribute(): string
+    {
+        return $this->type->name ?? "";
+    }
 }

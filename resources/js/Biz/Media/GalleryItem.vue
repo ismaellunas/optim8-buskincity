@@ -37,26 +37,26 @@
         <footer class="card-footer">
             <biz-button-icon
                 v-if="isImage"
-                icon="fas fa-expand"
                 title="Preview"
                 type="button"
                 :class="[actionClass, 'is-info']"
+                :icon="icon.expand"
                 @click="$emit('on-preview-clicked', medium)"
             />
             <biz-button-icon
                 v-if="isEditButtonEnabled"
-                icon="fas fa-pen"
                 title="Edit"
                 type="button"
                 :class="[actionClass, 'is-primary']"
+                :icon="icon.edit"
                 @click="$emit('on-edit-clicked', medium)"
             />
             <biz-button-icon
                 v-if="isDeleteEnabled"
-                icon="far fa-trash-alt"
                 title="Delete"
                 type="button"
                 :class="[actionClass, 'is-danger']"
+                :icon="icon.remove"
                 @click="$emit('on-delete-clicked', medium)"
             />
             <biz-button-download
@@ -81,6 +81,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
     import { isEmpty } from 'lodash';
+    import { expand, edit, remove } from '@/Libs/icon-class';
 
     export default {
         name: 'MediaGalleryItem',
@@ -120,8 +121,9 @@
             'on-preview-clicked',
         ],
 
-        data() {
+        setup() {
             return {
+                icon: { expand, edit, remove },
                 actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
             };
         },
