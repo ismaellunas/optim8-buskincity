@@ -13,10 +13,10 @@
         <div class="control">
             <biz-button-icon
                 v-if="isImage"
-                icon="fas fa-expand"
                 title="Preview"
                 type="button"
                 :class="['is-info']"
+                :icon="icon.expand"
                 @click="$emit('on-preview-clicked', medium)"
             />
         </div>
@@ -34,10 +34,10 @@
         <div class="control">
             <biz-button-icon
                 v-if="isDeleteEnabled"
-                icon="far fa-trash-alt"
                 title="Delete"
                 type="button"
                 :class="['is-danger']"
+                :icon="icon.remove"
                 @click="$emit('on-delete-clicked', medium)"
             />
         </div>
@@ -48,6 +48,7 @@
     import MixinMediaItem from '@/Mixins/MediaItem';
     import BizButtonDownload from '@/Biz/ButtonDownload.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import { expand, remove } from '@/Libs/icon-class';
 
     export default {
         name: 'BizMediaTextItem',
@@ -72,5 +73,11 @@
             'on-delete-clicked',
             'on-preview-clicked',
         ],
+
+        setup() {
+            return {
+                icon: { expand, remove },
+            };
+        },
     };
 </script>

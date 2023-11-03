@@ -157,7 +157,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { defaultCropperOptions } from '@/Libs/defaults';
     import { isEmpty } from 'lodash';
-    import { checkCircle, crop, flipHorizontal, flipVertical, rotateLeft, rotateRight } from '@/Libs/icon-class';
+    import { crop, flipHorizontal, flipVertical, rotateLeft, rotateRight } from '@/Libs/icon-class';
     import { ref } from 'vue';
 
     import Cropper from 'cropperjs';
@@ -208,7 +208,6 @@
                 previewFileSrc: useModelWrapper(props, emit),
                 imageCropper: useModelWrapper(props, emit, 'cropper'),
                 icon: {
-                    checkCircle,
                     crop,
                     flipHorizontal,
                     flipVertical,
