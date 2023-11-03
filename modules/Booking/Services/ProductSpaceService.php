@@ -75,7 +75,7 @@ class ProductSpaceService
         ];
     }
 
-    public function unAssignSpaceFromProducts(): void
+    public function unassignSpaceFromProducts(): void
     {
         $products = Product::where('productable_type', Space::class)->get();
 

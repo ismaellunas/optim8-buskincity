@@ -13,6 +13,6 @@ class UnassignSpaceFromProduct implements ShouldQueue
 
     public function handle(ModuleDeactivated $event)
     {
-        app(ProductSpaceService::class)->unAssignSpaceFromProducts();
+        app(ProductSpaceService::class)->unassignSpaceFromProducts();
     }
 }
