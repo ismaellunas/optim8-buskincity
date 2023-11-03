@@ -1,8 +1,9 @@
 import MixinContentHasImage from '@/Mixins/ContentHasImage';
 import MixinMediaImage from '@/Mixins/MediaImage';
-import { forEach } from 'lodash';
+import { forEach, find } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
+import { emitter } from '@/Libs/utils';
 
 export default {
     mixins: [
@@ -26,7 +27,16 @@ export default {
         return {
             imageListQueryParams: {},
             imageListRouteName: 'admin.media.lists',
+            modalImages: [],
         }
+    },
+
+    mounted() {
+        const self = this;
+
+        emitter.on('on-save-as-image', () => {
+            self.refreshImageLists();
+        });
     },
 
     methods: {
@@ -69,7 +79,7 @@ export default {
             const self = this;
             axios.get(url, {params: this.imageListQueryParams})
                 .then(function (response) {
-                    self.onImageListLoadedSuccess(response.data)
+                    self.modalImages = response.data;
                 })
                 .catch(function (error) {
                     oopsAlert();
@@ -87,7 +97,6 @@ export default {
 
         onImageSelected() {},
         onImageUpdated() {},
-        onImageListLoadedSuccess(data) {},
         onImageListLoadedFail(error) {},
 
         search(term) {
@@ -97,6 +106,16 @@ export default {
 
         refreshImageLists() {
             this.getImagesList(route(this.imageListRouteName));
+        },
+
+        refreshImageListByPageActive() {
+            let url = find(this.modalImages.links, 'active').url ?? null;
+
+            if (url) {
+                this.getImagesList(url);
+            } else {
+                this.refreshImageLists();
+            }
         },
     },
 };

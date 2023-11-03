@@ -42,7 +42,7 @@
             :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
-            @on-close-edit-modal="refreshImageLists"
+            @on-close-edit-modal="refreshImageListByPageActive()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -110,7 +110,6 @@
                 entityTemplate: this.entity.content.template,
                 images: this.dataImages,
                 indexModify: null,
-                modalImages: [],
                 sliderOptions: [1,2,3,4,5,6],
                 visibleSlide: 0,
             };
@@ -174,10 +173,6 @@
             onShownModal() { /* @override */
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
-            },
-
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
-                this.modalImages = data;
             },
 
             selectImage(image) { /* @override Mixins/ContainImageContent */
