@@ -79,7 +79,7 @@
 
             <div
                 v-if="screenType != 'mobile'"
-                class="column is-6-desktop is-12-tablet is-12-mobile"
+                class="column is-12-desktop is-12-tablet is-12-mobile"
             >
                 <biz-pagination
                     class="mt-4"

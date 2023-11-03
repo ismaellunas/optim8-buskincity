@@ -37,6 +37,7 @@
                                 <biz-input
                                     v-model="term"
                                     placeholder="Search..."
+                                    @keydown.enter.prevent
                                     @keyup.prevent="searchIcon(term)"
                                 />
                                 <span class="icon is-small is-left">
@@ -88,28 +89,42 @@
                     </div>
                 </div>
                 <div class="columns">
-                    <div
-                        v-if="filteredIcon.length > 0"
-                        class="column"
-                    >
-                        <template
-                            v-for="(icon, index) in filteredIcon"
-                            :key="index"
+                    <fieldset :disabled="isProcessing">
+                        <div
+                            v-if="filteredIcon.length > 0"
+                            class="column"
                         >
                             <biz-button-icon
+                                v-for="icon in displayedIcons"
+                                :key="selectedType+'_'+icon.class"
                                 :icon="iconFormatter(icon.class)"
                                 class="mr-1 mb-1"
                                 type="button"
-                                @click="onSelectedIcon(iconFormatter(icon.class))"
+                                @click.prevent="onSelectedIcon(iconFormatter(icon.class))"
                             />
-                        </template>
-                    </div>
-                    <div
-                        v-else
-                        class="column"
-                    >
-                        <p>Icon not found.</p>
-                    </div>
+                        </div>
+                        <div
+                            v-else
+                            class="column"
+                        >
+                            <p>Icon not found.</p>
+                        </div>
+
+                        <div
+                            v-if="showAll"
+                            class="column is-full mt-2"
+                        >
+                            <biz-button
+                                v-show="canShowMoreIcons"
+                                :disabled="isProcessing"
+                                class="is-fullwidth"
+                                type="button"
+                                @click.stop="showMoreIcons"
+                            >
+                                Show more
+                            </biz-button>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </template>
@@ -122,8 +137,9 @@
     import BizInput from '@/Biz/Input.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizSelect from '@/Biz/Select.vue';
+    import { debounce, filter, find, isEmpty, upperFirst } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
-    import { debounce, filter, isEmpty } from 'lodash';
+    import { ref } from 'vue';
 
     export default {
         name: 'IconBrowser',
@@ -157,26 +173,64 @@
             'remove-icon',
         ],
 
-        data() {
+        setup(props) {
             return {
-                filteredIcon: [],
-                selectedType: null,
-                showAll: false,
-                iconDelay: 100,
-                term: "",
-                typeOptions: [
-                    { value: 'fa-solid', name: 'Solid' },
-                    { value: 'fa-regular', name: 'Regular' },
-                    { value: 'fa-light', name: 'Light' },
-                    { value: 'fa-thin', name: 'Thin' },
-                    { value: 'fa-duotone', name: 'Duotone' },
+                filteredIcon: ref([]),
+                maxShown: ref(52),
+                fontStyles: [
+                    'solid',
+                    'regular',
+                    'light',
+                    'thin',
+                    'duotone',
                 ],
+                selectedType: ref(null),
+                showAll: ref(false),
+                iconDelay: 100,
+                term: ref(""),
+                isProcessing: ref(false),
             };
+        },
+
+        computed: {
+            typeOptions() {
+                const availableStyles = filter(this.fontStyles, (fontStyle) => {
+                    if (process.env.fontawesomeFree) {
+                        return fontStyle == 'solid';
+                    }
+                    return fontStyle;
+                });
+
+                return availableStyles.map((fontStyle) => ({
+                    value: 'fa-' + fontStyle,
+                    name: upperFirst(fontStyle),
+                }));
+            },
+
+            availableIconClasses() {
+                return process.env.fontawesomeFree
+                    ? filter(
+                        this.iconClasses,
+                        (icon) => icon?.free && icon.free.includes('solid')
+                    )
+                    : this.iconClasses
+            },
+
+            displayedIcons() {
+                return this.filteredIcon.slice(0, this.maxShown);
+            },
+
+            canShowMoreIcons() {
+                return (
+                    this.showAll
+                    && (this.maxShown <= this.availableIconClasses.length)
+                );
+            },
         },
 
         mounted() {
             this.selectedType = this.typeOptions[0].value;
-            this.filteredIcon = this.iconSlice(this.iconClasses);
+            this.filteredIcon = this.iconSlice(this.availableIconClasses);
         },
 
         methods: {
@@ -188,13 +242,13 @@
             searchIcon: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 2) {
                     this.filteredIcon = this.iconSlice(
-                        filter(this.iconClasses, function (icon) {
+                        filter(this.availableIconClasses, function (icon) {
                             return new RegExp(term, 'i').test(icon.name);
                         })
                     );
                 } else {
                     this.filteredIcon = this.iconSlice(
-                        this.iconClasses
+                        this.availableIconClasses
                     );
                 }
             }, debounceTime),
@@ -219,9 +273,16 @@
                         this.searchIcon(this.term);
                     } else {
                         this.filteredIcon = this.iconSlice(
-                            this.iconClasses
+                            this.availableIconClasses
                         );
                     }
+
+                    if (this.showAll) {
+                        this.maxShown = this.maxShown + (52 * 4);
+                    } else {
+                        this.maxShown = 52;
+                    }
+
                 }, this.iconDelay);
             },
 
@@ -240,6 +301,15 @@
             iconFormatter(iconClass) {
                 return this.hasType ? this.selectedType + ' ' + iconClass : iconClass
             },
+
+            showMoreIcons() {
+                this.isProcessing = true;
+
+                setTimeout(() => {
+                    this.maxShown = this.maxShown + (52 * 4);
+                    setTimeout(() => { this.isProcessing = false}, 1500);
+                }, this.iconDelay);
+            },
         },
-    }
+    };
 </script>
