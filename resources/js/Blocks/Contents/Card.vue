@@ -74,7 +74,7 @@
             :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
-            @on-close-edit-modal="refreshImageLists"
+            @on-close-edit-modal="refreshImageListByPageActive()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -137,7 +137,6 @@
                 entityImage: this.entity.content.cardImage.figure.image,
                 images: this.dataImages,
                 isFormOpen: false,
-                modalImages: [],
             };
         },
         computed: {
@@ -225,9 +224,6 @@
             onShownModal() { /* @overide */
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
-            },
-            onImageListLoadedSuccess(data) { /* @override MixinContentHasMediaLibrary */
-                this.modalImages = data;
             },
             onImageListLoadedFail(error) { /* @override MixinContentHasMediaLibrary */
                 this.closeModal();

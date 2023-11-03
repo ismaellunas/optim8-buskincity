@@ -385,9 +385,9 @@ class ProductController extends CrudController
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
-                'space' => __('Space'),
+                'space' => __(':space_term.space'),
                 'select_space' => __('Select space'),
-                'select_space_note' => __('The product can only have one space.'),
+                'select_space_note' => __('The :resource can only have one space.', ['resource' => __(':booking_term.product')]),
                 'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
