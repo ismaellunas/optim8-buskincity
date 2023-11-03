@@ -181,7 +181,7 @@
                     </template>
                 </div>
 
-                <div class="navbar-end">
+                <div class="navbar-end navbar-end-layout-2">
                     <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2">
                         <a class="navbar-link">
                             {{ $page.props.user.full_name }}
@@ -271,13 +271,3 @@
         },
     }
 </script>
-
-<style>
-    @media screen and (min-width: 1024px){
-        .navbar-end {
-            padding: 20px;
-            right: 0;
-            position: absolute;
-        }
-    }
-</style>

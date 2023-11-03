@@ -140,7 +140,7 @@
                 </div>
             </div>
 
-            <div class="navbar-end is-hidden-touch">
+            <div class="navbar-end navbar-end-layout-2 is-hidden-touch">
                 @guest
                     <div class="navbar-item">
                         <div class="buttons">
@@ -228,7 +228,7 @@
                 @endforeach
             </div>
 
-            <div class="navbar-end is-hidden-desktop">
+            <div class="navbar-end navbar-end-layout-2 is-hidden-desktop">
                 @guest
                     <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                         <a href="#" class="navbar-link">{{ strtoupper($currentLanguage) }}</a>
@@ -303,16 +303,4 @@
         document.getElementById('form-logout').submit();
     }
 </script>
-@endpush
-
-@push('bottom_styles')
-<style>
-    @media screen and (min-width: 1024px){
-        .navbar-end {
-            padding: 20px;
-            right: 0;
-            position: absolute;
-        }
-    }
-</style>
 @endpush
