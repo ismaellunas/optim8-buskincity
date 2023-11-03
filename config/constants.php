@@ -5,6 +5,8 @@ return [
 
     'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
 
+    'fontawesome_free' => env('FONTAWESOME_FREE', false),
+
     'error_reporting' => env('ERROR_REPORTING', false),
 
     'one_megabyte' => 1024,
@@ -287,6 +289,13 @@ return [
                 'value' => null,
                 'order' => 14,
                 'group' => 'key.tinymce'
+            ],
+            [
+                'key' => 'fontawesome_kit_name',
+                'display_name' => 'Fontawesome Kit Name',
+                'value' => null,
+                'order' => 15,
+                'group' => 'key.fontawesome'
             ],
         ],
 

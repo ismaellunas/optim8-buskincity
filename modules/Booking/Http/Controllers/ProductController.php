@@ -18,12 +18,14 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Space\Entities\Space;
 
 class ProductController extends CrudController
 {
@@ -33,7 +35,8 @@ class ProductController extends CrudController
     public function __construct(
         private ProductService $productService,
         private ProductEventService $productEventService,
-        private CountryService $countryService
+        private ProductSpaceService $productSpaceService,
+        private CountryService $countryService,
     ) {
         $this->authorizeResource(Product::class, 'product');
     }
@@ -194,6 +197,8 @@ class ProductController extends CrudController
 
         $product->load('eventSchedule.weeklyHours.times');
 
+        $formSpace = $this->productSpaceService->formResource($product);
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
                 [
@@ -237,12 +242,17 @@ class ProductController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
                 ],
+                'space' => [
+                    'manageProductSpace' => $user->can('manageProductSpace', Space::class),
+                ],
             ],
             'instructions' => $this->getInstructions(),
             'i18n' => $this->translationCreateEditPage(),
             'dimensions' => [
                 'gallery' => config('constants.dimensions.gallery'),
             ],
+            'space' => $formSpace,
+            'spaceOptions' => $this->productSpaceService->getSpaceOptions($formSpace['id']),
         ]));
     }
 
@@ -375,11 +385,14 @@ class ProductController extends CrudController
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
+                'space' => __(':space_term.space'),
+                'select_space' => __('Select space'),
+                'select_space_note' => __('The :resource can only have one space.', ['resource' => __(':booking_term.product')]),
                 'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
                     'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),
-                ]
+                ],
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

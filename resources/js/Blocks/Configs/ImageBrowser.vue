@@ -47,6 +47,7 @@
             :search="search"
             @close="closeModal()"
             @on-clicked-pagination="getImagesList"
+            @on-close-edit-modal="refreshImageLists()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"

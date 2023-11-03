@@ -4,18 +4,22 @@ namespace App\View\Components\Headers;
 
 class NavbarLayoutTwo extends BaseNavbarLayout
 {
-    public $menuChunks;
-    public $layoutName = 'navbar-layout-one';
+    protected $layoutName = 'navbar-layout-two';
 
-    public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
+    public function __construct($menus, $currentLanguage, $languageOptions)
     {
-        parent::__construct($menus, $currentLanguage, $logoUrl, $languageOptions);
-        $this->menuChunks = $this->splitMenu();
+        parent::__construct($menus, $currentLanguage, $languageOptions);
+
+        $this->splitMenus();
     }
 
-    private function splitMenu()
+    private function splitMenus(): void
     {
-        $half = ceil(count($this->menus) / 2);
-        return collect($this->menus)->chunk($half);
+        $half = ceil(count($this->menus['nav']) / 2);
+
+        $this->menus['splited'] = collect($this->menus['nav'])
+            ->chunk($half)
+            ->map(fn ($menu) => $menu->values()->all())
+            ->all();
     }
 }

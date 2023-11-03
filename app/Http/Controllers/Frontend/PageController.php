@@ -37,7 +37,9 @@ class PageController extends Controller
 
     private function defaultHomePage()
     {
-        return view('home', ['title' => env('APP_NAME')]);
+        return view('home', [
+            'title' => __('Homepage'),
+        ]);
     }
 
     private function userCanAccessPage(): bool

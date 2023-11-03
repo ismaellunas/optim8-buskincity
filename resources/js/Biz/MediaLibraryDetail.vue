@@ -77,6 +77,7 @@
                 <div class="buttons">
                     <biz-button
                         type="button"
+                        class="component-configurable"
                         :disabled="isProcessing"
                         @click="closeModal"
                     >
@@ -136,7 +137,7 @@
     import { getBlob, getCanvas } from '@/Libs/crop-helper';
     import { startsWith } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, emitter } from '@/Libs/utils';
 
     export default {
         name: 'BizMediaLibraryDetail',
@@ -299,7 +300,18 @@
             },
 
             saveAsImageConfirm(cropper) {
-                confirmAlert("Are you sure?", "You will create a new image")
+                confirmAlert(
+                    "Are you sure?",
+                    "You will create a new image",
+                    "Yes",
+                    {
+                        customClass: {
+                            container: 'high-z-index',
+                            confirmButton: 'component-configurable',
+                            cancelButton: 'component-configurable',
+                        }
+                    }
+                )
                     .then((result) => result.isConfirmed ? this.saveAsImage(cropper) : false);
             },
 
@@ -327,7 +339,7 @@
 
                         successAlert(page.props.flash.message);
 
-                        self.$emit('on-close-edit-modal');
+                        emitter.emit('on-save-as-image');
                     },
                     onError: (errors) => {
                         oopsAlert();

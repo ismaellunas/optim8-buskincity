@@ -41,4 +41,15 @@ class Schedule extends BaseModel
     {
         return $this->hasMany(Event::class);
     }
+
+    public function getDisplayTimezoneAttribute(): ?string
+    {
+        $timezone = $this->timezone ?? null;
+
+        if ($timezone == 'UTC') {
+            $timezone = 'GMT';
+        }
+
+        return $timezone;
+    }
 }
