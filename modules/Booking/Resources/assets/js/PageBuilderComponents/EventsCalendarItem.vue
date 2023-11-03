@@ -78,7 +78,7 @@
 
                             <tr v-if="isStartDateRowDisplayed">
                                 <td :class="tdLabelClass">
-                                    <biz-icon :icon="bookingIcon.calendar" />
+                                    <biz-icon :icon="icon.calendar" />
                                 </td>
                                 <td :class="tdDescriptionClass">
                                     <template v-if="record.duration">
@@ -96,7 +96,7 @@
 
                             <tr v-if="isEndDateRowDisplayed">
                                 <td :class="tdLabelClass">
-                                    <biz-icon :icon="bookingIcon.duration" />
+                                    <biz-icon :icon="icon.duration" />
                                 </td>
                                 <td :class="tdDescriptionClass">
                                     <span v-if="record.duration">
@@ -141,8 +141,7 @@
 </template>
 
 <script>
-    import bookingIcon from '@mod/Booking/Resources/assets/js/Libs/booking-icon';
-    import { camera, city, locationMark } from '@/Libs/icon-class';
+    import { camera, city, locationMark, calendar, duration, timezone } from '@/Libs/icon-class';
     import { computed, defineAsyncComponent } from 'vue';
 
     export default {
@@ -163,8 +162,7 @@
 
         setup(props, { emit }) {
             return {
-                bookingIcon,
-                icon: { camera, city, locationMark },
+                icon: { camera, city, locationMark, calendar, duration, timezone },
                 tdDescriptionClass: "m-0 py-0 px-0",
                 tdLabelClass: "m-0 py-0 pl-0 pr-1",
             };

@@ -70,6 +70,7 @@
                 :instructions="instructions"
                 @close="closeModal"
                 @on-clicked-pagination="getMediaList"
+                @on-close-edit-modal="refreshMediaListByPageActive()"
                 @on-media-selected="onSelectMedia"
                 @on-media-submitted="onUpdateMedia"
                 @on-view-changed="setView"
@@ -99,7 +100,7 @@
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
     import BizModalMediaLibraryDetail from '@/Biz/Modal/MediaLibraryDetail.vue';
     import { image as imageIcon } from '@/Libs/icon-class.js';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, emitter } from '@/Libs/utils';
     import { isEmpty, cloneDeep, isArray } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
 

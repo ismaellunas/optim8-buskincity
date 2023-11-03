@@ -88,13 +88,16 @@
                 <td>
                     <div class="level-right">
                         <biz-button-link
-                            class="is-ghost has-text-black"
+                            class="is-primary"
                             :href="route(baseRouteName+'.show', product.id)"
                         >
                             <biz-icon
                                 class="is-small"
                                 :icon="calendarCirclePlusIcon"
                             />
+                            <span>
+                                {{ i18n.book_now }}
+                            </span>
                         </biz-button-link>
                     </div>
                 </td>
@@ -138,6 +141,7 @@
             products: { type: Object, required: true },
             countryOptions: { type: Array, default: () => [] },
             cityOptions: { type: Array, default: () => [] },
+            i18n: { type: Object, required: true },
         },
 
         setup(props) {

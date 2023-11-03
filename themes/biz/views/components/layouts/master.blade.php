@@ -32,18 +32,7 @@
 
         @stack('styles')
 
-        @env ('production')
-            <!-- Scripts -->
-            <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
-        @endenv
-
-        @env ('local')
-            @if (config('constants.fontawesome_local'))
-                @vite(['resources/js/fontawesome.js'])
-            @else
-                <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
-            @endif
-        @endenv
+        @include('fontawesome')
 
         @vite('resources/js/bulma-misc.js')
 

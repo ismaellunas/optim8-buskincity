@@ -56,7 +56,7 @@
             :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
-            @on-close-edit-modal="refreshImageLists"
+            @on-close-edit-modal="refreshImageListByPageActive()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -115,7 +115,6 @@
                 entityImage: this.entity.content.figure.image,
                 images: this.dataImages,
                 isFormOpen: false,
-                modalImages: [],
             };
         },
         computed: {
@@ -168,9 +167,6 @@
             onShownModal() { /* @override */
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
-            },
-            onImageListLoadedSuccess(data) { /* @override Mixins/MixinContentHasMediaLibrary */
-                this.modalImages = data;
             },
             onImageListLoadedFail(error) { /* @override Mixins/MixinContentHasMediaLibrary */
                 this.closeModal();

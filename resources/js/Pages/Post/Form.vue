@@ -274,7 +274,7 @@
             :instructions="instructions.mediaLibrary"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
-            @on-close-edit-modal="refreshMediaList"
+            @on-close-edit-modal="refreshMediaListByPageActive()"
             @on-media-selected="selectFile"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"

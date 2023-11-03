@@ -6,14 +6,15 @@ use App\Services\MenuService;
 
 class NavbarLayoutThree extends BaseNavbarLayout
 {
-    public $layoutName = 'navbar-layout-one';
-    public $socialMediaMenus;
+    protected $layoutName = 'navbar-layout-three';
 
-    public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
+    public $socialMediaMenus = [];
+
+    public function __construct($menus, $currentLanguage, $languageOptions)
     {
-        parent::__construct($menus, $currentLanguage, $logoUrl, $languageOptions);
-        $menuService = app(MenuService::class);
-        $this->socialMediaMenus = $menuService->getSocialMediaMenus();
+        parent::__construct($menus, $currentLanguage, $languageOptions);
 
+        $this->socialMediaMenus = app(MenuService::class)
+            ->getSocialMediaMenus();
     }
 }
