@@ -27,7 +27,7 @@ use App\Http\Controllers\{
     ThemeFooterController,
     ThemeFooterMenuController,
     ThemeHeaderController,
-    ThemeHeaderMenuController,
+    ThemeHeaderNavigationController,
     ThemeSeoController,
     TranslationManagerController,
     TwoFactorAuthenticatedSessionController,
@@ -113,7 +113,7 @@ Route::middleware(array_filter([
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
             Route::post('/layout', [ThemeHeaderController::class, 'update'])->name('layout.update');
-            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+            Route::post('/navigation', [ThemeHeaderNavigationController::class, 'update'])->name('navigation.update');
         });
 
         Route::prefix('footer')->name('footer.')->group(function () {
@@ -256,7 +256,7 @@ Route::name('api.')
         Route::post('/media/replace', [MediaController::class, 'apiReplace'])
             ->name('media.replace');
 
-        Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
+        Route::post('/theme/header/menu-item', [ThemeHeaderNavigationController::class, 'apiValidateMenuItem'])
             ->name('theme.header.menu-item.validate');
 
         Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])

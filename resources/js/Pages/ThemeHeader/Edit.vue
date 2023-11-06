@@ -3,7 +3,7 @@
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
-            <biz-tab>
+            <biz-tab class="is-boxed">
                 <ul>
                     <biz-tab-list
                         v-for="(tab, index) in tabs"
@@ -16,16 +16,6 @@
                         </a>
                     </biz-tab-list>
                 </ul>
-
-                <biz-button
-                    type="button"
-                    class="is-primary ml-2"
-                    @click="onSave(activeTab)"
-                >
-                    <span>
-                        {{ i18n.save }}
-                    </span>
-                </biz-button>
             </biz-tab>
 
             <layout
@@ -49,24 +39,23 @@
 <script>
     import MixinHasTab from '@/Mixins/HasTab';
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import Layout from './Layout.vue';
-    import Navigation from './Navigation.vue';
-    import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizTab from '@/Biz/Tab.vue';
     import BizTabList from '@/Biz/TabList.vue';
+    import Layout from './Layout.vue';
+    import Navigation from './Navigation.vue';
     import { confirmLeaveProgress } from '@/Libs/alert';
+    import { ref } from 'vue';
 
     export default {
         name: "ThemeHeaderEdit",
 
         components: {
-            Layout,
-            Navigation,
-            BizButton,
             BizErrorNotifications,
             BizTab,
             BizTabList,
+            Layout,
+            Navigation,
         },
 
         mixins: [
@@ -75,10 +64,10 @@
 
         provide() {
             return {
-                instructions: this.instructions,
                 can: this.can,
-                i18n: this.i18n,
                 dimensions: this.dimensions,
+                i18n: this.i18n,
+                instructions: this.instructions,
             };
         },
 
@@ -89,31 +78,22 @@
             can: { type: Object, default: () => {} },
             dimensions: { type: Object, default: () => {} },
             headerMenus: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => {}},
             instructions: { type: Object, default: () => {} },
             logoMedia: { type: Object, default: () => {} },
             menu: { type: Object, required: true },
             settings: { type: Object, required: true },
             title: { type: String, default: "-" },
-            i18n: { type: Object, default: () => ({
-                layout : 'Layout',
-                navigation : 'Navigation',
-                save : 'Save',
-            }) },
         },
 
         setup(props) {
             return {
+                activeTab: ref('layout'),
                 tabs: {
                     layout: { title: props.i18n.layout, id: 'layout-tab-trigger' },
                     navigation: { title: props.i18n.navigation, id: 'navigation-tab-trigger' },
                 },
             }
-        },
-
-        data() {
-            return {
-                activeTab: 'layout',
-            };
         },
 
         methods: {
@@ -136,16 +116,6 @@
                     } else {
                         this.activeTab = tab;
                     }
-                }
-            },
-
-            onSave(tab) {
-                if (tab == 'layout') {
-                    this.$refs.layout.onSubmit();
-                }
-
-                if (tab == 'navigation') {
-                    this.$refs.navigation.updateMenuItems();
                 }
             },
 

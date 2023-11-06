@@ -73,19 +73,10 @@
 
 <script>
     import { usePage } from '@inertiajs/vue3';
+    import { computed } from 'vue';
 
     export default {
-        name: 'HeaderLayout',
-
-        inject: {
-            i18n: { default: () => ({
-                header_layout : 'Header layout',
-                standard : 'Standard',
-                centered_logo : 'Centered logo',
-                standard_with_social_media : 'Standard with social media',
-                layout : 'Layout',
-            }) },
-        },
+        name: 'LayoutHeader',
 
         props: {
             modelValue: {
@@ -101,6 +92,7 @@
         setup() {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
+                i18n: computed(() => usePage().props.i18n),
             };
         },
 
