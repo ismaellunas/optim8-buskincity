@@ -1065,5 +1065,5 @@
     "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.",
     "Page builder components currently in use that are related to the :module module will be deleted.": "Page builder components currently in use that are related to the :module module will be deleted.",
     "The field name configuration for the :field field is required.": "The field name configuration for the :field field is required.",
-    "The :names field name must be unique and cannot match any existing field names": "The :names field name must be unique and cannot match any existing field names"
+    "The :names field name must be unique and cannot match any existing field names.": "The :names field name must be unique and cannot match any existing field names."
 }

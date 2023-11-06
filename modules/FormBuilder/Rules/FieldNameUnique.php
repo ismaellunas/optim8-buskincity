@@ -25,7 +25,7 @@ class FieldNameUnique implements Rule
 
     public function message()
     {
-        return __('The :names field name must be unique and cannot match any existing field names', [
+        return __('The :names field name must be unique and cannot match any existing field names.', [
             'names' => $this->duplicateNames->implode(', ')
         ]);
     }
