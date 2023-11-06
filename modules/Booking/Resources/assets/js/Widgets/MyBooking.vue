@@ -10,40 +10,43 @@
         <div class="box is-shadowless">
             <div class="columns is-multiline is-mobile">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
-                    <biz-table
+                    <div
                         v-if="data.records.length > 0"
-                        is-fullwidth
+                        class="table-container"
                     >
-                        <thead>
-                            <tr>
-                                <th>{{ i18n.product }}</th>
-                                <th>{{ i18n.city }}</th>
-                                <th>{{ i18n.country }}</th>
-                                <th>{{ i18n.time }}</th>
-                                <th>{{ i18n.actions }}</th>
-                            </tr>
-                        </thead>
+                        <biz-table is-fullwidth>
+                            <thead>
+                                <tr>
+                                    <th>{{ i18n.product }}</th>
+                                    <th>{{ i18n.city }}</th>
+                                    <th>{{ i18n.country }}</th>
+                                    <th>{{ i18n.time }}</th>
+                                    <th>{{ i18n.actions }}</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            <tr
-                                v-for="record in data.records"
-                                :key="record.order_id"
-                            >
-                                <td>{{ record.name }}</td>
-                                <td>{{ record.city }}</td>
-                                <td>{{ record.country }}</td>
-                                <td>{{ record.booked_at }}</td>
-                                <td>
-                                    <biz-button-link
-                                        class="is-small is-link is-light"
-                                        :href="record.url"
-                                    >
-                                        <biz-icon :icon="icon.show" />
-                                    </biz-button-link>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </biz-table>
+                            <tbody>
+                                <tr
+                                    v-for="record in data.records"
+                                    :key="record.order_id"
+                                >
+                                    <td>{{ record.name }}</td>
+                                    <td>{{ record.city }}</td>
+                                    <td>{{ record.country }}</td>
+                                    <td>{{ record.booked_at }}</td>
+                                    <td>
+                                        <biz-button-link
+                                            class="is-small is-link is-light"
+                                            :href="record.url"
+                                        >
+                                            <biz-icon :icon="icon.show" />
+                                        </biz-button-link>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </biz-table>
+                    </div>
+
                     <p
                         v-else
                         class="has-text-centered"

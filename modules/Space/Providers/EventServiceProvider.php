@@ -14,6 +14,7 @@ use Modules\Space\Listeners\RemoveSpaceFromMenus;
 use Modules\Space\Listeners\SetPublishedEventsDrafts;
 use Modules\Space\Listeners\SetPublishedPageTranslationsDrafts;
 use Modules\Space\Listeners\UnassignAllSpaceManagers;
+use Modules\Space\Listeners\UnassignSpaceFromProduct;
 use Modules\Space\Observers\PageTranslationObserver;
 use Modules\Space\Observers\SpaceObserver;
 
@@ -32,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
             SetPublishedPageTranslationsDrafts::class,
             RemoveSpaceFromMenus::class,
             SanitizeDisabledComponentsOnPageTranslations::class,
+            UnassignSpaceFromProduct::class,
         ],
     ];
 

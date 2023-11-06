@@ -11,7 +11,8 @@ abstract class BaseNavbarLayout extends Component
     public $menus;
     public $currentLanguage;
     public $languageOptions;
-    public $layoutName;
+
+    protected $layoutName;
 
     public function __construct($menus, $currentLanguage, $languageOptions)
     {

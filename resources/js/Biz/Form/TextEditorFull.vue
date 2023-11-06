@@ -38,7 +38,7 @@
             :style="{zIndex: 1300}"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
-            @on-close-edit-modal="refreshMediaList"
+            @on-close-edit-modal="refreshMediaListByPageActive()"
             @on-media-selected="selectFile"
             @on-media-submitted="onMediaSubmitted"
             @on-view-changed="setView"
