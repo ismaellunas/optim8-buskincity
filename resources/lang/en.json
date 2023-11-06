@@ -1053,7 +1053,6 @@
     "Choose roles": "Choose roles",
     "Select your timezone to ensure that all scheduled events and time-related information are accurate.": "Select your timezone to ensure that all scheduled events and time-related information are accurate.",
     "This page update may affect the navigation menu on the Theme Header and Footer.": "This page update may affect the navigation menu on the Theme Header and Footer.",
-    "You will not be able to change your country in the future.": "You will not be able to change your country in the future.",
     "Editing :title :resource": "Editing :title :resource",
     "Navigations": "Navigations",
     "Active": "Active",
@@ -1064,5 +1063,7 @@
     "Are you sure want to deactivate :module module?": "Are you sure want to deactivate :module module?",
     "All permissions assigned to users from the :module module will be unassigned from those users.": "All permissions assigned to users from the :module module will be unassigned from those users.",
     "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.",
-    "Page builder components currently in use that are related to the :module module will be deleted.": "Page builder components currently in use that are related to the :module module will be deleted."
+    "Page builder components currently in use that are related to the :module module will be deleted.": "Page builder components currently in use that are related to the :module module will be deleted.",
+    "The field name configuration for the :field field is required.": "The field name configuration for the :field field is required.",
+    "The :names field name must be unique and cannot match any existing field names": "The :names field name must be unique and cannot match any existing field names"
 }
