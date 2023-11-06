@@ -6,7 +6,10 @@
                     {{ i18n.menu_items }}
                 </span>
 
-                <biz-tooltip :message="i18n.menu_items_note" />
+                <biz-tooltip
+                    class="ml-1"
+                    :message="i18n.tips.menu_items"
+                />
             </div>
             <div class="column">
                 <biz-language-tab
@@ -93,6 +96,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
@@ -100,12 +104,12 @@
     import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
     import NavigationFormMenu from './NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
-    import { usePage, useForm } from '@inertiajs/vue3';
-    import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
-    import { forEach, cloneDeep } from 'lodash';
-    import { computed, ref } from 'vue';
-    import { sentenceCase } from 'change-case';
     import { add as iconAdd } from '@/Libs/icon-class';
+    import { forEach, cloneDeep } from 'lodash';
+    import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
+    import { ref } from 'vue';
+    import { sentenceCase } from 'change-case';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'ThemeHeaderNavigation',
@@ -123,6 +127,7 @@
         mixins: [
             MixinHasLoader,
             MixinHasModal,
+            MixinHasTranslation,
         ],
 
         props: {
@@ -146,7 +151,6 @@
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
                 defaultLocale,
-                i18n: computed(() => usePage().props.i18n),
                 iconAdd,
                 localeOptions: usePage().props.languageOptions ?? [],
                 selectedLocale: ref(defaultLocale),
@@ -239,7 +243,7 @@
                         if (child['children'].length > 0) {
                             self.menuForm.menu_items = self.lastDataMenuItems;
                             oopsAlert({
-                                text: "Cannot add more than 2 levels of nested menus.",
+                                text: self.i18n.nested_menu_error_message,
                             });
                         }
                     });

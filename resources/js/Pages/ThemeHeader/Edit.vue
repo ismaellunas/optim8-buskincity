@@ -45,7 +45,7 @@
     import Layout from './Layout.vue';
     import Navigation from './Navigation.vue';
     import { confirmLeaveProgress } from '@/Libs/alert';
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
 
     export default {
         name: "ThemeHeaderEdit",
@@ -66,7 +66,6 @@
             return {
                 can: this.can,
                 dimensions: this.dimensions,
-                i18n: this.i18n,
                 instructions: this.instructions,
             };
         },
@@ -87,11 +86,13 @@
         },
 
         setup(props) {
+            let i18n = computed(() => props.i18n);
+
             return {
                 activeTab: ref('layout'),
                 tabs: {
-                    layout: { title: props.i18n.layout, id: 'layout-tab-trigger' },
-                    navigation: { title: props.i18n.navigation, id: 'navigation-tab-trigger' },
+                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
+                    navigation: { title: i18n.value.navigation, id: 'navigation-tab-trigger' },
                 },
             }
         },

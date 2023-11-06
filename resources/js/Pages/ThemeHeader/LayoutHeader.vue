@@ -72,11 +72,15 @@
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import { usePage } from '@inertiajs/vue3';
-    import { computed } from 'vue';
 
     export default {
         name: 'LayoutHeader',
+
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props: {
             modelValue: {
@@ -92,7 +96,6 @@
         setup() {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
-                i18n: computed(() => usePage().props.i18n),
             };
         },
 

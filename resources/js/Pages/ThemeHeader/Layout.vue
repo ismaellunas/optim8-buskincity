@@ -39,6 +39,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import LayoutHeader from './LayoutHeader.vue';
@@ -58,6 +59,7 @@
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
+            MixinHasTranslation,
         ],
 
         inject: {
@@ -80,7 +82,6 @@
                     layout: parseInt(settings.value.header_layout?.value) ?? null,
                     logo: parseInt(settings.value.header_logo_media_id?.value) ?? null,
                 }),
-                i18n: computed(() => usePage().props.i18n),
             };
         },
 
