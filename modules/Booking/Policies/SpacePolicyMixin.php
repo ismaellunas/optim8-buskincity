@@ -13,6 +13,7 @@ class SpacePolicyMixin
         return function (User $user, Space $space) {
             if (
                 ! $space->product
+                || ! $space->product->isPublished
                 || ! app(ModuleService::class)->isModuleActive()
             ) {
                 return false;
