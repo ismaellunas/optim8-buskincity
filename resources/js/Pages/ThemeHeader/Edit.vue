@@ -18,19 +18,19 @@
                 </ul>
             </biz-tab>
 
+            <navigation
+                v-if="activeTab == 'navigation'"
+                ref="navigation"
+                :header-menus="headerMenus"
+                :menu="menu"
+            />
+
             <layout
                 v-if="activeTab == 'layout'"
                 ref="layout"
                 :logo-media="logoMedia"
                 :settings="settings"
                 :instructions="instructions"
-            />
-
-            <navigation
-                v-if="activeTab == 'navigation'"
-                ref="navigation"
-                :header-menus="headerMenus"
-                :menu="menu"
             />
         </div>
     </div>
@@ -89,10 +89,10 @@
             let i18n = computed(() => props.i18n);
 
             return {
-                activeTab: ref('layout'),
+                activeTab: ref('navigation'),
                 tabs: {
-                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
                     navigation: { title: i18n.value.navigation, id: 'navigation-tab-trigger' },
+                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
                 },
             }
         },
