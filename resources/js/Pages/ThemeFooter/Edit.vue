@@ -3,7 +3,7 @@
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
-            <biz-tab>
+            <biz-tab class="is-boxed">
                 <ul>
                     <biz-tab-list
                         v-for="(tab, index) in tabs"
@@ -16,16 +16,6 @@
                         </a>
                     </biz-tab-list>
                 </ul>
-
-                <biz-button
-                    type="button"
-                    class="is-primary ml-2"
-                    @click="onSave(activeTab)"
-                >
-                    <span>
-                        {{ i18n.save }}
-                    </span>
-                </biz-button>
             </biz-tab>
 
             <layout
@@ -50,11 +40,11 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import Layout from './Layout.vue';
     import Navigation from './Navigation.vue';
-    import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizTab from '@/Biz/Tab.vue';
     import BizTabList from '@/Biz/TabList.vue';
     import { confirmLeaveProgress } from '@/Libs/alert';
+    import { computed, ref } from 'vue';
 
     export default {
         name: 'ThemeFooterEdit',
@@ -62,7 +52,6 @@
         components: {
             Layout,
             Navigation,
-            BizButton,
             BizErrorNotifications,
             BizTab,
             BizTabList,
@@ -71,12 +60,6 @@
         mixins: [
             MixinHasTab,
         ],
-
-        provide() {
-            return {
-                i18n: this.i18n,
-            };
-        },
 
         layout: AppLayout,
 
@@ -107,26 +90,19 @@
                 type: String,
                 default: "-"
             },
-            i18n: { type: Object, default: () => ({
-                layout : 'Layout',
-                navigation : 'Navigation',
-                save : 'Save',
-            }) },
+            i18n: { type: Object, default: () => {} },
         },
 
         setup(props) {
+            let i18n = computed(() => props.i18n);
+
             return {
                 tabs: {
-                    layout: { title: props.i18n.layout, id: 'layout-tab-trigger' },
-                    navigation: { title: props.i18n.navigation, id: 'navigation-tab-trigger' },
+                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
+                    navigation: { title: i18n.value.navigation, id: 'navigation-tab-trigger' },
                 },
+                activeTab: ref('layout'),
             }
-        },
-
-        data() {
-            return {
-                activeTab: 'layout',
-            };
         },
 
         methods: {
@@ -149,16 +125,6 @@
                     } else {
                         this.activeTab = tab;
                     }
-                }
-            },
-
-            onSave(tab) {
-                if (tab == 'layout') {
-                    this.$refs.layout.onSubmit();
-                }
-
-                if (tab == 'navigation') {
-                    this.$refs.navigation.updateMenuItems();
                 }
             },
 

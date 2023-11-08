@@ -66,6 +66,7 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
@@ -75,7 +76,7 @@
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/vue3';
-    import { reactive } from 'vue';
+    import { ref } from 'vue';
     import { capitalCase } from 'change-case';
 
     export default {
@@ -91,20 +92,8 @@
 
         mixins: [
             MixinHasPageErrors,
+            MixinHasTranslation,
         ],
-
-        inject: {
-            i18n: { default: () => ({
-                add_social_media : 'Add social media',
-                edit_social_media : 'Edit social media',
-                icon : 'Icon',
-                link : 'Link',
-                cancel : 'Cancel',
-                create : 'Create',
-                update : 'Update',
-                open_link : 'Open link in a new tab',
-            }) },
-        },
 
         props: {
             errors: {
@@ -143,7 +132,7 @@
 
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
-                form: reactive(fields),
+                form: ref(fields),
                 firstFields: cloneDeep(fields),
                 iconClasses: fontawesomeBrandClasses,
             };
