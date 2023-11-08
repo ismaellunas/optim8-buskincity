@@ -3,9 +3,9 @@
         class="has-background-light"
         handle=".handle-menu"
         item-key="id"
-        tag="nav"
         :animation="300"
-        :class="panelClasses"
+        :class="areaClasses"
+        :style="areaStyles"
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
@@ -17,48 +17,40 @@
                     :menu-item-index="index"
                     :menu-item="element"
                     :selected-locale="selectedLocale"
+                    :is-up-button-disabled="index == 0"
+                    :is-down-button-disabled="index == (menuItems.length - 1)"
+                    :is-add-button-enabled="! isChild"
                     @delete-row="deleteRow"
                     @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="$emit('edit-row', $event)"
+                    @move-menu-item="moveMenuItem"
+                    @add-child-menu-item="$emit('add-child-menu-item', $event)"
                 />
 
                 <navigation-menu
-                    v-if="!isChild"
+                    v-if="! isChild"
                     :menu-items="element.children"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
+                    @change="$emit('check-nested-menu-items')"
+                    @check-nested-menu-items="$emit('check-nested-menu-items')"
                     @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="editRow"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
-        </template>
-
-        <template #footer>
-            <a
-                v-if="!isChild"
-                class="panel-block p-4 has-background-white border-top has-text-link"
-                @click.prevent="$emit('open-form-modal')"
-            >
-                <span class="panel-icon handle-menu has-text-link">
-                    <i
-                        :class="icon.add"
-                        aria-hidden="true"
-                    />
-                </span>
-                {{ sentenceCase(i18n.add_menu_item) }}
-            </a>
         </template>
     </draggable>
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import Draggable from "vuedraggable";
-    import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import icon from '@/Libs/icon-class';
+    import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { sentenceCase } from 'change-case';
+    import { useModelWrapper } from '@/Libs/utils';
+    import { moveItemUp, moveItemDown } from '@/Libs/menu-builder';
 
     export default {
         name: 'NavigationMenu',
@@ -68,11 +60,9 @@
             ThemeMenuItem,
         },
 
-        inject: {
-            i18n: { default: () => ({
-                add_menu_item : 'Add new menu item',
-            }) }
-        },
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props: {
             isChild: {
@@ -94,31 +84,39 @@
         },
 
         emits: [
+            'add-child-menu-item',
+            'check-nested-menu-items',
             'duplicate-menu-item',
             'edit-row',
             'menu-items',
-            'open-form-modal',
-            'update-last-data-menu-items'
         ],
 
-        setup() {
+        setup(props, {emit}) {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
-            };
-        },
-
-        data() {
-            return {
+                computedMenuItems: useModelWrapper(props, emit, 'menuItems'),
                 icon,
             };
         },
 
         computed: {
-            panelClasses() {
+            areaClasses() {
                 return {
-                    'child-panel': this.isChild,
-                    'panel': true,
-                    'pl-4': true,
+                    'p-2': true,
+                    'is-rounded': true,
+                    'ml-5': this.isChild,
+                    'mb-2': this.isChild,
+                    'draggable-area': this.isChild,
+                };
+            },
+
+            areaStyles() {
+                if (! this.isChild) {
+                    return {};
+                }
+
+                return {
+                    'min-height': '40px',
                 };
             },
         },
@@ -130,17 +128,18 @@
 
             deleteRow(index) {
                 const self = this;
-                const menuItems = this.menuItems;
+                const menuItems = self.menuItems;
                 let message = "";
 
                 if (menuItems[index].children.length > 0) {
-                    message = "A nested menu will deleted too."
+                    message = self.i18n.menu_items_delete;
                 }
 
-                confirmDelete("Are you sure?", message).then((result) => {
+                confirmDelete(self.i18n.are_you_sure, message).then((result) => {
                     if (result.isConfirmed) {
                         self.$emit('menu-items', menuItems.splice(index, 1));
-                        self.updateLastDataMenuItems();
+
+                        self.$emit('check-nested-menu-items');
                     }
                 });
             },
@@ -149,30 +148,19 @@
                 this.$emit('duplicate-menu-item', menuItem);
             },
 
-            updateLastDataMenuItems() {
-                this.$emit('update-last-data-menu-items');
-            },
+            moveMenuItem(type, index) {
+                switch (type) {
+                case 'up':
+                    moveItemUp(index, this.computedMenuItems);
+                    break;
 
-            sentenceCase,
+                case 'down':
+                    moveItemDown(index, this.computedMenuItems);
+                    break;
+                }
+
+                this.$emit('check-nested-menu-items');
+            },
         },
     }
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .panel {
-        min-height: 20px;
-    }
-
-    .child-panel {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-    }
-
-    .border-top {
-        border-top: 1px solid rgb(236, 236, 236);
-    }
-</style>
