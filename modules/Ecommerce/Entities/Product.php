@@ -252,4 +252,9 @@ class Product extends LunarProduct
             ? $city . ($countryName ? ', ' . $countryName : null)
             : $countryName;
     }
+
+    public function getIsPublishedAttribute(): bool
+    {
+        return $this->status == ProductStatus::PUBLISHED->value;
+    }
 }

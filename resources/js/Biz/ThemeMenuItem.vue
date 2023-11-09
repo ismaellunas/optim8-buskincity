@@ -1,74 +1,84 @@
 <template>
-    <div class="panel-block p-4 has-background-white">
-        <div class="level">
-            <div
-                class="level-left"
-                :class="isChild ? 'pl-4' : ''"
-            >
-                <span class="panel-icon handle-menu">
-                    <i
-                        class="fas fa-bars"
-                        aria-hidden="true"
-                    />
-                </span>
-                <span
-                    v-if="menuItem.children.length > 0"
-                    class="panel-icon"
-                >
-                    <i
-                        class="fas fa-caret-down"
-                        aria-hidden="true"
-                    />
-                </span>
+    <div class="card">
+        <div class="card-content p-2">
+            <div class="level handle-menu is-clickable">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="buttons">
+                            <biz-button-icon
+                                type="button"
+                                :icon="icon.up"
+                                :disabled="isUpButtonDisabled"
+                                @click="$emit('move-menu-item', 'up', menuItemIndex)"
+                            />
 
-                {{ menuItem.title }}
+                            <biz-button-icon
+                                type="button"
+                                :icon="icon.down"
+                                :disabled="isDownButtonDisabled"
+                                @click="$emit('move-menu-item', 'down', menuItemIndex)"
+                            />
+                        </div>
+                    </div>
 
-                <biz-tag
-                    v-for="translation in menuItem.translations"
-                    :key="translation.id"
-                    class="is-info px-2 ml-1 is-small"
-                >
-                    {{ translation.locale?.toUpperCase() }}
-                </biz-tag>
-            </div>
+                    <div class="level-item">
+                        {{ menuItem.title }}
 
-            <div class="level-right">
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click.prevent="$emit('duplicate-menu-item', menuItem)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.copy" />
-                    </span>
-                </biz-button>
+                        <biz-tag
+                            v-for="translation in menuItem.translations"
+                            :key="translation.id"
+                            class="is-info px-2 ml-1 is-small"
+                        >
+                            {{ translation.locale?.toUpperCase() }}
+                        </biz-tag>
+                    </div>
+                </div>
 
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', menuItem)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.edit" />
-                    </span>
-                </biz-button>
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="buttons">
+                            <biz-button-icon
+                                v-if="isAddButtonEnabled"
+                                :icon="icon.add"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click.prevent="$emit('add-child-menu-item', menuItemIndex)"
+                            />
 
-                <biz-button
-                    class="is-ghost has-text-black ml-1"
-                    type="button"
-                    @click="$emit('delete-row', menuItemIndex)"
-                >
-                    <span class="icon is-small">
-                        <i :class="icon.remove" />
-                    </span>
-                </biz-button>
+                            <biz-button-icon
+                                :icon="icon.copy"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click.prevent="$emit('duplicate-menu-item', menuItem)"
+                            />
+
+                            <biz-button-icon
+                                :icon="icon.edit"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click="$emit('edit-row', menuItem)"
+                            />
+
+                            <biz-button-icon
+                                :icon="icon.remove"
+                                icon-class="is-small"
+                                type="button"
+                                class="is-ghost has-text-black"
+                                @click="$emit('delete-row', menuItemIndex)"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
 
@@ -76,8 +86,8 @@
         name: 'ThemeMenuItem',
 
         components: {
-            BizButton,
             BizTag,
+            BizButtonIcon,
         },
 
         props:{
@@ -101,12 +111,17 @@
                 type: String,
                 default: "en"
             },
+            isUpButtonDisabled: { type: Boolean, default: false },
+            isDownButtonDisabled: { type: Boolean, default: false },
+            isAddButtonEnabled: { type: Boolean, default: false },
         },
 
         emits: [
+            'add-child-menu-item',
             'delete-row',
             'duplicate-menu-item',
             'edit-row',
+            'move-menu-item',
         ],
 
         data() {
@@ -116,13 +131,3 @@
         },
     };
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .level {
-        width: 100%;
-    }
-</style>
