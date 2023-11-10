@@ -4,8 +4,8 @@ export default {
     type: "Email",
     title: "Email",
     column: 'is-full',
-    label: "Email",
-    name: "email",
+    label: "",
+    name: "",
     placeholder: 'e.g. example@mail.com',
     notes: [],
     default_value: "",
@@ -28,17 +28,8 @@ export const config = {
     properties: {
         label: "Properties",
         config: {
-            label: {
-                component: "ConfigInput",
-                label: "Label",
-            },
-            name: {
-                component: "ConfigAutoGenerateKey",
-                label: "Name",
-                settings: {
-                    generateBasedOn: 'label',
-                    placeholder: 'field_name'
-                },
+            labelName: {
+                component: "ConfigLabelName",
             },
             placeholder: {
                 component: "ConfigInput",
