@@ -337,7 +337,7 @@ class FormSeeder extends Seeder
                             ],
                             "visibility" => [],
                             "translated" => false,
-                            "left_icon" => 'fa-brands fa-twitter',
+                            "left_icon" => 'fa-brands fa-x-twitter',
                         ],
                         [
                             "type" => "Text",

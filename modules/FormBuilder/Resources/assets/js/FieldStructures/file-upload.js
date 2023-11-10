@@ -7,8 +7,8 @@ export default {
     type: "FileDragDrop",
     title: "File Upload",
     column: 'is-full',
-    label: "File",
-    name: "file",
+    label: "",
+    name: "",
     placeholder: "Drop files here...",
     notes: [],
     default_value: [],
@@ -36,17 +36,8 @@ export const config = {
     properties: {
         label: "Properties",
         config: {
-            label: {
-                component: "ConfigInput",
-                label: "Label",
-            },
-            name: {
-                component: "ConfigAutoGenerateKey",
-                label: "Name",
-                settings: {
-                    generateBasedOn: 'label',
-                    placeholder: 'field_name'
-                },
+            labelName: {
+                component: "ConfigLabelName",
             },
             placeholder: {
                 component: "ConfigInput",

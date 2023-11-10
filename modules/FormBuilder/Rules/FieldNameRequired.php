@@ -3,10 +3,12 @@
 namespace Modules\FormBuilder\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Str;
 
 class FieldNameRequired implements Rule
 {
     private $type;
+    private $label;
 
     public function passes($attribute, $value)
     {
@@ -14,6 +16,7 @@ class FieldNameRequired implements Rule
             foreach ($value as $field) {
                 if (empty($field['name'])) {
                     $this->type = $field['type'];
+                    $this->label = $field['label'];
 
                     return false;
                 }
@@ -25,8 +28,8 @@ class FieldNameRequired implements Rule
 
     public function message()
     {
-        return __('The :type field name is required.', [
-            'type' => $this->type,
+        return __('The field name configuration for the :field field is required.', [
+            'field' => Str::lower($this->label ?? $this->type),
         ]);
     }
 }

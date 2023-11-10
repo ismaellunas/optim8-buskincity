@@ -65,7 +65,7 @@
                         @foreach ($socialMediaMenus as $socialMedia)
                             <p class="control">
                                 <a
-                                    class="bd-tw-button button is-ghost"
+                                    class="bd-tw-button button is-ghost has-text-black"
                                     target="{{ $socialMedia['target'] }}"
                                     href="{{ $socialMedia['url'] }}"
                                 >

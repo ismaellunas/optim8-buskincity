@@ -28,6 +28,7 @@
     import BizMediaLibrary from '@/Biz/MediaLibrary.vue';
     import { merge, clone } from 'lodash';
     import { ref } from 'vue';
+    import { emitter } from '@/Libs/utils';
 
     export default {
         name: 'MediaIndex',
@@ -77,6 +78,14 @@
             };
         },
 
+        mounted() {
+            const self = this;
+
+            emitter.on('on-save-as-image', () => {
+                self.onSaveAsImage();
+            });
+        },
+
         methods: {
             onViewChanged(view) {
                 this.queryParams['view'] = view;
@@ -100,7 +109,12 @@
             onTypeChanged(types) {
                 this.queryParams['types'] = types;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
-            }
+            },
+
+            onSaveAsImage() {
+                this.queryParams['page'] = 1;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
         },
     }
 </script>

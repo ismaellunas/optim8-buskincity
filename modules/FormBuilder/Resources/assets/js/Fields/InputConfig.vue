@@ -60,23 +60,23 @@
 <script>
     import BizCard from '@/Biz/Card.vue';
     import ConfigAddOption from '@/Blocks/Configs/AddOption.vue';
-    import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey.vue';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
     import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
     import ConfigFileUploadAttribute from './Configs/FileUploadAttribute.vue';
     import ConfigFileUploadImageEditor from './Configs/FileUploadImageEditor.vue';
     import ConfigInput from '@/Blocks/Configs/Input.vue';
+    import ConfigLabelName from './Configs/LabelName.vue';
+    import ConfigNotes from '@/Blocks/Configs/Notes.vue';
     import ConfigNumber from '@/Blocks/Configs/Number.vue';
     import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
+    import configs from './../FieldStructures/configs';
     import ConfigSelect from '@/Blocks/Configs/Select.vue';
-    import ConfigNotes from '@/Blocks/Configs/Notes.vue';
     import TRBL from '@/Blocks/Configs/TRBL.vue';
     import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
-    import configs from './../FieldStructures/configs';
     import { camelCase, forEach } from "lodash";
     import { isBlank } from '@/Libs/utils';
-    import { useModelWrapper } from '@/Libs/utils'
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'InputConfig',
@@ -84,17 +84,17 @@
         components: {
             BizCard,
             ConfigAddOption,
-            ConfigAutoGenerateKey,
             ConfigCheckbox,
             ConfigCheckboxes,
             ConfigFileUploadAttribute,
             ConfigFileUploadImageEditor,
             ConfigInput,
+            ConfigLabelName,
+            ConfigNotes,
             ConfigNumber,
             ConfigNumberAddons,
             ConfigRowSection,
             ConfigSelect,
-            ConfigNotes,
             TRBL,
             TRBLInput,
         },
