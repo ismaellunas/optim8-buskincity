@@ -1062,6 +1062,8 @@
     "All permissions assigned to users from the :module module will be unassigned from those users.": "All permissions assigned to users from the :module module will be unassigned from those users.",
     "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.": "If you remove this field, it will impact the settings of the \"Automate user creation\" feature.",
     "Page builder components currently in use that are related to the :module module will be deleted.": "Page builder components currently in use that are related to the :module module will be deleted.",
+    "The field name configuration for the :field field is required.": "The field name configuration for the :field field is required.",
+    "The :names field name must be unique and cannot match any existing field names.": "The :names field name must be unique and cannot match any existing field names.",
     "This menu will be shown on the navbar, drag and drop to reorganize the menu items.": "This menu will be shown on the navbar, drag and drop to reorganize the menu items.",
     "A nested menu will get deleted.": "A nested menu will get deleted.",
     "Choose roles": "Choose roles",
