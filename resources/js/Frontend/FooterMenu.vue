@@ -6,8 +6,21 @@
                     <div class="column is-3-desktop is-3-tablet is-12-mobile">
                         <img
                             :src="appLogoImageUrl"
+                            class="mb-2"
                             style="max-width:160px"
                         >
+
+                        <div class="buttons">
+                            <a
+                                v-for="(socialMedia, index) in socialMediaMenus"
+                                :key="index"
+                                class="button is-ghost has-text-black"
+                                :target="socialMedia.target"
+                                :href="socialMedia.url"
+                            >
+                                <biz-icon :icon="socialMedia.icon" />
+                            </a>
+                        </div>
                     </div>
                     <div class="column is-9-desktop is-9-tablet is-12-mobile">
                         <div class="columns is-multiline is-mobile">
@@ -57,12 +70,17 @@
 </template>
 
 <script>
+    import BizIcon from '@/Biz/Icon.vue';
     import { computed } from 'vue';
     import { usePage } from '@inertiajs/vue3';
     import { appName } from '@/Libs/defaults';
 
     export default {
         name: 'FrontendFooterMenu',
+
+        components: {
+            BizIcon,
+        },
 
         setup() {
             const appLogoImageUrl = computed(() => usePage().props.appLogoUrl);
@@ -76,6 +94,10 @@
         computed: {
             navMenus() {
                 return this.$page.props.footerMenus.nav;
+            },
+
+            socialMediaMenus() {
+                return usePage().props.socialMediaMenus;
             },
         },
     }
