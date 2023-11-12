@@ -29,7 +29,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, filter, head } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
@@ -162,7 +162,7 @@
                     })
                     .catch((error) => {
                         this.formErrors = error.response.data.errors;
-                        this.errorMessage = error.response.data.message;
+                        this.errorMessage = this.getErrorMessage(error.response.data.errors);
 
                         oopsAlert({
                             text: this.formErrors?.default[0] ?? null
@@ -187,6 +187,17 @@
                         element.classList.add('is-danger');
                     }
                 });
+            },
+
+            getErrorMessage(errors) {
+                return head(
+                    filter(errors, function (value, key) {
+                        return ! [
+                            'default',
+                            'phone.country'
+                        ].includes(key)
+                    })
+                )[0];
             },
         },
     };
