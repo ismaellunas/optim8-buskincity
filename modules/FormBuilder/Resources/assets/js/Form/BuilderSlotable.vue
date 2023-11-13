@@ -33,6 +33,7 @@
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
+    import { removedErrorKeys } from './../Libs/form-builder';
 
     export default {
         name: 'FormBuilderSlotable',
@@ -192,10 +193,7 @@
             getErrorMessage(errors) {
                 return head(
                     filter(errors, function (value, key) {
-                        return ! [
-                            'default',
-                            'phone.country'
-                        ].includes(key)
+                        return ! removedErrorKeys.includes(key)
                     })
                 )[0];
             },

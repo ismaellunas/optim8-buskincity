@@ -6,3 +6,8 @@ export function onFormEditorClicked(event, inputConfigId) {
         inputConfigId.value = '';
     }
 }
+
+export const removedErrorKeys = [
+    'default',
+    'phone.country',
+];
