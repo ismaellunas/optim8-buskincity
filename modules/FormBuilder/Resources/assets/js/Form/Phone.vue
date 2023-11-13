@@ -64,11 +64,11 @@
             }
         },
 
-        // beforeMount() {
-        //     if (! this.computedValue.country || this.computedValue.country == '') {
-        //         this.computedValue.country = this.defaultCountry;
-        //     }
-        // },
+        beforeMount() {
+            if (! this.computedValue.country || this.computedValue.country == '') {
+                this.computedValue.country = this.defaultCountry;
+            }
+        },
 
         beforeUnmount() {
             if (typeof window !== 'undefined') {
