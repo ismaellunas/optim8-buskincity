@@ -46,6 +46,7 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
+            'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
                 'create_new' => __('Create new'),
