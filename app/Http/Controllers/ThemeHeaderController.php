@@ -120,6 +120,7 @@ class ThemeHeaderController extends CrudController
                 'type' => __('Type'),
                 'update' => __('Update'),
                 'url' => __('Url'),
+                'drag_and_drop' => __('Drag and drop'),
                 'tips' => [
                     'menu_items' => __('This menu will be shown on the navbar, drag and drop to reorganize the menu items.'),
                 ],

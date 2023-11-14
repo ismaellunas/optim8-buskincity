@@ -1,10 +1,17 @@
 <template>
     <div class="card">
         <div class="card-content p-2">
-            <div class="level handle-menu is-clickable">
+            <div class="level">
                 <div class="level-left">
                     <div class="level-item">
                         <div class="buttons">
+                            <biz-button-icon
+                                type="button"
+                                class="handle-menu"
+                                :title="i18n.drag_and_drop"
+                                :icon="icon.move"
+                            />
+
                             <biz-button-icon
                                 type="button"
                                 :icon="icon.up"
@@ -78,9 +85,18 @@
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizTag from '@/Biz/Tag.vue';
-    import icon from '@/Libs/icon-class';
+    import {
+        move,
+        up,
+        down,
+        add,
+        copy,
+        edit,
+        remove,
+    } from '@/Libs/icon-class';
 
     export default {
         name: 'ThemeMenuItem',
@@ -89,6 +105,10 @@
             BizTag,
             BizButtonIcon,
         },
+
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props:{
             isChild: {
@@ -124,9 +144,17 @@
             'move-menu-item',
         ],
 
-        data() {
+        setup() {
             return {
-                icon,
+                icon: {
+                    move,
+                    up,
+                    down,
+                    add,
+                    copy,
+                    edit,
+                    remove,
+                },
             };
         },
     };

@@ -27,13 +27,20 @@
                 >
                     <template #item="{ element, index }">
                         <biz-card
-                            class="handle-social-media mb-1"
-                            class-card-content="p-2 is-clickable"
+                            class="mb-1"
+                            class-card-content="p-2"
                         >
                             <div class="level">
                                 <div class="level-left">
                                     <div class="level-item">
                                         <div class="buttons">
+                                            <biz-button-icon
+                                                type="button"
+                                                class="handle-social-media"
+                                                :title="i18n.drag_and_drop"
+                                                :icon="icon.move"
+                                            />
+
                                             <biz-button-icon
                                                 type="button"
                                                 :icon="icon.up"

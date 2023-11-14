@@ -22,15 +22,18 @@
                     >
                         <template #header>
                             <div
-                                class="field is-grouped pl-4 pr-2 py-2 has-background-light"
+                                class="field is-grouped pl-4 pr-2 py-2 has-background-dark"
                                 style="width: 100%"
                             >
-                                <div class="control is-align-items-center is-flex is-clickable handle-segment">
-                                    <biz-icon :icon="icon.bars" />
-                                </div>
-
                                 <div class="control">
                                     <div class="buttons">
+                                        <biz-button-icon
+                                            type="button"
+                                            class="handle-segment"
+                                            :icon="icon.move"
+                                            :title="i18n.drag_and_drop"
+                                        />
+
                                         <biz-button-icon
                                             type="button"
                                             :icon="icon.up"
@@ -60,7 +63,7 @@
                                         type="button"
                                         class="is-ghost"
                                         :icon="icon.remove"
-                                        icon-class="has-text-danger"
+                                        icon-class="has-text-white"
                                         @click="deleteRow(index)"
                                     />
                                 </div>

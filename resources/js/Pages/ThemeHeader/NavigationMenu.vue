@@ -5,7 +5,6 @@
         item-key="id"
         :animation="300"
         :class="areaClasses"
-        :style="areaStyles"
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
@@ -107,16 +106,6 @@
                     'ml-5': this.isChild,
                     'mb-2': this.isChild,
                     'draggable-area': this.isChild,
-                };
-            },
-
-            areaStyles() {
-                if (! this.isChild) {
-                    return {};
-                }
-
-                return {
-                    'min-height': '40px',
                 };
             },
         },
