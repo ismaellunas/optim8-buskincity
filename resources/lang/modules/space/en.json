@@ -7,5 +7,6 @@
     "Pages managed by space will be set to draft.": "Pages managed by :space_term.space will be set to draft.",
     "Events managed by space will be set to draft.": "Events managed by :space_term.space will be set to draft.",
     "Select space": "Select :space_term.space",
-    "The product can only have one space.": "The product can only have one :space_term.space."
+    "The :resource can only have one space.": "The :resource can only have one :space_term.space.",
+    "Spaces will be unassigned from the :resource in the :module module.": ":Space_term.space will be unassigned from the :resource in the :module module."
 }

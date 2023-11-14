@@ -25,9 +25,9 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontController,
     ThemeFooterController,
-    ThemeFooterMenuController,
+    ThemeFooterNavigationController,
     ThemeHeaderController,
-    ThemeHeaderMenuController,
+    ThemeHeaderNavigationController,
     ThemeSeoController,
     TranslationManagerController,
     TwoFactorAuthenticatedSessionController,
@@ -113,13 +113,13 @@ Route::middleware(array_filter([
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
             Route::post('/layout', [ThemeHeaderController::class, 'update'])->name('layout.update');
-            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+            Route::post('/navigation', [ThemeHeaderNavigationController::class, 'update'])->name('navigation.update');
         });
 
         Route::prefix('footer')->name('footer.')->group(function () {
             Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
             Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
-            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
+            Route::post('/menu-item', [ThemeFooterNavigationController::class, 'update'])->name('navigation.update');
         });
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
@@ -256,7 +256,7 @@ Route::name('api.')
         Route::post('/media/replace', [MediaController::class, 'apiReplace'])
             ->name('media.replace');
 
-        Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
+        Route::post('/theme/header/menu-item', [ThemeHeaderNavigationController::class, 'apiValidateMenuItem'])
             ->name('theme.header.menu-item.validate');
 
         Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])

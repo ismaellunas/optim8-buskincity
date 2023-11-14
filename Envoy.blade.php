@@ -37,6 +37,8 @@
         'DB_CONNECTION',
         'ERROR_REPORTING',
         'FOLDER_PREFIX',
+        'FONTAWESOME_FREE',
+        'FONTAWESOME_KIT_NAME',
         'MAIL_ENCRYPTION',
         'MAIL_FROM_ADDRESS',
         'MAIL_FROM_NAME',

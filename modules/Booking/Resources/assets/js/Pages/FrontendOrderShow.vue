@@ -78,7 +78,7 @@
                             class="column is-8-desktop is-12-tablet is-12-mobile"
                         >
                             <biz-button-icon
-                                class="is-fullwidth"
+                                class="is-fullwidth is-primary"
                                 type="button"
                                 :icon="icon.buildingCheck"
                                 @click="checkIn"

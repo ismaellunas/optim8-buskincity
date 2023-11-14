@@ -1,7 +1,7 @@
 <template>
     <biz-field>
         <biz-label
-            v-if="hasLabelSlot"
+            v-if="$slots.label"
             :class="labelClass"
             :is-required="isRequired"
         >
@@ -33,12 +33,6 @@
         props: {
             isRequired: { type: Boolean, default: false },
             labelClass: { type: [Array, Object, String], default: '' },
-        },
-
-        computed: {
-            hasLabelSlot() {
-                return !!this.$slots.label;
-            },
         },
     };
 </script>

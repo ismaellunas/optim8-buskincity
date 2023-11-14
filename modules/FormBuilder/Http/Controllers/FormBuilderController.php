@@ -240,7 +240,9 @@ class FormBuilderController extends CrudController
             'form_name_placeholder' => __('Contact Form'),
             'form_id_placeholder' => Str::snake(__('Contact Form')),
             'remove_field_confirmation_text' => __('If you remove this field, it will impact the settings of the "Automate user creation" feature.'),
-            'field_group_title_placeholder' => __('Field group title')
+            'field_group_title_placeholder' => __('Field group title'),
+            'label' => __('Label'),
+            'name_field_note' => __('Please enter a unique name. This field is required and should not match any existing field names.'),
         ];
     }
 }

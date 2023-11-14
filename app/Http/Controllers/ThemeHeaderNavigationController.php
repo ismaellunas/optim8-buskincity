@@ -6,7 +6,7 @@ use App\Http\Requests\MenuItemRequest;
 use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
 
-class ThemeHeaderMenuController extends CrudController
+class ThemeHeaderNavigationController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.header';
 

@@ -1,4 +1,6 @@
 import { oops as oopsAlert } from '@/Libs/alert';
+import { find } from 'lodash';
+import { emitter } from '@/Libs/utils';
 
 export default {
     name: 'MediaLibraryMixin',
@@ -15,6 +17,14 @@ export default {
             },
             mediaListRouteName: 'admin.media.lists',
         };
+    },
+
+    mounted() {
+        const self = this;
+
+        emitter.on('on-save-as-image', () => {
+            self.refreshMediaList();
+        });
     },
 
     methods: {
@@ -51,5 +61,14 @@ export default {
         },
         onMediaListLoadedFail() {},
         onMediaListLoadedSuccess() {},
+        refreshMediaListByPageActive() {
+            let url = find(this.media.links, 'active').url ?? null;
+
+            if (url) {
+                this.getMediaList(url);
+            } else {
+                this.refreshMediaList();
+            }
+        },
     },
 }
