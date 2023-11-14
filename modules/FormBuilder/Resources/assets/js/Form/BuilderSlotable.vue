@@ -2,10 +2,7 @@
     <div class="generated-form-builder">
         <biz-flash-notifications :flash="flash" />
 
-        <biz-notifications
-            class="is-danger"
-            :message="errorMessage"
-        />
+        <biz-error-notifications :errors="errorMessage" />
 
         <form
             :key="formKey"
@@ -29,7 +26,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { cloneDeep, filter, head } from 'lodash';
+    import { cloneDeep, pickBy } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
@@ -42,8 +39,8 @@
             BizFlashNotifications: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/FlashNotifications.vue')
             ),
-            BizNotifications: defineAsyncComponent(() =>
-                import('./../../../../../../resources/js/Biz/Notifications.vue')
+            BizErrorNotifications: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/ErrorNotifications.vue')
             ),
             BizRecaptcha: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/Recaptcha.vue')
@@ -191,11 +188,9 @@
             },
 
             getErrorMessage(errors) {
-                return head(
-                    filter(errors, function (value, key) {
-                        return ! removedErrorKeys.includes(key)
-                    })
-                )[0];
+                return {
+                    form_builder: pickBy(errors, (value, key) => !removedErrorKeys.includes(key)),
+                };
             },
         },
     };
