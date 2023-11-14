@@ -15,6 +15,7 @@ use Modules\Booking\Listeners\SendCanceledEventNotification;
 use Modules\Booking\Listeners\SendRescheduledEventNotification;
 use Modules\Booking\Listeners\SetPublishedProductsToDraft;
 use Modules\Booking\Listeners\UnassignAllProductManagers;
+use Modules\Booking\Listeners\UnassignSpaceFromProduct;
 use Modules\Booking\Observers\ProductObserver;
 use Modules\Ecommerce\Entities\Product;
 
@@ -41,6 +42,7 @@ class EventServiceProvider extends ServiceProvider
             SetPublishedProductsToDraft::class,
             CancelUpcomingOrOngoingBookings::class,
             SanitizeDisabledComponentsOnPageTranslations::class,
+            UnassignSpaceFromProduct::class,
         ],
     ];
 

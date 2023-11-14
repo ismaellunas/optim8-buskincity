@@ -60,7 +60,7 @@
                             </tr>
                             <tr>
                                 <th>Timezone</th>
-                                <td>{{ event.timezone }}</td>
+                                <td>{{ event.display_timezone }}</td>
                             </tr>
                         </tbody>
                     </biz-table>
@@ -145,6 +145,7 @@
                                     :max-date="maxDate"
                                     :min-date="minDate"
                                     :product-id="product.id"
+                                    :timezone="event.display_timezone"
                                     @on-time-confirmed="openModal"
                                 />
                             </div>
@@ -181,7 +182,7 @@
                 </tr>
                 <tr>
                     <th><biz-icon :icon="icon.timezone" /></th>
-                    <td>{{ event.timezone }}</td>
+                    <td>{{ event.display_timezone }}</td>
                 </tr>
                 <tr>
                     <th><biz-icon :icon="icon.calendar" /></th>
@@ -230,7 +231,7 @@
     import moment from 'moment';
     import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { startCase } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
 
@@ -277,7 +278,7 @@
             const form = {
                 date: null,
                 time: null,
-                timezone: props.timezone,
+                timezone: computed(() => props.timezone).value,
             };
 
             return {

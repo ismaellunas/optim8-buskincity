@@ -43,7 +43,8 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
 
     Route::put('/products/{product}/space', [ProductSpaceController::class, 'update'])
         ->name('products.spaces.update')
-        ->can('update', 'product');
+        ->can('update', 'product')
+        ->middleware('verifyModule:Space',);
 
     Route::resource('/orders', OrderController::class)
         ->only(['index', 'show']);

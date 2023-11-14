@@ -6,7 +6,7 @@
         </tr>
         <tr>
             <th><biz-icon :icon="icon.timezone" /></th>
-            <td>{{ event.timezone }} ({{ event.timezoneOffset }})</td>
+            <td>{{ event.display_timezone }} ({{ event.timezoneOffset }})</td>
         </tr>
         <tr>
             <th><biz-icon :icon="icon.duration" /></th>

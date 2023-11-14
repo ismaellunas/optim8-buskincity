@@ -70,7 +70,7 @@ export default {
         onShownModal() { /* @override /Mixins/HasModal */
             this.setTerm('');
 
-            this.getMediaList(route(this.mediaListRouteName));
+            this.refreshMediaList();
         },
 
         onPreviewOpened(medium) {

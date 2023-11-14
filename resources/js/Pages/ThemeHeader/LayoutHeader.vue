@@ -72,20 +72,15 @@
 </template>
 
 <script>
+    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import { usePage } from '@inertiajs/vue3';
 
     export default {
-        name: 'HeaderLayout',
+        name: 'LayoutHeader',
 
-        inject: {
-            i18n: { default: () => ({
-                header_layout : 'Header layout',
-                standard : 'Standard',
-                centered_logo : 'Centered logo',
-                standard_with_social_media : 'Standard with social media',
-                layout : 'Layout',
-            }) },
-        },
+        mixins: [
+            MixinHasTranslation,
+        ],
 
         props: {
             modelValue: {
