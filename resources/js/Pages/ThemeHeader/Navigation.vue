@@ -164,6 +164,7 @@
                 menuForm: {},
                 menuItemErrors: {},
                 selectedMenuItem: {},
+                selectedParentIndex: null,
                 validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },

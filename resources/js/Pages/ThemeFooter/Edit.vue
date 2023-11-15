@@ -18,18 +18,18 @@
                 </ul>
             </biz-tab>
 
-            <layout
-                v-if="activeTab == 'layout'"
-                ref="layout"
-                :settings="settings"
-                :social-media-menus="socialMediaMenus"
-            />
-
             <navigation
                 v-if="activeTab == 'navigation'"
                 ref="navigation"
                 :footer-menus="footerMenus"
                 :menu="menu"
+            />
+
+            <layout
+                v-if="activeTab == 'layout'"
+                ref="layout"
+                :settings="settings"
+                :social-media-menus="socialMediaMenus"
             />
         </div>
     </div>
@@ -98,10 +98,10 @@
 
             return {
                 tabs: {
-                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
                     navigation: { title: i18n.value.navigation, id: 'navigation-tab-trigger' },
+                    layout: { title: i18n.value.layout, id: 'layout-tab-trigger' },
                 },
-                activeTab: ref('layout'),
+                activeTab: ref('navigation'),
             }
         },
 

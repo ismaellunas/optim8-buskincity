@@ -4,10 +4,11 @@
             <slot name="header" />
         </div>
 
-        <div class="card-content has-background-light p-0">
+        <div class="card-content has-background-light p-2">
             <draggable
                 handle=".handle-menu"
                 item-key="id"
+                class="draggable-area"
                 :animation="300"
                 :group="{ name: 'g1' }"
                 :list="menuItems"

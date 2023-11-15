@@ -23,6 +23,7 @@
     $branch = $_ENV['HEROKU_BRANCH'] ?? 'main';
     $git_remote = $_ENV['HEROKU_REMOTE'] ?? 'remote_is_empty';
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
+    $heroku_app = $_ENV['HEROKU_APP'] ?? '';
 
     $heroku_vars = [
         'APP_DEBUG',
@@ -92,9 +93,32 @@
     git-push
 @endstory
 
+@story('heroku:deploy-tag')
+    check-deploy-environment
+    check-tag
+    git-restore-and-stash
+    heroku:maintenance-on
+    heroku:backup-db
+    git-create-branch-from-tag
+    heroku:push-tag
+    heroku:migration
+    heroku:generate-css
+    heroku:add-translations
+    heroku:route-list
+    heroku:restart
+    heroku:clean-after-deploy
+    heroku:maintenance-off
+    git-delete-tag-branch
+@endstory
+
 @story('heroku:populate-data-basic')
     check-deploy-environment
     heroku:seed-basic
+@endstory
+
+@story('fetch-tag')
+    check-tag
+    git-fetch-tag
 @endstory
 
 @task('heroku:migration')
@@ -181,6 +205,27 @@
     heroku run -r {{ $git_remote }} -- php artisan route:list --path="admin"
 @endtask
 
+@task('heroku:backup-db')
+    heroku pg:backups:capture -a {{ $heroku_app }}
+@endtask
+
+@task('heroku:push-tag')
+    git push {{ $git_remote }} {{ $tag }}_branch:{{ $branch }} --force
+@endtask
+
+@task('git-create-branch-from-tag')
+    git checkout tags/{{ $tag }} -b {{ $tag }}_branch
+@endtask
+
+@task('git-delete-tag-branch')
+    git checkout {{ $branch }}
+    git branch --delete {{ $tag }}_branch
+@endtask
+
+@task('git-fetch-tag')
+    git fetch platform tag {{ $tag }} --no-tags
+@endtask
+
 @task('sail:fresh')
     sail artisan db:wipe
     sail artisan migrate
@@ -223,3 +268,17 @@
 
     {{ logInfo("Deployment is starting") }}
 @endtask
+
+@task('check-tag')
+    @if (empty($tag))
+        {{ logWarn("Tag is not specified") }}
+        exit;
+    @endif
+
+    {{ logInfo("Tag name is: ".$tag) }}
+@endtask
+
+@error
+    echo "[x] $task is failed";
+    exit;
+@enderror
