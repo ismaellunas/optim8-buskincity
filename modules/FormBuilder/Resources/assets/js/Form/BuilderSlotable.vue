@@ -30,7 +30,6 @@
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
-    import { removedErrorKeys } from './../Libs/form-builder';
 
     export default {
         name: 'FormBuilderSlotable',
@@ -189,7 +188,7 @@
 
             getErrorMessage(errors) {
                 return {
-                    form_builder: pickBy(errors, (value, key) => !removedErrorKeys.includes(key)),
+                    form_builder: pickBy(errors, (value, key) => !['default'].includes(key)),
                 };
             },
         },
