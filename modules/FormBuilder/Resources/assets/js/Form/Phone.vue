@@ -30,12 +30,12 @@
         },
 
         setup(props, { emit }) {
-            const filteredCountries = ref(computed(() => props.countryOptions));
+            const filteredCountries = ref(computed(() => props.countryOptions).value);
             const isActive = ref(false);
-            const latestIndex = ref(computed(() => props.optionsMaxNumber));
+            const latestIndex = ref(computed(() => props.optionsMaxNumber).value);
             const refDropdownMenu = ref();
             const refTrigger = ref();
-            const selectedCountryId = ref(computed(() => props.defaultCountry));
+            const selectedCountryId = ref(computed(() => props.defaultCountry).value);
             const term = ref('');
             const displayedCountries = computed(() => filteredCountries.value.slice(0, latestIndex.value));
             const selectedCountry = computed(() => find(
