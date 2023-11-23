@@ -57,7 +57,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, find, isEmpty } from 'lodash';
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
 
     export default {
         name: 'BizPhone',
@@ -85,7 +85,9 @@
         setup(props, { emit }) {
             return {
                 computedValue: useModelWrapper(props, emit),
-                selectedOption: ref(props.defaultCountry),
+                selectedOption: ref(
+                    computed(() => props.defaultCountry)
+                ),
             }
         },
 
@@ -110,7 +112,7 @@
         },
 
         beforeMount() {
-            if (!this.computedValue.country || this.computedValue.country == '') {
+            if (! this.computedValue.country || this.computedValue.country == '') {
                 this.computedValue.country = this.defaultCountry;
             }
         },

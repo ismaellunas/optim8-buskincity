@@ -2,10 +2,7 @@
     <div class="generated-form-builder">
         <biz-flash-notifications :flash="flash" />
 
-        <biz-notifications
-            class="is-danger"
-            :message="errorMessage"
-        />
+        <biz-error-notifications :errors="errorMessage" />
 
         <form
             :key="formKey"
@@ -29,7 +26,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, pickBy } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { defineAsyncComponent, ref } from 'vue';
     import { serialize } from 'object-to-formdata';
@@ -41,8 +38,8 @@
             BizFlashNotifications: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/FlashNotifications.vue')
             ),
-            BizNotifications: defineAsyncComponent(() =>
-                import('./../../../../../../resources/js/Biz/Notifications.vue')
+            BizErrorNotifications: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/ErrorNotifications.vue')
             ),
             BizRecaptcha: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/Recaptcha.vue')
@@ -162,7 +159,7 @@
                     })
                     .catch((error) => {
                         this.formErrors = error.response.data.errors;
-                        this.errorMessage = error.response.data.message;
+                        this.errorMessage = this.getErrorMessage(error.response.data.errors);
 
                         oopsAlert({
                             text: this.formErrors?.default[0] ?? null
@@ -187,6 +184,12 @@
                         element.classList.add('is-danger');
                     }
                 });
+            },
+
+            getErrorMessage(errors) {
+                return {
+                    form_builder: pickBy(errors, (value, key) => !['default'].includes(key)),
+                };
             },
         },
     };

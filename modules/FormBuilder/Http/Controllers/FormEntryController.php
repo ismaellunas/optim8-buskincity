@@ -5,6 +5,7 @@ namespace Modules\FormBuilder\Http\Controllers;
 use App\Http\Controllers\CrudController;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
@@ -84,7 +85,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __(':Form_builder_term.form_builders'),
+                    'title' => Str::title(__(':Form_builder_term.form_builders')),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
@@ -157,7 +158,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __(':Form_builder_term.form_builders'),
+                    'title' => Str::title(__(':Form_builder_term.form_builders')),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [

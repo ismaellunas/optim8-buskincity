@@ -30,12 +30,12 @@
         },
 
         setup(props, { emit }) {
-            const filteredCountries = ref(props.countryOptions);
+            const filteredCountries = ref(computed(() => props.countryOptions));
             const isActive = ref(false);
-            const latestIndex = ref(props.optionsMaxNumber);
+            const latestIndex = ref(computed(() => props.optionsMaxNumber));
             const refDropdownMenu = ref();
             const refTrigger = ref();
-            const selectedCountryId = ref(props.defaultCountry);
+            const selectedCountryId = ref(computed(() => props.defaultCountry));
             const term = ref('');
             const displayedCountries = computed(() => filteredCountries.value.slice(0, latestIndex.value));
             const selectedCountry = computed(() => find(
@@ -61,6 +61,12 @@
             if (typeof window !== 'undefined') {
                 document.addEventListener('click', this.clickedOutside);
                 document.addEventListener('keyup', this.keyPress);
+            }
+        },
+
+        beforeMount() {
+            if (! this.computedValue.country || this.computedValue.country == '') {
+                this.computedValue.country = this.defaultCountry;
             }
         },
 
