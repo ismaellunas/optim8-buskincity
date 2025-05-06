@@ -70,9 +70,7 @@
                             v-model="form.favicon"
                             image-preview-size="6"
                             :placeholder="i18n.open_media_library"
-                            :is-browse-enabled="can?.media?.browse ?? false"
                             :is-download-enabled="can?.media?.read ?? false"
-                            :is-edit-enabled="can?.media?.edit ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
                             :dimension="dimensions.favicon"
@@ -123,9 +121,7 @@
                             v-model="form.qrcode_public_page_logo"
                             image-preview-size="6"
                             :placeholder="i18n.open_media_library"
-                            :is-browse-enabled="can?.media?.browse ?? false"
                             :is-download-enabled="can?.media?.read ?? false"
-                            :is-edit-enabled="can?.media?.edit ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
                             :dimension="dimensions.qrCode"
@@ -228,12 +224,6 @@
             MixinHasLoader,
             MixinHasPageErrors,
         ],
-
-        provide() {
-            return {
-                i18n: this.i18n,
-            }
-        },
 
         layout: AppLayout,
 

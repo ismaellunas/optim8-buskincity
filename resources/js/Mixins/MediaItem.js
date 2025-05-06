@@ -9,11 +9,10 @@ export default {
 
     computed: {
         isImage() {
-            if (this.medium.hasOwnProperty('is_image')) {
-                return this.medium.is_image;
-            }
-
-            return this.medium.file.type.startsWith("image");
+            return (
+                (this.medium?.is_image)
+                || (this.medium?.file && this.medium.file.type.startsWith("image"))
+            );
         },
 
         thumbnailIcon() {

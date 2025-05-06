@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            ModuleSeeder::class,
             GlobalOptionSeeder::class,
             CountrySeeder::class,
             RoleSeeder::class,
@@ -35,7 +34,6 @@ class DatabaseSeeder extends Seeder
             StripeSeeder::class,
             StripeSettingSeeder::class,
             DashboardWidgetSeeder::class,
-            WidgetSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();

@@ -39,14 +39,13 @@ class SpaceEventService
         ?array $scopes = null,
         $perPage = 5
     ): LengthAwarePaginator {
-        $spaceEvents = SpaceEvent::published()
-            ->where(function ($query) use ($space, $scopes) {
+        $spaceEvents = SpaceEvent::where(function ($query) use ($space, $scopes) {
                 $this->scopeRecords($query, $space, $scopes);
             })
             ->with([
                 'space' => function ($query) {
                     $query->select([
-                        'id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'address', 'latitude', 'longitude', 'updated_at', 'city', 'country_code'
+                        'id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'address', 'latitude', 'longitude', 'updated_at'
                     ]);
                     $query->withStructuredUrl();
                 },
@@ -59,15 +58,12 @@ class SpaceEventService
 
         $spaceEvents->getCollection()->transform(function ($event) {
             $space = $event->space;
-            $purifiedConfigs = [
-                'AutoFormat.AutoParagraph' => false,
-            ];
 
             $shortDescription = nl2br(preg_replace("/[\r\n]+/", "\n", Purifier::clean(
                 !empty($event->excerpt)
                 ? $event->excerpt
-                : Str::words($event->description ?? '', 60, ' ...')
-            , $purifiedConfigs)));
+                : Str::words($event->description, 60, ' ...')
+            )));
 
             $data = [
                 'id' => $event->id,
@@ -75,10 +71,10 @@ class SpaceEventService
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
                 'short_description' => $shortDescription,
-                'description' => nl2br(Purifier::clean($event->description, $purifiedConfigs)),
+                'description' => nl2br(Purifier::clean($event->description)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
-                'address' => $event->fullAddress,
+                'address' => $space->address,
             ];
 
             if ($space->latitude && $space->longitude) {

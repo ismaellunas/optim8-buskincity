@@ -22,7 +22,7 @@ class OrderController extends CrudController
     private $orderService;
     private $productEventService;
 
-    protected $title = ":Booking_term.booking";
+    protected $title = "Booking";
     protected $baseRouteName = "booking.orders";
 
     public function __construct(
@@ -111,7 +111,7 @@ class OrderController extends CrudController
             ],
             'breadcrumbs' => [
                 [
-                    'title' => Str::plural($this->title()),
+                    'title' => Str::plural($this->title),
                     'url' => route($this->baseRouteName.'.index'),
                 ],
                 ['title' => $product->displayName],

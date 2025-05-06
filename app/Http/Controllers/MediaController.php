@@ -6,7 +6,6 @@ use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\{
     MediaIndexRequest,
-    MediaReplaceRequest,
     MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
@@ -108,7 +107,7 @@ class MediaController extends CrudController
                 $media->update($data);
             }
 
-            $media->transformMediaLibrary();
+            $media->append(['is_image', 'display_file_name']);
 
             $allMedia[] = $media;
         }
@@ -131,14 +130,12 @@ class MediaController extends CrudController
 
     private function syncMedia(Request $request)
     {
-        $allMedia = [];
-
         $storeInputs = collect($request->all())
             ->filter(fn ($media) => empty($media['id']))
             ->all();
 
         if (!empty($storeInputs)) {
-            $allMedia = $this->storeProcess($storeInputs);
+            $this->storeProcess($storeInputs);
 
             $this->generateFlashMessage('The :resource was created!', [
                 'resource' => __('Media')
@@ -150,14 +147,12 @@ class MediaController extends CrudController
             ->all();
 
         if (!empty($updateInputs)) {
-            $allMedia = $this->updateProsess($updateInputs);
+            $this->updateProsess($updateInputs);
 
             $this->generateFlashMessage('The :resource was updated!', [
                 'resource' => __('Media')
             ]);
         }
-
-        return $allMedia;
     }
 
     /**
@@ -166,14 +161,14 @@ class MediaController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function apiStore(MediaStoreRequest $request): array
+    public function apiStore(MediaStoreRequest $request)
     {
-        $allMedia = $this->syncMedia($request);
+        $allMedia = $this->storeProcess($request->all());
 
         return $allMedia;
     }
 
-    private function updateProsess(array $inputs): array
+    private function updateProsess(array $inputs)
     {
         $allMedia = [];
 
@@ -207,8 +202,6 @@ class MediaController extends CrudController
                 $media->deleteTranslations($localeToBeDeleted);
             }
 
-            $media->transformMediaLibrary();
-
             $allMedia[] = $media;
         }
 
@@ -239,10 +232,6 @@ class MediaController extends CrudController
             $media,
             new CloudinaryStorage()
         );
-
-        $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => __('Media')
-        ]);
 
         return $request->ajax()
             ? redirect()->back()
@@ -289,26 +278,6 @@ class MediaController extends CrudController
         return $request->ajax() ? $records : abort(404);
     }
 
-    public function apiReplace(MediaReplaceRequest $request)
-    {
-        $oldMedia = Media::find($request->media_id);
-
-        $media = $this->mediaService->replace(
-            $request->file('image'),
-            $oldMedia,
-            new CloudinaryStorage()
-        );
-
-        $media->append(['is_image', 'display_file_name', 'thumbnail_url']);
-
-        return response()->json([
-            'media' => $media,
-            'message' => __('The :resource was updated!', [
-                'resource' => __('Media')
-            ]),
-        ]);
-    }
-
     private function isValidMediaType($type): bool
     {
         return collect(config('constants.extensions'))
@@ -321,28 +290,25 @@ class MediaController extends CrudController
     private function translationIndexPage(): array
     {
         return [
-            ...[
-                'search' => __('Search'),
-                'filter' => __('Filter'),
-                'file_name' => __('File name'),
-                'alternative_text' => __('Alternative text'),
-                'description' => __('Description'),
-                'date_modified' => __('Date modified'),
-                'type' => __('Type'),
-                'size' => __('Size'),
-                'actions' => __('Actions'),
-                'media_detail' => __('Media detail'),
-                'save' => __('Save'),
-                'cancel' => __('Cancel'),
-                'delete' => __('Delete'),
-                'save_as_new' => __('Save as new'),
-                'done' => __('Done'),
-                'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
-                'are_you_sure' => __('Are you sure?'),
-                'delete_resource' => __('Delete :resource', ['resource' => __('Media')]),
-                'warning_delete_resource' => __('This resource is still being used in another place. If you :action this resource, it may have an effect on that other place.', ['action' => 'delete']),
-            ],
-            ...MediaService::defaultMediaLibraryTranslations(),
+            'search' => __('Search'),
+            'filter' => __('Filter'),
+            'file_name' => __('File name'),
+            'alternative_text' => __('Alternative text'),
+            'description' => __('Description'),
+            'date_modified' => __('Date modified'),
+            'type' => __('Type'),
+            'size' => __('Size'),
+            'actions' => __('Actions'),
+            'media_detail' => __('Media detail'),
+            'save' => __('Save'),
+            'cancel' => __('Cancel'),
+            'delete' => __('Delete'),
+            'save_as_new' => __('Save as new'),
+            'done' => __('Done'),
+            'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
+            'are_you_sure' => __('Are you sure?'),
+            'delete_resource' => __('Delete :resource', ['resource' => __('Media')]),
+            'warning_delete_resource' => __('This resource is still being used in another place. If you delete this resource, it may have an effect on that other place.'),
         ];
     }
 }

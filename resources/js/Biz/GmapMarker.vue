@@ -9,7 +9,6 @@
             class="input"
             :class="searchBoxClass"
             :style="searchBoxStyle"
-            @keydown.enter.prevent
         >
 
         <div

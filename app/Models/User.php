@@ -11,7 +11,6 @@ use App\Traits\HasMetas;
 use App\Services\{
     IPService,
     MediaService,
-    SettingService,
     TranslationService,
     UserService,
 };
@@ -241,10 +240,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getIsAdministratorAttribute(): bool
     {
-        return (
-            $this->hasRole(config('permission.role_names.admin'))
-            || $this->isSuperAdministrator
-        );
+        return $this->hasRole(config('permission.role_names.admin'));
     }
 
     public function getOriginLanguageCodeAttribute(): ?string
@@ -347,32 +343,17 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
-    public function getProfilePageUrlAttribute(?array $parameters = []): string
+    public function getProfilePageUrlAttribute(): string
     {
-        $className = $this->getPublicPageProfileUrlClassName();
-
-        return (new $className($this, $parameters ?? []))->url();
-    }
-
-    private function getPublicPageProfileUrlClassName(): string
-    {
-        $profileSlugType = app(SettingService::class)->getPublicPageProfileSlugType();
-
-        $className = "App\\Entities\\PublicPageProfile\\".Str::studly($profileSlugType)."Url";
-
-        if (
-            class_exists($className)
-            && method_exists($className, 'url')
-        ) {
-            return $className;
-        }
-
-        return "App\\Entities\\PublicPageProfile\\DefaultUrl";
+        return route('frontend.profile', [
+            'user' => $this->unique_key,
+            'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
+        ]);
     }
 
     public function getQrCodeLogoNameAttribute(): string
     {
-        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->slug();
+        return 'qrcode-'.$this->unique_key.'-'.Str::of($this->fullName)->ascii()->lower()->replace(' ', '-');
     }
 
     public function sendPasswordResetNotification($token)

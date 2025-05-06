@@ -94,8 +94,9 @@ class ThemeFooterController extends CrudController
             'footer_layout' => __('Footer layout'),
             'standard' => __('Standard'),
             'social_media' => __('Social media'),
-            'add_social_media' => __('Add :resource', ['resource' => __('Social media')]),
-            'edit_social_media' => __('Edit :resource', ['resource' => __('Social media')]),
+            'social_media_items' => __('Social media items'),
+            'add_social_media' => __('Add :resource', ['resource' => __('Social media item')]),
+            'edit_social_media' => __('Edit :resource', ['resource' => __('Social media item')]),
             'icon' => __('Icon'),
             'link' => __('Link'),
             'save' => __('Save'),
@@ -114,13 +115,6 @@ class ThemeFooterController extends CrudController
             'update' => __('Update'),
             'duplicate' => __('Duplicate'),
             'add_new_segment' => __('Add :resource', ['resource' => __('New segment')]),
-            'delete_segment_message' => __('A nested menu will get deleted.'),
-            'are_you_sure' => __('Are you sure?'),
-            'drag_and_drop' => __('Drag and drop'),
-            'tips' => [
-                'menu_items' => __('This menu will be shown on the navbar, drag and drop to reorganize the menu items.'),
-                'social_media' => __('This social media will be shown on the footer, drag and drop to reorganize the social media.')
-            ],
         ];
     }
 }

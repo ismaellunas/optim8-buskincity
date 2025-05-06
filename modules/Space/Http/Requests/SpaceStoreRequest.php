@@ -2,7 +2,6 @@
 
 namespace Modules\Space\Http\Requests;
 
-use App\Rules\CountryCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Space\Entities\Space;
@@ -34,14 +33,18 @@ class SpaceStoreRequest extends FormRequest
                 'required',
                 'max:128',
             ],
+            'latitude' => [
+                'nullable',
+                'numeric',
+            ],
+            'longitude' => [
+                'nullable',
+                'numeric',
+            ],
             'address' => [
                 'nullable',
                 'max:500',
             ],
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
-            'city' => ['max:64'],
-            'country_code' => ['required', new CountryCode()],
             'type_id' => [
                 'nullable',
                 'integer',

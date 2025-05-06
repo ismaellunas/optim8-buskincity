@@ -5,21 +5,13 @@
         :cropped-image-type="croppedImageType"
         :file-name="computedMedium.name"
         :dimension="dimension"
+        :is-resize-enabled="false"
         @close="closeModal()"
     >
-        <template #leftActions>
-            <biz-button
-                type="button"
-                @click="closeModal()"
-            >
-                Cancel
-            </biz-button>
-        </template>
-
         <template #actions>
             <biz-button
                 type="button"
-                class="is-primary"
+                class="is-link"
                 @click="updateFile()"
             >
                 Done
@@ -31,8 +23,7 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
-    import { getBlob, getCanvas } from '@/Libs/crop-helper';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: "BizFileDragDropImageEditor",
@@ -43,6 +34,7 @@
         },
 
         props: {
+            croppedImageType: { type: String, default: "image/png" },
             dimension: { type: Object, default: () => {} },
             medium: { type: Object, required: true },
             mediumUrl: { type: String, default: null },
@@ -50,19 +42,16 @@
 
         emits: [
             'on-close',
-            'on-update',
             'update:medium',
             'update:mediumUrl',
         ],
 
         setup(props, {emit}) {
-            const computedMedium = useModelWrapper(props, emit, 'medium');
-
             return {
-                computedMedium,
+                computedMedium: useModelWrapper(props, emit, 'medium'),
                 computedMediumUrl: props.mediumUrl
                     ? useModelWrapper(props, emit, 'mediumUrl')
-                    : URL.createObjectURL(computedMedium.value),
+                    : URL.createObjectURL(props.medium),
             };
         },
 
@@ -72,35 +61,24 @@
             };
         },
 
-        computed: {
-            croppedImageType() {
-                let imageType = null;
-
-                if (this.medium?.type) {
-                    imageType = this.medium.type;
-                } else if (this.medium.extension) {
-                    imageType = 'image/' + this.medium.extension;
-                }
-
-                return imageType == 'image/png' ? imageType : 'image/jpeg';
-            },
-        },
-
         methods: {
-            async updateFile() {
-                let generateMedium = await this.generateMedium();
+            updateFile() {
+                const self = this;
 
-                this.computedMediumUrl = generateMedium.url;
-                this.computedMedium = generateMedium.file;
+                self.getCropperBlob()
+                    .then((blob) => {
+                        self.computedMediumUrl = URL.createObjectURL(blob);
+                        self.computedMedium = blob;
 
-                this.$emit('on-update');
+                        self.closeModal();
+                    });
             },
 
-            async generateMedium() {
-                return {
-                    url: getCanvas(this.cropper, 600).toDataURL('image/jpeg', 0.8),
-                    file: await getBlob(this.cropper, this.croppedImageType),
-                }
+            getCropperBlob() {
+                return getCanvasBlob(
+                    this.cropper.getCroppedCanvas(),
+                    this.croppedImageType
+                );
             },
 
             closeModal() {

@@ -19,8 +19,6 @@ class CreateSpacesTable extends Migration
             $table->string('name', 128);
             $table->string('address', 512)->nullable();
             $table->json('contacts')->nullable();
-            $table->string('city')->nullable();
-            $table->string('country_code', 3)->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->boolean('is_page_enabled')->default(false);

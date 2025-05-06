@@ -3,23 +3,18 @@
 namespace App\Console\Commands;
 
 use App\Entities\Caches\TranslationCache;
-use App\Models\Translation;
 use App\Services\ModuleService;
-use App\Services\TranslationManagerService;
+use App\Models\Translation;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Filesystem\Filesystem;
 
 class FixTranslationSource extends Command
 {
-    protected $signature = 'fix:translation-source '.
-        '{mode=new : "new|replace|forceCreate" Mode to store the translation}';
+    protected $signature = 'fix:translation-source';
 
-    protected $description = 'Populate source column in translations table with optional mode. '.
-        'new (store only new records), '.
-        'replace (replace existing records), '.
-        'forceCreate (force to create records)';
+    protected $description = 'Populate source column in translations table';
 
     private $files;
 
@@ -33,8 +28,6 @@ class FixTranslationSource extends Command
         $this->importTranslations(lang_path());
 
         $this->importModuleTranslations();
-
-        $this->importAppIdTranslations();
 
         app(TranslationCache::class)->flush();
 
@@ -60,43 +53,32 @@ class FixTranslationSource extends Command
         $key,
         $source,
         $group = null,
-        $value = null,
-        $module = null,
+        $value = null
     ): void {
-        $mode = $this->argument('mode');
-
-        if (in_array($mode, ['new', 'replace'])) {
-            app(TranslationManagerService::class)->saveTranslation(
-                key: $key,
-                value: $value,
-                locale: $locale,
-                group: $group,
-                source: $source,
-                module: $module,
-                replace: ($mode == 'replace' ? true : false)
-            );
-
-        } elseif ($mode == 'forceCreate') {
-
-            Translation::insertOrIgnore([
-                'key' => $key,
-                'value' => $value,
+        $translation = Translation::firstOrNew(
+            [
                 'locale' => $locale,
-                'group' => $group ?? null,
-                'source' => $source ?? null,
-                'module' => $module ?? null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                'group'  => $group,
+                'key'    => $key,
+            ],
+            [
+                'value' => $value,
+            ]
+        );
+
+        if (! $translation->value) {
+            $translation->value = $value;
         }
+
+        $translation->source = $source;
+
+        $translation->save();
     }
 
-    private function importTranslations(string $basePath, string $module = null)
+    private function importTranslations(string $basePath)
     {
         foreach ($this->files()->directories($basePath) as $langPath) {
             $locale = basename($langPath);
-
-            if (empty($module) && $locale == 'modules') continue;
 
             foreach ($this->files()->allfiles($langPath) as $idx => $file) {
                 $info = pathinfo($file);
@@ -120,21 +102,12 @@ class FixTranslationSource extends Command
 
                 if ($translations && is_array($translations)) {
                     foreach (Arr::dot($translations) as $key => $value) {
-                        $manipulatedGroup = null;
-                        $manipulatedKey = null;
-
-                        if ($module && $group == 'terms') {
-                            $manipulatedKey = Str::snake($key);
-                            $manipulatedGroup = $module.'_term';
-                        }
-
                         $this->fixTranslation(
                             $locale,
-                            $manipulatedKey ?? $key,
+                            $key,
                             $source,
-                            $manipulatedGroup ?? $group,
+                            $group,
                             $value,
-                            $module,
                         );
                     }
                 }
@@ -162,7 +135,6 @@ class FixTranslationSource extends Command
                             $source,
                             null,
                             $value,
-                            $module,
                         );
                     }
                 }
@@ -172,21 +144,12 @@ class FixTranslationSource extends Command
 
     private function importModuleTranslations()
     {
-        foreach (app(ModuleService::class)->getEnabledNames() as $module) {
+        foreach (app(ModuleService::class)->getAllEnabledNames() as $module) {
 
-            $basePath = lang_path()."/modules/".Str::snake($module);
+            $basePath = lang_path()."/modules/".strtolower($module);
 
             if (! is_dir($basePath)) continue;
 
-            $this->importTranslations($basePath, Str::snake($module));
-        }
-    }
-
-    private function importAppIdTranslations()
-    {
-        $basePath = lang_path()."/".strtolower(config('app.id'));
-
-        if (is_dir($basePath)) {
             $this->importTranslations($basePath);
         }
     }

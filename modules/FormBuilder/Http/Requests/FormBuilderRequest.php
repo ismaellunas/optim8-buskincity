@@ -4,7 +4,6 @@ namespace Modules\FormBuilder\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\FormBuilder\Rules\FieldNameRequired;
-use Modules\FormBuilder\Rules\FieldNameUnique;
 
 class FormBuilderRequest extends FormRequest
 {
@@ -37,7 +36,6 @@ class FormBuilderRequest extends FormRequest
             'field_groups.*.fields' => [
                 'nullable',
                 new FieldNameRequired(),
-                new FieldNameUnique(),
             ],
         ];
     }

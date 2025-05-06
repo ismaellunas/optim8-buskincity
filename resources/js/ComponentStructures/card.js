@@ -1,4 +1,5 @@
 import {
+    alignments,
     contentPositions,
     contentSizes,
     defaultOption,
@@ -53,6 +54,7 @@ export default {
             }
         },
         content: {
+            alignment: null,
             size: null,
         },
         dimension: dimension.config
@@ -142,6 +144,13 @@ export const config = {
                 label: "Size",
                 settings: {
                     options: defaultOption.concat(contentSizes)
+                },
+            },
+            alignment: {
+                component: "ConfigSelect",
+                label: "Alignment",
+                settings: {
+                    options: defaultOption.concat(alignments)
                 },
             },
         }

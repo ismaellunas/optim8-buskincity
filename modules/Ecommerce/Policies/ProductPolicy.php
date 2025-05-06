@@ -8,12 +8,9 @@ use App\Services\LoginService;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\ProductStatus;
-use Illuminate\Support\Traits\Macroable;
 
 class ProductPolicy extends BasePermissionPolicy
 {
-    use Macroable;
-
     protected $basePermission = 'product';
 
     public function viewAny(User $user)

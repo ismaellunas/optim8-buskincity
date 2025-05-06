@@ -10,15 +10,13 @@
                 <div class="column">
                     <div class="buttons is-right">
                         <biz-button-download
-                            v-if="false"
-                            :url="route(baseRouteName + '.export', {locale: locale, groups, module})"
+                            :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
                             class="export-translation mr-2"
                         >
                             {{ i18n.export }}
                         </biz-button-download>
 
                         <biz-button
-                            v-if="false"
                             class="import-translation mr-2"
                             @click="openModal"
                         >
@@ -36,9 +34,10 @@
                         <biz-button-icon
                             class="update-translation is-link"
                             :icon="icon.edit"
-                            :label="i18n.update"
                             @click="onSubmit"
-                        />
+                        >
+                            <span>{{ i18n.update }}</span>
+                        </biz-button-icon>
                     </div>
                 </div>
             </div>
@@ -47,8 +46,18 @@
                 <div class="column is-8">
                     <biz-dropdown
                         :close-on-click="true"
-                        :trigger-label="selectedLocale ?? 'Language'"
                     >
+                        <template #trigger>
+                            <span>{{ selectedLocale ?? 'Language' }}</span>
+
+                            <span class="icon is-small">
+                                <i
+                                    :class="icon.angleDown"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                        </template>
+
                         <biz-dropdown-scroll :max-height="350">
                             <biz-dropdown-item
                                 v-for="(localeOption, index) in localeOptions"
@@ -69,30 +78,6 @@
                     </biz-dropdown>
 
                     <biz-dropdown
-                        class="ml-3"
-                        :close-on-click="true"
-                        :trigger-label="selectedModule?.value ?? 'No module'"
-                    >
-                        <biz-dropdown-scroll :max-height="350">
-                            <biz-dropdown-item
-                                v-for="(moduleOption, moduleIndex) in moduleOptions"
-                                :key="moduleIndex"
-                                class="pt-0 pb-1"
-                            >
-                                <biz-button
-                                    :class="[
-                                        'is-fullwidth',
-                                        (moduleOption.id == selectedModule.id) ? 'is-link' : 'is-white',
-                                    ]"
-                                    @click.prevent="filterModule(moduleOption)"
-                                >
-                                    {{ moduleOption.value }}
-                                </biz-button>
-                            </biz-dropdown-item>
-                        </biz-dropdown-scroll>
-                    </biz-dropdown>
-
-                    <biz-dropdown
                         class="group-filter ml-3"
                         :close-on-click="false"
                     >
@@ -105,24 +90,25 @@
                             >
                                 ({{ groups.length }})
                             </span>
-                            <biz-icon
-                                aria-hidden="true"
-                                class="is-small"
-                                :icon="icon.angleDown"
-                            />
+                            <span class="icon is-small">
+                                <i
+                                    :class="icon.angleDown"
+                                    aria-hidden="true"
+                                />
+                            </span>
                         </template>
 
                         <biz-dropdown-scroll :max-height="350">
                             <biz-dropdown-item
-                                v-for="(groupOption) in groupOptions"
-                                :key="groupOption.id"
+                                v-for="(groupOption, key, index) in groupOptions"
+                                :key="index"
                             >
                                 <biz-checkbox
                                     v-model:checked="groups"
-                                    :value="groupOption.id"
+                                    :value="key"
                                     @change="filterGroups"
                                 >
-                                    &nbsp; {{ groupOption.value }}
+                                    &nbsp; {{ groupOption }}
                                 </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>
@@ -151,7 +137,6 @@
                     <template #thead>
                         <tr>
                             <th>#</th>
-                            <th>{{ i18n.module }}</th>
                             <th>{{ i18n.group }}</th>
                             <th>{{ i18n.key }}</th>
                             <th v-if="!isReferenceLanguage">
@@ -171,7 +156,6 @@
                         :key="page.id"
                     >
                         <th>{{ page.id ?? "-" }}</th>
-                        <td>{{ page.module }}</td>
                         <td>{{ page.group }}</td>
                         <td>
                             <template v-if="!page.group && isReferenceLanguage">
@@ -322,12 +306,12 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTextarea from '@/Biz/Textarea.vue';
-    import { debounce, find } from 'lodash';
-    import { computed, ref } from 'vue';
+    import { merge, debounce } from 'lodash';
+    import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
-    import { router, useForm } from '@inertiajs/vue3';
-    import { add as iconAdd, angleDown, edit as iconEdit, eraser, remove as iconRemove } from '@/Libs/icon-class';
+    import { useForm } from '@inertiajs/vue3';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'TranslationManagerIndex',
@@ -372,10 +356,6 @@
             groupOptions: {
                 type: Object,
                 default:() => {},
-            },
-            moduleOptions: {
-                type: Object,
-                default: () => {},
             },
             referenceLocale: {
                 type: String,
@@ -425,49 +405,16 @@
         },
 
         setup(props) {
-            const additionalQueryParams = ref({});
-
-            const queryParams = computed({
-                get: () => ({
-                    ...additionalQueryParams.value,
-                    ...props.pageQueryParams
-                }),
-                set(newParams) {
-                    additionalQueryParams.value = newParams;
-                },
-            });
-
-            const locale = ref(null);
-            locale.value = queryParams.value?.locale ?? props.defaultLocale;
-
-            const selectedLocale = computed({
-                get() {
-                    return find(props.localeOptions, ['id', locale.value])?.name ?? '';
-                },
-                set: (newLocale) => { locale.value = newLocale.id }
-            });
-
-            const module = ref(null);
-            module.value = queryParams.value?.module ?? null;
-
-            const selectedModule = computed({
-                get: () => find(props.moduleOptions, ['id', module.value]),
-                set: (newModule) => { module.value = newModule.id }
-            });
-
-            const isReferenceLanguage = computed(() => (
-                props.referenceLocale === locale.value
-            ));
+            const queryParams = merge(
+                {},
+                props.pageQueryParams
+            );
 
             return {
-                groups: ref(queryParams.value?.groups ?? []),
-                isReferenceLanguage,
-                locale,
-                module,
-                queryParams,
-                selectedLocale,
-                selectedModule,
-                term: ref(queryParams.value?.term ?? ''),
+                groups: ref(props.pageQueryParams?.groups ?? []),
+                locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
+                term: ref(props.pageQueryParams?.term ?? ''),
+                queryParams: ref(queryParams),
                 importForm: useForm({
                     file: null
                 }),
@@ -482,14 +429,25 @@
                 form: useForm({
                     translations: this.records.data,
                 }),
-                icon: {
-                    add: iconAdd,
-                    angleDown,
-                    edit: iconEdit,
-                    eraser,
-                    remove: iconRemove
-                },
+                icon,
             };
+        },
+
+        computed: {
+            isReferenceLanguage() {
+                return this.referenceLocale === this.locale;
+            },
+            selectedLocale: {
+                get() {
+                    const selectedLocale = this
+                        .localeOptions
+                        .find((localeOption) => localeOption.id == this.locale);
+                    return selectedLocale?.name ?? '';
+                },
+                set(locale) {
+                    this.locale = locale.id;
+                }
+            },
         },
 
         methods: {
@@ -506,20 +464,17 @@
                             this.queryParams['groups'] = this.groups;
                             this.queryParams['locale'] = this.locale;
                             this.queryParams['term'] = this.term;
-                            this.queryParams['module'] = this.module;
                             this.refreshWithQueryParams();
                         } else {
                             this.groups = this.queryParams['groups'] ?? [];
                             this.locale = this.queryParams['locale'] ?? this.defaultLocale;
                             this.term = this.queryParams['term'] ?? '';
-                            this.module = this.queryParams['module'] ?? null;
                         }
                     });
                 } else {
                     this.queryParams['groups'] = this.groups;
                     this.queryParams['locale'] = this.locale;
                     this.queryParams['term'] = this.term;
-                    this.queryParams['module'] = this.module;
                     this.refreshWithQueryParams();
                 }
             },
@@ -537,15 +492,8 @@
                 this.search();
             }, 1400),
 
-            filterModule: debounce(function(moduleOption) {
-                this.selectedModule = moduleOption;
-                this.groups = [];
-
-                this.search();
-            }, debounceTime),
-
             refreshWithQueryParams() {
-                router.get(
+                this.$inertia.get(
                     route(this.baseRouteName+'.edit'),
                     this.queryParams,
                     {
@@ -563,7 +511,7 @@
             onSubmit() {
                 const self = this;
 
-                self.form.post(route(self.baseRouteName+'.update', this.queryParams), {
+                self.form.post(route(self.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
                         self.onStartLoadingOverlay();
@@ -599,7 +547,7 @@
                     message
                 ).then((result) => {
                     if (result.isConfirmed) {
-                        router.delete(
+                        self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', translation.id),
                             {
                                 onSuccess: () => {
@@ -624,7 +572,7 @@
             },
 
             refreshPagination(url) {
-                router.get(
+                this.$inertia.get(
                     url,
                     this.queryParams,
                     {

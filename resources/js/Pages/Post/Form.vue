@@ -178,6 +178,9 @@
                             :label="i18n.content"
                             :config="editorConfig"
                             :disabled="isInputDisabled"
+                            :is-download-enabled="can.media.read"
+                            :is-media-enabled="can.media.browse"
+                            :is-upload-enabled="can.media.add"
                             :is-config-combined="true"
                             :message="error('content')"
                         />
@@ -267,14 +270,12 @@
             v-if="isModalOpen"
             :data="media"
             :is-download-enabled="can.media.read"
-            :is-edit-enabled="can.media.edit"
             :is-upload-enabled="can.media.add"
             :query-params="mediaListQueryParams"
             :search="search"
             :instructions="instructions.mediaLibrary"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
-            @on-close-edit-modal="refreshMediaListByPageActive()"
             @on-media-selected="selectFile"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -286,7 +287,7 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
-    import MixinMediaLibrary from '@/Mixins/MediaLibrary';
+    import MixinImageLibrary from '@/Mixins/MediaLibrary';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
@@ -337,7 +338,7 @@
             MixinHasModal,
             MixinHasPageErrors,
             MixinHasTab,
-            MixinMediaLibrary,
+            MixinImageLibrary,
         ],
 
         inject: {

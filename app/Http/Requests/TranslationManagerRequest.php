@@ -24,7 +24,7 @@ class TranslationManagerRequest extends BaseFormRequest
      */
     public function rules()
     {
-        $groups = app(TranslationManagerService::class)->getGroups($this->get('module'));
+        $groups = (new TranslationManagerService())->getGroups();
 
         return [
             'groups' => [

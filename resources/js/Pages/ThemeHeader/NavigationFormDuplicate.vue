@@ -123,14 +123,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep } from 'lodash';
-    import { ref, computed } from 'vue';
+    import { reactive } from 'vue';
     import { usePage } from '@inertiajs/vue3';
     import { capitalCase } from 'change-case';
 
@@ -147,8 +146,21 @@
 
         mixins: [
             MixinHasPageErrors,
-            MixinHasTranslation,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                duplicate_menu: 'Duplicate menu',
+                to: 'To',
+                title : 'Title',
+                type : 'Type',
+                url : 'Url',
+                menu : 'Menu',
+                open_link : 'Open link in a new tab',
+                cancel : 'Cancel',
+                duplicate: 'Duplicate',
+            }) },
+        },
 
         props: {
             errors: {
@@ -171,10 +183,8 @@
         ],
 
         setup(props) {
-            const menuItem = computed(() => props.menuItem);
-
             return {
-                form: ref(cloneDeep(menuItem.value)),
+                form: reactive(cloneDeep(props.menuItem)),
                 menuOptions: usePage().props.menuOptions,
                 typeOptions: usePage().props.typeOptions,
             };

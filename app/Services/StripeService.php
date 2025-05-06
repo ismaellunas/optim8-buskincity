@@ -243,7 +243,6 @@ class StripeService
             'payment_intent_data' => [
                 'application_fee_amount' => $applicationFeeAmount,
             ],
-            'payment_method_types' => app(SettingService::class)->getStripePaymentMethodTypes(),
             'mode' => 'payment',
             'submit_type' => 'donate',
             'success_url' => route('donations.success', ['user' => $user]),

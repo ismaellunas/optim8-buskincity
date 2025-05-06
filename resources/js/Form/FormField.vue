@@ -139,16 +139,15 @@
                                 successAlert(page.props.flash.message);
 
                                 self.$emit('on-success-submit');
-                                self.formFieldKey += 1;
+
                             },
                             onError: errors => {
-                                oopsAlert({
-                                    text: errors?.formBuilder?.default[0] ?? null,
-                                    isScrollToTop: false
-                                });
+                                oopsAlert({isScrollToTop: false});
                             },
                             onFinish: (visit) => {
                                 self.onEndLoadingOverlay();
+
+                                self.formFieldKey += 1;
                             },
                         }
                     );

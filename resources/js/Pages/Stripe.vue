@@ -139,15 +139,9 @@
                                         <biz-form-input
                                             v-model="form.minimal_amounts[ currency ]"
                                             type="number"
-                                            :min="minimalCurrencyAmounts[currency]"
+                                            min="1"
                                             style="width: 5rem;"
-                                        >
-                                            <template #note>
-                                                <p class="help is-info">
-                                                    {{ `${i18n.minimal}: ${minimalCurrencyAmounts[currency]} ${currency}` }}
-                                                </p>
-                                            </template>
-                                        </biz-form-input>
+                                        />
                                     </td>
                                     <td>
                                         <div class="columns is-multiline">
@@ -155,7 +149,7 @@
                                                 <biz-form-input-addons
                                                     v-model="tempAmountOptions[ currency ]"
                                                     type="number"
-                                                    :min="form.minimal_amounts[ currency ] >= minimalCurrencyAmounts[currency] ? form.minimal_amounts[ currency ] : minimalCurrencyAmounts[currency]"
+                                                    min="1"
                                                     @keydown.enter.prevent="addAmount(currency)"
                                                 >
                                                     <template #afterInput>
@@ -163,17 +157,11 @@
                                                             <button
                                                                 class="button is-primary"
                                                                 type="button"
-                                                                :disabled="!canAddAmountOption(tempAmountOptions[ currency ], currency)"
+                                                                :disabled="!canAddAmountOption(tempAmountOptions[ currency ])"
                                                                 @click.prevent="addAmount(currency)"
                                                             >
                                                                 <i :class="icon.plusCircle" />
                                                             </button>
-                                                        </p>
-                                                    </template>
-
-                                                    <template #note>
-                                                        <p class="help is-info">
-                                                            {{ `${i18n.minimal}: ${form.minimal_amounts[ currency ] >= minimalCurrencyAmounts[currency] ? form.minimal_amounts[ currency ] : minimalCurrencyAmounts[currency]} ${currency}` }}
                                                         </p>
                                                     </template>
                                                 </biz-form-input-addons>
@@ -237,9 +225,7 @@
                             v-model="form.logo"
                             image-preview-size="6"
                             :placeholder="i18n.open_media_library"
-                            :is-browse-enabled="can?.media?.browse ?? false"
                             :is-download-enabled="can?.media?.read ?? false"
-                            :is-edit-enabled="can?.media?.edit ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="logoMedia"
                             :dimension="dimensions.logo"
@@ -271,7 +257,7 @@
     import BizTable from '@/Biz/Table.vue';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import icon from '@/Libs/icon-class';
-    import { debounce, difference, isEmpty, filter, find, forEach, sortBy, mapValues } from 'lodash';
+    import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
@@ -299,12 +285,6 @@
             MixinHasLoader,
             MixinHasPageErrors,
         ],
-
-        provide() {
-            return {
-                i18n: this.i18n,
-            };
-        },
 
         layout: AppLayout,
 
@@ -362,10 +342,6 @@
                 type: Object,
                 default: () => {},
             },
-            minimalCurrencyAmounts: {
-                type: Object,
-                default: () => {},
-            },
             paymentCurrencies: {
                 type: Array,
                 default: () => [],
@@ -377,31 +353,26 @@
             i18n: {
                 type: Object,
                 default: () => ({
-                    amount_options : 'Amount options',
-                    application_fee_percentage : 'Application fee percentage',
-                    currency : 'Currency',
-                    default_country : 'Default country',
+                    settings : 'Settings',
                     is_enabled : 'Is enabled?',
-                    logo : 'Logo',
-                    minimal_payment : 'Minimal payment',
-                    minimal: 'Minimal',
-                    open_media_library : 'Open media library',
+                    default_country : 'Default country',
+                    application_fee_percentage : 'Application fee percentage',
                     payment_currencies : 'Payment currencies',
                     primary_color : 'Primary color',
-                    save : 'Save',
                     secondary_color : 'Secondary color',
-                    settings : 'Settings',
+                    logo : 'Logo',
+                    open_media_library : 'Open media library',
+                    save : 'Save',
+                    currency : 'Currency',
+                    minimal_payment : 'Minimal payment',
+                    amount_options : 'Amount options',
                 }),
             },
         },
 
         setup(props) {
-            const amountOptions = mapValues(props.amountOptions ?? {}, function (options) {
-                return sortBy(options);
-            });
-
             const form = {
-                amount_options: amountOptions,
+                amount_options: props.amountOptions ?? {},
                 application_fee_percentage: props.applicationFeePercentage ?? null,
                 default_country: props.defaultCountry ?? '',
                 is_enabled: props.isEnabled ?? false,
@@ -466,22 +437,6 @@
                     });
                 },
             },
-
-            'form.minimal_amounts': {
-                deep: true,
-                handler(value) {
-                    const self = this;
-
-                    forEach(self.form.amount_options, (options, currency) => {
-                        self.form.amount_options[currency] = filter(
-                            options,
-                            function (amountOption) {
-                                return amountOption >= value[currency];
-                            }
-                        );
-                    });
-                },
-            },
         },
 
         methods: {
@@ -496,26 +451,20 @@
             }, debounceTime),
 
             addAmount(currency) {
-                if (this.canAddAmountOption(this.tempAmountOptions[ currency ], currency)) {
+                if (this.canAddAmountOption(this.tempAmountOptions[ currency ])) {
                     this.form.amount_options[ currency ].push(
                         parseInt(this.tempAmountOptions[ currency ])
                     );
                     this.tempAmountOptions[ currency ] = '';
-
-                    this.form.amount_options[ currency ] = sortBy(this.form.amount_options[ currency ]);
                 }
             },
 
-            canAddAmountOption(amount, currency) {
-                let minimalAmount = this.form.minimal_amounts[ currency ] >= this.minimalCurrencyAmounts[currency]
-                    ? this.form.minimal_amounts[ currency ]
-                    : this.minimalCurrencyAmounts[currency];
-
+            canAddAmountOption(amount) {
                 return (
                     amount
                     && /^\+?\d+$/.test(amount.replace(/\s/g,''))
                     && parseInt(amount) > 0
-                ) && parseInt(minimalAmount) <= parseInt(amount);
+                );
             },
 
             deleteAmount(currency, index) {
@@ -526,7 +475,6 @@
                 const self = this;
                 this.form.post(this.route('admin.settings.stripe.update'), {
                     preserveScroll: false,
-                    preserveState: false,
                     onStart: () => {
                         self.onStartLoadingOverlay();
                     },

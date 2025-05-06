@@ -5,7 +5,7 @@
                 <biz-form-input
                     v-model="form.name"
                     :label="i18n.name"
-                    :placeholder="i18n.form_name_placeholder"
+                    placeholder="Contact Form"
                     :required="true"
                     :message="error('name')"
                     @on-blur="populateKey"
@@ -15,7 +15,7 @@
                 <biz-form-key
                     v-model="form.form_id"
                     :label="i18n.form_id"
-                    :placeholder="i18n.form_id_placeholder"
+                    placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('form_id')"
                 />

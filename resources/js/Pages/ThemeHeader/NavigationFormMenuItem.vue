@@ -107,7 +107,6 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
@@ -115,7 +114,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep } from 'lodash';
     import { isBlank } from '@/Libs/utils';
-    import { ref, computed } from 'vue';
+    import { reactive } from 'vue';
     import { usePage } from '@inertiajs/vue3';
     import { capitalCase } from 'change-case';
 
@@ -132,8 +131,22 @@
 
         mixins: [
             MixinHasPageErrors,
-            MixinHasTranslation,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                add_menu_item : 'Add menu item',
+                edit_menu_item : 'Edit menu item',
+                title : 'Title',
+                type : 'Type',
+                url : 'Url',
+                menu : 'Menu',
+                open_link : 'Open link in a new tab',
+                cancel : 'Cancel',
+                create : 'Create',
+                update : 'Update',
+            }) },
+        },
 
         props: {
             baseRouteName: {
@@ -166,12 +179,11 @@
 
         setup(props) {
             let fields = {};
-            const menuItem = computed(() => props.menuItem);
 
-            if (! isBlank(menuItem.value)) {
-                fields = ref(cloneDeep(menuItem.value));
+            if (!isBlank(props.menuItem)) {
+                fields = reactive(cloneDeep(props.menuItem));
             } else {
-                fields = ref({
+                fields = reactive({
                     id: null,
                     title: null,
                     type: 'url',
@@ -194,6 +206,12 @@
             };
         },
 
+        data() {
+            return {
+                loader: null,
+            };
+        },
+
         computed: {
             isCreate() {
                 return isBlank(this.menuItem);
@@ -207,11 +225,12 @@
         methods: {
             onSubmit() {
                 const self = this;
+                const form = this.form;
 
-                if (isBlank(self.menuItem)) {
-                    self.$emit('add-menu-item', self.form);
+                if (isBlank(this.menuItem)) {
+                    this.$emit('add-menu-item', form);
                 } else {
-                    self.$emit('update-menu-item', self.form);
+                    this.$emit('update-menu-item', form);
                 }
             },
 

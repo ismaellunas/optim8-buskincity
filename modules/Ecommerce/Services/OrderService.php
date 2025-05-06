@@ -294,7 +294,6 @@ class OrderService
                 'time' => $event->timezonedBookedAt->format('H:i'),
                 'status' => Str::title($event->status),
                 'timezone' => $event->schedule->timezone,
-                'display_timezone' => $event->schedule->displayTimezone,
                 'timezoneOffset' => 'GMT '.$carbonTimeZone->toOffsetName(),
             ],
         ];

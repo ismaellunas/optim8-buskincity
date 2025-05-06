@@ -19,7 +19,7 @@
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <div
                         class="profile-background hero is-medium is-primary is-radius"
-                        @if ($space->cover) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 400) }});" @endif
+                        @if ($space->coverUrl) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 720) }});" @endif
                     >
                         <div class="hero-body">
                             <div class="title">&nbsp;</div>
@@ -31,7 +31,7 @@
                 <div class="column is-11-desktop is-11-tablet is-11-mobile">
                     <figure class="profile-picture image is-250x250">
                         <x-image
-                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) }}"
+                            src="{{ $space->getOptimizedLogoImageUrl(250, 250) ?? $pageSpace->defaultLogoUrl() }}"
                             alt="{{ $space->name }}"
                             width="250"
                             height="250"
@@ -47,38 +47,11 @@
                     <p class="is-size-7">{{ $space->address }}</p>
 
                     <div class="columns is-multiline is-mobile mt-3">
-                        <div class="column is-8-desktop is-12-tablet is-12-mobile">
+                        <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <div class="content has-text-justified">
                                 <p>{{ $space->description }}</p>
                             </div>
                         </div>
-
-                        @can ('bookAProduct', $space)
-                            <div class="column is-4-desktop is-hidden-touch has-text-right">
-                                <a
-                                    href="{{ route('booking.products.show', $space->product->id) }}"
-                                    class="button is-primary"
-                                >
-                                    {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
-                                </a>
-                            </div>
-
-                            <div
-                                class="columns is-mobile mb-1 is-hidden-desktop"
-                                style="position: fixed; z-index: 9999; bottom: 0; width: 100%;"
-                            >
-                                <div class="column is-12 p-0">
-                                    <div class="notification is-primary m-2 has-text-centered">
-                                        <a
-                                            href="{{ route('booking.products.show', $space->product->id) }}"
-                                            class="button is-white is-outlined"
-                                        >
-                                            {{ __('Book this :typeName', ['typeName' => Str::lower($space->typeName)]) }}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endcan
                     </div>
 
                     @if ($space->contacts)
@@ -138,7 +111,7 @@
                                     <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
                                         <figure class="image is-250x250 is-inline-block">
                                             <x-image
-                                                src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
+                                                src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
                                                 alt="{{ $spaceChild->name }}"
                                                 width="250"
                                                 height="250"
@@ -173,7 +146,7 @@
                                         <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                             <figure class="image is-250x250 is-pulled-left">
                                                 <x-image
-                                                    src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
+                                                    src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
                                                     alt="{{ $spaceChild->name }}"
                                                     width="250"
                                                     height="250"
@@ -208,7 +181,7 @@
                                         <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                             <figure class="image is-250x250 is-pulled-right">
                                                 <x-image
-                                                    src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
+                                                    src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}"
                                                     alt="{{ $spaceChild->name }}"
                                                     width="250"
                                                     height="250"

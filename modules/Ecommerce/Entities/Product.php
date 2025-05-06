@@ -12,7 +12,6 @@ use Lunar\FieldTypes\TranslatedText;
 use Lunar\Models\Product as LunarProduct;
 use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
-use Modules\Ecommerce\ModuleService;
 
 class Product extends LunarProduct
 {
@@ -83,14 +82,6 @@ class Product extends LunarProduct
                 return $query->orderByName($order);
                 break;
 
-            case 'city':
-                return $query->orderByCity($order);
-                break;
-
-            case 'country':
-                return $query->orderByCountry($order);
-                break;
-
             default:
                 return $query->orderBy('id', 'DESC');
                 break;
@@ -103,28 +94,6 @@ class Product extends LunarProduct
 
         return $query
             ->orderBy("attribute_data->name->value->{$locale}", $order);
-    }
-
-    public function scopeOrderByCity($query, string $order)
-    {
-        $tablePrefix = ModuleService::tablePrefix();
-
-        return $query->orderBy(
-            ProductMeta::selectRaw("value::json->0->>'city'")
-                ->where('key', '=', 'locations')
-                ->whereColumn("{$tablePrefix}products_meta.product_id", "{$tablePrefix}products.id")
-        , $order);
-    }
-
-    public function scopeOrderByCountry($query, string $order)
-    {
-        $tablePrefix = ModuleService::tablePrefix();
-
-        return $query->orderBy(
-            ProductMeta::selectRaw("value::json->0->>'country_code'")
-                ->where('key', '=', 'locations')
-                ->whereColumn("{$tablePrefix}products_meta.product_id", "{$tablePrefix}products.id")
-        , $order);
     }
 
     public function scopeInStatus($query, array $status)
@@ -146,14 +115,6 @@ class Product extends LunarProduct
             $q->where('key', 'locations');
             $q->where(DB::raw("value::json->0->>'country_code'"), "ILIKE", $country);
         });
-    }
-
-    public function scopeType($query, string $type)
-    {
-        return $query
-            ->whereHas('productType', function ($query) use ($type) {
-                $query->where('name', $type);
-            });
     }
 
     /**
@@ -202,23 +163,6 @@ class Product extends LunarProduct
         return $this->translateAttribute('description', config('app.locale'));
     }
 
-    public function getDisplayCityAttribute(): string
-    {
-        return $this->locations[0]['city'] ?? "";
-    }
-
-    public function getDisplayCountryAttribute(): string
-    {
-        $countryCode = $this->locations[0]['country_code'] ?? null;
-        $countryName = "";
-
-        if ($countryCode) {
-            $countryName = app(CountryService::class)->getCountryName($countryCode);
-        }
-
-        return $countryName;
-    }
-
     public function syncMedia(array $mediaIds = []): void
     {
         $mediaIds = collect($mediaIds)
@@ -238,7 +182,7 @@ class Product extends LunarProduct
         $this->gallery()->detach($mediaId);
     }
 
-    public function getLocationAttribute(): string
+    public function getLocationAttribute()
     {
         $city = $this->locations[0]['city'] ?? null;
         $countryCode = $this->locations[0]['country_code'] ?? null;
@@ -251,10 +195,5 @@ class Product extends LunarProduct
         return $city
             ? $city . ($countryName ? ', ' . $countryName : null)
             : $countryName;
-    }
-
-    public function getIsPublishedAttribute(): bool
-    {
-        return $this->status == ProductStatus::PUBLISHED->value;
     }
 }

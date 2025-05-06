@@ -47,10 +47,8 @@ class StripeController extends Controller
             'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
             'can' => [
                 'media' => [
-                    'add' => $user->can('media.add'),
-                    'browse' => $user->can('media.browse'),
-                    'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
                 ]
             ],
             'colorPrimary' => $settings->get('stripe_color_primary'),
@@ -64,7 +62,6 @@ class StripeController extends Controller
             ],
             'logoMedia' => $logoMedia,
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
-            'minimalCurrencyAmounts' => $this->stripeService->getListMinimalPayments(),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
             'title' => __('Stripe'),
             'i18n' => $this->translations(),
@@ -140,7 +137,6 @@ class StripeController extends Controller
                 'currency' => __('Currency'),
                 'minimal_payment' => __('Minimal payment'),
                 'amount_options' => __('Amount options'),
-                'minimal' => __('Minimal'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

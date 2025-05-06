@@ -13,12 +13,10 @@ class Translation extends Model implements TranslationLoader
     use HasFactory;
 
     protected $fillable = [
+        'locale',
         'group',
         'key',
-        'locale',
-        'module',
         'value',
-        'source',
     ];
 
     public function saveFromInputs(array $inputs)
@@ -33,7 +31,7 @@ class Translation extends Model implements TranslationLoader
         $translationCache = app(TranslationCache::class);
 
         try {
-            $cache = $translationCache->rememberForGroup(
+            return $translationCache->rememberForGroup(
                 $locale,
                 function () use ($locale, $group) {
                     return self::select([
@@ -59,9 +57,6 @@ class Translation extends Model implements TranslationLoader
                 return [];
             }
         }
-
-        //temporary until we figure out how to use this
-        return [];
     }
 
     // Scope

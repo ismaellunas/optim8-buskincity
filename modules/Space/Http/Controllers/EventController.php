@@ -22,31 +22,31 @@ class EventController extends Controller
 
     public function store(SpaceEventRequest $request, Space $space)
     {
-        $inputs = $request->validated();
+        $inputs = $request->all();
 
         $event = $this->eventService->createEvent($space, $inputs);
 
         return [
-            'event' => $this->eventService->getEditableRecord($event),
+            'event' => $this->eventService->getEditableRecord($space, $event),
             'message' => $this->title.' created successfully!',
         ];
     }
 
     public function update(SpaceEventRequest $request, Space $space, SpaceEvent $event)
     {
-        $inputs = $request->validated();
+        $inputs = $request->all();
 
         $this->eventService->updateEvent($event, $inputs);
 
         return [
-            'event' => $this->eventService->getEditableRecord($event),
+            'event' => $this->eventService->getEditableRecord($space, $event),
             'message' => $this->title.' updated successfully!',
         ];
     }
 
     public function show(Space $space, SpaceEvent $event)
     {
-        return $this->eventService->getEditableRecord($event);
+        return $this->eventService->getEditableRecord($space, $event);
     }
 
     public function destroy(Space $space, SpaceEvent $event)

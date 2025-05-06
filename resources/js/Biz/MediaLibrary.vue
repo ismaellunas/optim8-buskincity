@@ -16,7 +16,7 @@
                                 :max-files="maxFiles"
                                 :max-file-size="maxFileSize"
                                 required
-                                @update-files="onUpdateFiles"
+                                @on-update-files="onUpdateFiles"
                             />
                         </div>
 
@@ -164,7 +164,7 @@
             >
                 <biz-media-library-detail
                     :media="formMedia[index]"
-                    :allow-multiple="(allowMultiple && formMedia.length > 1)"
+                    :allow-multiple="allowMultiple"
                     :is-ajax="isAjax"
                     :is-processing="isProcessing"
                     @on-close-edit-modal="closeEditModal()"
@@ -180,18 +180,18 @@
                     style="width: 100%"
                 >
                     <div class="column">
-                        <div class="buttons is-right">
+                        <div class="buttons is-pulled-right">
                             <biz-button
                                 type="button"
-                                class="is-primary component-configurable"
+                                class="is-link"
                                 @click="onSubmit()"
                             >
                                 {{ i18n.save }}
                             </biz-button>
 
                             <biz-button
+                                class="is-link is-light ml-2"
                                 type="button"
-                                class="component-configurable"
                                 @click="closeEditModal"
                             >
                                 {{ i18n.cancel }}
@@ -231,11 +231,17 @@
     import MediaForm from '@/Pages/Media/Form.vue';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { extensionToMimes, buildFormData, emitter } from '@/Libs/utils';
+    import { extensionToMimes, buildFormData } from '@/Libs/utils';
     import { includes, isEmpty, cloneDeep } from 'lodash';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/vue3';
-    import { generateNewTranslation } from '@/Libs/media-translation';
+
+    function generateNewTranslation() {
+        return {
+            alt: '',
+            description: '',
+        };
+    };
 
     export default {
         name: 'MediaLibrary',
@@ -314,7 +320,6 @@
         },
 
         emits: [
-            'on-close-edit-modal',
             'on-media-submitted',
             'on-type-changed',
             'on-view-changed',
@@ -373,87 +378,50 @@
             },
         },
 
-        mounted() {
-            const self = this;
-
-            emitter.on('on-save-as-image', () => {
-                self.isEditing = false;
-                self.formMedia = [];
-                self.fileUploadKey += 1;
-            });
-        },
-
         methods: {
             openEditModal(media) {
-                const self = this;
+                this.isEditing = true;
 
                 if (media) {
-                    if (media.is_in_use) {
-                        confirmAlert(
-                            self.i18n.edit_resource,
-                            self.i18n.warning_edit_resource,
-                            self.i18n.are_you_sure,
-                            {
-                                icon: 'warning'
-                            }
-                        ).then((result) => {
-                            if (result.isConfirmed) {
-                                self.onOpenEditModal(media);
+                    let form = cloneDeep(media);
+                    let translations = {};
 
-                                self.isEditing = true;
-                            }
-                        });
-                    } else {
-                        self.onOpenEditModal(media);
-
-                        self.isEditing = true;
-                    }
-                } else {
-                    self.isEditing = true;
-                }
-            },
-
-            onOpenEditModal(media) {
-                let form = cloneDeep(media);
-                let translations = {};
-
-                if (isEmpty(media.translations)) {
-                    translations[this.defaultLocale] = generateNewTranslation();
-                } else {
-                    media.translations.forEach(translation => {
-                        translations[translation.locale] = {
-                            alt: translation.alt ?? null,
-                            description: translation.description ?? null,
-                        };
-                    });
-
-                    if (!translations[this.defaultLocale]) {
+                    if (isEmpty(media.translations)) {
                         translations[this.defaultLocale] = generateNewTranslation();
+                    } else {
+                        media.translations.forEach(translation => {
+                            translations[translation.locale] = {
+                                alt: translation.alt ?? null,
+                                description: translation.description ?? null,
+                            };
+                        });
+
+                        if (!translations[this.defaultLocale]) {
+                            translations[this.defaultLocale] = generateNewTranslation();
+                        }
                     }
+
+                    form.file_name = media.file_name_without_extension;
+                    form.translations = translations;
+
+                    this.formMedia.push(form);
                 }
-
-                form.file_name = media.file_name_without_extension;
-                form.translations = translations;
-
-                this.formMedia.push(form);
             },
 
             closeEditModal() {
                 this.isEditing = false;
                 this.formMedia = [];
                 this.fileUploadKey += 1;
-
-                this.$emit('on-close-edit-modal');
             },
 
             onDeleteRecord(record) {
                 const self = this;
 
-                if (record.is_in_use) {
+                if (!record.canDeleted) {
                     confirmAlert(
                         self.i18n.delete_resource,
                         self.i18n.warning_delete_resource,
-                        self.i18n.yes,
+                        'Yes',
                         {
                             icon: 'warning'
                         }

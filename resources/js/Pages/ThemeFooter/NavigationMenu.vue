@@ -1,68 +1,58 @@
 <template>
-    <div class="card">
-        <div class="card-header">
-            <slot name="header" />
-        </div>
-
-        <div class="card-content has-background-light p-2">
-            <draggable
-                handle=".handle-menu"
-                item-key="id"
-                class="draggable-area"
-                :animation="300"
-                :group="{ name: 'g1' }"
-                :list="menuItems"
-            >
-                <template #item="{ element, index }">
-                    <theme-menu-item
-                        class="mb-1"
-                        :is-child="isChild"
-                        :is-down-button-disabled="index == (menuItems.length - 1)"
-                        :is-up-button-disabled="index == 0"
-                        :locale-options="localeOptions"
-                        :menu-item-index="index"
-                        :menu-item="element"
-                        :selected-locale="selectedLocale"
-                        @delete-row="deleteRow"
-                        @duplicate-menu-item="duplicateMenuItem"
-                        @edit-row="$emit('edit-row', $event)"
-                        @move-menu-item="moveMenuItem"
-                    />
-                </template>
-            </draggable>
-        </div>
-
-        <div class="card-footer p-2">
-            <div
-                class="has-text-right"
-                style="width: 100%"
-            >
-                <biz-button-icon
-                    type="button"
-                    class="is-primary"
-                    :icon="icon.add"
-                    @click="$emit('open-form-modal', segmentIndex)"
-                >
-                    <span>
-                        {{ sentenceCase(i18n.add_menu_item) }}
-                    </span>
-                </biz-button-icon>
+    <draggable
+        class="has-background-light"
+        handle=".handle-menu"
+        item-key="id"
+        tag="nav"
+        :animation="300"
+        :class="panelClasses"
+        :group="{ name: 'g1' }"
+        :list="menuItems"
+    >
+        <template #item="{ element, index }">
+            <div>
+                <theme-menu-item
+                    :is-child="isChild"
+                    :locale-options="localeOptions"
+                    :menu-item-index="index"
+                    :menu-item="element"
+                    :selected-locale="selectedLocale"
+                    @delete-row="deleteRow"
+                    @duplicate-menu-item="duplicateMenuItem"
+                    @edit-row="$emit('edit-row', $event)"
+                />
             </div>
-        </div>
-    </div>
+        </template>
+
+        <template #header>
+            <slot name="header" />
+        </template>
+
+        <template #footer>
+            <a
+                v-if="!isChild"
+                class="panel-block p-4 has-background-white border-top has-text-link"
+                @click.prevent="$emit('open-form-modal', segmentIndex)"
+            >
+                <span class="panel-icon handle-menu has-text-link">
+                    <i
+                        :class="icon.add"
+                        aria-hidden="true"
+                    />
+                </span>
+                {{ sentenceCase(i18n.add_menu_item) }}
+            </a>
+        </template>
+    </draggable>
 </template>
 
 <script>
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import Draggable from "vuedraggable";
     import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
-    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { sentenceCase } from 'change-case';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { moveItemUp, moveItemDown } from '@/Libs/menu-builder';
 
     export default {
         name: 'NavigationMenu',
@@ -70,12 +60,13 @@
         components: {
             Draggable,
             ThemeMenuItem,
-            BizButtonIcon,
         },
 
-        mixins: [
-            MixinHasTranslation,
-        ],
+        inject: {
+            i18n: { default: () => ({
+                add_menu_item : 'Add new menu item',
+            }) }
+        },
 
         props: {
             isChild: {
@@ -108,12 +99,26 @@
             'update-last-data-menu-items'
         ],
 
-        setup(props, {emit}) {
+        setup() {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
-                computedMenuItems: useModelWrapper(props, emit, 'menuItems'),
+            };
+        },
+
+        data() {
+            return {
                 icon
             };
+        },
+
+        computed: {
+            panelClasses() {
+                return {
+                    'child-panel': this.isChild,
+                    'panel': true,
+                    'pl-4': true,
+                };
+            },
         },
 
         methods: {
@@ -124,8 +129,13 @@
             deleteRow(index) {
                 const self = this;
                 const menuItems = this.menuItems;
+                let message = "";
 
-                confirmDelete().then((result) => {
+                if (menuItems[index].children.length > 0) {
+                    message = "A nested menu will deleted too."
+                }
+
+                confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
                         self.$emit('menu-items', menuItems.splice(index, 1));
                         self.updateLastDataMenuItems();
@@ -141,19 +151,26 @@
                 this.$emit('update-last-data-menu-items');
             },
 
-            moveMenuItem(type, index) {
-                switch (type) {
-                case 'up':
-                    moveItemUp(index, this.computedMenuItems);
-                    break;
-
-                case 'down':
-                    moveItemDown(index, this.computedMenuItems);
-                    break;
-                }
-            },
-
             sentenceCase,
         },
     }
 </script>
+
+<style scoped>
+    .handle-menu {
+        cursor: pointer;
+    }
+
+    .panel {
+        min-height: 20px;
+    }
+
+    .child-panel {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    .border-top {
+        border-top: 1px solid rgb(236, 236, 236);
+    }
+</style>

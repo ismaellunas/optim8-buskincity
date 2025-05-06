@@ -1,9 +1,8 @@
 <?php
 
-use App\Enums\PublishingStatus;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -20,13 +19,6 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->dateTime('started_at');
             $table->dateTime('ended_at');
-            $table->string('timezone', 32)->nullable();
-            $table->boolean('is_same_address_as_parent')->default(true);
-            $table->string('city')->nullable();
-            $table->string('country_code', 3)->nullable();
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
-            $table->string('status', 23)->default(PublishingStatus::DRAFT->value);
 
             $table
                 ->foreignId('space_id')

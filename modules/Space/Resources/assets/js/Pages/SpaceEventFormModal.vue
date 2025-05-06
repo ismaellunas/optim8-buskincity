@@ -19,35 +19,13 @@
             v-if="!isBlank(form)"
             @submit.prevent="submit"
         >
-            <div class="columns">
-                <div class="column is-half">
-                    <biz-form-input
-                        v-model="form.title"
-                        maxlength="255"
-                        required
-                        :label="i18n.title"
-                        :message="error('title', null, formErrors)"
-                    />
-                </div>
-
-                <div class="column is-half">
-                    <biz-form-select
-                        v-model="form.status"
-                        class="is-fullwidth"
-                        name="status"
-                        :label="i18n.status"
-                        :message="error('status', null, formErrors)"
-                    >
-                        <option
-                            v-for="statusOption in eventStatusOptions"
-                            :key="statusOption.id"
-                            :value="statusOption.id"
-                        >
-                            {{ statusOption.value }}
-                        </option>
-                    </biz-form-select>
-                </div>
-            </div>
+            <biz-form-input
+                v-model="form.title"
+                :label="i18n.title"
+                maxlength="255"
+                required
+                :message="error('title', null, formErrors)"
+            />
 
             <div class="columns">
                 <div class="column is-half">
@@ -63,37 +41,15 @@
                         :start-time="[startTime, endTime]"
                     />
                 </div>
-
-                <div class="column is-half">
-                    <biz-form-timezone
-                        v-model="form.timezone"
-                        required
-                        :label="i18n.timezone"
-                        :message="error('timezone', null, formErrors)"
-                        :tooltip-message="i18n.tips.timezone"
-                    />
-                </div>
             </div>
 
-            <div class="columns">
-                <div class="column is-full">
-                    <biz-form-checkbox-toggle
-                        v-model="form.is_same_address_as_parent"
-                        :text="i18n.is_same_address_as_parent"
-                        :value="form.is_same_address_as_parent"
-                    />
-                </div>
-            </div>
-
-            <biz-form-fieldset-location
-                v-if="!form.is_same_address_as_parent"
-                v-model:address="form.address"
-                v-model:city="form.city"
-                v-model:country-code="form.country_code"
-                v-model:latitude="form.latitude"
-                v-model:longitude="form.longitude"
-                :error-bag="formErrors"
-                :error-bag-name="null"
+            <biz-form-textarea
+                v-model="form.address"
+                :label="i18n.address"
+                :placeholder="i18n.address"
+                rows="2"
+                maxlength="500"
+                :message="error('address', null, formErrors)"
             />
 
             <div class="box">
@@ -158,13 +114,9 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
-    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import BizFormDateTime from '@/Biz/Form/DateTime.vue';
-    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
-    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
-    import BizFormTimezone from '@/Biz/Form/Timezone.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep, find, sortBy } from 'lodash';
@@ -179,13 +131,9 @@
 
         components: {
             BizButton,
-            BizFormCheckboxToggle,
             BizFormDateTime,
-            BizFormFieldsetLocation,
             BizFormInput,
-            BizFormSelect,
             BizFormTextarea,
-            BizFormTimezone,
             BizLanguageTab,
             BizModalCard,
         },
@@ -205,9 +153,7 @@
                 cancel: 'Cancel',
                 create: 'Create',
                 update: 'Update',
-                timezone: 'Timezone',
             }) },
-            eventStatusOptions: { default: () => []},
         },
 
         props: {
@@ -238,7 +184,6 @@
             }
 
             return {
-                capitalCase,
                 defaultLocale,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
@@ -302,6 +247,7 @@
 
                 this.form = useForm(this.newEvent());
             }
+
         },
 
         methods: {
@@ -313,14 +259,7 @@
                     address: null,
                     started_at: null,
                     ended_at: null,
-                    city: null,
-                    country_code: null,
-                    latitude: null,
-                    longitude: null,
-                    translations: {},
-                    timezone: usePage().props.timezone,
-                    is_same_address_as_parent: true,
-                    status: 'draft',
+                    translations: {}
                 };
 
                 event.translations[this.selectedLocale] = this.newTranslation();
@@ -426,6 +365,8 @@
                         self.formErrors = error.response.data.errors;
                     });
             },
+
+            capitalCase,
         },
     };
 </script>

@@ -12,7 +12,7 @@
 
 <x-layouts.master>
     <x-slot name="title">
-        {{ ($userProfile->getMeta('stage_name') ?? $user->fullName) . ' | ' .config('app.name') }}
+        {{ $user->fullName . ' | ' .config('app.name') }}
     </x-slot>
 
     <x-slot name="metaDescription">
@@ -23,7 +23,7 @@
         <div class="container">
             <div class="columns is-multiline is-mobile is-centered">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 400) }});">
+                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 398) }});">
                         <div class="hero-body">
                             <div class="title">&nbsp;</div>
                             <div class="subtitle">&nbsp;</div>
@@ -57,22 +57,8 @@
                 </div>
 
                 <div class="column is-11-desktop is-12-tablet is-12-mobile">
-                    <div class="columns is-mobile mt-5 mb-2">
-                        <div class="column is-12-desktop is-10-tablet is-10-mobile">
-                            <h1 class="title is-2 mb-2">{{ $userProfile->getMeta('stage_name') ?? $user->fullName }}</h1>
-                            <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
-                        </div>
-
-                        <div class="column is-2-tablet is-2-mobile is-hidden-desktop">
-                            <div class="buttons is-right">
-                                @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
-                                        {{ __('Donate') }}
-                                    </a>
-                                @endcan
-                            </div>
-                        </div>
-                    </div>
+                    <h1 class="title is-2 mt-5 mb-2">{{ $userProfile->getMeta('stage_name') }}</h1>
+                    <p class="is-size-7">{{ $userProfile->getMeta('discipline') }}</p>
 
                     <div class="columns is-multiline is-mobile mt-3">
                         <div class="column is-8-desktop is-12-tablet is-12-mobile">
@@ -80,16 +66,14 @@
                                 <p>{{ $userProfile->getMeta('short_bio', $locale) }}</p>
 
                                 @if ($userProfile->getMeta('short_bio', $locale) && $userProfile->getMeta('long_bio', $locale))
-                                    <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio" onclick="event.preventDefault();">
-                                        {{ __('Read more') }}
-                                    </a>
+                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio">{{ __('Read more') }}</a>
                                 @endif
                             </div>
                         </div>
-                        <div class="column is-4-desktop is-hidden-touch">
+                        <div class="column is-4-desktop is-12-tablet is-12-mobile">
                             <div class="buttons is-right">
                                 @can ('receiveDonation', $user)
-                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation" onclick="event.preventDefault();">
+                                    <a href="#" class="button is-primary js-modal-trigger" data-target="donation">
                                         {{ __('Donate') }}
                                     </a>
                                 @endcan
@@ -179,7 +163,7 @@
 
     <!-- Modal: Payment donation is-active -->
     @can ('receiveDonation', $user)
-    <x-modal id="donation" @class(['is-active' => request()->get('qrcode') ?? false])>
+    <x-modal id="donation">
         <div class="modal-content is-small">
             <div class="card">
                 <div class="card-content">
@@ -191,6 +175,7 @@
                                 width="48"
                                 height="48"
                                 rounded="is-rounded"
+                                is-lazyload
                             />
                         </figure>
                         <div>
@@ -198,18 +183,6 @@
                             <p>{{ __('Thank you for your support!') }}</p>
                         </div>
                     </div>
-
-                    @if (session('donationError'))
-                    <div class="notification is-danger mt-4">
-                        <button
-                            type="button"
-                            class="delete"
-                            onclick="removeErrorMessage(this)"
-                        ></button>
-                        {{ session('donationError') }}
-                    </div>
-                    @endif
-
                     <x-stripe-form-donation :user-id="$user->id"/>
                 </div>
             </div>
@@ -223,17 +196,4 @@
         @vite('themes/'.config('theme.parent').'/js/donation.js')
         @endcan
     @endpush
-
-    @if (
-        ! empty($errors->donation->all())
-        || session('donationError')
-    )
-        @push('bottom_scripts')
-            <script>
-                document.getElementById('donation').classList.add('is-active');
-
-                function removeErrorMessage(element) { element.parentElement.remove() };
-            </script>
-        @endpush
-    @endif
 </x-layouts.master>

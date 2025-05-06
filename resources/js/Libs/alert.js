@@ -57,10 +57,6 @@ export function confirm(title, message, confirmButtonText = "Yes", additionalCon
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: confirmButtonText,
-            customClass: {
-                confirmButton: 'component-configurable',
-                cancelButton: 'component-configurable',
-            }
         },
         additionalConfig
     ));

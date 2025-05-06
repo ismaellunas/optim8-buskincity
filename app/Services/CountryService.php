@@ -6,16 +6,11 @@ use App\Entities\Caches\CountryCache;
 use App\Models\Country;
 use App\Models\UserMeta;
 use App\Traits\HasCache;
-use DateTime;
-use DateTimeZone;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class CountryService
 {
     use HasCache;
-
-    private $timezones;
 
     public function getPhoneCountryOptions(): Collection
     {
@@ -108,43 +103,5 @@ class CountryService
         }
 
         return "";
-    }
-
-    public function getTimezoneOptions(): Collection
-    {
-        if (! is_null($this->timezones)) {
-            return $this->timezones;
-        }
-
-        $timezones = array();
-        $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( DateTimeZone::ALL ) );
-
-        $timezoneOffsets = array();
-        foreach ($timezones as $timezone) {
-            $tz = new DateTimeZone($timezone);
-            $timezoneOffsets[$timezone] = $tz->getOffset(new DateTime());
-        }
-
-        asort($timezoneOffsets);
-
-        $timezoneList = [];
-        foreach ($timezoneOffsets as $timezone => $offset) {
-            $offsetPrefix = $offset < 0 ? '-' : '+';
-            $offsetFormatted = gmdate( 'G:i', abs($offset) );
-
-            $prettyOffset = "GMT {$offsetPrefix}{$offsetFormatted}";
-
-            $timezoneList[] = [
-                'id' => $timezone,
-                'value' => [
-                    'offsetValue' => $prettyOffset,
-                    'timezone' => Str::replace("_", " ", "$timezone"),
-                ],
-            ];
-        }
-
-        $this->timezones = collect($timezoneList);
-
-        return $this->timezones;
     }
 }

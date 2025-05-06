@@ -1,7 +1,6 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { inRange} from 'lodash';
 import mime from 'mime';
-import mitt from 'mitt';
 
 export const regexFileName = "a-z0-9\-";
 export const regexSlug = regexFileName;
@@ -197,5 +196,3 @@ export const useBreakpoints = () => {
         screenType,
     };
 }
-
-export const emitter = mitt();

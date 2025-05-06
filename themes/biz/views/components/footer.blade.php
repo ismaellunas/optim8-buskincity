@@ -4,7 +4,7 @@
             <div class="columns is-multiline is-mobile">
                 <div class="column is-3-desktop is-3-tablet is-12-mobile">
                     <figure
-                        class="image mb-2"
+                        class="image"
                         style="max-width:160px"
                     >
                         <x-image
@@ -14,18 +14,6 @@
                             is-lazyload
                         />
                     </figure>
-
-                    <div class="buttons">
-                        @foreach ($socialMediaMenus as $socialMedia)
-                            <a
-                                class="button is-ghost has-text-black"
-                                target="{{ $socialMedia['target'] }}"
-                                href="{{ $socialMedia['url'] }}"
-                            >
-                                <x-icon :icon="$socialMedia['icon']" />
-                            </a>
-                        @endforeach
-                    </div>
                 </div>
                 <div class="column is-9-desktop is-9-tablet is-12-mobile">
                     <div class="columns is-multiline is-mobile">

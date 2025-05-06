@@ -119,7 +119,22 @@ class File extends BaseField
 
         $deleteMediaIds = $inputs[$this->name]['deleted_media'] ?? [];
 
-        $value = $storedValue;
+        if (! empty($deleteMediaIds)) {
+            $deleteMediaIds = array_intersect(
+                $deleteMediaIds,
+                $storedValue
+            );
+
+            $this->deleteFiles($deleteMediaIds);
+
+            $value = array_diff(
+                $storedValue,
+                $deleteMediaIds,
+            );
+
+        } else {
+            $value = $storedValue;
+        }
 
         if (! empty($files)) {
 
@@ -129,21 +144,6 @@ class File extends BaseField
                 $value,
                 $media->pluck('id')->all()
             );
-        }
-
-        if (! empty($deleteMediaIds)) {
-            $deleteMediaIds = array_intersect(
-                $deleteMediaIds,
-                $value
-            );
-
-            $this->deleteFiles($deleteMediaIds);
-
-            $value = array_diff(
-                $value,
-                $deleteMediaIds,
-            );
-
         }
 
         $data[$this->name] = array_values($value);
@@ -161,7 +161,6 @@ class File extends BaseField
             'file_url',
             'size',
             'type',
-            'version',
             'updated_at',
         ])
             ->whereIn('id', $mediaIds)
@@ -300,16 +299,10 @@ class File extends BaseField
     {
         $maxFileSize = SettingService::maxFileSize();
 
-        if (array_key_exists('max', $this->validation['rules'])) {
-            $validationRuleMax = $this->validation['rules']['max'];
-
-            if (
-                $validationRuleMax > $maxFileSize
-                || $validationRuleMax === null
-            ) {
-                $this->validation['rules']['max'] = $maxFileSize;
-            }
-        } else {
+        if (
+            array_key_exists('max', $this->validation['rules'])
+            && (int)$this->validation['rules']['max'] > $maxFileSize
+        ) {
             $this->validation['rules']['max'] = $maxFileSize;
         }
     }

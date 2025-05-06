@@ -2,10 +2,10 @@
     <draggable
         handle=".handle-segment"
         item-key="id"
-        class="has-background-light p-2"
         :animation="300"
+        :class="panelClasses"
         :group="{ name: 'segment' }"
-        :list="computedMenuItems"
+        :list="menuItems"
     >
         <template #item="{ element, index }">
             <div class="columns">
@@ -21,51 +21,37 @@
                         @open-form-modal="openFormModal"
                     >
                         <template #header>
-                            <div
-                                class="field is-grouped pl-4 pr-2 py-2 has-background-dark"
-                                style="width: 100%"
-                            >
-                                <div class="control">
-                                    <div class="buttons">
-                                        <biz-button-icon
-                                            type="button"
-                                            class="handle-segment"
-                                            :icon="icon.move"
-                                            :title="i18n.drag_and_drop"
-                                        />
-
-                                        <biz-button-icon
-                                            type="button"
-                                            :icon="icon.up"
-                                            :disabled="index == 0"
-                                            @click="moveSegment('up', index)"
-                                        />
-
-                                        <biz-button-icon
-                                            type="button"
-                                            :icon="icon.down"
-                                            :disabled="index == (computedMenuItems.length - 1)"
-                                            @click="moveSegment('down', index)"
+                            <div class="panel-heading">
+                                <div class="field is-grouped">
+                                    <div class="control is-align-items-center is-flex">
+                                        <span class="panel-icon handle-segment">
+                                            <i
+                                                class="fas fa-bars"
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+                                    </div>
+                                    <div class="control is-expanded">
+                                        <biz-input
+                                            v-model="element.title"
+                                            placeholder="Segment Name"
+                                            required
                                         />
                                     </div>
-                                </div>
-
-                                <div class="control is-expanded">
-                                    <biz-input
-                                        v-model="element.title"
-                                        placeholder="Segment Name"
-                                        required
-                                    />
-                                </div>
-
-                                <div class="control">
-                                    <biz-button-icon
-                                        type="button"
-                                        class="is-ghost"
-                                        :icon="icon.remove"
-                                        icon-class="has-text-white"
-                                        @click="deleteRow(index)"
-                                    />
+                                    <div class="control">
+                                        <biz-button
+                                            type="button"
+                                            class="is-ghost"
+                                            @click="deleteRow(index)"
+                                        >
+                                            <span class="icon has-text-danger">
+                                                <i
+                                                    class="fas fa-trash"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </biz-button>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -90,35 +76,28 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
-    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
-    import BizIcon from '@/Biz/Icon.vue';
+    import BizButton from '@/Biz/Button.vue';
     import BizInput from '@/Biz/Input.vue';
-    import Draggable from "vuedraggable";
-    import icon from '@/Libs/icon-class';
     import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
+    import Draggable from "vuedraggable";
     import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { moveItemUp, moveItemDown } from '@/Libs/menu-builder';
 
     export default {
         name: 'NavigationSegment',
 
         components: {
+            BizButton,
             BizInput,
             NavigationFormMenu,
             NavigationMenu,
             Draggable,
-            BizIcon,
-            BizButtonIcon,
         },
 
         mixins: [
             MixinHasModal,
-            MixinHasTranslation,
         ],
 
         props: {
@@ -143,17 +122,14 @@
         emits: [
             'duplicate-menu-item',
             'edit-row',
-            'menu-items',
             'open-duplicate-modal',
             'open-form-modal',
         ],
 
-        setup(props, {emit}) {
+        setup() {
             return {
                 baseRouteName: usePage().props.baseRouteName ?? null,
                 validationRoute: route('admin.api.theme.header.menu-item.validate'),
-                computedMenuItems: useModelWrapper(props, emit, 'menuItems'),
-                icon,
             };
         },
 
@@ -165,6 +141,15 @@
             };
         },
 
+        computed: {
+            panelClasses() {
+                return {
+                    'panel': true,
+                    'pl-4': true,
+                };
+            },
+        },
+
         methods: {
             editRow(menuItem) {
                 this.selectedMenuItem = menuItem;
@@ -174,15 +159,16 @@
 
             deleteRow(index) {
                 const self = this;
+                const menuItems = this.menuItems;
                 let message = "";
 
-                if (self.computedMenuItems[index].children.length > 0) {
-                    message = self.i18n.delete_segment_message;
+                if (menuItems[index].children.length > 0) {
+                    message = "A menu item will deleted too."
                 }
 
-                confirmDelete(self.i18n.are_you_sure, message).then((result) => {
+                confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
-                        self.$emit('menu-items', self.computedMenuItems.splice(index, 1));
+                        self.$emit('menu-items', menuItems.splice(index, 1));
                     }
                 });
             },
@@ -244,18 +230,12 @@
                 this.selectedMenuItem['is_blank'] = menuItem['is_blank'];
                 this.selectedMenuItem['menu_itemable_id'] = menuItem['menu_itemable_id'];
             },
-
-            moveSegment(type, index) {
-                switch (type) {
-                case 'up':
-                    moveItemUp(index, this.computedMenuItems);
-                    break;
-
-                case 'down':
-                    moveItemDown(index, this.computedMenuItems);
-                    break;
-                }
-            },
         },
     }
 </script>
+
+<style scoped>
+    .handle-segment {
+        cursor: pointer;
+    }
+</style>

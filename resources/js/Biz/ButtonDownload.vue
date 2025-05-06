@@ -3,26 +3,22 @@
         @click="download($event)"
     >
         <slot>
-            <biz-icon
-                class="is-small"
-                :icon="icon.download"
-            />
+            <span class="icon is-small">
+                <i class="fas fa-download" />
+            </span>
         </slot>
     </biz-button>
 </template>
 
 <script>
     import BizButton from '@/Biz/Button.vue';
-    import BizIcon from '@/Biz/Icon.vue';
     import JsFileDownloader from 'js-file-downloader';
-    import { download } from '@/Libs/icon-class';
 
     export default {
         name: 'BizButtonDownload',
 
         components: {
             BizButton,
-            BizIcon,
         },
 
         props: {
@@ -36,12 +32,6 @@
             'on-success',
             'on-failed',
         ],
-
-        setup() {
-            return {
-                icon: { download },
-            };
-        },
 
         methods: {
             download(event) {

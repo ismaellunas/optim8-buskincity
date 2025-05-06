@@ -3,7 +3,6 @@
 namespace Modules\Booking\Database\Seeders;
 
 use App\Models\Setting;
-use App\Services\UserService;
 use Illuminate\Database\Seeder;
 
 class SettingTableSeeder extends Seeder
@@ -15,11 +14,6 @@ class SettingTableSeeder extends Seeder
      */
     public function run()
     {
-        $roleIds = app(UserService::class)
-            ->getRoleOptions()
-            ->pluck('id')
-            ->all();
-
         $settings = [
             [
                 "key" => "allowed_early_check_in",
@@ -34,20 +28,6 @@ class SettingTableSeeder extends Seeder
                 "value" => json_encode(['value' => null, 'unit' => 'm']),
                 "group" => "booking",
                 "order" => "2"
-            ],
-            [
-                "key" => "booking_access_common_user",
-                "display_name" => null,
-                "value" => false,
-                "group" => "booking",
-                "order" => "3"
-            ],
-            [
-                "key" => "booking_access_roles",
-                "display_name" => null,
-                "value" => json_encode($roleIds),
-                "group" => "booking",
-                "order" => "4"
             ],
         ];
 

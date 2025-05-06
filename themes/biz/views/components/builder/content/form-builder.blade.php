@@ -1,4 +1,4 @@
-@if ($isEnabled && $schema)
+@if ($schema)
 <div @class($uniqueClass)>
     @if (session('failed'))
         <div class="alert alert-danger">

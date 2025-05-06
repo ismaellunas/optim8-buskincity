@@ -348,13 +348,9 @@ class EventService
                 'name' => $event->orderLine->purchasable->product->displayName,
                 'short_description' => nl2br(Purifier::clean($event->orderLine->purchasable->product->displayShortDescription)),
                 'description' => nl2br(Purifier::clean($event->orderLine->purchasable->product->displayDescription)),
-                'direction_url' => (
-                    !is_null($location['latitude']) && !is_null($location['longitude'])
-                    ? GoogleMap::directionUrl(
-                        $location['latitude'],
-                        $location['longitude'],
-                    )
-                    : ""
+                'direction_url' => GoogleMap::directionUrl(
+                    $location['latitude'],
+                    $location['longitude']
                 ),
             ];
         });

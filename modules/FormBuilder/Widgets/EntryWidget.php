@@ -9,7 +9,7 @@ class EntryWidget implements WidgetInterface
 {
     private $user;
     private $componentName = "FormEntry";
-    private $title = ":Form_builder_term.form_entries";
+    private $title = "Form entries";
 
     private $baseRouteName = "admin.form-builders";
 

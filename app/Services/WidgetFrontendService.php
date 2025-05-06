@@ -2,27 +2,59 @@
 
 namespace App\Services;
 
+use App\Services\ModuleService;
+use Illuminate\Support\Str;
+
 class WidgetFrontendService extends WidgetService
 {
     protected function getWidgetLists(): array
     {
-        return collect(app(SettingService::class)->getFrontendWidgetLists())
-            ->sortBy('order')
-            ->all();
+        return [
+            'qrCode',
+            'socialMediaShare',
+            'stripeConnect',
+            'upcomingEvents',
+            'streetPerformersYouMightLike',
+            'wantToBecomeAStreetPerformer',
+        ];
     }
 
-    public function generateWidgets(): array
+    protected function moduleWidgets(): array
     {
-        $widgets = collect([]);
+        $modules = app(ModuleService::class)->getAllEnabledNames();
 
-        foreach ($this->getWidgetLists() as $widgetList) {
-            $className = $widgetList['widget'];
+        $widgets = [];
 
-            if (class_exists($className)) {
-                $widgetObject = new $className($widgetList);
+        foreach ($modules as $module) {
+            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
 
-                if ($widgetObject->canBeAccessed()) {
-                    $widgets->push($widgetObject->data());
+            $methodName = 'frontendWidgets';
+
+            if (
+                class_exists($moduleService)
+                && method_exists($moduleService, $methodName)
+            ) {
+                $widgets[$module] = $moduleService::$methodName();
+            }
+        }
+
+        return $widgets;
+    }
+
+    public function generateModuleWidgets($request): array
+    {
+        $widgets = collect();
+
+        foreach ($this->moduleWidgets() as $module => $moduleWidgets) {
+            foreach ($moduleWidgets as $widgetName) {
+                $className = "\\Modules\\{$module}\\Widgets\\".Str::of($widgetName)->studly()."Widget";
+
+                if (class_exists($className)) {
+                    $widgetObject = new $className($request);
+
+                    if ($widgetObject->canBeAccessed()) {
+                        $widgets->push($widgetObject->data());
+                    }
                 }
             }
         }

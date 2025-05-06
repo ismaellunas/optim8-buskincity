@@ -5,7 +5,9 @@ namespace Database\Seeders\Buskincity;
 use App\Services\ModuleService;
 use App\Models\User;
 use App\Models\Page;
+use App\Models\Setting;
 use App\Models\PageTranslation;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 use Modules\FormBuilder\Entities\FieldGroup;
@@ -23,8 +25,10 @@ class PerformerApplicationSeeder extends Seeder
     {
         $name = "Performer Application";
 
+        $formId = null;
+
         if ($this->isModuleFormBuilderActive()) {
-            Form::factory()
+            $form = Form::factory()
                 ->has(
                     FieldGroup::factory()
                         ->count(5)
@@ -34,11 +38,13 @@ class PerformerApplicationSeeder extends Seeder
                     'key' => Str::of($name)->lower()->snake()->value(),
                     'name' => $name,
                 ]);
+
+            $formId = $form->id;
         }
 
         $adminUser = User::find(1);
 
-        Page::factory()
+        $page = Page::factory()
             ->hasTranslations(1, [
                 'title' => $name,
                 'slug' => Str::slug($name),
@@ -47,6 +53,32 @@ class PerformerApplicationSeeder extends Seeder
             ])
             ->for($adminUser, 'author')
             ->create();
+
+        $pageId = $page->id;
+
+        $widgetPerformerApplications = [
+            [
+                "key" => "page_id",
+                "display_name" => null,
+                "value" => $pageId,
+                "group" => "widget.performer_application",
+                "order" => 1,
+            ],
+            [
+                "key" => "form_id",
+                "display_name" => null,
+                "value" => $formId,
+                "group" => "widget.performer_application",
+                "order" => 2,
+            ],
+        ];
+
+        foreach ($widgetPerformerApplications as $widgetPerformerApplication) {
+            Setting::factory()->create(array_merge($widgetPerformerApplication, [
+                "created_at" => now(),
+                "updated_at" => now(),
+            ]));
+        }
     }
 
     private function isModuleFormBuilderActive(): bool
@@ -666,8 +698,8 @@ class PerformerApplicationSeeder extends Seeder
                         "type" => "FileDragDrop",
                         "title" => "File Upload",
                         "column" => "is-half",
-                        "label" => "Performance photo",
-                        "name" => "performance_photo",
+                        "label" => "Performace photo",
+                        "name" => "performace_photo",
                         "placeholder" => "Drop files here...",
                         "notes" => [
                             "Upload photos of your Performance. Kindly upload up to 10 pictures of your performances, and make sure to pick your best photos, as this might have an impact on your application during the review process.",
@@ -679,21 +711,16 @@ class PerformerApplicationSeeder extends Seeder
                             "rules" => [
                                 "required" => true,
                                 "mimes" => ["image"],
-                                "max" => "10240",
+                                "max" => "15360",
                             ],
                             "message" => [],
                         ],
                         "is_multiple_upload" => true,
-                        "media_dimension" => [
-                            "width" => config('constants.dimensions.gallery.width'),
-                            "height" => config('constants.dimensions.gallery.height'),
-                        ],
                         "visibility" => [],
                         "translated" => false,
                         "id" => "IDLD8H5U52FQ",
                         "properties" => [],
                         "attributes" => [],
-                        "is_image_editor_enabled" => true,
                     ],
                 ]
             ],
@@ -727,7 +754,6 @@ class PerformerApplicationSeeder extends Seeder
                                 [
                                     "id" => "IDLD8IPXVK3O",
                                     "componentName" => "FormBuilder",
-                                    "module" => "FormBuilder",
                                 ],
                             ],
                         ],

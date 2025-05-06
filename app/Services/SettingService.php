@@ -20,8 +20,15 @@ use Illuminate\Support\Facades\Vite;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mews\Purifier\Facades\Purifier;
 
-class SettingService extends BaseSettingService
+class SettingService
 {
+    private static function getKey(string $key): string
+    {
+        return app(SettingCache::class)->remember($key, function () use ($key) {
+            return Setting::key($key)->value('value') ?? "";
+        });
+    }
+
     public function saveKey(string $key, mixed $value, string $group = null): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
@@ -176,7 +183,7 @@ class SettingService extends BaseSettingService
             ->all();
     }
 
-    public function getKeys(): array
+    public function getKeys()
     {
         $keys = $this->getSettingsByGroup('key.', true);
         $defaultKeys = collect(config('constants.settings.keys'));
@@ -272,20 +279,12 @@ class SettingService extends BaseSettingService
 
     public function getLogoMedia(): ?Media
     {
-        return $this->staticRemember(
-            'logo_media',
-            fn () => $this->getMediaFromSetting(
-                config("constants.theme_header.header_logo_media.key")
-            )
+        $media = $this->getMediaFromSetting(
+            config("constants.theme_header.header_logo_media.key")
         );
-    }
-
-    public function getLogoForMediaLibrary(): ?Media
-    {
-        $media = $this->getLogoMedia();
 
         if ($media) {
-            $media->transformMediaLibrary();
+            $this->transformMedia($media);
         }
 
         return $media;
@@ -498,18 +497,10 @@ class SettingService extends BaseSettingService
 
     public function getQrCodePublicPageLogoMedia(): ?Media
     {
-        return $this->staticRemember(
-            'qr_code_public_page_logo_media',
-            fn () => $this->getMediaFromSetting('qrcode_public_page_logo_media_id')
-        );
-    }
-
-    public function getQrCodePublicPageLogoForMediaLibrary(): ?Media
-    {
-        $media = $this->getQrCodePublicPageLogoMedia();
+        $media = $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
 
         if ($media) {
-            $media->transformMediaLibrary();
+            $this->transformMedia($media);
         }
 
         return $media;
@@ -537,18 +528,10 @@ class SettingService extends BaseSettingService
 
     public function getFaviconMedia(): ?Media
     {
-        return $this->staticRemember(
-            'favicon_media',
-            fn () => $this->getMediaFromSetting('favicon_media_id')
-        );
-    }
-
-    public function getFaviconForMediaLibrary(): ?Media
-    {
-        $media = $this->getFaviconMedia();
+        $media = $this->getMediaFromSetting('favicon_media_id');
 
         if ($media) {
-            $media->transformMediaLibrary();
+            $this->transformMedia($media);
         }
 
         return $media;
@@ -581,7 +564,7 @@ class SettingService extends BaseSettingService
                     }
                 }
 
-                return array_values($drivers);
+                return $drivers;
             });
     }
 
@@ -633,12 +616,6 @@ class SettingService extends BaseSettingService
     public function getTinyMCEKey(): string
     {
         return $this->getKey('tinymce_api_key');
-    }
-
-    public function getFontawesomeKitName(): string
-    {
-        $kitName = $this->getKey('fontawesome_kit_name');
-        return !empty($kitName) ? $kitName : env('FONTAWESOME_KIT_NAME', "");
     }
 
     public function getDomainRedirections(): array
@@ -713,6 +690,16 @@ class SettingService extends BaseSettingService
     public function saveOpenGraph(?int $mediaId = null): void
     {
         $this->saveMedia('open_graph_media_id', $mediaId, 'theme_seo');
+    }
+
+    private function transformMedia(Media $media): void
+    {
+        $media->append([
+            'is_image',
+            'thumbnail_url',
+            'display_file_name',
+            'optimized_image_url'
+        ]);
     }
 
     public function adminDashboardWidgets(): Collection
@@ -854,18 +841,10 @@ class SettingService extends BaseSettingService
 
     public function getPostThumbnailMedia(): ?Media
     {
-        return $this->staticRemember(
-            'post_thumbnail_media',
-            fn () => $this->getMediaFromSetting('post_thumbnail_media_id')
-        );
-    }
-
-    public function getPostThumbnailForMediaLibrary(): ?Media
-    {
-        $media = $this->getPostThumbnailMedia();
+        $media = $this->getMediaFromSetting('post_thumbnail_media_id');
 
         if ($media) {
-            $media->transformMediaLibrary();
+            $this->transformMedia($media);
         }
 
         return $media;
@@ -873,18 +852,10 @@ class SettingService extends BaseSettingService
 
     public function getOpenGraphMedia(): ?Media
     {
-       return $this->staticRemember(
-            'open_graph_media',
-            fn () => $this->getMediaFromSetting('open_graph_media_id')
-        );
-    }
-
-    public function getOpenGraphForMediaLibrary(): ?Media
-    {
-        $media = $this->getOpenGraphMedia();
+        $media = $this->getMediaFromSetting('open_graph_media_id');
 
         if ($media) {
-            $media->transformMediaLibrary();
+            $this->transformMedia($media);
         }
 
         return $media;
@@ -904,31 +875,5 @@ class SettingService extends BaseSettingService
                 return "";
             }
         );
-    }
-
-    public function getStripePaymentMethodTypes(): array
-    {
-        return $this->getArrayValueByKey('stripe_payment_method_types');
-    }
-
-    public function getFrontendWidgetLists(): array
-    {
-        return $this->getArrayValueByKey('dashboard_widget');
-    }
-
-    public function getPublicPageProfileSlugType(): string
-    {
-        $type = $this->getKey('public_page_profile_slug_type');
-
-        if ($type == '') {
-            return 'default';
-        }
-
-        return $type;
-    }
-
-    public function getPublicPageProfileSlugCustomField(): array
-    {
-        return $this->getArrayValueByKey('public_page_profile_slug_custom_field');
     }
 }

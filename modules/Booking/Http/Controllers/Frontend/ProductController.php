@@ -5,6 +5,7 @@ namespace Modules\Booking\Http\Controllers\Frontend;
 use App\Http\Controllers\CrudController;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
@@ -14,14 +15,22 @@ use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController
 {
-    protected $title = ":Booking_term.product";
+    protected $title = "Product";
     protected $baseRouteName = "booking.products";
 
+    private $eventService;
+    private $productEventService;
+    private $productService;
+
     public function __construct(
-        private EventService $eventService,
-        private ProductEventService $productEventService,
-        private ProductService $productService
-    ) {}
+        EventService $eventService,
+        ProductEventService $productEventService,
+        ProductService $productService
+    ) {
+        $this->eventService = $eventService;
+        $this->productService = $productService;
+        $this->productEventService = $productEventService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -31,34 +40,19 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
-        $scopes = [
-            'orderByColumn' => [
-                'column' => $request->column,
-                'order' => $request->order,
-            ],
-            'city' => $request->city ?? null,
-            'country' => $request->country ?? null,
-        ];
-
         return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only(
-                'term',
-                'column',
-                'order',
-                'city',
-                'country',
-            )),
+            'pageQueryParams' => array_filter($request->only('term', 'column', 'order')),
             'products' => $this->productService->getFrontendRecords(
                 $user,
                 $request->term,
-                $scopes,
+                [
+                    'orderByColumn' => [
+                        'column' => $request->column,
+                        'order' => $request->order,
+                    ]
+                ]
             ),
-            'countryOptions' => $this->productEventService->getFrontendCountryOptions(),
-            'cityOptions' => $this->productEventService->getFrontendCityOptions(),
-            'i18n' => [
-                'book_now' => __('Book now'),
-            ],
         ]));
     }
 
@@ -84,9 +78,7 @@ class ProductController extends CrudController
             'timezone' => $schedule->timezone,
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'i18n' => [
-                'products' => __(':Booking_term.products'),
-                'event_booking' => __('Event booking'),
-                'booking_event_confirmation' => __('Booking event confirmation'),
+                'products' => __('Products'),
             ],
         ]));
     }

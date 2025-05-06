@@ -2,13 +2,11 @@
 
 namespace Modules\Booking\Services;
 
-use App\Services\CountryService;
-use App\Helpers\GoogleMap;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Arr;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
@@ -17,8 +15,7 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductEventService
 {
-    private $cacheProducts = null;
-    private $cacheFrontendProducts = null;
+    private $timezones;
 
     public function availableTimesRouteName(): string
     {
@@ -75,8 +72,7 @@ class ProductEventService
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
             'location' => $product->locations[0] ?? null,
-            'timezone' => $schedule->timezone,
-            'display_timezone' => $schedule->displayTimezone,
+            'timezone' => $schedule->timezone ?? null,
         ];
     }
 
@@ -96,6 +92,41 @@ class ProductEventService
             ['id' => 'date_range', 'value' => 'Date Range'],
             ['id' => 'indefinitely_into_the_future', 'value' => 'Indefinitely into the future'],
         ]);
+    }
+
+    public function timezoneOptions(): Collection
+    {
+        if (! is_null($this->timezones)) {
+            return $this->timezones;
+        }
+
+        $timezones = array();
+        $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( DateTimeZone::ALL ) );
+
+        $timezoneOffsets = array();
+        foreach ($timezones as $timezone) {
+            $tz = new DateTimeZone($timezone);
+            $timezoneOffsets[$timezone] = $tz->getOffset(new DateTime());
+        }
+
+        asort($timezoneOffsets);
+
+        $timezoneList = [];
+        foreach ($timezoneOffsets as $timezone => $offset) {
+            $offsetPrefix = $offset < 0 ? '-' : '+';
+            $offsetFormatted = gmdate( 'H:i', abs($offset) );
+
+            $prettyOffset = "UTC{$offsetPrefix}{$offsetFormatted}";
+
+            $timezoneList[] = [
+                'id' => $timezone,
+                'value' => "({$prettyOffset}) $timezone",
+            ];
+        }
+
+        $this->timezones = collect($timezoneList);
+
+        return $this->timezones;
     }
 
     public function weeklyHours(Product $product): array
@@ -354,173 +385,61 @@ class ProductEventService
             return null;
         }
 
-        return GoogleMap::directionUrl(
-            $location['latitude'],
-            $location['longitude'],
-            Arr::get($origin, 'latitude'),
-            Arr::get($origin, 'longitude')
-        );
-    }
+        $urlParts = [
+            "https://www.google.com/maps/dir/?api=1",
+            "&destination=".urlencode($location['latitude']).','.urlencode($location['longitude']),
+        ];
 
-    private function getProductLocations(
-        User $user = null,
-        array $options = []
-    ): Collection {
-        $isUserProductManager = false;
-
-        if (Arr::get($options, 'hasProductManager', false)) {
-            $isUserProductManager = $user->isProductManager();
+        if ($origin) {
+            $urlParts[] = "&origin=".urlencode($origin['latitude']).','.urlencode($origin['longitude']);
         }
 
-        $hasRole = Arr::get($options, 'hasRole', false);
+        return implode("", $urlParts);
+    }
+
+    public function getCityOptions(?array $relatedUserIds = null): array
+    {
+        $user = auth()->user();
+        $isUserProductManager = false;
+
+         if ($user) {
+            $isUserProductManager = $user->isProductManager();
+         }
 
         $products = Product::with([
                 'metas' => function ($q){
                     $q->whereIn('key', ['locations']);
                 },
             ])
-            ->type('Event')
-            ->whereHas('metas', function ($query) use ($user, $hasRole) {
-                if ($hasRole) {
-                    $roleIds = $user->roles->pluck('id');
-
-                    if ($roleIds->isNotEmpty()) {
-                        $query
-                            ->where('key', 'roles')
-                            ->whereJsonContains('value', $roleIds);
-                    } else {
-                        $query
-                            ->where('key', 'roles')
-                            ->whereJsonLength('value', 0);
-                    }
-                } else {
-                    $query->where('key', 'locations');
-                }
-            })
             ->when($isUserProductManager, function ($query) use ($user) {
                 $query->whereHas('managers', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
             })
+            ->whereHas('productType', function ($query) use ($user) {
+                $query->where('name', 'Event');
+            })
+            ->whereHas('variants', function ($query) use ($relatedUserIds) {
+                $query->whereHas('orderLine.order', function ($query) use ($relatedUserIds) {
+                    $query->when($relatedUserIds, function ($query, $relatedUserIds) {
+                        $query->whereIn('user_id', $relatedUserIds);
+                    });
+                });
+                $query->whereHas('orderLine.latestEvent');
+            })
+            ->whereHas('metas', function ($query) {
+                $query->where('key', 'locations');
+                $query->whereNotNull(DB::raw("value::json->0->>'city'"));
+            })
             ->get(['id', 'product_type_id']);
 
-        return $products
-            ->map(function ($product) {
-                return collect($product->locations[0] ?? [])
-                    ->only(['country_code', 'city'])
-                    ->all();
-            })
+        $cities = $products
+            ->map(fn ($product) => $product->locations[0]['city'])
             ->filter()
             ->unique()
-            ->values();
-    }
-
-    public function getCountryOptions(): array
-    {
-        if (! $this->cacheProducts) {
-            $this->cacheProducts = $this->getProductLocations(
-                auth()->user(),
-                [
-                    'hasProductManager' => true,
-                    'hasRole' => false,
-                ]
-            );
-        }
-
-        return $this->mapCountryOptions($this->cacheProducts);
-    }
-
-    public function getCityOptions(): array
-    {
-        if (! $this->cacheProducts) {
-            $this->cacheProducts = $this->getProductLocations(
-                auth()->user(),
-                [
-                    'hasProductManager' => true,
-                    'hasRole' => false,
-                ]
-            );
-        }
-
-        return $this->mapCityOptions($this->cacheProducts);
-    }
-
-    public function getFrontendCountryOptions(): array
-    {
-        if (! $this->cacheFrontendProducts) {
-            $this->cacheFrontendProducts = $this->getProductLocations(
-                auth()->user(),
-                [
-                    'hasProductManager' => false,
-                    'hasRole' => true,
-                ]
-            );
-        }
-
-        return $this->mapCountryOptions($this->cacheFrontendProducts);
-    }
-
-    public function getFrontendCityOptions(): array
-    {
-        if (! $this->cacheFrontendProducts) {
-            $this->cacheFrontendProducts = $this->getProductLocations(
-                auth()->user(),
-                [
-                    'hasProductManager' => false,
-                    'hasRole' => true,
-                ]
-            );
-        }
-
-        return $this->mapCityOptions($this->cacheFrontendProducts);
-    }
-
-    private function mapCountryOptions(Collection $products): array
-    {
-        $countryCodes = $products
-            ->pluck('country_code')
-            ->unique()
-            ->values();
-
-        return $countryCodes->transform(function ($code) {
-                $countryName = app(CountryService::class)->getCountryName($code);
-
-                return [
-                    'value' => $code,
-                    'name' => $countryName,
-                ];
-            })
-            ->all();
-    }
-
-    private function mapCityOptions(Collection $products): array
-    {
-        return $products
-            ->pluck('city')
-            ->unique()
             ->values()
-            ->map(function ($city) use ($products) {
-                $countryCode = $products
-                    ->where('city', $city)
-                    ->first()['country_code']
-                    ?? null;
-
-                return [
-                    'value' => $city,
-                    'name' => $city,
-                    'country_code' => $countryCode,
-                ];
-            })
             ->all();
-    }
 
-    public function getPublishedProducts(): EloquentCollection
-    {
-        return Product::published()->type('Event')->get();
-    }
-
-    public function getManagedProducts(): EloquentCollection
-    {
-        return Product::type('Event')->whereHas('managers')->get();
+        return $cities;
     }
 }

@@ -7,12 +7,10 @@ use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
 use App\Models\User;
-use App\Services\CountryService;
 use App\Traits\Mediable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Arr;
 use Kalnoy\Nestedset\NodeTrait;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Ecommerce\Entities\Product;
@@ -39,9 +37,7 @@ class Space extends BaseModel implements TranslatableContract
 
     protected $fillable = [
         'address',
-        'city',
         'contacts',
-        'country_code',
         'is_page_enabled',
         'latitude',
         'longitude',
@@ -52,8 +48,6 @@ class Space extends BaseModel implements TranslatableContract
 
     protected $casts = [
         'contacts' => 'array',
-        'latitude' => 'double',
-        'longitude' => 'double',
     ];
 
     protected static function newFactory()
@@ -184,6 +178,16 @@ class Space extends BaseModel implements TranslatableContract
         $query->whereIn('type_id', $types);
     }
 
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo ? $this->logo->file_url : null;
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->cover ? $this->cover->file_url : null;
+    }
+
     public function getIsParentableAttribute(): bool
     {
         return $this->depth < ModuleService::maxParentDepth();
@@ -211,10 +215,10 @@ class Space extends BaseModel implements TranslatableContract
     public function getOptimizedLogoImageUrl(
         ?int $width = null,
         ?int $height = null
-    ): string {
+    ): ?string {
         return $this->logo
             ? $this->logo->getOptimizedImageUrl($width, $height)
-            : ModuleService::defaultLogoUrl();
+            : null;
     }
 
     public function saveFromInputs(array $inputs)
@@ -225,8 +229,6 @@ class Space extends BaseModel implements TranslatableContract
         $this->address = $inputs['address'] ?? null;
         $this->type_id = $inputs['type_id'] ?? null;
         $this->contacts = $inputs['contacts'] ?? [];
-        $this->city = Arr::get($inputs, 'city');
-        $this->country_code = Arr::get($inputs, 'country_code');
 
         if (array_key_exists('parent_id', $inputs)) {
             $this->parent_id = $inputs['parent_id'];
@@ -255,23 +257,5 @@ class Space extends BaseModel implements TranslatableContract
             && !empty($this->page)
             && $this->page->translations->contains('status', PageTranslation::STATUS_PUBLISHED)
         );
-    }
-
-    public function getFullAddressAttribute(): string
-    {
-        return collect([
-            $this->address,
-            $this->city,
-            (
-                $this->country_code
-                ? app(CountryService::class)->getCountryName($this->country_code)
-                : null
-            ),
-        ])->filter()->implode(', ');
-    }
-
-    public function getTypeNameAttribute(): string
-    {
-        return $this->type->name ?? "";
     }
 }

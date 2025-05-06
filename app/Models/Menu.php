@@ -144,12 +144,8 @@ class Menu extends Model
     private function updateSocialMedia(array $inputs): array
     {
         $affectedIds = collect([]);
-        $order = 1;
-
         foreach ($inputs as $input) {
             $input['title'] = 'social-media';
-            $input['order'] = $order;
-
             $affectedSocialMedia = MenuItem::updateOrCreate(
                 [
                     'id' => $input['id'],
@@ -159,7 +155,6 @@ class Menu extends Model
             );
 
             $affectedIds->push($affectedSocialMedia->id);
-            $order++;
         }
 
         return $affectedIds->flatten()->all();

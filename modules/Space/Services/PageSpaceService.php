@@ -61,6 +61,11 @@ class PageSpaceService
             ->get();
     }
 
+    public function defaultLogoUrl(): string
+    {
+        return ModuleService::defaultLogoUrl();
+    }
+
     public function eventDateTimeFormat(string $dateTime): string
     {
         $format = config('constants.format.date_time_event');

@@ -180,7 +180,7 @@
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { isArray, each } from 'lodash';
-    import { ref, computed } from "vue";
+    import { ref } from "vue";
     import { useForm } from '@inertiajs/vue3';
 
     export default {
@@ -242,26 +242,20 @@
                 message: null,
             };
 
-            const queryParams = computed(() => props.pageQueryParams);
-
-            const country = queryParams.value?.country ?? null;
-            const city = queryParams.value?.city ?? null;
+            const country = props.pageQueryParams?.country;
+            const city = props.pageQueryParams?.city;
             const location = country
                 ? country + (city ? '-' + city : '')
                 : null;
 
             return {
-                queryParams: ref({
-                    ...{},
-                    ...queryParams.value
-                }),
-                dates: ref(
-                    isArray(queryParams.value?.dates)
-                        ? queryParams.value?.dates.filter(Boolean)
-                        : []
+                queryParams: ref({ ...{}, ...props.pageQueryParams }),
+                dates: ref(isArray(props.pageQueryParams?.dates)
+                    ? props.pageQueryParams?.dates.filter(Boolean)
+                    : []
                 ),
-                status: ref(queryParams.value?.status ?? null),
-                term: ref(queryParams.value?.term ?? null),
+                status: ref(props.pageQueryParams?.status ?? null),
+                term: ref(props.pageQueryParams?.term ?? null),
                 location: ref(location),
                 form: useForm(form),
                 selectedOrder: ref(null),
@@ -303,8 +297,8 @@
                 const locationParts = this.location.split('-');
 
                 return {
-                    country: locationParts[0] ?? "",
-                    city: locationParts[1] ?? "",
+                    country: locationParts[0],
+                    city: locationParts[1],
                 };
             },
         },

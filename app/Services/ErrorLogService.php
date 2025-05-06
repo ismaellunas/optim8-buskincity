@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Models\ErrorLog;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Throwable;
 
 class ErrorLogService
 {
@@ -50,59 +48,5 @@ class ErrorLogService
 
             return $record;
         });
-    }
-
-    public function report(Throwable $exception): void
-    {
-        $isValid = true;
-
-        $excepts = [
-            \Illuminate\Auth\Access\AuthorizationException::class,
-            \Illuminate\Auth\AuthenticationException::class,
-            \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-            \Illuminate\Queue\MaxAttemptsExceededException::class,
-            \Illuminate\Session\TokenMismatchException::class,
-            \Illuminate\Validation\ValidationException::class,
-        ];
-
-        foreach ($excepts as $except) {
-            if ($exception instanceof $except) {
-                $isValid = false;
-
-                break;
-            }
-        }
-
-        if ($isValid) {
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-
-            $inputs = [
-                'url' => url()->full(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'message' => $exception->getMessage() . '; ' . $userAgent,
-                'trace' => $exception->getTrace(),
-            ];
-
-            if (
-                !$this->isHttpException($exception)
-                || $exception->getStatusCode() > 499
-            ) {
-                try {
-                    $errorLog = new ErrorLog();
-
-                    $errorLog->syncErrorLog($inputs);
-                } catch (\Throwable $th) {
-                    if (!app()->environment('local') || !app()->runningInConsole()) {
-                        throw $th;
-                    }
-                }
-            }
-        }
-    }
-
-    private function isHttpException(Throwable $e)
-    {
-        return $e instanceof HttpExceptionInterface;
     }
 }

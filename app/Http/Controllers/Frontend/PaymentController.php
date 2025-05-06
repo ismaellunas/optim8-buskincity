@@ -47,31 +47,8 @@ class PaymentController extends Controller
             'countryOptions' => $countryOptions,
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
-            'title' => __('Payments'),
-            'i18n' => $this->i18n(),
+            'title' => 'Payments',
+            'description' => 'BuskinCity allows you to receive payments/donations from your audience, to activate payments you need to apply with our partners.',
         ]);
-    }
-
-    private function i18n(): array
-    {
-        return [
-            'connect_payment' => __('Connect Payments with Stripe'),
-            'inconnect' => __(
-                'If you would like to receive donations and payments for private gigs through :appName, please apply for payments with Stripe:',
-                [
-                    'appName' => config('app.name'),
-                ]
-            ),
-            'country' => __('Country'),
-            'select_an_option' => __('Select an option'),
-            'create_a_connected_account' => __('Create a connected account'),
-            'connect' => __(
-                'Visit the payment’s dashboard to manage your Stripe Connect account.'
-            ),
-            'manage_payments' => __('Manage payments'),
-            'create_alert_title' => __('Please double-check your country!'),
-            'create_alert_text' => __('You will not be able to change your country in the future.'),
-            'create_alert_button' => __('Continue'),
-        ];
     }
 }

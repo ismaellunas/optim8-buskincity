@@ -33,7 +33,7 @@
                         <input
                             class="input"
                             type="text"
-                            :value="timezone"
+                            :value="form.timezone"
                             readonly
                             disabled
                         >
@@ -103,14 +103,13 @@
         ],
 
         props: {
-            allowedDatesRoute: { type: String, required: true },
-            availableTimesParam: { type: Object, required: true },
-            availableTimesRoute: { type: String, required: true },
-            maxDate: { type: String, required: true },
-            minDate: { type: String, required: true },
             modelValue: { type: Object, required: true },
+            allowedDatesRoute: { type: String, required: true },
+            availableTimesRoute: { type: String, required: true },
+            availableTimesParam: { type: Object, required: true },
+            minDate: { type: String, required: true },
+            maxDate: { type: String, required: true },
             productId: { type: Number, required: true },
-            timezone: { type: String, default: 'GMT' },
         },
 
         emits: [

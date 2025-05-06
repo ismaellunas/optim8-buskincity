@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Services\ErrorLogService;
+use App\Models\ErrorLog;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
@@ -46,7 +46,51 @@ class Handler extends ExceptionHandler
 
     public function report(Throwable $exception)
     {
-        app(ErrorLogService::class)->report($exception);
+        $isValid = true;
+
+        $excepts = [
+            \Illuminate\Auth\Access\AuthorizationException::class,
+            \Illuminate\Auth\AuthenticationException::class,
+            \Illuminate\Database\Eloquent\ModelNotFoundException::class,
+            \Illuminate\Queue\MaxAttemptsExceededException::class,
+            \Illuminate\Session\TokenMismatchException::class,
+            \Illuminate\Validation\ValidationException::class,
+        ];
+
+        foreach ($excepts as $except) {
+            if ($exception instanceof $except) {
+                $isValid = false;
+
+                break;
+            }
+        }
+
+        if ($isValid) {
+            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+            $inputs = [
+                'url' => url()->full(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage() . '; ' . $userAgent,
+                'trace' => $exception->getTrace(),
+            ];
+
+            if (
+                !$this->isHttpException($exception)
+                || $exception->getStatusCode() > 499
+            ) {
+                try {
+                    $errorLog = new ErrorLog();
+
+                    $errorLog->syncErrorLog($inputs);
+                } catch (\Throwable $th) {
+                    if (!app()->environment('local') || !app()->runningInConsole()) {
+                        throw $th;
+                    }
+                }
+            }
+        }
     }
 
     public function render($request, Throwable $e)

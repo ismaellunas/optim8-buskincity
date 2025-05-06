@@ -49,15 +49,6 @@ class SpaceServiceProvider extends ServiceProvider
                 ->withDepth()
             ;
         });
-
-        User::macro('isSpaceManagerOnlyAccess', function () {
-            return $this->spaces->isNotEmpty()
-                && ! $this->can('space.viewAny')
-                && (
-                    ! $this->IsSuperAdministrator
-                    && ! $this->IsAdministrator
-                );
-        });
     }
 
     /**

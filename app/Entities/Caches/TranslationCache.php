@@ -11,7 +11,7 @@ class TranslationCache extends BaseCache
     private string $locale;
     private string $group;
 
-    private function getKey(string $locale, ?string $group = null): string
+    private function getKey(string $locale, string $group = null): string
     {
         if (!$group || $group == '') {
             $group = '*';
@@ -25,7 +25,7 @@ class TranslationCache extends BaseCache
         return $this->tag . ":" . $locale;
     }
 
-    private function getGroupTag(string $locale, ?string $group = null): string
+    private function getGroupTag(string $locale, string $group = null): string
     {
         return $this->tag . ":" . $this->getKey($locale, $group);
     }
@@ -44,7 +44,7 @@ class TranslationCache extends BaseCache
     public function rememberForGroup(
         string $locale,
         Closure $callback,
-        ?string $group = null,
+        string $group = null,
         mixed $default = []
     ): mixed {
         $key = $this->getKey($locale, $group);

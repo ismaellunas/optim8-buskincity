@@ -40,9 +40,9 @@
                     </div>
                     <div class="column is-narrow">
                         <biz-button-icon
+                            icon="fas fa-times"
                             title="Remove"
                             type="button"
-                            :icon="icon.clear"
                             @click="removeFileInput(index)"
                         />
                     </div>
@@ -58,9 +58,9 @@
 
         <biz-button-icon
             v-if="canAddFileInput"
+            icon="fas fa-plus"
             title="Add File"
             type="button"
-            :icon="icon.add"
             @click="addFileInput"
         />
 
@@ -78,7 +78,6 @@
     import BizMediaTextItem from '@/Biz/Media/TextItem.vue';
     import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
-    import { add, clear } from '@/Libs/icon-class';
 
     export default {
         name: 'BizFormFieldFiles',
@@ -157,7 +156,6 @@
         setup(props, { emit }) {
             return {
                 computedValue: useModelWrapper(props, emit),
-                icon: { add, clear },
                 files: useModelWrapper(props, emit, 'selectedFiles'),
             };
         },

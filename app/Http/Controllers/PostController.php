@@ -74,11 +74,11 @@ class PostController extends CrudController
                     ],
                     'can' => [
                         'media' => [
-                            'add' => $user->can('media.add'),
                             'browse' => $user->can('media.browse'),
-                            'delete' => $user->can('media.delete'),
-                            'edit' => $user->can('media.edit'),
                             'read' => $user->can('media.read'),
+                            'edit' => $user->can('media.edit'),
+                            'add' => $user->can('media.add'),
+                            'delete' => $user->can('media.delete'),
                         ],
                     ],
                     'categoryOptions' => $this->postService->getCategoryOptions(),
@@ -154,11 +154,11 @@ class PostController extends CrudController
                     ],
                     'can' => [
                         'media' => [
-                            'add' => $user->can('media.add'),
                             'browse' => $user->can('media.browse'),
-                            'delete' => $user->can('media.delete'),
-                            'edit' => $user->can('media.edit'),
                             'read' => $user->can('media.read'),
+                            'edit' => $user->can('media.edit'),
+                            'add' => $user->can('media.add'),
+                            'delete' => $user->can('media.delete'),
                         ],
                     ],
                     'categoryOptions' => $this->postService->getCategoryOptions(),

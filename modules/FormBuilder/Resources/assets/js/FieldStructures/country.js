@@ -4,8 +4,8 @@ export default {
     type: "Country",
     title: "Country",
     column: 'is-full',
-    label: "",
-    name: "",
+    label: "Country",
+    name: 'country',
     placeholder: null,
     notes: [],
     default_value: null,
@@ -26,8 +26,17 @@ export const config = {
     properties: {
         label: "Properties",
         config: {
-            labelName: {
-                component: "ConfigLabelName",
+            label: {
+                component: "ConfigInput",
+                label: "Label",
+            },
+            name: {
+                component: "ConfigAutoGenerateKey",
+                label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             notes: {
                 component: "ConfigNotes",

@@ -509,75 +509,28 @@ class AutomateUserCreationService
             ->isEmpty();
     }
 
-    public function syncRules(Form $form): void
+    public function removeUntrackedRules(Form $form): Collection
     {
-        $fields = collect();
+        $fieldIds = collect();
 
         foreach ($form->fieldGroups as $fieldGroup) {
             if (! is_array($fieldGroup->fields)) {
                 continue;
             }
 
-            $fields->push(collect($fieldGroup->fields)->map(function ($field) {
-                return [
-                    'id' => $field['id'],
-                    'name' => $field['name'],
-                ];
+            $fieldIds->push(collect($fieldGroup->fields)->map(function ($field) {
+                return $field['id'];
             }));
         }
 
-        $fields = $fields->flatten(1);
+        $fieldIds = $fieldIds->flatten();
 
-        $mappingRules = $form->userCreationMappingRules;
-
-        $this->updateFromNameRules($mappingRules, $fields);
-        $this->removeUntrackedRules($mappingRules, $fields);
-    }
-
-    private function updateFromNameRules(
-        Collection $mappingRules,
-        Collection $fields
-    ): Collection {
-        $mappingRules = $mappingRules
-            ->filter(
-                function ($rule) use ($fields) {
-                    return (
-                        Arr::has($rule->from, 'id')
-                        && $fields->where('id', $rule->from['id'])->isNotEmpty()
-                    );
-                }
-            )
-            ->transform(function ($rule) use ($fields) {
-                $newName = $fields->firstWhere('id', $rule->from['id'])['name']
-                    ?? $rule->from['name'];
-
-                $rule->from = [
-                    ...$rule->from,
-                    ...[
-                        'name' => $newName
-                    ]
-                ];
-
-                return $rule;
-            })
-            ->values();
-
-        foreach ($mappingRules as $mappingRule) {
-            $mappingRule->save();
-        }
-
-        return $mappingRules;
-    }
-
-    private function removeUntrackedRules(
-        Collection $mappingRules,
-        Collection $fields
-    ): Collection {
-        $untrackedRules = $mappingRules
-            ->filter(function ($rule) use ($fields) {
+        $untrackedRules = $form
+            ->userCreationMappingRules
+            ->filter(function ($rule) use ($fieldIds) {
                 return (
                     Arr::has($rule->from, 'id')
-                    && $fields->where('id', $rule->from['id'])->isEmpty()
+                    && ! $fieldIds->contains($rule->from['id'])
                 );
             });
 

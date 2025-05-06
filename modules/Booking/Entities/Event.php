@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Helpers\EventTimeHelper;
-use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
 
 class Event extends BaseModel
@@ -36,26 +35,9 @@ class Event extends BaseModel
         return $this->belongsTo(OrderLine::class);
     }
 
-    public function order()
-    {
-        return $this->hasOneThrough(
-            Order::class,
-            OrderLine::class,
-            'id',
-            'id',
-            'order_line_id',
-            'order_id'
-        );
-    }
-
     public function scopeUpcoming($query)
     {
         return $query->where('status', BookingStatus::UPCOMING);
-    }
-
-    public function scopeOngoing($query)
-    {
-        return $query->where('status', BookingStatus::ONGOING);
     }
 
     public function scopePassed($query)

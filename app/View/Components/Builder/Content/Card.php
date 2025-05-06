@@ -116,6 +116,7 @@ class Card extends BaseContent
         $classes = collect();
 
         $classes->push($configContent['size'] ?? null);
+        $classes->push($configContent['alignment'] ?? null);
 
         return $classes->filter()->all();
     }

@@ -52,7 +52,7 @@
                     <td>
                         <biz-link
                             :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
-                            :title="i18n.list_entries"
+                            title="List Entries"
                         >
                             {{ form.totalEntries }}
                         </biz-link>
@@ -62,7 +62,7 @@
                             <biz-button-link
                                 v-if="can.browse"
                                 class="is-ghost has-text-black"
-                                :title="i18n.list_entries"
+                                title="List Entries"
                                 :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
                             >
                                 <span class="icon is-small">
@@ -107,7 +107,7 @@
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
-    import { ref, computed } from 'vue';
+    import { ref } from 'vue';
 
     export default {
         name: 'FormBuilderIndex',
@@ -144,11 +144,9 @@
         },
 
         setup(props) {
-            let pageQueryParams = computed(() => props.pageQueryParams);
-
             return {
-                queryParams: ref(merge({}, pageQueryParams.value)),
-                term: ref(pageQueryParams.value?.term ?? null),
+                queryParams: ref(merge({},props.pageQueryParams)),
+                term: ref(props.pageQueryParams?.term ?? null),
             };
         },
 

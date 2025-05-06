@@ -37,8 +37,8 @@
 </template>
 
 <script>
-    import FrontendNavbarMenu from '@/Frontend/NavbarMenu.vue';
     import FrontendFooterMenu from '@/Frontend/FooterMenu.vue';
+    import FrontendNavbarMenu from '@/Frontend/NavbarMenu.vue';
     import { Head as HeadTag } from '@inertiajs/vue3';
     import { head } from 'lodash';
 

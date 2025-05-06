@@ -22,10 +22,7 @@
             </span>
         </div>
 
-        <div
-            v-if="isFilenameShown"
-            class="card-content p-2"
-        >
+        <div class="card-content p-2">
             <div
                 class="content"
                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
@@ -37,26 +34,26 @@
         <footer class="card-footer">
             <biz-button-icon
                 v-if="isImage"
+                icon="fas fa-expand"
                 title="Preview"
                 type="button"
                 :class="[actionClass, 'is-info']"
-                :icon="icon.expand"
                 @click="$emit('on-preview-clicked', medium)"
             />
             <biz-button-icon
-                v-if="isEditButtonEnabled"
+                v-if="isEditEnabled"
+                icon="fas fa-pen"
                 title="Edit"
                 type="button"
                 :class="[actionClass, 'is-primary']"
-                :icon="icon.edit"
                 @click="$emit('on-edit-clicked', medium)"
             />
             <biz-button-icon
                 v-if="isDeleteEnabled"
+                icon="far fa-trash-alt"
                 title="Delete"
                 type="button"
                 :class="[actionClass, 'is-danger']"
-                :icon="icon.remove"
                 @click="$emit('on-delete-clicked', medium)"
             />
             <biz-button-download
@@ -81,7 +78,6 @@
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
     import { isEmpty } from 'lodash';
-    import { expand, edit, remove } from '@/Libs/icon-class';
 
     export default {
         name: 'MediaGalleryItem',
@@ -103,7 +99,6 @@
         props: {
             isDeleteEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
-            isEditButtonForImage: { type: Boolean, default: false },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
             isSelectEnabled: { type: Boolean, default: true },
@@ -112,7 +107,6 @@
             ratio: { type: String, default: null },
             imageStyles: { type: [String, Object, Array], default: null },
             figureStyles: { type: [String, Object, Array], default: null },
-            isFilenameShown: { type: Boolean, default: true },
         },
 
         emits: [
@@ -121,9 +115,8 @@
             'on-preview-clicked',
         ],
 
-        setup() {
+        data() {
             return {
-                icon: { expand, edit, remove },
                 actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
             };
         },
@@ -148,17 +141,6 @@
                 }
 
                 return this.medium.optimized_image_url ?? this.medium.file_url;
-            },
-
-            isEditButtonEnabled() {
-                if (! this.isEditButtonForImage) {
-                    return this.isEditEnabled;
-                } else {
-                    return (
-                        this.isEditEnabled
-                        && this.isImage
-                    );
-                }
             },
         },
     }

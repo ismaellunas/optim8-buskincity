@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Database\Seeders\TranslationSeeder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class ImportTranslations extends Command
 {
@@ -12,13 +12,8 @@ class ImportTranslations extends Command
 
     public function handle()
     {
-        $arguments = [];
-
-        if ($this->option('replace')) {
-            $arguments['mode'] = 'replace';
-        }
-
-        Artisan::call('fix:translation-source', $arguments);
+        $translation = app(TranslationSeeder::class);
+        $translation->run($this->option('replace'));
 
         $this->info('The import translation is successfully!');
         return Command::SUCCESS;

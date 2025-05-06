@@ -4,10 +4,10 @@ namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
 use App\Models\User;
+use App\Services\ModuleService;
 use Illuminate\Support\Arr;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
-use Modules\FormBuilder\ModuleService;
 
 class TotalUsersWidget implements WidgetInterface
 {
@@ -83,7 +83,7 @@ class TotalUsersWidget implements WidgetInterface
     private function moduleResponseForm(): array
     {
         if (
-            ! app(ModuleService::class)->isModuleActive()
+            ! app(ModuleService::class)->isModuleActive('formbuilder')
             || ! auth()->user()->can('viewAny', Form::class)
             || ! $this->formId
         ) {

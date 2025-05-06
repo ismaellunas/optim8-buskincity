@@ -1,7 +1,6 @@
 <?php
 namespace App\View\Components;
 
-use App\Services\IconService;
 use Illuminate\View\Component;
 
 class Icon extends Component
@@ -10,12 +9,11 @@ class Icon extends Component
     public $iconWrapperClasses = [];
 
     public function __construct(
-        private string $icon = '',
+        private string $icon,
         private ?string $iconClass = '',
         public $class = null,
         private ?string $type = null,
         private ?bool $isSmall = false,
-        private string $iconKey = ''
     ) {
         $this->type = config('constants.icon.type');
 
@@ -25,17 +23,10 @@ class Icon extends Component
 
     private function getIconClasses(): array
     {
-        $classes = collect();
-
-        if ($this->iconKey) {
-            $classes->push( app(IconService::class)->getClasses($this->iconKey));
-        } else {
-            $classes->push($this->type);
-            $classes->push($this->icon);
-        }
-
+        $classes = collect([]);
+        $classes->push($this->type);
+        $classes->push($this->icon);
         $classes->push($this->iconClass);
-
         return $classes->filter()->all();
     }
 

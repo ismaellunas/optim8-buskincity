@@ -12,10 +12,14 @@
             class="button"
             :class="buttonClass"
         >
-            <biz-icon
-                v-if="hasIcon && (config.icon.position === 'left' || config.icon.position === null)"
-                :icon="config.icon.class"
-            />
+            <template v-if="hasIcon">
+                <span
+                    v-if="config.icon.position === 'left' || config.icon.position === null"
+                    class="icon"
+                >
+                    <i :class="config.icon.class" />
+                </span>
+            </template>
 
             <span
                 :class="inputAreaClass"
@@ -24,10 +28,14 @@
                 v-text="entity.content.button.text"
             />
 
-            <biz-icon
-                v-if="hasIcon && config.icon.position === 'right'"
-                :icon="config.icon.class"
-            />
+            <template v-if="hasIcon">
+                <span
+                    v-if="config.icon.position === 'right'"
+                    class="icon"
+                >
+                    <i :class="config.icon.class" />
+                </span>
+            </template>
         </a>
     </div>
 </template>
@@ -37,9 +45,7 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import BizIcon from '@/Biz/Icon.vue';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
-    import { computed } from 'vue';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -48,7 +54,6 @@
 
         components: {
             BizToolbarContent,
-            BizIcon,
         },
 
         mixins: [
@@ -104,5 +109,5 @@
                 this.entity.content.button.text = evt.target.innerText;
             },
         },
-    };
+    }
 </script>

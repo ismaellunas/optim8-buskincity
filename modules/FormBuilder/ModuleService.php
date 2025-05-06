@@ -2,52 +2,34 @@
 
 namespace Modules\FormBuilder;
 
-use App\Contracts\HasModulePageBuilderComponentInterface;
-use App\Contracts\ManageableModuleInterface;
-use App\Contracts\ToggleableModuleStatusInterface;
-use App\Models\User;
-use App\Services\BaseModuleService;
-use App\Traits\ActivateableModuleStatus;
-use App\Traits\ManageableModule;
-use Illuminate\Support\Collection;
-use Modules\FormBuilder\Events\ModuleDeactivated;
+use Illuminate\Http\Request;
 use Modules\FormBuilder\Services\FormBuilderService;
 
-class ModuleService extends BaseModuleService implements
-    ManageableModuleInterface,
-    HasModulePageBuilderComponentInterface,
-    ToggleableModuleStatusInterface
+class ModuleService
 {
-    use ManageableModule;
-    use ActivateableModuleStatus;
-
-    public function menuPermissions(User $user): array
+    public static function permissions()
     {
-        return [
-            'admin.form-builders.index' => $user->can('form_builder.browse'),
-        ];
+        return config('formbuilder.permissions');
     }
 
-    public function defaultNavigations(): array
+    public static function adminMenus(Request $request): array
     {
+        $user = $request->user();
+        $canManageFormBuilder = $user->can('form_builder.browse');
+
         return [
-            [
-                'route' => 'admin.form-builders.index',
-                'routeIs' => 'admin.form-builders.index',
-                'title' => __('Manage'),
-                'default' => true,
+            'title' => __('Form Builder'),
+            'isActive' => $request->routeIs('admin.form-builders.*'),
+            'isEnabled' => $canManageFormBuilder,
+            'children' => [
+                [
+                    'title' => __('Manage'),
+                    'link' => route('admin.form-builders.index'),
+                    'isActive' => $request->routeIs('admin.form-builders.index'),
+                    'isEnabled' => $canManageFormBuilder,
+                ],
             ],
         ];
-    }
-
-    public static function permissions(): Collection
-    {
-        return collect(config('formbuilder.permissions'));
-    }
-
-    public function adminPermissions(): array
-    {
-        return [ 'form_builder.*' ];
     }
 
     public static function activeOptions()
@@ -75,36 +57,6 @@ class ModuleService extends BaseModuleService implements
     {
         return [
             'entry',
-        ];
-    }
-
-    public function deactivationEventClass(): ?string
-    {
-        return ModuleDeactivated::class;
-    }
-
-    public function deactivationMessages(): array
-    {
-        return [
-            __("All permissions assigned to users from the :module module will be unassigned from those users.", [
-                'module' => $this->model()->title,
-            ]),
-            __("Notifications managed by form builder module will be set to inactive."),
-            __("Page builder components currently in use that are related to the :Module module will be deleted.", [
-                'module' => $this->model()->title,
-            ]),
-        ];
-    }
-
-    public function getModulePageBuilderComponents(): array
-    {
-        return [
-            [
-                'name' => 'FormBuilder',
-                'in_module' => 'FormBuilder',
-                'filename' => "form-builder",
-                'is_enabled' => $this->isModuleActive(),
-            ],
         ];
     }
 }

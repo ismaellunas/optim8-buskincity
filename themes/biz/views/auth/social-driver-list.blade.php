@@ -7,7 +7,7 @@
             "mt-6" => $loop->first,
             "mt-4" => !$loop->first,
         ])>
-            <x-icon icon="fa-brands fa-{{ $driver == 'twitter' ? 'x-'.$driver : $driver }}" is-small/>
+            <x-icon icon="fa-brands fa-{{ $driver }}" is-small/>
             <span>
                 {!! __('Continue with :driver', ['driver' => '<span class="has-text-weight-bold">'.Str::title($driver).'</span>']) !!}
             </span>

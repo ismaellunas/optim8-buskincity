@@ -2,7 +2,7 @@
     <biz-card class-card-content="px-1 py-2">
         <template #headerTitle>
             <h4 class="title is-4">
-                {{ entity.title ?? entity.componentName }}
+                {{ entity.componentName }}
             </h4>
         </template>
 
@@ -67,31 +67,44 @@
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
+    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
+    import ConfigColumns from '@/Blocks/Configs/ConfigColumns.vue';
+    import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser.vue';
+    import ConfigInput from '@/Blocks/Configs/Input.vue';
+    import ConfigInputIcon from '@/Blocks/Configs/InputIcon.vue';
+    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
+    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
+    import ConfigSelect from '@/Blocks/Configs/Select.vue';
+    import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple.vue';
+    import TRBL from '@/Blocks/Configs/TRBL.vue';
+    import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
     import configs from '@/ComponentStructures/configs';
+    import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import { camelCase, merge, forEach } from 'lodash';
+    import { isBlank } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import { close as iconClose } from '@/Libs/icon-class';
-    import { computed, reactive, onBeforeMount } from 'vue';
-    import { defineAsyncComponent } from 'vue';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/vue3';
 
     export default {
+
         components: {
             BizButtonIcon,
             BizCard,
-            BizIcon: defineAsyncComponent(() => import('../Biz/Icon.vue')),
-            ConfigCheckbox: defineAsyncComponent(() => import('../Blocks/Configs/Checkbox.vue')),
-            ConfigCheckboxes: defineAsyncComponent(() => import('../Blocks/Configs/Checkboxes.vue')),
-            ConfigColumns: defineAsyncComponent(() => import('../Blocks/Configs/ConfigColumns.vue')),
-            ConfigImageBrowser: defineAsyncComponent(() => import('../Blocks/Configs/ImageBrowser.vue')),
-            ConfigInput: defineAsyncComponent(() => import('../Blocks/Configs/Input.vue')),
-            ConfigInputIcon: defineAsyncComponent(() => import('../Blocks/Configs/InputIcon.vue')),
-            ConfigNumberAddons: defineAsyncComponent(() => import('../Blocks/Configs/NumberAddons.vue')),
-            ConfigRowSection: defineAsyncComponent(() => import('../Blocks/Configs/ConfigRowSection.vue')),
-            ConfigSelect: defineAsyncComponent(() => import('../Blocks/Configs/Select.vue')),
-            ConfigSelectMultiple: defineAsyncComponent(() => import('../Blocks/Configs/SelectMultiple.vue')),
-            TRBL: defineAsyncComponent(() => import('../Blocks/Configs/TRBL.vue')),
-            TRBLInput: defineAsyncComponent(() => import('../Blocks/Configs/TRBLInput.vue')),
+            BizIcon,
+            ConfigCheckbox,
+            ConfigCheckboxes,
+            ConfigImageBrowser,
+            ConfigInput,
+            ConfigInputIcon,
+            ConfigNumberAddons,
+            ConfigRowSection,
+            ConfigColumns,
+            ConfigSelect,
+            ConfigSelectMultiple,
+            TRBL,
+            TRBLInput,
         },
 
         props: {
@@ -101,58 +114,31 @@
         },
 
         setup(props, { emit }) {
-            const moduleConfigs = reactive({});
-
             const entity = useModelWrapper(props, emit);
 
-            const allConfigs = computed(() => merge(configs, moduleConfigs));
+            let allConfig = merge(configs, moduleConfigs);
+            let componentConfig = allConfig[ camelCase(entity.value.componentName) ];
 
-            onBeforeMount(async () => {
-                const promises = [];
-
-                forEach(usePage().props.modulePageBuilderComponents, (moduleComponent) => {
-                    if (moduleComponent?.in_module) {
-                        promises.push(import(
-                            `../../../modules/${moduleComponent.in_module}/Resources/assets/js/ComponentStructures/${moduleComponent.filename}.js`
-                        ));
-                    } else {
-                        promises.push(import(`../ComponentStructures/modules/${moduleComponent.filename}.js`));
-                    }
-                });
-
-                const components = await Promise.all(promises);
-
-                if (components) {
-                    forEach(components, (component) => {
-                        moduleConfigs[camelCase(component.default.componentName)] = component.config;
-                    })
-                }
-
-                const componentConfig = allConfigs.value[camelCase(entity.value.componentName)];
-
-                for (const [groupKey, group] of Object.entries(componentConfig)) {
-                    for (const [key, value] of Object.entries(group)) {
-                        if (entity.value.config[groupKey] === undefined) {
-                            entity.value.config[groupKey] = {};
-                        }
+            for (const [groupKey, group] of Object.entries(componentConfig)) {
+                for (const [key, value] of Object.entries(group)) {
+                    if (entity.value.config[groupKey] === undefined) {
+                        entity.value.config[groupKey] = {};
                     }
                 }
-            });
+            }
 
             return {
-                allConfigs,
-                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
-                computedStructure: useModelWrapper(props, emit, 'structure'),
                 entity,
+                computedStructure: useModelWrapper(props, emit, 'structure'),
+                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 iconClose,
-                isBlank,
-                moduleConfigs,
             };
         },
 
         computed: {
             configOptions() {
-                return this.allConfigs[ camelCase(this.entity.componentName) ];
+                let componentConfigs = merge(configs, moduleConfigs);
+                return componentConfigs[ camelCase(this.entity.componentName) ];
             },
 
             numberOfOptions() {
@@ -161,6 +147,8 @@
         },
 
         methods: {
+            isBlank: isBlank,
+
             onClickHeaderCard(isContentShown, index) {
                 const self = this;
 

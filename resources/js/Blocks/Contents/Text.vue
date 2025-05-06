@@ -10,6 +10,7 @@
         >
             <biz-tinymce
                 v-model="entity.content.html"
+                :class="editorClass"
             />
         </div>
     </div>
@@ -48,8 +49,14 @@
         computed: {
             contentClass() {
                 return concat(
+                    (this.config.text?.alignment ?? ''),
                     (this.config.text?.size ?? ''),
                     (this.config.text?.color ?? '')
+                ).filter(Boolean);
+            },
+            editorClass() {
+                return concat(
+                    (this.config.text?.alignment ?? '')
                 ).filter(Boolean);
             },
         }

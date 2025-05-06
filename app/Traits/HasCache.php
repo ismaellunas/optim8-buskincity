@@ -20,12 +20,4 @@ trait HasCache
     {
         return $this->caches[$key];
     }
-
-    protected function staticRemember(string $key, mixed $callback): mixed
-    {
-        if (! $this->hasLoadedKey($key)) {
-            $this->setLoadedKey($key, $callback());
-        }
-        return $this->getLoadedKey($key);
-    }
 }

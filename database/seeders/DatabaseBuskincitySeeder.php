@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Buskincity\PerformerApplicationSeeder;
-use Database\Seeders\Buskincity\WidgetSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseBuskincitySeeder extends Seeder
@@ -17,7 +16,6 @@ class DatabaseBuskincitySeeder extends Seeder
     {
         $this->call([
             PerformerApplicationSeeder::class,
-            WidgetSeeder::class,
         ]);
     }
 }

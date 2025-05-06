@@ -13,17 +13,11 @@
     },
     {
         "name": "address book",
-        "class": "fa-address-book",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-address-book"
     },
     {
         "name": "address card",
-        "class": "fa-address-card",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-address-card"
     },
     {
         "name": "adjust",
@@ -75,31 +69,19 @@
     },
     {
         "name": "align center",
-        "class": "fa-align-center",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-align-center"
     },
     {
         "name": "align justify",
-        "class": "fa-align-justify",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-align-justify"
     },
     {
         "name": "align left",
-        "class": "fa-align-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-align-left"
     },
     {
         "name": "align right",
-        "class": "fa-align-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-align-right"
     },
     {
         "name": "align slash",
@@ -127,10 +109,7 @@
     },
     {
         "name": "anchor",
-        "class": "fa-anchor",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-anchor"
     },
     {
         "name": "angel",
@@ -154,31 +133,19 @@
     },
     {
         "name": "angle down",
-        "class": "fa-angle-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-angle-down"
     },
     {
         "name": "angle left",
-        "class": "fa-angle-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-angle-left"
     },
     {
         "name": "angle right",
-        "class": "fa-angle-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-angle-right"
     },
     {
         "name": "angle up",
-        "class": "fa-angle-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-angle-up"
     },
     {
         "name": "angry",
@@ -186,10 +153,7 @@
     },
     {
         "name": "ankh",
-        "class": "fa-ankh",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ankh"
     },
     {
         "name": "apple alt",
@@ -205,10 +169,7 @@
     },
     {
         "name": "archway",
-        "class": "fa-archway",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-archway"
     },
     {
         "name": "arrow alt circle down",
@@ -308,10 +269,7 @@
     },
     {
         "name": "arrow down",
-        "class": "fa-arrow-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-arrow-down"
     },
     {
         "name": "arrow from bottom",
@@ -331,17 +289,11 @@
     },
     {
         "name": "arrow left",
-        "class": "fa-arrow-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-arrow-left"
     },
     {
         "name": "arrow right",
-        "class": "fa-arrow-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-arrow-right"
     },
     {
         "name": "arrow square down",
@@ -377,10 +329,7 @@
     },
     {
         "name": "arrow up",
-        "class": "fa-arrow-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-arrow-up"
     },
     {
         "name": "arrows",
@@ -412,17 +361,11 @@
     },
     {
         "name": "asterisk",
-        "class": "fa-asterisk",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-asterisk"
     },
     {
         "name": "at",
-        "class": "fa-at",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-at"
     },
     {
         "name": "atlas",
@@ -430,10 +373,7 @@
     },
     {
         "name": "atom",
-        "class": "fa-atom",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-atom"
     },
     {
         "name": "atom alt",
@@ -441,17 +381,11 @@
     },
     {
         "name": "audio description",
-        "class": "fa-audio-description",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-audio-description"
     },
     {
         "name": "award",
-        "class": "fa-award",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-award"
     },
     {
         "name": "axe",
@@ -463,17 +397,11 @@
     },
     {
         "name": "baby",
-        "class": "fa-baby",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-baby"
     },
     {
         "name": "baby carriage",
-        "class": "fa-baby-carriage",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-baby-carriage"
     },
     {
         "name": "backpack",
@@ -485,31 +413,19 @@
     },
     {
         "name": "backward",
-        "class": "fa-backward",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-backward"
     },
     {
         "name": "bacon",
-        "class": "fa-bacon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bacon"
     },
     {
         "name": "bacteria",
-        "class": "fa-bacteria",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bacteria"
     },
     {
         "name": "bacterium",
-        "class": "fa-bacterium",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bacterium"
     },
     {
         "name": "badge",
@@ -541,10 +457,7 @@
     },
     {
         "name": "bahai",
-        "class": "fa-bahai",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bahai"
     },
     {
         "name": "balance scale",
@@ -572,10 +485,7 @@
     },
     {
         "name": "ban",
-        "class": "fa-ban",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ban"
     },
     {
         "name": "band aid",
@@ -587,10 +497,7 @@
     },
     {
         "name": "barcode",
-        "class": "fa-barcode",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-barcode"
     },
     {
         "name": "barcode alt",
@@ -606,17 +513,11 @@
     },
     {
         "name": "bars",
-        "class": "fa-bars",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bars"
     },
     {
         "name": "baseball",
-        "class": "fa-baseball",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-baseball"
     },
     {
         "name": "baseball ball",
@@ -636,10 +537,7 @@
     },
     {
         "name": "bath",
-        "class": "fa-bath",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bath"
     },
     {
         "name": "battery bolt",
@@ -647,31 +545,19 @@
     },
     {
         "name": "battery empty",
-        "class": "fa-battery-empty",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-battery-empty"
     },
     {
         "name": "battery full",
-        "class": "fa-battery-full",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-battery-full"
     },
     {
         "name": "battery half",
-        "class": "fa-battery-half",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-battery-half"
     },
     {
         "name": "battery quarter",
-        "class": "fa-battery-quarter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-battery-quarter"
     },
     {
         "name": "battery slash",
@@ -679,17 +565,11 @@
     },
     {
         "name": "battery three quarters",
-        "class": "fa-battery-three-quarters",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-battery-three-quarters"
     },
     {
         "name": "bed",
-        "class": "fa-bed",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bed"
     },
     {
         "name": "bed alt",
@@ -709,10 +589,7 @@
     },
     {
         "name": "bell",
-        "class": "fa-bell",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bell"
     },
     {
         "name": "bell exclamation",
@@ -736,10 +613,7 @@
     },
     {
         "name": "bell slash",
-        "class": "fa-bell-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bell-slash"
     },
     {
         "name": "bells",
@@ -751,10 +625,7 @@
     },
     {
         "name": "bezier curve",
-        "class": "fa-bezier-curve",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bezier-curve"
     },
     {
         "name": "bible",
@@ -762,10 +633,7 @@
     },
     {
         "name": "bicycle",
-        "class": "fa-bicycle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bicycle"
     },
     {
         "name": "biking",
@@ -777,17 +645,11 @@
     },
     {
         "name": "binoculars",
-        "class": "fa-binoculars",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-binoculars"
     },
     {
         "name": "biohazard",
-        "class": "fa-biohazard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-biohazard"
     },
     {
         "name": "birthday cake",
@@ -799,17 +661,11 @@
     },
     {
         "name": "blender",
-        "class": "fa-blender",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-blender"
     },
     {
         "name": "blender phone",
-        "class": "fa-blender-phone",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-blender-phone"
     },
     {
         "name": "blind",
@@ -829,38 +685,23 @@
     },
     {
         "name": "blog",
-        "class": "fa-blog",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-blog"
     },
     {
         "name": "bold",
-        "class": "fa-bold",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bold"
     },
     {
         "name": "bolt",
-        "class": "fa-bolt",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bolt"
     },
     {
         "name": "bomb",
-        "class": "fa-bomb",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bomb"
     },
     {
         "name": "bone",
-        "class": "fa-bone",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bone"
     },
     {
         "name": "bone break",
@@ -868,17 +709,11 @@
     },
     {
         "name": "bong",
-        "class": "fa-bong",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bong"
     },
     {
         "name": "book",
-        "class": "fa-book",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-book"
     },
     {
         "name": "book alt",
@@ -894,17 +729,11 @@
     },
     {
         "name": "book medical",
-        "class": "fa-book-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-book-medical"
     },
     {
         "name": "book open",
-        "class": "fa-book-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-book-open"
     },
     {
         "name": "book reader",
@@ -920,10 +749,7 @@
     },
     {
         "name": "bookmark",
-        "class": "fa-bookmark",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bookmark"
     },
     {
         "name": "books",
@@ -947,10 +773,7 @@
     },
     {
         "name": "border all",
-        "class": "fa-border-all",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-border-all"
     },
     {
         "name": "border bottom",
@@ -974,10 +797,7 @@
     },
     {
         "name": "border none",
-        "class": "fa-border-none",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-border-none"
     },
     {
         "name": "border outer",
@@ -1005,10 +825,7 @@
     },
     {
         "name": "bowling ball",
-        "class": "fa-bowling-ball",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bowling-ball"
     },
     {
         "name": "bowling pins",
@@ -1016,10 +833,7 @@
     },
     {
         "name": "box",
-        "class": "fa-box",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-box"
     },
     {
         "name": "box alt",
@@ -1047,17 +861,11 @@
     },
     {
         "name": "box open",
-        "class": "fa-box-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-box-open"
     },
     {
         "name": "box tissue",
-        "class": "fa-box-tissue",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-box-tissue"
     },
     {
         "name": "box up",
@@ -1089,17 +897,11 @@
     },
     {
         "name": "braille",
-        "class": "fa-braille",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-braille"
     },
     {
         "name": "brain",
-        "class": "fa-brain",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-brain"
     },
     {
         "name": "bread loaf",
@@ -1107,24 +909,15 @@
     },
     {
         "name": "bread slice",
-        "class": "fa-bread-slice",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bread-slice"
     },
     {
         "name": "briefcase",
-        "class": "fa-briefcase",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-briefcase"
     },
     {
         "name": "briefcase medical",
-        "class": "fa-briefcase-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-briefcase-medical"
     },
     {
         "name": "bring forward",
@@ -1140,10 +933,7 @@
     },
     {
         "name": "broom",
-        "class": "fa-broom",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-broom"
     },
     {
         "name": "browser",
@@ -1151,38 +941,23 @@
     },
     {
         "name": "brush",
-        "class": "fa-brush",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-brush"
     },
     {
         "name": "bug",
-        "class": "fa-bug",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bug"
     },
     {
         "name": "building",
-        "class": "fa-building",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-building"
     },
     {
         "name": "bullhorn",
-        "class": "fa-bullhorn",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bullhorn"
     },
     {
         "name": "bullseye",
-        "class": "fa-bullseye",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bullseye"
     },
     {
         "name": "bullseye arrow",
@@ -1206,10 +981,7 @@
     },
     {
         "name": "bus",
-        "class": "fa-bus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-bus"
     },
     {
         "name": "bus alt",
@@ -1221,10 +993,7 @@
     },
     {
         "name": "business time",
-        "class": "fa-business-time",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-business-time"
     },
     {
         "name": "cabinet filing",
@@ -1236,10 +1005,7 @@
     },
     {
         "name": "calculator",
-        "class": "fa-calculator",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calculator"
     },
     {
         "name": "calculator alt",
@@ -1247,10 +1013,7 @@
     },
     {
         "name": "calendar",
-        "class": "fa-calendar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar"
     },
     {
         "name": "calendar alt",
@@ -1258,17 +1021,11 @@
     },
     {
         "name": "calendar check",
-        "class": "fa-calendar-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar-check"
     },
     {
         "name": "calendar day",
-        "class": "fa-calendar-day",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar-day"
     },
     {
         "name": "calendar edit",
@@ -1280,17 +1037,11 @@
     },
     {
         "name": "calendar minus",
-        "class": "fa-calendar-minus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar-minus"
     },
     {
         "name": "calendar plus",
-        "class": "fa-calendar-plus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar-plus"
     },
     {
         "name": "calendar star",
@@ -1302,10 +1053,7 @@
     },
     {
         "name": "calendar week",
-        "class": "fa-calendar-week",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-calendar-week"
     },
     {
         "name": "camcorder",
@@ -1313,10 +1061,7 @@
     },
     {
         "name": "camera",
-        "class": "fa-camera",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-camera"
     },
     {
         "name": "camera alt",
@@ -1336,10 +1081,7 @@
     },
     {
         "name": "camera retro",
-        "class": "fa-camera-retro",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-camera-retro"
     },
     {
         "name": "campfire",
@@ -1347,10 +1089,7 @@
     },
     {
         "name": "campground",
-        "class": "fa-campground",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-campground"
     },
     {
         "name": "candle holder",
@@ -1358,10 +1097,7 @@
     },
     {
         "name": "candy cane",
-        "class": "fa-candy-cane",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-candy-cane"
     },
     {
         "name": "candy corn",
@@ -1369,24 +1105,15 @@
     },
     {
         "name": "cannabis",
-        "class": "fa-cannabis",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cannabis"
     },
     {
         "name": "capsules",
-        "class": "fa-capsules",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-capsules"
     },
     {
         "name": "car",
-        "class": "fa-car",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-car"
     },
     {
         "name": "car alt",
@@ -1394,10 +1121,7 @@
     },
     {
         "name": "car battery",
-        "class": "fa-car-battery",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-car-battery"
     },
     {
         "name": "car building",
@@ -1425,10 +1149,7 @@
     },
     {
         "name": "car side",
-        "class": "fa-car-side",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-car-side"
     },
     {
         "name": "car tilt",
@@ -1440,10 +1161,7 @@
     },
     {
         "name": "caravan",
-        "class": "fa-caravan",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-caravan"
     },
     {
         "name": "caravan alt",
@@ -1467,24 +1185,15 @@
     },
     {
         "name": "caret down",
-        "class": "fa-caret-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-caret-down"
     },
     {
         "name": "caret left",
-        "class": "fa-caret-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-caret-left"
     },
     {
         "name": "caret right",
-        "class": "fa-caret-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-caret-right"
     },
     {
         "name": "caret square down",
@@ -1504,17 +1213,11 @@
     },
     {
         "name": "caret up",
-        "class": "fa-caret-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-caret-up"
     },
     {
         "name": "carrot",
-        "class": "fa-carrot",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-carrot"
     },
     {
         "name": "cars",
@@ -1522,24 +1225,15 @@
     },
     {
         "name": "cart arrow down",
-        "class": "fa-cart-arrow-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cart-arrow-down"
     },
     {
         "name": "cart plus",
-        "class": "fa-cart-plus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cart-plus"
     },
     {
         "name": "cash register",
-        "class": "fa-cash-register",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cash-register"
     },
     {
         "name": "cassette tape",
@@ -1547,10 +1241,7 @@
     },
     {
         "name": "cat",
-        "class": "fa-cat",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cat"
     },
     {
         "name": "cat space",
@@ -1566,17 +1257,11 @@
     },
     {
         "name": "certificate",
-        "class": "fa-certificate",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-certificate"
     },
     {
         "name": "chair",
-        "class": "fa-chair",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chair"
     },
     {
         "name": "chair office",
@@ -1584,10 +1269,7 @@
     },
     {
         "name": "chalkboard",
-        "class": "fa-chalkboard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chalkboard"
     },
     {
         "name": "chalkboard teacher",
@@ -1595,31 +1277,19 @@
     },
     {
         "name": "charging station",
-        "class": "fa-charging-station",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-charging-station"
     },
     {
         "name": "chart area",
-        "class": "fa-chart-area",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chart-area"
     },
     {
         "name": "chart bar",
-        "class": "fa-chart-bar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chart-bar"
     },
     {
         "name": "chart line",
-        "class": "fa-chart-line",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chart-line"
     },
     {
         "name": "chart line down",
@@ -1631,10 +1301,7 @@
     },
     {
         "name": "chart pie",
-        "class": "fa-chart-pie",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chart-pie"
     },
     {
         "name": "chart pie alt",
@@ -1646,10 +1313,7 @@
     },
     {
         "name": "check",
-        "class": "fa-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-check"
     },
     {
         "name": "check circle",
@@ -1657,10 +1321,7 @@
     },
     {
         "name": "check double",
-        "class": "fa-check-double",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-check-double"
     },
     {
         "name": "check square",
@@ -1668,10 +1329,7 @@
     },
     {
         "name": "cheese",
-        "class": "fa-cheese",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cheese"
     },
     {
         "name": "cheese swiss",
@@ -1683,17 +1341,11 @@
     },
     {
         "name": "chess",
-        "class": "fa-chess",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess"
     },
     {
         "name": "chess bishop",
-        "class": "fa-chess-bishop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-bishop"
     },
     {
         "name": "chess bishop alt",
@@ -1701,10 +1353,7 @@
     },
     {
         "name": "chess board",
-        "class": "fa-chess-board",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-board"
     },
     {
         "name": "chess clock",
@@ -1716,10 +1365,7 @@
     },
     {
         "name": "chess king",
-        "class": "fa-chess-king",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-king"
     },
     {
         "name": "chess king alt",
@@ -1727,10 +1373,7 @@
     },
     {
         "name": "chess knight",
-        "class": "fa-chess-knight",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-knight"
     },
     {
         "name": "chess knight alt",
@@ -1738,10 +1381,7 @@
     },
     {
         "name": "chess pawn",
-        "class": "fa-chess-pawn",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-pawn"
     },
     {
         "name": "chess pawn alt",
@@ -1749,10 +1389,7 @@
     },
     {
         "name": "chess queen",
-        "class": "fa-chess-queen",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-queen"
     },
     {
         "name": "chess queen alt",
@@ -1760,10 +1397,7 @@
     },
     {
         "name": "chess rook",
-        "class": "fa-chess-rook",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chess-rook"
     },
     {
         "name": "chess rook alt",
@@ -1803,24 +1437,15 @@
     },
     {
         "name": "chevron down",
-        "class": "fa-chevron-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chevron-down"
     },
     {
         "name": "chevron left",
-        "class": "fa-chevron-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chevron-left"
     },
     {
         "name": "chevron right",
-        "class": "fa-chevron-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chevron-right"
     },
     {
         "name": "chevron square down",
@@ -1840,17 +1465,11 @@
     },
     {
         "name": "chevron up",
-        "class": "fa-chevron-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-chevron-up"
     },
     {
         "name": "child",
-        "class": "fa-child",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-child"
     },
     {
         "name": "chimney",
@@ -1858,31 +1477,19 @@
     },
     {
         "name": "church",
-        "class": "fa-church",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-church"
     },
     {
         "name": "circle",
-        "class": "fa-circle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-circle"
     },
     {
         "name": "circle notch",
-        "class": "fa-circle-notch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-circle-notch"
     },
     {
         "name": "city",
-        "class": "fa-city",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-city"
     },
     {
         "name": "clarinet",
@@ -1898,24 +1505,15 @@
     },
     {
         "name": "clipboard",
-        "class": "fa-clipboard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clipboard"
     },
     {
         "name": "clipboard check",
-        "class": "fa-clipboard-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clipboard-check"
     },
     {
         "name": "clipboard list",
-        "class": "fa-clipboard-list",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clipboard-list"
     },
     {
         "name": "clipboard list check",
@@ -1927,38 +1525,23 @@
     },
     {
         "name": "clipboard user",
-        "class": "fa-clipboard-user",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clipboard-user"
     },
     {
         "name": "clock",
-        "class": "fa-clock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clock"
     },
     {
         "name": "clone",
-        "class": "fa-clone",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-clone"
     },
     {
         "name": "closed captioning",
-        "class": "fa-closed-captioning",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-closed-captioning"
     },
     {
         "name": "cloud",
-        "class": "fa-cloud",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud"
     },
     {
         "name": "cloud download",
@@ -1982,24 +1565,15 @@
     },
     {
         "name": "cloud meatball",
-        "class": "fa-cloud-meatball",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-meatball"
     },
     {
         "name": "cloud moon",
-        "class": "fa-cloud-moon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-moon"
     },
     {
         "name": "cloud moon rain",
-        "class": "fa-cloud-moon-rain",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-moon-rain"
     },
     {
         "name": "cloud music",
@@ -2007,10 +1581,7 @@
     },
     {
         "name": "cloud rain",
-        "class": "fa-cloud-rain",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-rain"
     },
     {
         "name": "cloud rainbow",
@@ -2022,10 +1593,7 @@
     },
     {
         "name": "cloud showers heavy",
-        "class": "fa-cloud-showers-heavy",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-showers-heavy"
     },
     {
         "name": "cloud sleet",
@@ -2037,17 +1605,11 @@
     },
     {
         "name": "cloud sun",
-        "class": "fa-cloud-sun",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-sun"
     },
     {
         "name": "cloud sun rain",
-        "class": "fa-cloud-sun-rain",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cloud-sun-rain"
     },
     {
         "name": "cloud upload",
@@ -2079,31 +1641,19 @@
     },
     {
         "name": "code",
-        "class": "fa-code",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-code"
     },
     {
         "name": "code branch",
-        "class": "fa-code-branch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-code-branch"
     },
     {
         "name": "code commit",
-        "class": "fa-code-commit",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-code-commit"
     },
     {
         "name": "code merge",
-        "class": "fa-code-merge",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-code-merge"
     },
     {
         "name": "coffee",
@@ -2139,10 +1689,7 @@
     },
     {
         "name": "coins",
-        "class": "fa-coins",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-coins"
     },
     {
         "name": "columns",
@@ -2154,10 +1701,7 @@
     },
     {
         "name": "comment",
-        "class": "fa-comment",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comment"
     },
     {
         "name": "comment alt",
@@ -2221,17 +1765,11 @@
     },
     {
         "name": "comment dollar",
-        "class": "fa-comment-dollar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comment-dollar"
     },
     {
         "name": "comment dots",
-        "class": "fa-comment-dots",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comment-dots"
     },
     {
         "name": "comment edit",
@@ -2247,10 +1785,7 @@
     },
     {
         "name": "comment medical",
-        "class": "fa-comment-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comment-medical"
     },
     {
         "name": "comment minus",
@@ -2266,10 +1801,7 @@
     },
     {
         "name": "comment slash",
-        "class": "fa-comment-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comment-slash"
     },
     {
         "name": "comment smile",
@@ -2281,10 +1813,7 @@
     },
     {
         "name": "comments",
-        "class": "fa-comments",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comments"
     },
     {
         "name": "comments alt",
@@ -2296,24 +1825,15 @@
     },
     {
         "name": "comments dollar",
-        "class": "fa-comments-dollar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-comments-dollar"
     },
     {
         "name": "compact disc",
-        "class": "fa-compact-disc",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-compact-disc"
     },
     {
         "name": "compass",
-        "class": "fa-compass",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-compass"
     },
     {
         "name": "compass slash",
@@ -2321,10 +1841,7 @@
     },
     {
         "name": "compress",
-        "class": "fa-compress",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-compress"
     },
     {
         "name": "compress alt",
@@ -2368,31 +1885,19 @@
     },
     {
         "name": "cookie",
-        "class": "fa-cookie",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cookie"
     },
     {
         "name": "cookie bite",
-        "class": "fa-cookie-bite",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cookie-bite"
     },
     {
         "name": "copy",
-        "class": "fa-copy",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-copy"
     },
     {
         "name": "copyright",
-        "class": "fa-copyright",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-copyright"
     },
     {
         "name": "corn",
@@ -2400,17 +1905,11 @@
     },
     {
         "name": "couch",
-        "class": "fa-couch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-couch"
     },
     {
         "name": "cow",
-        "class": "fa-cow",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cow"
     },
     {
         "name": "cowbell",
@@ -2422,10 +1921,7 @@
     },
     {
         "name": "credit card",
-        "class": "fa-credit-card",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-credit-card"
     },
     {
         "name": "credit card blank",
@@ -2445,10 +1941,7 @@
     },
     {
         "name": "crop",
-        "class": "fa-crop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-crop"
     },
     {
         "name": "crop alt",
@@ -2456,38 +1949,23 @@
     },
     {
         "name": "cross",
-        "class": "fa-cross",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cross"
     },
     {
         "name": "crosshairs",
-        "class": "fa-crosshairs",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-crosshairs"
     },
     {
         "name": "crow",
-        "class": "fa-crow",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-crow"
     },
     {
         "name": "crown",
-        "class": "fa-crown",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-crown"
     },
     {
         "name": "crutch",
-        "class": "fa-crutch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-crutch"
     },
     {
         "name": "crutches",
@@ -2495,17 +1973,11 @@
     },
     {
         "name": "cube",
-        "class": "fa-cube",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cube"
     },
     {
         "name": "cubes",
-        "class": "fa-cubes",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-cubes"
     },
     {
         "name": "curling",
@@ -2521,10 +1993,7 @@
     },
     {
         "name": "database",
-        "class": "fa-database",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-database"
     },
     {
         "name": "deaf",
@@ -2544,17 +2013,11 @@
     },
     {
         "name": "democrat",
-        "class": "fa-democrat",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-democrat"
     },
     {
         "name": "desktop",
-        "class": "fa-desktop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-desktop"
     },
     {
         "name": "desktop alt",
@@ -2566,10 +2029,7 @@
     },
     {
         "name": "dharmachakra",
-        "class": "fa-dharmachakra",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dharmachakra"
     },
     {
         "name": "diagnoses",
@@ -2577,17 +2037,11 @@
     },
     {
         "name": "diamond",
-        "class": "fa-diamond",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-diamond"
     },
     {
         "name": "dice",
-        "class": "fa-dice",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice"
     },
     {
         "name": "dice d10",
@@ -2599,10 +2053,7 @@
     },
     {
         "name": "dice d20",
-        "class": "fa-dice-d20",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-d20"
     },
     {
         "name": "dice d4",
@@ -2610,10 +2061,7 @@
     },
     {
         "name": "dice d6",
-        "class": "fa-dice-d6",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-d6"
     },
     {
         "name": "dice d8",
@@ -2621,45 +2069,27 @@
     },
     {
         "name": "dice five",
-        "class": "fa-dice-five",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-five"
     },
     {
         "name": "dice four",
-        "class": "fa-dice-four",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-four"
     },
     {
         "name": "dice one",
-        "class": "fa-dice-one",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-one"
     },
     {
         "name": "dice six",
-        "class": "fa-dice-six",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-six"
     },
     {
         "name": "dice three",
-        "class": "fa-dice-three",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-three"
     },
     {
         "name": "dice two",
-        "class": "fa-dice-two",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dice-two"
     },
     {
         "name": "digging",
@@ -2683,17 +2113,11 @@
     },
     {
         "name": "disease",
-        "class": "fa-disease",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-disease"
     },
     {
         "name": "divide",
-        "class": "fa-divide",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-divide"
     },
     {
         "name": "dizzy",
@@ -2701,10 +2125,7 @@
     },
     {
         "name": "dna",
-        "class": "fa-dna",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dna"
     },
     {
         "name": "do not enter",
@@ -2712,10 +2133,7 @@
     },
     {
         "name": "dog",
-        "class": "fa-dog",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dog"
     },
     {
         "name": "dog leashed",
@@ -2723,17 +2141,11 @@
     },
     {
         "name": "dollar sign",
-        "class": "fa-dollar-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dollar-sign"
     },
     {
         "name": "dolly",
-        "class": "fa-dolly",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dolly"
     },
     {
         "name": "dolly empty",
@@ -2757,17 +2169,11 @@
     },
     {
         "name": "door closed",
-        "class": "fa-door-closed",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-door-closed"
     },
     {
         "name": "door open",
-        "class": "fa-door-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-door-open"
     },
     {
         "name": "dot circle",
@@ -2775,17 +2181,11 @@
     },
     {
         "name": "dove",
-        "class": "fa-dove",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dove"
     },
     {
         "name": "download",
-        "class": "fa-download",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-download"
     },
     {
         "name": "drafting compass",
@@ -2793,10 +2193,7 @@
     },
     {
         "name": "dragon",
-        "class": "fa-dragon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dragon"
     },
     {
         "name": "draw circle",
@@ -2804,10 +2201,7 @@
     },
     {
         "name": "draw polygon",
-        "class": "fa-draw-polygon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-draw-polygon"
     },
     {
         "name": "draw square",
@@ -2827,17 +2221,11 @@
     },
     {
         "name": "drum",
-        "class": "fa-drum",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-drum"
     },
     {
         "name": "drum steelpan",
-        "class": "fa-drum-steelpan",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-drum-steelpan"
     },
     {
         "name": "drumstick",
@@ -2845,10 +2233,7 @@
     },
     {
         "name": "drumstick bite",
-        "class": "fa-drumstick-bite",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-drumstick-bite"
     },
     {
         "name": "dryer",
@@ -2864,31 +2249,19 @@
     },
     {
         "name": "dumbbell",
-        "class": "fa-dumbbell",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dumbbell"
     },
     {
         "name": "dumpster",
-        "class": "fa-dumpster",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dumpster"
     },
     {
         "name": "dumpster fire",
-        "class": "fa-dumpster-fire",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dumpster-fire"
     },
     {
         "name": "dungeon",
-        "class": "fa-dungeon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-dungeon"
     },
     {
         "name": "ear",
@@ -2912,10 +2285,7 @@
     },
     {
         "name": "egg",
-        "class": "fa-egg",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-egg"
     },
     {
         "name": "egg fried",
@@ -2923,10 +2293,7 @@
     },
     {
         "name": "eject",
-        "class": "fa-eject",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-eject"
     },
     {
         "name": "elephant",
@@ -2958,17 +2325,11 @@
     },
     {
         "name": "envelope",
-        "class": "fa-envelope",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-envelope"
     },
     {
         "name": "envelope open",
-        "class": "fa-envelope-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-envelope-open"
     },
     {
         "name": "envelope open dollar",
@@ -2976,10 +2337,7 @@
     },
     {
         "name": "envelope open text",
-        "class": "fa-envelope-open-text",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-envelope-open-text"
     },
     {
         "name": "envelope square",
@@ -2987,31 +2345,19 @@
     },
     {
         "name": "equals",
-        "class": "fa-equals",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-equals"
     },
     {
         "name": "eraser",
-        "class": "fa-eraser",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-eraser"
     },
     {
         "name": "ethernet",
-        "class": "fa-ethernet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ethernet"
     },
     {
         "name": "euro sign",
-        "class": "fa-euro-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-euro-sign"
     },
     {
         "name": "exchange",
@@ -3023,10 +2369,7 @@
     },
     {
         "name": "exclamation",
-        "class": "fa-exclamation",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-exclamation"
     },
     {
         "name": "exclamation circle",
@@ -3042,10 +2385,7 @@
     },
     {
         "name": "expand",
-        "class": "fa-expand",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-expand"
     },
     {
         "name": "expand alt",
@@ -3081,17 +2421,11 @@
     },
     {
         "name": "eye",
-        "class": "fa-eye",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-eye"
     },
     {
         "name": "eye dropper",
-        "class": "fa-eye-dropper",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-eye-dropper"
     },
     {
         "name": "eye evil",
@@ -3099,17 +2433,11 @@
     },
     {
         "name": "eye slash",
-        "class": "fa-eye-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-eye-slash"
     },
     {
         "name": "fan",
-        "class": "fa-fan",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fan"
     },
     {
         "name": "fan table",
@@ -3129,31 +2457,19 @@
     },
     {
         "name": "faucet",
-        "class": "fa-faucet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-faucet"
     },
     {
         "name": "faucet drip",
-        "class": "fa-faucet-drip",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-faucet-drip"
     },
     {
         "name": "fax",
-        "class": "fa-fax",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fax"
     },
     {
         "name": "feather",
-        "class": "fa-feather",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-feather"
     },
     {
         "name": "feather alt",
@@ -3173,10 +2489,7 @@
     },
     {
         "name": "file",
-        "class": "fa-file",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file"
     },
     {
         "name": "file alt",
@@ -3188,10 +2501,7 @@
     },
     {
         "name": "file audio",
-        "class": "fa-file-audio",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-audio"
     },
     {
         "name": "file certificate",
@@ -3211,24 +2521,15 @@
     },
     {
         "name": "file code",
-        "class": "fa-file-code",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-code"
     },
     {
         "name": "file contract",
-        "class": "fa-file-contract",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-contract"
     },
     {
         "name": "file csv",
-        "class": "fa-file-csv",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-csv"
     },
     {
         "name": "file download",
@@ -3240,10 +2541,7 @@
     },
     {
         "name": "file excel",
-        "class": "fa-file-excel",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-excel"
     },
     {
         "name": "file exclamation",
@@ -3251,45 +2549,27 @@
     },
     {
         "name": "file export",
-        "class": "fa-file-export",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-export"
     },
     {
         "name": "file image",
-        "class": "fa-file-image",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-image"
     },
     {
         "name": "file import",
-        "class": "fa-file-import",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-import"
     },
     {
         "name": "file invoice",
-        "class": "fa-file-invoice",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-invoice"
     },
     {
         "name": "file invoice dollar",
-        "class": "fa-file-invoice-dollar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-invoice-dollar"
     },
     {
         "name": "file medical",
-        "class": "fa-file-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-medical"
     },
     {
         "name": "file medical alt",
@@ -3305,10 +2585,7 @@
     },
     {
         "name": "file pdf",
-        "class": "fa-file-pdf",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-pdf"
     },
     {
         "name": "file plus",
@@ -3316,17 +2593,11 @@
     },
     {
         "name": "file powerpoint",
-        "class": "fa-file-powerpoint",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-powerpoint"
     },
     {
         "name": "file prescription",
-        "class": "fa-file-prescription",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-prescription"
     },
     {
         "name": "file search",
@@ -3334,10 +2605,7 @@
     },
     {
         "name": "file signature",
-        "class": "fa-file-signature",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-signature"
     },
     {
         "name": "file spreadsheet",
@@ -3357,17 +2625,11 @@
     },
     {
         "name": "file video",
-        "class": "fa-file-video",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-video"
     },
     {
         "name": "file word",
-        "class": "fa-file-word",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-file-word"
     },
     {
         "name": "files medical",
@@ -3375,24 +2637,15 @@
     },
     {
         "name": "fill",
-        "class": "fa-fill",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fill"
     },
     {
         "name": "fill drip",
-        "class": "fa-fill-drip",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fill-drip"
     },
     {
         "name": "film",
-        "class": "fa-film",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-film"
     },
     {
         "name": "film alt",
@@ -3404,24 +2657,15 @@
     },
     {
         "name": "filter",
-        "class": "fa-filter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-filter"
     },
     {
         "name": "fingerprint",
-        "class": "fa-fingerprint",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fingerprint"
     },
     {
         "name": "fire",
-        "class": "fa-fire",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fire"
     },
     {
         "name": "fire alt",
@@ -3429,10 +2673,7 @@
     },
     {
         "name": "fire extinguisher",
-        "class": "fa-fire-extinguisher",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fire-extinguisher"
     },
     {
         "name": "fire smoke",
@@ -3448,10 +2689,7 @@
     },
     {
         "name": "fish",
-        "class": "fa-fish",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-fish"
     },
     {
         "name": "fish cooked",
@@ -3463,10 +2701,7 @@
     },
     {
         "name": "flag",
-        "class": "fa-flag",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-flag"
     },
     {
         "name": "flag alt",
@@ -3474,17 +2709,11 @@
     },
     {
         "name": "flag checkered",
-        "class": "fa-flag-checkered",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-flag-checkered"
     },
     {
         "name": "flag usa",
-        "class": "fa-flag-usa",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-flag-usa"
     },
     {
         "name": "flame",
@@ -3496,10 +2725,7 @@
     },
     {
         "name": "flask",
-        "class": "fa-flask",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-flask"
     },
     {
         "name": "flask poison",
@@ -3539,10 +2765,7 @@
     },
     {
         "name": "folder",
-        "class": "fa-folder",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-folder"
     },
     {
         "name": "folder download",
@@ -3550,24 +2773,15 @@
     },
     {
         "name": "folder minus",
-        "class": "fa-folder-minus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-folder-minus"
     },
     {
         "name": "folder open",
-        "class": "fa-folder-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-folder-open"
     },
     {
         "name": "folder plus",
-        "class": "fa-folder-plus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-folder-plus"
     },
     {
         "name": "folder times",
@@ -3575,10 +2789,7 @@
     },
     {
         "name": "folder tree",
-        "class": "fa-folder-tree",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-folder-tree"
     },
     {
         "name": "folder upload",
@@ -3590,10 +2801,7 @@
     },
     {
         "name": "font",
-        "class": "fa-font",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-font"
     },
     {
         "name": "font case",
@@ -3613,10 +2821,7 @@
     },
     {
         "name": "forward",
-        "class": "fa-forward",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-forward"
     },
     {
         "name": "fragile",
@@ -3628,10 +2833,7 @@
     },
     {
         "name": "frog",
-        "class": "fa-frog",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-frog"
     },
     {
         "name": "frosty head",
@@ -3655,10 +2857,7 @@
     },
     {
         "name": "futbol",
-        "class": "fa-futbol",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-futbol"
     },
     {
         "name": "galaxy",
@@ -3678,10 +2877,7 @@
     },
     {
         "name": "gamepad",
-        "class": "fa-gamepad",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gamepad"
     },
     {
         "name": "gamepad alt",
@@ -3701,10 +2897,7 @@
     },
     {
         "name": "gas pump",
-        "class": "fa-gas-pump",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gas-pump"
     },
     {
         "name": "gas pump slash",
@@ -3712,38 +2905,23 @@
     },
     {
         "name": "gavel",
-        "class": "fa-gavel",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gavel"
     },
     {
         "name": "gem",
-        "class": "fa-gem",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gem"
     },
     {
         "name": "genderless",
-        "class": "fa-genderless",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-genderless"
     },
     {
         "name": "ghost",
-        "class": "fa-ghost",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ghost"
     },
     {
         "name": "gift",
-        "class": "fa-gift",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gift"
     },
     {
         "name": "gift card",
@@ -3751,10 +2929,7 @@
     },
     {
         "name": "gifts",
-        "class": "fa-gifts",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gifts"
     },
     {
         "name": "gingerbread man",
@@ -3794,10 +2969,7 @@
     },
     {
         "name": "glasses",
-        "class": "fa-glasses",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-glasses"
     },
     {
         "name": "glasses alt",
@@ -3805,10 +2977,7 @@
     },
     {
         "name": "globe",
-        "class": "fa-globe",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-globe"
     },
     {
         "name": "globe africa",
@@ -3844,17 +3013,11 @@
     },
     {
         "name": "gopuram",
-        "class": "fa-gopuram",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-gopuram"
     },
     {
         "name": "graduation cap",
-        "class": "fa-graduation-cap",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-graduation-cap"
     },
     {
         "name": "gramophone",
@@ -3862,17 +3025,11 @@
     },
     {
         "name": "greater than",
-        "class": "fa-greater-than",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-greater-than"
     },
     {
         "name": "greater than equal",
-        "class": "fa-greater-than-equal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-greater-than-equal"
     },
     {
         "name": "grimace",
@@ -3936,31 +3093,19 @@
     },
     {
         "name": "grip lines",
-        "class": "fa-grip-lines",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-grip-lines"
     },
     {
         "name": "grip lines vertical",
-        "class": "fa-grip-lines-vertical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-grip-lines-vertical"
     },
     {
         "name": "grip vertical",
-        "class": "fa-grip-vertical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-grip-vertical"
     },
     {
         "name": "guitar",
-        "class": "fa-guitar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-guitar"
     },
     {
         "name": "guitar electric",
@@ -3996,10 +3141,7 @@
     },
     {
         "name": "hammer",
-        "class": "fa-hammer",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hammer"
     },
     {
         "name": "hammer war",
@@ -4007,10 +3149,7 @@
     },
     {
         "name": "hamsa",
-        "class": "fa-hamsa",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hamsa"
     },
     {
         "name": "hand heart",
@@ -4018,10 +3157,7 @@
     },
     {
         "name": "hand holding",
-        "class": "fa-hand-holding",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-holding"
     },
     {
         "name": "hand holding box",
@@ -4029,10 +3165,7 @@
     },
     {
         "name": "hand holding heart",
-        "class": "fa-hand-holding-heart",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-holding-heart"
     },
     {
         "name": "hand holding magic",
@@ -4040,10 +3173,7 @@
     },
     {
         "name": "hand holding medical",
-        "class": "fa-hand-holding-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-holding-medical"
     },
     {
         "name": "hand holding seedling",
@@ -4059,17 +3189,11 @@
     },
     {
         "name": "hand lizard",
-        "class": "fa-hand-lizard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-lizard"
     },
     {
         "name": "hand middle finger",
-        "class": "fa-hand-middle-finger",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-middle-finger"
     },
     {
         "name": "hand paper",
@@ -4077,45 +3201,27 @@
     },
     {
         "name": "hand peace",
-        "class": "fa-hand-peace",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-peace"
     },
     {
         "name": "hand point down",
-        "class": "fa-hand-point-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-point-down"
     },
     {
         "name": "hand point left",
-        "class": "fa-hand-point-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-point-left"
     },
     {
         "name": "hand point right",
-        "class": "fa-hand-point-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-point-right"
     },
     {
         "name": "hand point up",
-        "class": "fa-hand-point-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-point-up"
     },
     {
         "name": "hand pointer",
-        "class": "fa-hand-pointer",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-pointer"
     },
     {
         "name": "hand receiving",
@@ -4127,31 +3233,19 @@
     },
     {
         "name": "hand scissors",
-        "class": "fa-hand-scissors",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-scissors"
     },
     {
         "name": "hand sparkles",
-        "class": "fa-hand-sparkles",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-sparkles"
     },
     {
         "name": "hand spock",
-        "class": "fa-hand-spock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hand-spock"
     },
     {
         "name": "hands",
-        "class": "fa-hands",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hands"
     },
     {
         "name": "hands heart",
@@ -4171,10 +3265,7 @@
     },
     {
         "name": "handshake",
-        "class": "fa-handshake",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-handshake"
     },
     {
         "name": "handshake alt",
@@ -4186,17 +3277,11 @@
     },
     {
         "name": "handshake slash",
-        "class": "fa-handshake-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-handshake-slash"
     },
     {
         "name": "hanukiah",
-        "class": "fa-hanukiah",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hanukiah"
     },
     {
         "name": "hard hat",
@@ -4204,10 +3289,7 @@
     },
     {
         "name": "hashtag",
-        "class": "fa-hashtag",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hashtag"
     },
     {
         "name": "hat chef",
@@ -4215,17 +3297,11 @@
     },
     {
         "name": "hat cowboy",
-        "class": "fa-hat-cowboy",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hat-cowboy"
     },
     {
         "name": "hat cowboy side",
-        "class": "fa-hat-cowboy-side",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hat-cowboy-side"
     },
     {
         "name": "hat santa",
@@ -4241,10 +3317,7 @@
     },
     {
         "name": "hat wizard",
-        "class": "fa-hat-wizard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hat-wizard"
     },
     {
         "name": "hdd",
@@ -4260,17 +3333,11 @@
     },
     {
         "name": "head side cough",
-        "class": "fa-head-side-cough",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-head-side-cough"
     },
     {
         "name": "head side cough slash",
-        "class": "fa-head-side-cough-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-head-side-cough-slash"
     },
     {
         "name": "head side headphones",
@@ -4278,10 +3345,7 @@
     },
     {
         "name": "head side mask",
-        "class": "fa-head-side-mask",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-head-side-mask"
     },
     {
         "name": "head side medical",
@@ -4289,10 +3353,7 @@
     },
     {
         "name": "head side virus",
-        "class": "fa-head-side-virus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-head-side-virus"
     },
     {
         "name": "head vr",
@@ -4300,17 +3361,11 @@
     },
     {
         "name": "heading",
-        "class": "fa-heading",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-heading"
     },
     {
         "name": "headphones",
-        "class": "fa-headphones",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-headphones"
     },
     {
         "name": "headphones alt",
@@ -4318,17 +3373,11 @@
     },
     {
         "name": "headset",
-        "class": "fa-headset",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-headset"
     },
     {
         "name": "heart",
-        "class": "fa-heart",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-heart"
     },
     {
         "name": "heart broken",
@@ -4356,10 +3405,7 @@
     },
     {
         "name": "helicopter",
-        "class": "fa-helicopter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-helicopter"
     },
     {
         "name": "helmet battle",
@@ -4371,10 +3417,7 @@
     },
     {
         "name": "highlighter",
-        "class": "fa-highlighter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-highlighter"
     },
     {
         "name": "hiking",
@@ -4382,10 +3425,7 @@
     },
     {
         "name": "hippo",
-        "class": "fa-hippo",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hippo"
     },
     {
         "name": "history",
@@ -4397,10 +3437,7 @@
     },
     {
         "name": "hockey puck",
-        "class": "fa-hockey-puck",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hockey-puck"
     },
     {
         "name": "hockey sticks",
@@ -4408,10 +3445,7 @@
     },
     {
         "name": "holly berry",
-        "class": "fa-holly-berry",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-holly-berry"
     },
     {
         "name": "home",
@@ -4443,17 +3477,11 @@
     },
     {
         "name": "horse",
-        "class": "fa-horse",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-horse"
     },
     {
         "name": "horse head",
-        "class": "fa-horse-head",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-horse-head"
     },
     {
         "name": "horse saddle",
@@ -4461,10 +3489,7 @@
     },
     {
         "name": "hospital",
-        "class": "fa-hospital",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hospital"
     },
     {
         "name": "hospital alt",
@@ -4476,10 +3501,7 @@
     },
     {
         "name": "hospital user",
-        "class": "fa-hospital-user",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hospital-user"
     },
     {
         "name": "hospitals",
@@ -4491,52 +3513,31 @@
     },
     {
         "name": "hotdog",
-        "class": "fa-hotdog",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hotdog"
     },
     {
         "name": "hotel",
-        "class": "fa-hotel",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hotel"
     },
     {
         "name": "hourglass",
-        "class": "fa-hourglass",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hourglass"
     },
     {
         "name": "hourglass end",
-        "class": "fa-hourglass-end",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hourglass-end"
     },
     {
         "name": "hourglass half",
-        "class": "fa-hourglass-half",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hourglass-half"
     },
     {
         "name": "hourglass start",
-        "class": "fa-hourglass-start",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hourglass-start"
     },
     {
         "name": "house",
-        "class": "fa-house",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-house"
     },
     {
         "name": "house damage",
@@ -4564,17 +3565,11 @@
     },
     {
         "name": "house signal",
-        "class": "fa-house-signal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-house-signal"
     },
     {
         "name": "house user",
-        "class": "fa-house-user",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-house-user"
     },
     {
         "name": "hryvnia",
@@ -4586,24 +3581,15 @@
     },
     {
         "name": "hurricane",
-        "class": "fa-hurricane",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-hurricane"
     },
     {
         "name": "i cursor",
-        "class": "fa-i-cursor",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-i-cursor"
     },
     {
         "name": "ice cream",
-        "class": "fa-ice-cream",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ice-cream"
     },
     {
         "name": "ice skate",
@@ -4611,17 +3597,11 @@
     },
     {
         "name": "icicles",
-        "class": "fa-icicles",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-icicles"
     },
     {
         "name": "icons",
-        "class": "fa-icons",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-icons"
     },
     {
         "name": "icons alt",
@@ -4629,17 +3609,11 @@
     },
     {
         "name": "id badge",
-        "class": "fa-id-badge",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-id-badge"
     },
     {
         "name": "id card",
-        "class": "fa-id-card",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-id-card"
     },
     {
         "name": "id card alt",
@@ -4647,17 +3621,11 @@
     },
     {
         "name": "igloo",
-        "class": "fa-igloo",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-igloo"
     },
     {
         "name": "image",
-        "class": "fa-image",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-image"
     },
     {
         "name": "image polaroid",
@@ -4665,17 +3633,11 @@
     },
     {
         "name": "images",
-        "class": "fa-images",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-images"
     },
     {
         "name": "inbox",
-        "class": "fa-inbox",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-inbox"
     },
     {
         "name": "inbox in",
@@ -4687,17 +3649,11 @@
     },
     {
         "name": "indent",
-        "class": "fa-indent",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-indent"
     },
     {
         "name": "industry",
-        "class": "fa-industry",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-industry"
     },
     {
         "name": "industry alt",
@@ -4705,17 +3661,11 @@
     },
     {
         "name": "infinity",
-        "class": "fa-infinity",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-infinity"
     },
     {
         "name": "info",
-        "class": "fa-info",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-info"
     },
     {
         "name": "info circle",
@@ -4747,10 +3697,7 @@
     },
     {
         "name": "italic",
-        "class": "fa-italic",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-italic"
     },
     {
         "name": "jack o lantern",
@@ -4758,17 +3705,11 @@
     },
     {
         "name": "jedi",
-        "class": "fa-jedi",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-jedi"
     },
     {
         "name": "joint",
-        "class": "fa-joint",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-joint"
     },
     {
         "name": "journal whills",
@@ -4784,10 +3725,7 @@
     },
     {
         "name": "kaaba",
-        "class": "fa-kaaba",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-kaaba"
     },
     {
         "name": "kazoo",
@@ -4799,10 +3737,7 @@
     },
     {
         "name": "key",
-        "class": "fa-key",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-key"
     },
     {
         "name": "key skeleton",
@@ -4810,10 +3745,7 @@
     },
     {
         "name": "keyboard",
-        "class": "fa-keyboard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-keyboard"
     },
     {
         "name": "keynote",
@@ -4821,10 +3753,7 @@
     },
     {
         "name": "khanda",
-        "class": "fa-khanda",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-khanda"
     },
     {
         "name": "kidneys",
@@ -4848,10 +3777,7 @@
     },
     {
         "name": "kiwi bird",
-        "class": "fa-kiwi-bird",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-kiwi-bird"
     },
     {
         "name": "knife kitchen",
@@ -4875,10 +3801,7 @@
     },
     {
         "name": "landmark",
-        "class": "fa-landmark",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-landmark"
     },
     {
         "name": "landmark alt",
@@ -4886,24 +3809,15 @@
     },
     {
         "name": "language",
-        "class": "fa-language",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-language"
     },
     {
         "name": "laptop",
-        "class": "fa-laptop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-laptop"
     },
     {
         "name": "laptop code",
-        "class": "fa-laptop-code",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-laptop-code"
     },
     {
         "name": "laptop house",
@@ -4911,10 +3825,7 @@
     },
     {
         "name": "laptop medical",
-        "class": "fa-laptop-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-laptop-medical"
     },
     {
         "name": "lasso",
@@ -4938,10 +3849,7 @@
     },
     {
         "name": "layer group",
-        "class": "fa-layer-group",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-layer-group"
     },
     {
         "name": "layer minus",
@@ -4953,10 +3861,7 @@
     },
     {
         "name": "leaf",
-        "class": "fa-leaf",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-leaf"
     },
     {
         "name": "leaf heart",
@@ -4972,24 +3877,15 @@
     },
     {
         "name": "lemon",
-        "class": "fa-lemon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lemon"
     },
     {
         "name": "less than",
-        "class": "fa-less-than",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-less-than"
     },
     {
         "name": "less than equal",
-        "class": "fa-less-than-equal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-less-than-equal"
     },
     {
         "name": "level down",
@@ -5009,10 +3905,7 @@
     },
     {
         "name": "life ring",
-        "class": "fa-life-ring",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-life-ring"
     },
     {
         "name": "light ceiling",
@@ -5032,10 +3925,7 @@
     },
     {
         "name": "lightbulb",
-        "class": "fa-lightbulb",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lightbulb"
     },
     {
         "name": "lightbulb dollar",
@@ -5067,10 +3957,7 @@
     },
     {
         "name": "link",
-        "class": "fa-link",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-link"
     },
     {
         "name": "lips",
@@ -5078,17 +3965,11 @@
     },
     {
         "name": "lira sign",
-        "class": "fa-lira-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lira-sign"
     },
     {
         "name": "list",
-        "class": "fa-list",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-list"
     },
     {
         "name": "list alt",
@@ -5100,17 +3981,11 @@
     },
     {
         "name": "list ol",
-        "class": "fa-list-ol",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-list-ol"
     },
     {
         "name": "list ul",
-        "class": "fa-list-ul",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-list-ul"
     },
     {
         "name": "location",
@@ -5118,10 +3993,7 @@
     },
     {
         "name": "location arrow",
-        "class": "fa-location-arrow",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-location-arrow"
     },
     {
         "name": "location circle",
@@ -5133,10 +4005,7 @@
     },
     {
         "name": "lock",
-        "class": "fa-lock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lock"
     },
     {
         "name": "lock alt",
@@ -5144,10 +4013,7 @@
     },
     {
         "name": "lock open",
-        "class": "fa-lock-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lock-open"
     },
     {
         "name": "lock open alt",
@@ -5203,17 +4069,11 @@
     },
     {
         "name": "lungs",
-        "class": "fa-lungs",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lungs"
     },
     {
         "name": "lungs virus",
-        "class": "fa-lungs-virus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-lungs-virus"
     },
     {
         "name": "mace",
@@ -5225,10 +4085,7 @@
     },
     {
         "name": "magnet",
-        "class": "fa-magnet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-magnet"
     },
     {
         "name": "mail bulk",
@@ -5248,10 +4105,7 @@
     },
     {
         "name": "map",
-        "class": "fa-map",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-map"
     },
     {
         "name": "map marked",
@@ -5311,10 +4165,7 @@
     },
     {
         "name": "map pin",
-        "class": "fa-map-pin",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-map-pin"
     },
     {
         "name": "map signs",
@@ -5322,31 +4173,19 @@
     },
     {
         "name": "marker",
-        "class": "fa-marker",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-marker"
     },
     {
         "name": "mars",
-        "class": "fa-mars",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mars"
     },
     {
         "name": "mars double",
-        "class": "fa-mars-double",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mars-double"
     },
     {
         "name": "mars stroke",
-        "class": "fa-mars-stroke",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mars-stroke"
     },
     {
         "name": "mars stroke h",
@@ -5358,10 +4197,7 @@
     },
     {
         "name": "mask",
-        "class": "fa-mask",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mask"
     },
     {
         "name": "meat",
@@ -5369,10 +4205,7 @@
     },
     {
         "name": "medal",
-        "class": "fa-medal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-medal"
     },
     {
         "name": "medkit",
@@ -5396,45 +4229,27 @@
     },
     {
         "name": "memory",
-        "class": "fa-memory",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-memory"
     },
     {
         "name": "menorah",
-        "class": "fa-menorah",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-menorah"
     },
     {
         "name": "mercury",
-        "class": "fa-mercury",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mercury"
     },
     {
         "name": "meteor",
-        "class": "fa-meteor",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-meteor"
     },
     {
         "name": "microchip",
-        "class": "fa-microchip",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-microchip"
     },
     {
         "name": "microphone",
-        "class": "fa-microphone",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-microphone"
     },
     {
         "name": "microphone alt",
@@ -5446,10 +4261,7 @@
     },
     {
         "name": "microphone slash",
-        "class": "fa-microphone-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-microphone-slash"
     },
     {
         "name": "microphone stand",
@@ -5457,10 +4269,7 @@
     },
     {
         "name": "microscope",
-        "class": "fa-microscope",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-microscope"
     },
     {
         "name": "microwave",
@@ -5472,10 +4281,7 @@
     },
     {
         "name": "minus",
-        "class": "fa-minus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-minus"
     },
     {
         "name": "minus circle",
@@ -5499,17 +4305,11 @@
     },
     {
         "name": "mitten",
-        "class": "fa-mitten",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mitten"
     },
     {
         "name": "mobile",
-        "class": "fa-mobile",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mobile"
     },
     {
         "name": "mobile alt",
@@ -5525,10 +4325,7 @@
     },
     {
         "name": "money bill",
-        "class": "fa-money-bill",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-money-bill"
     },
     {
         "name": "money bill alt",
@@ -5536,10 +4333,7 @@
     },
     {
         "name": "money bill wave",
-        "class": "fa-money-bill-wave",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-money-bill-wave"
     },
     {
         "name": "money bill wave alt",
@@ -5547,10 +4341,7 @@
     },
     {
         "name": "money check",
-        "class": "fa-money-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-money-check"
     },
     {
         "name": "money check alt",
@@ -5574,17 +4365,11 @@
     },
     {
         "name": "monument",
-        "class": "fa-monument",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-monument"
     },
     {
         "name": "moon",
-        "class": "fa-moon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-moon"
     },
     {
         "name": "moon cloud",
@@ -5596,31 +4381,19 @@
     },
     {
         "name": "mortar pestle",
-        "class": "fa-mortar-pestle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mortar-pestle"
     },
     {
         "name": "mosque",
-        "class": "fa-mosque",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mosque"
     },
     {
         "name": "motorcycle",
-        "class": "fa-motorcycle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-motorcycle"
     },
     {
         "name": "mountain",
-        "class": "fa-mountain",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mountain"
     },
     {
         "name": "mountains",
@@ -5648,10 +4421,7 @@
     },
     {
         "name": "mug hot",
-        "class": "fa-mug-hot",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-mug-hot"
     },
     {
         "name": "mug marshmallows",
@@ -5663,10 +4433,7 @@
     },
     {
         "name": "music",
-        "class": "fa-music",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-music"
     },
     {
         "name": "music alt",
@@ -5686,52 +4453,31 @@
     },
     {
         "name": "network wired",
-        "class": "fa-network-wired",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-network-wired"
     },
     {
         "name": "neuter",
-        "class": "fa-neuter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-neuter"
     },
     {
         "name": "newspaper",
-        "class": "fa-newspaper",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-newspaper"
     },
     {
         "name": "not equal",
-        "class": "fa-not-equal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-not-equal"
     },
     {
         "name": "notes medical",
-        "class": "fa-notes-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-notes-medical"
     },
     {
         "name": "object group",
-        "class": "fa-object-group",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-object-group"
     },
     {
         "name": "object ungroup",
-        "class": "fa-object-ungroup",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-object-ungroup"
     },
     {
         "name": "octagon",
@@ -5739,10 +4485,7 @@
     },
     {
         "name": "oil can",
-        "class": "fa-oil-can",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-oil-can"
     },
     {
         "name": "oil temp",
@@ -5750,10 +4493,7 @@
     },
     {
         "name": "om",
-        "class": "fa-om",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-om"
     },
     {
         "name": "omega",
@@ -5765,17 +4505,11 @@
     },
     {
         "name": "otter",
-        "class": "fa-otter",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-otter"
     },
     {
         "name": "outdent",
-        "class": "fa-outdent",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-outdent"
     },
     {
         "name": "outlet",
@@ -5795,10 +4529,7 @@
     },
     {
         "name": "pager",
-        "class": "fa-pager",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pager"
     },
     {
         "name": "paint brush",
@@ -5810,24 +4541,15 @@
     },
     {
         "name": "paint roller",
-        "class": "fa-paint-roller",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paint-roller"
     },
     {
         "name": "palette",
-        "class": "fa-palette",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-palette"
     },
     {
         "name": "pallet",
-        "class": "fa-pallet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pallet"
     },
     {
         "name": "pallet alt",
@@ -5835,31 +4557,19 @@
     },
     {
         "name": "paper plane",
-        "class": "fa-paper-plane",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paper-plane"
     },
     {
         "name": "paperclip",
-        "class": "fa-paperclip",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paperclip"
     },
     {
         "name": "parachute box",
-        "class": "fa-parachute-box",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-parachute-box"
     },
     {
         "name": "paragraph",
-        "class": "fa-paragraph",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paragraph"
     },
     {
         "name": "paragraph rtl",
@@ -5883,10 +4593,7 @@
     },
     {
         "name": "passport",
-        "class": "fa-passport",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-passport"
     },
     {
         "name": "pastafarianism",
@@ -5894,17 +4601,11 @@
     },
     {
         "name": "paste",
-        "class": "fa-paste",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paste"
     },
     {
         "name": "pause",
-        "class": "fa-pause",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pause"
     },
     {
         "name": "pause circle",
@@ -5912,10 +4613,7 @@
     },
     {
         "name": "paw",
-        "class": "fa-paw",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-paw"
     },
     {
         "name": "paw alt",
@@ -5927,10 +4625,7 @@
     },
     {
         "name": "peace",
-        "class": "fa-peace",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-peace"
     },
     {
         "name": "pegasus",
@@ -5938,10 +4633,7 @@
     },
     {
         "name": "pen",
-        "class": "fa-pen",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pen"
     },
     {
         "name": "pen alt",
@@ -5949,17 +4641,11 @@
     },
     {
         "name": "pen fancy",
-        "class": "fa-pen-fancy",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pen-fancy"
     },
     {
         "name": "pen nib",
-        "class": "fa-pen-nib",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pen-nib"
     },
     {
         "name": "pen square",
@@ -5967,10 +4653,7 @@
     },
     {
         "name": "pencil",
-        "class": "fa-pencil",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pencil"
     },
     {
         "name": "pencil alt",
@@ -5990,10 +4673,7 @@
     },
     {
         "name": "people arrows",
-        "class": "fa-people-arrows",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-people-arrows"
     },
     {
         "name": "people carry",
@@ -6001,17 +4681,11 @@
     },
     {
         "name": "pepper hot",
-        "class": "fa-pepper-hot",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pepper-hot"
     },
     {
         "name": "percent",
-        "class": "fa-percent",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-percent"
     },
     {
         "name": "percentage",
@@ -6019,10 +4693,7 @@
     },
     {
         "name": "person booth",
-        "class": "fa-person-booth",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-person-booth"
     },
     {
         "name": "person carry",
@@ -6042,10 +4713,7 @@
     },
     {
         "name": "phone",
-        "class": "fa-phone",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-phone"
     },
     {
         "name": "phone alt",
@@ -6069,10 +4737,7 @@
     },
     {
         "name": "phone slash",
-        "class": "fa-phone-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-phone-slash"
     },
     {
         "name": "phone square",
@@ -6084,10 +4749,7 @@
     },
     {
         "name": "phone volume",
-        "class": "fa-phone-volume",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-phone-volume"
     },
     {
         "name": "photo video",
@@ -6115,17 +4777,11 @@
     },
     {
         "name": "piggy bank",
-        "class": "fa-piggy-bank",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-piggy-bank"
     },
     {
         "name": "pills",
-        "class": "fa-pills",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pills"
     },
     {
         "name": "pizza",
@@ -6133,24 +4789,15 @@
     },
     {
         "name": "pizza slice",
-        "class": "fa-pizza-slice",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pizza-slice"
     },
     {
         "name": "place of worship",
-        "class": "fa-place-of-worship",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-place-of-worship"
     },
     {
         "name": "plane",
-        "class": "fa-plane",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plane"
     },
     {
         "name": "plane alt",
@@ -6158,24 +4805,15 @@
     },
     {
         "name": "plane arrival",
-        "class": "fa-plane-arrival",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plane-arrival"
     },
     {
         "name": "plane departure",
-        "class": "fa-plane-departure",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plane-departure"
     },
     {
         "name": "plane slash",
-        "class": "fa-plane-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plane-slash"
     },
     {
         "name": "planet moon",
@@ -6187,10 +4825,7 @@
     },
     {
         "name": "play",
-        "class": "fa-play",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-play"
     },
     {
         "name": "play circle",
@@ -6198,17 +4833,11 @@
     },
     {
         "name": "plug",
-        "class": "fa-plug",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plug"
     },
     {
         "name": "plus",
-        "class": "fa-plus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-plus"
     },
     {
         "name": "plus circle",
@@ -6228,10 +4857,7 @@
     },
     {
         "name": "podcast",
-        "class": "fa-podcast",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-podcast"
     },
     {
         "name": "podium",
@@ -6259,24 +4885,15 @@
     },
     {
         "name": "poo",
-        "class": "fa-poo",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-poo"
     },
     {
         "name": "poo storm",
-        "class": "fa-poo-storm",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-poo-storm"
     },
     {
         "name": "poop",
-        "class": "fa-poop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-poop"
     },
     {
         "name": "popcorn",
@@ -6300,10 +4917,7 @@
     },
     {
         "name": "power off",
-        "class": "fa-power-off",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-power-off"
     },
     {
         "name": "pray",
@@ -6315,17 +4929,11 @@
     },
     {
         "name": "prescription",
-        "class": "fa-prescription",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-prescription"
     },
     {
         "name": "prescription bottle",
-        "class": "fa-prescription-bottle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-prescription-bottle"
     },
     {
         "name": "prescription bottle alt",
@@ -6337,10 +4945,7 @@
     },
     {
         "name": "print",
-        "class": "fa-print",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-print"
     },
     {
         "name": "print search",
@@ -6364,17 +4969,11 @@
     },
     {
         "name": "pump medical",
-        "class": "fa-pump-medical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pump-medical"
     },
     {
         "name": "pump soap",
-        "class": "fa-pump-soap",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-pump-soap"
     },
     {
         "name": "pumpkin",
@@ -6382,24 +4981,15 @@
     },
     {
         "name": "puzzle piece",
-        "class": "fa-puzzle-piece",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-puzzle-piece"
     },
     {
         "name": "qrcode",
-        "class": "fa-qrcode",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-qrcode"
     },
     {
         "name": "question",
-        "class": "fa-question",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-question"
     },
     {
         "name": "question circle",
@@ -6415,17 +5005,11 @@
     },
     {
         "name": "quote left",
-        "class": "fa-quote-left",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-quote-left"
     },
     {
         "name": "quote right",
-        "class": "fa-quote-right",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-quote-right"
     },
     {
         "name": "quran",
@@ -6449,10 +5033,7 @@
     },
     {
         "name": "radiation",
-        "class": "fa-radiation",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-radiation"
     },
     {
         "name": "radiation alt",
@@ -6460,10 +5041,7 @@
     },
     {
         "name": "radio",
-        "class": "fa-radio",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-radio"
     },
     {
         "name": "radio alt",
@@ -6471,10 +5049,7 @@
     },
     {
         "name": "rainbow",
-        "class": "fa-rainbow",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-rainbow"
     },
     {
         "name": "raindrops",
@@ -6498,17 +5073,11 @@
     },
     {
         "name": "receipt",
-        "class": "fa-receipt",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-receipt"
     },
     {
         "name": "record vinyl",
-        "class": "fa-record-vinyl",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-record-vinyl"
     },
     {
         "name": "rectangle landscape",
@@ -6524,10 +5093,7 @@
     },
     {
         "name": "recycle",
-        "class": "fa-recycle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-recycle"
     },
     {
         "name": "redo",
@@ -6543,10 +5109,7 @@
     },
     {
         "name": "registered",
-        "class": "fa-registered",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-registered"
     },
     {
         "name": "remove format",
@@ -6554,10 +5117,7 @@
     },
     {
         "name": "repeat",
-        "class": "fa-repeat",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-repeat"
     },
     {
         "name": "repeat 1",
@@ -6573,38 +5133,23 @@
     },
     {
         "name": "reply",
-        "class": "fa-reply",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-reply"
     },
     {
         "name": "reply all",
-        "class": "fa-reply-all",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-reply-all"
     },
     {
         "name": "republican",
-        "class": "fa-republican",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-republican"
     },
     {
         "name": "restroom",
-        "class": "fa-restroom",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-restroom"
     },
     {
         "name": "retweet",
-        "class": "fa-retweet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-retweet"
     },
     {
         "name": "retweet alt",
@@ -6612,17 +5157,11 @@
     },
     {
         "name": "ribbon",
-        "class": "fa-ribbon",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ribbon"
     },
     {
         "name": "ring",
-        "class": "fa-ring",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ring"
     },
     {
         "name": "rings wedding",
@@ -6630,24 +5169,15 @@
     },
     {
         "name": "road",
-        "class": "fa-road",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-road"
     },
     {
         "name": "robot",
-        "class": "fa-robot",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-robot"
     },
     {
         "name": "rocket",
-        "class": "fa-rocket",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-rocket"
     },
     {
         "name": "rocket launch",
@@ -6655,10 +5185,7 @@
     },
     {
         "name": "route",
-        "class": "fa-route",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-route"
     },
     {
         "name": "route highway",
@@ -6674,10 +5201,7 @@
     },
     {
         "name": "rss",
-        "class": "fa-rss",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-rss"
     },
     {
         "name": "rss square",
@@ -6685,31 +5209,19 @@
     },
     {
         "name": "ruble sign",
-        "class": "fa-ruble-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ruble-sign"
     },
     {
         "name": "ruler",
-        "class": "fa-ruler",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ruler"
     },
     {
         "name": "ruler combined",
-        "class": "fa-ruler-combined",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ruler-combined"
     },
     {
         "name": "ruler horizontal",
-        "class": "fa-ruler-horizontal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ruler-horizontal"
     },
     {
         "name": "ruler triangle",
@@ -6717,10 +5229,7 @@
     },
     {
         "name": "ruler vertical",
-        "class": "fa-ruler-vertical",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ruler-vertical"
     },
     {
         "name": "running",
@@ -6728,10 +5237,7 @@
     },
     {
         "name": "rupee sign",
-        "class": "fa-rupee-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-rupee-sign"
     },
     {
         "name": "rv",
@@ -6743,10 +5249,7 @@
     },
     {
         "name": "sack dollar",
-        "class": "fa-sack-dollar",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sack-dollar"
     },
     {
         "name": "sad cry",
@@ -6766,17 +5269,11 @@
     },
     {
         "name": "satellite",
-        "class": "fa-satellite",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-satellite"
     },
     {
         "name": "satellite dish",
-        "class": "fa-satellite-dish",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-satellite-dish"
     },
     {
         "name": "sausage",
@@ -6828,24 +5325,15 @@
     },
     {
         "name": "school",
-        "class": "fa-school",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-school"
     },
     {
         "name": "screwdriver",
-        "class": "fa-screwdriver",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-screwdriver"
     },
     {
         "name": "scroll",
-        "class": "fa-scroll",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-scroll"
     },
     {
         "name": "scroll old",
@@ -6861,10 +5349,7 @@
     },
     {
         "name": "sd card",
-        "class": "fa-sd-card",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sd-card"
     },
     {
         "name": "search",
@@ -6888,10 +5373,7 @@
     },
     {
         "name": "seedling",
-        "class": "fa-seedling",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-seedling"
     },
     {
         "name": "send back",
@@ -6923,24 +5405,15 @@
     },
     {
         "name": "server",
-        "class": "fa-server",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-server"
     },
     {
         "name": "shapes",
-        "class": "fa-shapes",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shapes"
     },
     {
         "name": "share",
-        "class": "fa-share",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-share"
     },
     {
         "name": "share all",
@@ -6964,17 +5437,11 @@
     },
     {
         "name": "shekel sign",
-        "class": "fa-shekel-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shekel-sign"
     },
     {
         "name": "shield",
-        "class": "fa-shield",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shield"
     },
     {
         "name": "shield alt",
@@ -6990,17 +5457,11 @@
     },
     {
         "name": "shield virus",
-        "class": "fa-shield-virus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shield-virus"
     },
     {
         "name": "ship",
-        "class": "fa-ship",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ship"
     },
     {
         "name": "shipping fast",
@@ -7016,10 +5477,7 @@
     },
     {
         "name": "shoe prints",
-        "class": "fa-shoe-prints",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shoe-prints"
     },
     {
         "name": "shopping bag",
@@ -7043,10 +5501,7 @@
     },
     {
         "name": "shower",
-        "class": "fa-shower",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-shower"
     },
     {
         "name": "shredder",
@@ -7094,10 +5549,7 @@
     },
     {
         "name": "signal",
-        "class": "fa-signal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-signal"
     },
     {
         "name": "signal 1",
@@ -7145,24 +5597,15 @@
     },
     {
         "name": "signature",
-        "class": "fa-signature",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-signature"
     },
     {
         "name": "sim card",
-        "class": "fa-sim-card",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sim-card"
     },
     {
         "name": "sink",
-        "class": "fa-sink",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sink"
     },
     {
         "name": "siren",
@@ -7174,10 +5617,7 @@
     },
     {
         "name": "sitemap",
-        "class": "fa-sitemap",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sitemap"
     },
     {
         "name": "skating",
@@ -7205,10 +5645,7 @@
     },
     {
         "name": "skull",
-        "class": "fa-skull",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-skull"
     },
     {
         "name": "skull cow",
@@ -7216,17 +5653,11 @@
     },
     {
         "name": "skull crossbones",
-        "class": "fa-skull-crossbones",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-skull-crossbones"
     },
     {
         "name": "slash",
-        "class": "fa-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-slash"
     },
     {
         "name": "sledding",
@@ -7234,10 +5665,7 @@
     },
     {
         "name": "sleigh",
-        "class": "fa-sleigh",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sleigh"
     },
     {
         "name": "sliders h",
@@ -7273,10 +5701,7 @@
     },
     {
         "name": "smog",
-        "class": "fa-smog",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-smog"
     },
     {
         "name": "smoke",
@@ -7284,10 +5709,7 @@
     },
     {
         "name": "smoking",
-        "class": "fa-smoking",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-smoking"
     },
     {
         "name": "smoking ban",
@@ -7315,10 +5737,7 @@
     },
     {
         "name": "snowflake",
-        "class": "fa-snowflake",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-snowflake"
     },
     {
         "name": "snowflakes",
@@ -7326,10 +5745,7 @@
     },
     {
         "name": "snowman",
-        "class": "fa-snowman",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-snowman"
     },
     {
         "name": "snowmobile",
@@ -7337,31 +5753,19 @@
     },
     {
         "name": "snowplow",
-        "class": "fa-snowplow",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-snowplow"
     },
     {
         "name": "soap",
-        "class": "fa-soap",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-soap"
     },
     {
         "name": "socks",
-        "class": "fa-socks",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-socks"
     },
     {
         "name": "solar panel",
-        "class": "fa-solar-panel",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-solar-panel"
     },
     {
         "name": "solar system",
@@ -7369,10 +5773,7 @@
     },
     {
         "name": "sort",
-        "class": "fa-sort",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sort"
     },
     {
         "name": "sort alpha down",
@@ -7424,10 +5825,7 @@
     },
     {
         "name": "sort down",
-        "class": "fa-sort-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sort-down"
     },
     {
         "name": "sort numeric down",
@@ -7479,10 +5877,7 @@
     },
     {
         "name": "sort up",
-        "class": "fa-sort-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sort-up"
     },
     {
         "name": "soup",
@@ -7490,10 +5885,7 @@
     },
     {
         "name": "spa",
-        "class": "fa-spa",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-spa"
     },
     {
         "name": "space shuttle",
@@ -7525,17 +5917,11 @@
     },
     {
         "name": "spell check",
-        "class": "fa-spell-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-spell-check"
     },
     {
         "name": "spider",
-        "class": "fa-spider",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-spider"
     },
     {
         "name": "spider black widow",
@@ -7547,10 +5933,7 @@
     },
     {
         "name": "spinner",
-        "class": "fa-spinner",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-spinner"
     },
     {
         "name": "spinner third",
@@ -7558,17 +5941,11 @@
     },
     {
         "name": "splotch",
-        "class": "fa-splotch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-splotch"
     },
     {
         "name": "spray can",
-        "class": "fa-spray-can",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-spray-can"
     },
     {
         "name": "sprinkler",
@@ -7576,17 +5953,11 @@
     },
     {
         "name": "square",
-        "class": "fa-square",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-square"
     },
     {
         "name": "square full",
-        "class": "fa-square-full",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-square-full"
     },
     {
         "name": "square root",
@@ -7606,24 +5977,15 @@
     },
     {
         "name": "stamp",
-        "class": "fa-stamp",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stamp"
     },
     {
         "name": "star",
-        "class": "fa-star",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-star"
     },
     {
         "name": "star and crescent",
-        "class": "fa-star-and-crescent",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-star-and-crescent"
     },
     {
         "name": "star christmas",
@@ -7635,10 +5997,7 @@
     },
     {
         "name": "star half",
-        "class": "fa-star-half",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-star-half"
     },
     {
         "name": "star half alt",
@@ -7646,17 +6005,11 @@
     },
     {
         "name": "star of david",
-        "class": "fa-star-of-david",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-star-of-david"
     },
     {
         "name": "star of life",
-        "class": "fa-star-of-life",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-star-of-life"
     },
     {
         "name": "star shooting",
@@ -7700,10 +6053,7 @@
     },
     {
         "name": "stethoscope",
-        "class": "fa-stethoscope",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stethoscope"
     },
     {
         "name": "sticky note",
@@ -7719,10 +6069,7 @@
     },
     {
         "name": "stop",
-        "class": "fa-stop",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stop"
     },
     {
         "name": "stop circle",
@@ -7730,24 +6077,15 @@
     },
     {
         "name": "stopwatch",
-        "class": "fa-stopwatch",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stopwatch"
     },
     {
         "name": "stopwatch 20",
-        "class": "fa-stopwatch-20",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stopwatch-20"
     },
     {
         "name": "store",
-        "class": "fa-store",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-store"
     },
     {
         "name": "store alt",
@@ -7759,10 +6097,7 @@
     },
     {
         "name": "store slash",
-        "class": "fa-store-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-store-slash"
     },
     {
         "name": "stream",
@@ -7770,10 +6105,7 @@
     },
     {
         "name": "street view",
-        "class": "fa-street-view",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-street-view"
     },
     {
         "name": "stretcher",
@@ -7781,24 +6113,15 @@
     },
     {
         "name": "strikethrough",
-        "class": "fa-strikethrough",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-strikethrough"
     },
     {
         "name": "stroopwafel",
-        "class": "fa-stroopwafel",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-stroopwafel"
     },
     {
         "name": "subscript",
-        "class": "fa-subscript",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-subscript"
     },
     {
         "name": "subway",
@@ -7806,24 +6129,15 @@
     },
     {
         "name": "suitcase",
-        "class": "fa-suitcase",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-suitcase"
     },
     {
         "name": "suitcase rolling",
-        "class": "fa-suitcase-rolling",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-suitcase-rolling"
     },
     {
         "name": "sun",
-        "class": "fa-sun",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-sun"
     },
     {
         "name": "sun cloud",
@@ -7851,10 +6165,7 @@
     },
     {
         "name": "superscript",
-        "class": "fa-superscript",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-superscript"
     },
     {
         "name": "surprise",
@@ -7862,10 +6173,7 @@
     },
     {
         "name": "swatchbook",
-        "class": "fa-swatchbook",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-swatchbook"
     },
     {
         "name": "swimmer",
@@ -7897,10 +6205,7 @@
     },
     {
         "name": "synagogue",
-        "class": "fa-synagogue",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-synagogue"
     },
     {
         "name": "sync",
@@ -7912,17 +6217,11 @@
     },
     {
         "name": "syringe",
-        "class": "fa-syringe",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-syringe"
     },
     {
         "name": "table",
-        "class": "fa-table",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-table"
     },
     {
         "name": "table tennis",
@@ -7930,10 +6229,7 @@
     },
     {
         "name": "tablet",
-        "class": "fa-tablet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tablet"
     },
     {
         "name": "tablet alt",
@@ -7953,10 +6249,7 @@
     },
     {
         "name": "tablets",
-        "class": "fa-tablets",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tablets"
     },
     {
         "name": "tachometer",
@@ -8012,17 +6305,11 @@
     },
     {
         "name": "tag",
-        "class": "fa-tag",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tag"
     },
     {
         "name": "tags",
-        "class": "fa-tags",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tags"
     },
     {
         "name": "tally",
@@ -8034,10 +6321,7 @@
     },
     {
         "name": "tape",
-        "class": "fa-tape",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tape"
     },
     {
         "name": "tasks",
@@ -8049,24 +6333,15 @@
     },
     {
         "name": "taxi",
-        "class": "fa-taxi",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-taxi"
     },
     {
         "name": "teeth",
-        "class": "fa-teeth",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-teeth"
     },
     {
         "name": "teeth open",
-        "class": "fa-teeth-open",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-teeth-open"
     },
     {
         "name": "telescope",
@@ -8082,10 +6357,7 @@
     },
     {
         "name": "temperature high",
-        "class": "fa-temperature-high",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-temperature-high"
     },
     {
         "name": "temperature hot",
@@ -8093,10 +6365,7 @@
     },
     {
         "name": "temperature low",
-        "class": "fa-temperature-low",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-temperature-low"
     },
     {
         "name": "temperature up",
@@ -8112,10 +6381,7 @@
     },
     {
         "name": "terminal",
-        "class": "fa-terminal",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-terminal"
     },
     {
         "name": "text",
@@ -8123,10 +6389,7 @@
     },
     {
         "name": "text height",
-        "class": "fa-text-height",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-text-height"
     },
     {
         "name": "text size",
@@ -8134,10 +6397,7 @@
     },
     {
         "name": "text width",
-        "class": "fa-text-width",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-text-width"
     },
     {
         "name": "th",
@@ -8157,10 +6417,7 @@
     },
     {
         "name": "thermometer",
-        "class": "fa-thermometer",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-thermometer"
     },
     {
         "name": "thermometer empty",
@@ -8188,24 +6445,15 @@
     },
     {
         "name": "thumbs down",
-        "class": "fa-thumbs-down",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-thumbs-down"
     },
     {
         "name": "thumbs up",
-        "class": "fa-thumbs-up",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-thumbs-up"
     },
     {
         "name": "thumbtack",
-        "class": "fa-thumbtack",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-thumbtack"
     },
     {
         "name": "thunderstorm",
@@ -8221,10 +6469,7 @@
     },
     {
         "name": "ticket",
-        "class": "fa-ticket",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-ticket"
     },
     {
         "name": "ticket alt",
@@ -8284,31 +6529,19 @@
     },
     {
         "name": "toggle off",
-        "class": "fa-toggle-off",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toggle-off"
     },
     {
         "name": "toggle on",
-        "class": "fa-toggle-on",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toggle-on"
     },
     {
         "name": "toilet",
-        "class": "fa-toilet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toilet"
     },
     {
         "name": "toilet paper",
-        "class": "fa-toilet-paper",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toilet-paper"
     },
     {
         "name": "toilet paper alt",
@@ -8316,10 +6549,7 @@
     },
     {
         "name": "toilet paper slash",
-        "class": "fa-toilet-paper-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toilet-paper-slash"
     },
     {
         "name": "tombstone",
@@ -8331,10 +6561,7 @@
     },
     {
         "name": "toolbox",
-        "class": "fa-toolbox",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-toolbox"
     },
     {
         "name": "tools",
@@ -8342,10 +6569,7 @@
     },
     {
         "name": "tooth",
-        "class": "fa-tooth",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tooth"
     },
     {
         "name": "toothbrush",
@@ -8357,31 +6581,19 @@
     },
     {
         "name": "torii gate",
-        "class": "fa-torii-gate",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-torii-gate"
     },
     {
         "name": "tornado",
-        "class": "fa-tornado",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tornado"
     },
     {
         "name": "tractor",
-        "class": "fa-tractor",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tractor"
     },
     {
         "name": "trademark",
-        "class": "fa-trademark",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-trademark"
     },
     {
         "name": "traffic cone",
@@ -8389,10 +6601,7 @@
     },
     {
         "name": "traffic light",
-        "class": "fa-traffic-light",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-traffic-light"
     },
     {
         "name": "traffic light go",
@@ -8408,17 +6617,11 @@
     },
     {
         "name": "trailer",
-        "class": "fa-trailer",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-trailer"
     },
     {
         "name": "train",
-        "class": "fa-train",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-train"
     },
     {
         "name": "tram",
@@ -8426,10 +6629,7 @@
     },
     {
         "name": "transgender",
-        "class": "fa-transgender",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-transgender"
     },
     {
         "name": "transgender alt",
@@ -8457,10 +6657,7 @@
     },
     {
         "name": "trash",
-        "class": "fa-trash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-trash"
     },
     {
         "name": "trash alt",
@@ -8488,10 +6685,7 @@
     },
     {
         "name": "tree",
-        "class": "fa-tree",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tree"
     },
     {
         "name": "tree alt",
@@ -8527,10 +6721,7 @@
     },
     {
         "name": "trophy",
-        "class": "fa-trophy",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-trophy"
     },
     {
         "name": "trophy alt",
@@ -8538,10 +6729,7 @@
     },
     {
         "name": "truck",
-        "class": "fa-truck",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-truck"
     },
     {
         "name": "truck container",
@@ -8557,24 +6745,15 @@
     },
     {
         "name": "truck monster",
-        "class": "fa-truck-monster",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-truck-monster"
     },
     {
         "name": "truck moving",
-        "class": "fa-truck-moving",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-truck-moving"
     },
     {
         "name": "truck pickup",
-        "class": "fa-truck-pickup",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-truck-pickup"
     },
     {
         "name": "truck plow",
@@ -8594,10 +6773,7 @@
     },
     {
         "name": "tty",
-        "class": "fa-tty",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tty"
     },
     {
         "name": "turkey",
@@ -8613,10 +6789,7 @@
     },
     {
         "name": "tv",
-        "class": "fa-tv",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-tv"
     },
     {
         "name": "tv alt",
@@ -8644,24 +6817,15 @@
     },
     {
         "name": "umbrella",
-        "class": "fa-umbrella",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-umbrella"
     },
     {
         "name": "umbrella beach",
-        "class": "fa-umbrella-beach",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-umbrella-beach"
     },
     {
         "name": "underline",
-        "class": "fa-underline",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-underline"
     },
     {
         "name": "undo",
@@ -8681,10 +6845,7 @@
     },
     {
         "name": "universal access",
-        "class": "fa-universal-access",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-universal-access"
     },
     {
         "name": "university",
@@ -8696,10 +6857,7 @@
     },
     {
         "name": "unlock",
-        "class": "fa-unlock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-unlock"
     },
     {
         "name": "unlock alt",
@@ -8707,10 +6865,7 @@
     },
     {
         "name": "upload",
-        "class": "fa-upload",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-upload"
     },
     {
         "name": "usb drive",
@@ -8726,10 +6881,7 @@
     },
     {
         "name": "user",
-        "class": "fa-user",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user"
     },
     {
         "name": "user alien",
@@ -8745,10 +6897,7 @@
     },
     {
         "name": "user astronaut",
-        "class": "fa-user-astronaut",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-astronaut"
     },
     {
         "name": "user chart",
@@ -8756,10 +6905,7 @@
     },
     {
         "name": "user check",
-        "class": "fa-user-check",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-check"
     },
     {
         "name": "user circle",
@@ -8767,10 +6913,7 @@
     },
     {
         "name": "user clock",
-        "class": "fa-user-clock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-clock"
     },
     {
         "name": "user cog",
@@ -8794,10 +6937,7 @@
     },
     {
         "name": "user graduate",
-        "class": "fa-user-graduate",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-graduate"
     },
     {
         "name": "user hard hat",
@@ -8809,17 +6949,11 @@
     },
     {
         "name": "user injured",
-        "class": "fa-user-injured",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-injured"
     },
     {
         "name": "user lock",
-        "class": "fa-user-lock",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-lock"
     },
     {
         "name": "user md",
@@ -8831,10 +6965,7 @@
     },
     {
         "name": "user minus",
-        "class": "fa-user-minus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-minus"
     },
     {
         "name": "user music",
@@ -8842,24 +6973,15 @@
     },
     {
         "name": "user ninja",
-        "class": "fa-user-ninja",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-ninja"
     },
     {
         "name": "user nurse",
-        "class": "fa-user-nurse",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-nurse"
     },
     {
         "name": "user plus",
-        "class": "fa-user-plus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-plus"
     },
     {
         "name": "user robot",
@@ -8867,38 +6989,23 @@
     },
     {
         "name": "user secret",
-        "class": "fa-user-secret",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-secret"
     },
     {
         "name": "user shield",
-        "class": "fa-user-shield",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-shield"
     },
     {
         "name": "user slash",
-        "class": "fa-user-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-slash"
     },
     {
         "name": "user tag",
-        "class": "fa-user-tag",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-tag"
     },
     {
         "name": "user tie",
-        "class": "fa-user-tie",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-user-tie"
     },
     {
         "name": "user times",
@@ -8914,10 +7021,7 @@
     },
     {
         "name": "users",
-        "class": "fa-users",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-users"
     },
     {
         "name": "users class",
@@ -8937,10 +7041,7 @@
     },
     {
         "name": "users slash",
-        "class": "fa-users-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-users-slash"
     },
     {
         "name": "utensil fork",
@@ -8956,10 +7057,7 @@
     },
     {
         "name": "utensils",
-        "class": "fa-utensils",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-utensils"
     },
     {
         "name": "utensils alt",
@@ -8979,45 +7077,27 @@
     },
     {
         "name": "vector square",
-        "class": "fa-vector-square",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vector-square"
     },
     {
         "name": "venus",
-        "class": "fa-venus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-venus"
     },
     {
         "name": "venus double",
-        "class": "fa-venus-double",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-venus-double"
     },
     {
         "name": "venus mars",
-        "class": "fa-venus-mars",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-venus-mars"
     },
     {
         "name": "vest",
-        "class": "fa-vest",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vest"
     },
     {
         "name": "vest patches",
-        "class": "fa-vest-patches",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vest-patches"
     },
     {
         "name": "vhs",
@@ -9025,24 +7105,15 @@
     },
     {
         "name": "vial",
-        "class": "fa-vial",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vial"
     },
     {
         "name": "vials",
-        "class": "fa-vials",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vials"
     },
     {
         "name": "video",
-        "class": "fa-video",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-video"
     },
     {
         "name": "video plus",
@@ -9050,17 +7121,11 @@
     },
     {
         "name": "video slash",
-        "class": "fa-video-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-video-slash"
     },
     {
         "name": "vihara",
-        "class": "fa-vihara",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vihara"
     },
     {
         "name": "violin",
@@ -9068,38 +7133,23 @@
     },
     {
         "name": "virus",
-        "class": "fa-virus",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-virus"
     },
     {
         "name": "virus slash",
-        "class": "fa-virus-slash",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-virus-slash"
     },
     {
         "name": "viruses",
-        "class": "fa-viruses",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-viruses"
     },
     {
         "name": "voicemail",
-        "class": "fa-voicemail",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-voicemail"
     },
     {
         "name": "volcano",
-        "class": "fa-volcano",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-volcano"
     },
     {
         "name": "volleyball ball",
@@ -9119,10 +7169,7 @@
     },
     {
         "name": "volume off",
-        "class": "fa-volume-off",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-volume-off"
     },
     {
         "name": "volume slash",
@@ -9142,10 +7189,7 @@
     },
     {
         "name": "vr cardboard",
-        "class": "fa-vr-cardboard",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-vr-cardboard"
     },
     {
         "name": "wagon covered",
@@ -9157,10 +7201,7 @@
     },
     {
         "name": "walkie talkie",
-        "class": "fa-walkie-talkie",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-walkie-talkie"
     },
     {
         "name": "walking",
@@ -9168,10 +7209,7 @@
     },
     {
         "name": "wallet",
-        "class": "fa-wallet",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wallet"
     },
     {
         "name": "wand",
@@ -9179,17 +7217,11 @@
     },
     {
         "name": "wand magic",
-        "class": "fa-wand-magic",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wand-magic"
     },
     {
         "name": "warehouse",
-        "class": "fa-warehouse",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-warehouse"
     },
     {
         "name": "warehouse alt",
@@ -9213,10 +7245,7 @@
     },
     {
         "name": "water",
-        "class": "fa-water",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-water"
     },
     {
         "name": "water lower",
@@ -9232,10 +7261,7 @@
     },
     {
         "name": "wave square",
-        "class": "fa-wave-square",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wave-square"
     },
     {
         "name": "wave triangle",
@@ -9263,10 +7289,7 @@
     },
     {
         "name": "weight hanging",
-        "class": "fa-weight-hanging",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-weight-hanging"
     },
     {
         "name": "whale",
@@ -9278,10 +7301,7 @@
     },
     {
         "name": "wheelchair",
-        "class": "fa-wheelchair",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wheelchair"
     },
     {
         "name": "whistle",
@@ -9289,10 +7309,7 @@
     },
     {
         "name": "wifi",
-        "class": "fa-wifi",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wifi"
     },
     {
         "name": "wifi 1",
@@ -9308,10 +7325,7 @@
     },
     {
         "name": "wind",
-        "class": "fa-wind",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wind"
     },
     {
         "name": "wind turbine",
@@ -9343,24 +7357,15 @@
     },
     {
         "name": "window maximize",
-        "class": "fa-window-maximize",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-window-maximize"
     },
     {
         "name": "window minimize",
-        "class": "fa-window-minimize",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-window-minimize"
     },
     {
         "name": "window restore",
-        "class": "fa-window-restore",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-window-restore"
     },
     {
         "name": "windsock",
@@ -9368,17 +7373,11 @@
     },
     {
         "name": "wine bottle",
-        "class": "fa-wine-bottle",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wine-bottle"
     },
     {
         "name": "wine glass",
-        "class": "fa-wine-glass",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wine-glass"
     },
     {
         "name": "wine glass alt",
@@ -9386,10 +7385,7 @@
     },
     {
         "name": "won sign",
-        "class": "fa-won-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-won-sign"
     },
     {
         "name": "wreath",
@@ -9397,30 +7393,18 @@
     },
     {
         "name": "wrench",
-        "class": "fa-wrench",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-wrench"
     },
     {
         "name": "x ray",
-        "class": "fa-x-ray",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-x-ray"
     },
     {
         "name": "yen sign",
-        "class": "fa-yen-sign",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-yen-sign"
     },
     {
         "name": "yin yang",
-        "class": "fa-yin-yang",
-        "free": [
-            "solid"
-        ]
+        "class": "fa-yin-yang"
     }
 ]

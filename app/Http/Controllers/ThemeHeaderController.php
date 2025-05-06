@@ -37,17 +37,15 @@ class ThemeHeaderController extends CrudController
     {
         $user = auth()->user();
 
-        $logoMedia = $this->settingService->getLogoForMediaLibrary();
+        $logoMedia = $this->settingService->getLogoMedia();
 
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
                 'can' => [
                     'media' => [
-                        'add' => $user->can('media.add'),
-                        'browse' => $user->can('media.browse'),
-                        'edit' => $user->can('media.edit'),
                         'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
                     ]
                 ],
                 'headerMenus' => $this->menuService->getHeaderMenus(
@@ -95,35 +93,29 @@ class ThemeHeaderController extends CrudController
     {
         return [
             ...[
-                'add_menu_item' => __('Add :resource', ['resource' => __('Menu item')]),
-                'cancel' => __('Cancel'),
-                'centered_logo' => __('Centered logo'),
-                'create' => __('Create'),
-                'duplicate_menu' => __('Duplicate menu'),
-                'duplicate' => __('Duplicate'),
-                'edit_menu_item' => __('Edit :resource', ['resource' => __('Menu item')]),
-                'header_layout' => __('Header layout'),
                 'layout' => __('Layout'),
-                'logo' => __('Logo'),
-                'menu_items_delete' => __('A nested menu will get deleted.'),
-                'menu_items' => __('Menu items'),
-                'menu' => __('Menu'),
                 'navigation' => __('Navigation'),
-                'nested_menu_error_message' => __('Cannot add more than 2 levels of nested menus.'),
-                'open_link' => __('Open link in a new tab'),
+                'header_layout' => __('Header layout'),
+                'standard' => __('Standard'),
+                'centered_logo' => __('Centered logo'),
+                'standard_with_social_media' => __('Standard with social media'),
+                'logo' => __('Logo'),
                 'open_media_library' => __('Open media library'),
                 'save' => __('Save'),
-                'standard_with_social_media' => __('Standard with social media'),
-                'standard' => __('Standard'),
-                'title' => __('Title'),
+                'menu_items' => __('Menu items'),
+                'add_menu_item' => __('Add :resource', ['resource' => __('Menu item')]),
+                'edit_menu_item' => __('Edit :resource', ['resource' => __('Menu item')]),
+                'duplicate_menu' => __('Duplicate menu'),
                 'to' => __('To'),
+                'title' => __('Title'),
                 'type' => __('Type'),
-                'update' => __('Update'),
                 'url' => __('Url'),
-                'drag_and_drop' => __('Drag and drop'),
-                'tips' => [
-                    'menu_items' => __('This menu will be shown on the navbar, drag and drop to reorganize the menu items.'),
-                ],
+                'menu' => __('Menu'),
+                'open_link' => __('Open link in a new tab'),
+                'cancel' => __('Cancel'),
+                'create' => __('Create'),
+                'update' => __('Update'),
+                'duplicate' => __('Duplicate'),
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

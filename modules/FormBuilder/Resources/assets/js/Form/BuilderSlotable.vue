@@ -2,7 +2,10 @@
     <div class="generated-form-builder">
         <biz-flash-notifications :flash="flash" />
 
-        <biz-error-notifications :errors="errorMessage" />
+        <biz-notifications
+            class="is-danger"
+            :message="errorMessage"
+        />
 
         <form
             :key="formKey"
@@ -26,9 +29,9 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { cloneDeep, pickBy } from 'lodash';
+    import { cloneDeep } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { defineAsyncComponent, ref } from 'vue';
+    import { defineAsyncComponent } from 'vue';
     import { serialize } from 'object-to-formdata';
 
     export default {
@@ -38,8 +41,8 @@
             BizFlashNotifications: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/FlashNotifications.vue')
             ),
-            BizErrorNotifications: defineAsyncComponent(() =>
-                import('./../../../../../../resources/js/Biz/ErrorNotifications.vue')
+            BizNotifications: defineAsyncComponent(() =>
+                import('./../../../../../../resources/js/Biz/Notifications.vue')
             ),
             BizRecaptcha: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/Recaptcha.vue')
@@ -64,12 +67,12 @@
             formStructure: { type: Object, required: true},
         },
 
-        setup(props) {
+        setup(props, { emit }) {
             const resetForm = () => {
-                return ref({
+                return {
                     ...{ 'form_id': props.formId },
                     ...cloneDeep(props.formStructure)
-                });
+                };
             }
 
             return {
@@ -158,12 +161,12 @@
                         this.formKey += 1;
                     })
                     .catch((error) => {
-                        this.formErrors = error.response.data.errors;
-                        this.errorMessage = this.getErrorMessage(error.response.data.errors);
-
                         oopsAlert({
-                            text: this.formErrors?.default[0] ?? null
+                            text: 'There are errors in the form. Please check the fields marked in red for more information.'
                         });
+
+                        this.formErrors = error.response.data.errors;
+                        this.errorMessage = error.response.data.message;
 
                         this.showErrorFields();
                     })
@@ -184,12 +187,6 @@
                         element.classList.add('is-danger');
                     }
                 });
-            },
-
-            getErrorMessage(errors) {
-                return {
-                    form_builder: pickBy(errors, (value, key) => !['default'].includes(key)),
-                };
             },
         },
     };

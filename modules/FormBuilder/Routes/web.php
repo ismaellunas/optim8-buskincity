@@ -28,7 +28,6 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'verified',
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
-    'verifyModule:FormBuilder',
 ])->group(function () {
     Route::get('form-builders/{form_builder}/entries', [FormEntryController::class, 'index'])
         ->name('form-builders.entries.index')
@@ -128,10 +127,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
         });
 });
 
-Route::name('form-builders.')
-    ->prefix('form-builders')
-    ->middleware(['verifyModule:FormBuilder'])
-    ->group(function () {
+Route::name('form-builders.')->prefix('form-builders')->group(function () {
     Route::get('schema', [FormBuilderController::class, 'getSchema'])
         ->name('schema');
 

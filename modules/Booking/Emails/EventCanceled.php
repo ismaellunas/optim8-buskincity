@@ -60,7 +60,7 @@ class EventCanceled extends Mailable
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
                 'template' => Purifier::clean($template, 'email'),
-                'timezone' => $schedule->displayTimezone,
+                'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
                 'message' => $event->message,
             ]);

@@ -1,17 +1,12 @@
 <template>
-    <div
-        class="column"
-        :class="columnClasses"
-    >
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
 
         <div class="box is-shadowless">
-            <template v-if="! hasSubmitted">
-                <p>
-                    {{ i18n.description }}
-                </p>
+            <template v-if="data">
+                <p>Apply to become a performer on BuskinCity. It will allow you to have your page, receive donations, private bookings, and build a bigger audience.</p>
                 <div class="buttons are-small mt-5">
                     <a
                         class="button is-primary"
@@ -20,9 +15,7 @@
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
                         </span>
-                        <span class="has-text-weight-bold">
-                            {{ i18n.button_apply }}
-                        </span>
+                        <span class="has-text-weight-bold">Apply Now</span>
                     </a>
                 </div>
             </template>
@@ -31,20 +24,13 @@
                 v-else
                 class="notification is-info is-light"
             >
-                <p>
-                    {{ i18n.under_review }}
-                </p>
+                <p>Our team is reviewing your application. Usually takes from 3-5 days to get approved. We will contact you by email with our decision. <strong>Have questions or comments?</strong></p>
                 <div class="buttons are-small mt-5">
-                    <biz-button-link
-                        :href="data.pageUrl"
-                        class="is-info"
-                    >
+                    <biz-button-link class="is-info">
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
                         </span>
-                        <span class="has-text-weight-bold">
-                            {{ i18n.button_get_in_touch }}
-                        </span>
+                        <span class="has-text-weight-bold">Get in Touch</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -53,7 +39,6 @@
 </template>
 
 <script>
-    import MixinWidget from '@/Mixins/Widget';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
 
     export default {
@@ -63,19 +48,11 @@
             BizButtonLink,
         },
 
-        mixins: [
-            MixinWidget,
-        ],
-
         props: {
+            columns: { type: [Number, String], default: 6 },
             data: { type: Object, default: null },
+            order: {type: Number, required: true},
             title: { type: String, default: "" },
-        },
-
-        computed: {
-            hasSubmitted() {
-                return this.data.hasSubmitted;
-            },
         },
     };
 </script>

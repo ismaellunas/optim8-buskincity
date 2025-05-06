@@ -11,9 +11,8 @@
         :max-total-file-size="maxTotalFileSize"
         :required="required"
         :drop-validation="true"
-        @addfile="onAddFile"
+        @addfile="$emit('on-add-file')"
         @updatefiles="onUpdateFiles"
-        @removefile="onRemoveFile"
     />
 </template>
 
@@ -22,7 +21,6 @@
     import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
     import vueFilePond from 'vue-filepond';
-    import { filter } from 'lodash';
 
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
     import 'filepond/dist/filepond.min.css';
@@ -52,17 +50,9 @@
         },
 
         emits: [
-            'add-file',
-            'add-files',
-            'update-files',
+            'on-add-file',
+            'on-update-files',
         ],
-
-        data() {
-            return {
-                addedFiles: [],
-                errorFiles: [],
-            };
-        },
 
         methods: {
             addFiles(files) {
@@ -77,40 +67,17 @@
             },
 
             onUpdateFiles(files) {
-                const self = this;
                 let uploadFiles = [];
 
                 files.forEach(function (file) {
                     uploadFiles.push(file.source);
                 });
 
-                self.$emit('update-files', uploadFiles);
-                self.$emit('add-files', self.addedFiles);
-
-                self.addedFiles = [];
+                this.$emit('on-update-files', uploadFiles);
             },
 
             reset() {
                 this.$refs.pond.removeFiles();
-
-                this.errorFiles = [];
-            },
-
-            onAddFile(error, file) {
-                if (! error) {
-                    this.addedFiles.push(file.file)
-                } else {
-                    this.errorFiles.push(file.file)
-                }
-            },
-
-            onRemoveFile(error, file) {
-                this.errorFiles = filter(
-                    this.errorFiles,
-                    function (errorFile) {
-                        return errorFile.name !== file.source.name;
-                    }
-                );
             },
         },
     }

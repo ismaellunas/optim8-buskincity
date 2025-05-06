@@ -2,12 +2,11 @@
 
 namespace Modules\Space\Http\Controllers;
 
-use App\Enums\PublishingStatus;
 use App\Http\Controllers\CrudController;
+use App\Models\Media;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
-use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -23,13 +22,15 @@ class SpaceController extends CrudController
 {
     protected $model = Space::class;
     protected $baseRouteName = 'admin.spaces';
-    protected $title = ":space_term.space";
+    protected $title = "Space";
 
-    public function __construct(
-        private SpaceService $spaceService,
-        private IPService $ipService
-    ) {
+    private $spaceService;
+
+    public function __construct(SpaceService $spaceService)
+    {
         $this->authorizeResource(Space::class, 'space');
+
+        $this->spaceService = $spaceService;
     }
 
     public function index(SpaceIndexRequest $request)
@@ -78,7 +79,6 @@ class SpaceController extends CrudController
             'records' => $records,
             'pageQueryParams' => (object) array_filter($request->only('term', 'parent', 'types')),
             'typeOptions' => $this->spaceService->typeOptions(),
-            'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
                 'select_parent' => __('Select parent'),
@@ -125,9 +125,6 @@ class SpaceController extends CrudController
             );
         }
 
-        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
-        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
-
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
@@ -150,10 +147,8 @@ class SpaceController extends CrudController
             'i18n' => $this->translationCreateEditPage(),
             'can' => [
                 'media' => [
-                    'add' => $user->can('media.add'),
-                    'browse' => $user->can('media.browse'),
-                    'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
                 ],
             ],
             'dimensions' => [
@@ -180,7 +175,7 @@ class SpaceController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => $this->title()
+            'resource' => __($this->title)
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
@@ -240,20 +235,13 @@ class SpaceController extends CrudController
 
         $coverMedia = $space->cover;
         if ($coverMedia) {
-            $coverMedia->transformMediaLibrary();
+            $this->transformMedia($coverMedia);
         }
 
         $logoMedia = $space->logo;
         if ($logoMedia) {
-            $logoMedia->transformMediaLibrary();
+            $this->transformMedia($logoMedia);
         }
-
-        Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
-        Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
-        Inertia::share('timezone', function () {
-            $timezone = $this->ipService->getTimezone();
-            return ($timezone == 'ETC/UTC') ? 'UTC' : $timezone;
-        });
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => $this->getEditTitle(),
@@ -275,15 +263,12 @@ class SpaceController extends CrudController
                 'update' => $user->can('update', $space),
                 'changeParent' => $canChangeParent,
                 'media' => [
-                    'add' => $user->can('media.add'),
-                    'browse' => $user->can('media.browse'),
-                    'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
                 ],
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),
-            'eventStatusOptions' => PublishingStatus::options(),
             'maxLength' => array_merge(
                 [
                     'meta_title' => config('constants.max_length.meta_title'),
@@ -324,7 +309,7 @@ class SpaceController extends CrudController
         $space->saveFromInputs($inputs);
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title()
+            'resource' => __($this->title)
         ]);
 
         return back();
@@ -335,7 +320,7 @@ class SpaceController extends CrudController
         $space->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => $this->title()
+            'resource' => __($this->title)
         ]);
 
         return redirect()->route($this->baseRouteName.'.index');
@@ -367,11 +352,16 @@ class SpaceController extends CrudController
         return app(MenuService::class)->isModelUsedByMenu($space, $locale);
     }
 
+    private function transformMedia(Media $media): void
+    {
+        $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
+    }
+
     private function translationCreateEditPage(): array
     {
         return [
             ...[
-                'space' => __(':Space_term.space'),
+                'space' => __('Space'),
                 'event' => __('Event'),
                 'manager' => __('Manager'),
                 'page' => __('Page'),
@@ -414,13 +404,8 @@ class SpaceController extends CrudController
                 'meta_title' => __('Meta title'),
                 'meta_description' => __('Meta description'),
                 'page_preview' => __('Page preview'),
+                'remove_page_confirmation' => __('This action will also remove the page on the navigation menu.'),
                 'yes' => __('Yes'),
-                'timezone' => __('Timezone'),
-                'is_same_address_as_parent' => __("Is it the same address as the parent?"),
-                'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
-                'tips' => [
-                    'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
-                ]
             ],
             ...MediaService::defaultMediaLibraryTranslations(),
         ];

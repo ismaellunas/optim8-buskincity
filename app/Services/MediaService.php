@@ -92,14 +92,6 @@ class MediaService
                 'translations' => function ($q) {
                     $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
-                'mediable' => function ($q) {
-                    $q->select([
-                        'id',
-                        'media_id',
-                        'mediable_id',
-                        'mediable_type',
-                    ]);
-                },
             ])
             ->default();
 
@@ -133,12 +125,10 @@ class MediaService
         $record->readable_size = $record->readableSize;
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
         $record->display_file_name = $record->displayFileName;
-        $record->can_edit_existing_media = auth()->user()->can('update', $record);
+        $record->canDeleted = $record->canDeleted;
         $record->optimize_file_url = $record->optimizedImageUrl != ''
             ? $record->optimizedImageUrl
             : $record->file_url;
-
-        $record->append('is_in_use');
 
         return $record;
     }
@@ -601,16 +591,11 @@ class MediaService
             'size' => __('Size'),
             'actions' => __('Actions'),
             'save' => __('Save'),
-            'save_as_new' => __('Save as new'),
             'cancel' => __('Cancel'),
             'done' => __('Done'),
             'delete' => __('Delete'),
             'edit_image' => __('Edit :resource', ['resource' => __('Image')]),
             'are_you_sure' => __('Are you sure?'),
-            'yes' => __('Yes'),
-            'edit_resource' => __('Edit :resource', ['resource' => __('Media')]),
-            'warning_edit_resource' => __('This resource is still being used in another place. If you :action this resource, it may have an effect on that other place.', ['action' => 'edit']),
-            'update_media_success' => __('The :resource was updated!', ['resource' => __('Media')]),
         ];
     }
 }

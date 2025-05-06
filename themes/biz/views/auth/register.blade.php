@@ -11,7 +11,7 @@
                         @endif
                     >
                         <span class="icon-text">
-                            <x-icon icon-key="back" />
+                            <x-icon icon="fa-arrow-left" />
 
                             <span>{{ __('Back') }}</span>
                         </span>
@@ -171,10 +171,10 @@
                                     </div>
                                     <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                         <button type="button" class="button" tabindex="-1">
-                                            <x-icon icon-key="eye" />
+                                            <x-icon icon="fa-eye" />
                                         </button>
                                         <button type="button" class="button is-hidden" tabindex="-1">
-                                            <x-icon icon-key="eyeSlash" />
+                                            <x-icon icon="fa-eye-slash" />
                                         </button>
                                     </div>
                                 </div>

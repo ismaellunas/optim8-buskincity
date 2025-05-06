@@ -6,7 +6,6 @@ use App\Http\Controllers\CrudController;
 use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Events\EventRescheduled;
@@ -25,7 +24,7 @@ class OrderController extends CrudController
     private $productEventService;
     private $eventService;
 
-    protected $title = ":booking_term.booking";
+    protected $title = "Booking";
     protected $baseRouteName = "admin.booking.orders";
 
     public function __construct(
@@ -122,7 +121,7 @@ class OrderController extends CrudController
                     'title' => $productName,
                 ],
             ],
-            'title' => $this->title().': '.Arr::get($orderRecord, 'product.name'),
+            'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
             'checkInTime' => $checkIn
                 ? $checkIn
@@ -157,10 +156,8 @@ class OrderController extends CrudController
 
         $product = app(ProductService::class)->formResource($product);
 
-        $title = Str::title(__('Reschedule event'));
-
         return Inertia::render('Booking::OrderReschedule', $this->getData([
-            'title' => $title,
+            'title' => __('Reschedule Event'),
             'breadcrumbs' => [
                 [
                     'title' => $this->getIndexTitle(),
@@ -171,7 +168,7 @@ class OrderController extends CrudController
                     'url' => route($this->baseRouteName.'.show', $order->id),
                 ],
                 [
-                    'title' => $title,
+                    'title' => __('Reschedule Event'),
                 ],
             ],
             'order' => $this->orderService->getRecord($order),
@@ -202,7 +199,7 @@ class OrderController extends CrudController
 
         EventRescheduled::dispatch($order);
 
-        $this->generateFlashMessage('The event has been rescheduled!');
+        $this->generateFlashMessage('The Event has been rescheduled!');
 
         return redirect()->route($this->baseRouteName.'.show', [$order->id]);
     }

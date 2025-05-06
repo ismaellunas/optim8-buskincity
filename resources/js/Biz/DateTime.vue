@@ -4,12 +4,11 @@
         v-model="dateValue"
         auto-apply
         keep-action-row
-        select-text="Select"
+        select-text="Close"
         :cancel-text="null"
         :close-on-auto-apply="false"
         :flow="['calendar', 'time']"
         :month-change-on-scroll="false"
-        :action-row="{showCancel: false}"
     />
 </template>
 

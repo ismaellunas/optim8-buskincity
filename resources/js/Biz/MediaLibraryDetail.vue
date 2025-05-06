@@ -73,42 +73,33 @@
             :dimension="injectMediaDimension"
             @close="closeModal"
         >
-            <template #leftActions>
-                <div class="buttons">
+            <template #actions="slotProps">
+                <template v-if="computedMedia.id">
                     <biz-button
                         type="button"
-                        class="component-configurable"
+                        :class="{'is-loading': isUploading, 'is-link': true}"
+                        :disabled="isProcessing"
+                        @click="updateImage"
+                    >
+                        {{ i18n.save }}
+                    </biz-button>
+                    <biz-button
+                        type="button"
+                        :class="{'is-loading': isUploading, 'is-primary': true}"
+                        :disabled="isProcessing"
+                        @click="saveAsImageConfirm"
+                    >
+                        {{ i18n.save_as_new }}
+                    </biz-button>
+                    <biz-button
+                        type="button"
+                        class="is-link is-light"
                         :disabled="isProcessing"
                         @click="closeModal"
                     >
                         {{ i18n.cancel }}
                     </biz-button>
-                </div>
-            </template>
-
-            <template #actions="slotProps">
-                <div
-                    v-if="computedMedia.id"
-                    class="buttons is-right"
-                >
-                    <biz-button
-                        type="button"
-                        :class="{'is-loading': isUploading, 'is-primary': true}"
-                        :disabled="isProcessing"
-                        @click="updateImage()"
-                    >
-                        {{ i18n.save }}
-                    </biz-button>
-                    <biz-button
-                        v-if="isSaveAsNewEnabled"
-                        type="button"
-                        :class="{'is-loading': isUploading, 'is-link': true}"
-                        :disabled="isProcessing"
-                        @click="saveAsImageConfirm()"
-                    >
-                        {{ i18n.save_as_new }}
-                    </biz-button>
-                </div>
+                </template>
 
                 <template v-else>
                     <biz-button
@@ -132,12 +123,11 @@
     import BizImage from '@/Biz/Image.vue';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
     import MediaForm from '@/Pages/Media/Form.vue';
-    import icon from '@/Libs/icon-class';
-    import { confirm as confirmAlert, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { getBlob, getCanvas } from '@/Libs/crop-helper';
-    import { startsWith } from 'lodash';
+    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { useForm } from '@inertiajs/vue3';
-    import { useModelWrapper, emitter } from '@/Libs/utils';
+    import { startsWith } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizMediaLibraryDetail',
@@ -175,14 +165,12 @@
             baseRouteName: {type: String, default: 'admin.media'},
             isAjax: {type: Boolean, default: false},
             isProcessing: {type: Boolean, default: false},
-            isSaveAsNewEnabled: { type: Boolean, default: true },
             media: { type: Object, required: true },
         },
 
         emits: [
             'on-close-edit-modal',
             'on-delete-edit',
-            'on-update-media',
         ],
 
         setup(props, {emit}) {
@@ -194,6 +182,7 @@
         data() {
             return {
                 cropper: null,
+                croppedImageType: "image/png",
                 isUploading: false,
                 icon,
             };
@@ -204,17 +193,6 @@
                 return this.computedMedia?.file_url
                     ?? this.computedMedia?.file
                     ?? '';
-            },
-            croppedImageType() {
-                let imageType = null;
-
-                if (this.media?.file?.type) {
-                    imageType = this.media.file.type;
-                } else if (this.media?.extension) {
-                    imageType = 'image/' + this.media.extension;
-                }
-
-                return imageType == 'image/png' ? imageType : 'image/jpeg';
             },
         },
 
@@ -248,7 +226,7 @@
                 return this.icon.file;
             },
 
-            async updateImage() {
+            updateImage() {
                 const self = this;
                 const media = this.computedMedia;
                 const url = route(this.baseRouteName+'.update-image', media.id);
@@ -256,120 +234,106 @@
 
                 self.isUploading = true;
 
-                cropper.disable();
+                self.getCropperBlob().then((blob) => {
+                    cropper.disable();
 
-                const form = useForm({
-                    image: await getBlob(cropper, this.croppedImageType),
-                    file_name: media.file_name,
-                });
+                    const form = useForm({
+                        image: blob,
+                        file_name: media.file_name,
+                    });
 
-                form.post(url, {
-                    preserveState: true,
-                    preserveScroll: true,
-                    onStart: () => self.onStartLoadingOverlay(),
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-
-                        if (page.props.records) {
+                    form.post(url, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onSuccess: (page) => {
                             const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
 
                             self.computedMedia.file_url = updatedMedia.file_url;
-                        } else {
-                            self.computedMedia.file_url = getCanvas(cropper, 600)
-                                .toDataURL(this.croppedImageType, 0.8);
-                        }
-
-                        self.$emit('on-update-media', self.computedMedia);
-
-                        self.closeModal();
-                    },
-                    onError: (errors) => {
-                        oopsAlert();
-
-                        if (self.$page.props.debug) {
-                            console.log(errors);
-                        }
-                    },
-                    onFinish: () => {
-                        cropper.enable();
-
-                        self.isUploading = false;
-                        self.onEndLoadingOverlay();
-                    },
+                            self.closeModal();
+                        },
+                        onError: (errors) => {
+                            if (self.$page.props.debug) {
+                                console.log(error);
+                            }
+                        },
+                        onFinish: () => {
+                            if (cropper) {
+                                cropper.enable();
+                            }
+                            self.isUploading = false;
+                            self.onEndLoadingOverlay();
+                        },
+                    });
                 });
             },
 
-            saveAsImageConfirm(cropper) {
-                confirmAlert(
-                    "Are you sure?",
-                    "You will create a new image",
-                    "Yes",
-                    {
-                        customClass: {
-                            container: 'high-z-index',
-                            confirmButton: 'component-configurable',
-                            cancelButton: 'component-configurable',
-                        }
-                    }
-                )
-                    .then((result) => result.isConfirmed ? this.saveAsImage(cropper) : false);
+            saveAsImageConfirm() {
+                confirmAlert("Are you sure?", "You will create a new image")
+                    .then((result) => result.isConfirmed ? this.saveAsImage() : false);
             },
 
-            async saveAsImage() {
+            saveAsImage() {
                 const self = this;
                 const media = this.computedMedia;
                 const url = route(this.baseRouteName+'.save-as-image', media.id);
-                const cropper = this.cropper;
 
                 self.isUploading = true;
 
-                cropper.disable();
+                self.getCropperBlob().then((blob) => {
 
-                const form = useForm({
-                    image: await getBlob(cropper, this.croppedImageType),
-                    filename: media.file_name,
-                });
+                    self.cropper.disable();
 
-                form.post(url, {
-                    preserveState: true,
-                    preserveScroll: true,
-                    onStart: () => self.onStartLoadingOverlay(),
-                    onSuccess: (page) => {
-                        self.closeModal();
+                    const form = useForm({
+                        image: blob,
+                        filename: media.file_name,
+                    });
 
-                        successAlert(page.props.flash.message);
+                    form.post(url, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onSuccess: (page) => {
+                            self.closeModal();
+                            successAlert(page.props.flash.message);
 
-                        emitter.emit('on-save-as-image');
-                    },
-                    onError: (errors) => {
-                        oopsAlert();
-
-                        if (self.$page.props.debug) {
-                            console.error(error);
-                        }
-                    },
-                    onFinish: () => {
-                        cropper.enable();
-
-                        self.isUploading = false;
-                        self.onEndLoadingOverlay();
-                    },
+                            self.$emit('on-close-edit-modal');
+                        },
+                        onError: (errors) => {
+                            if (self.$page.props.debug) {
+                                console.log(error);
+                            }
+                        },
+                        onFinish: () => {
+                            if (self.cropper) {
+                                self.cropper.enable();
+                            }
+                            self.isUploading = false;
+                            self.onEndLoadingOverlay();
+                        },
+                    });
                 });
             },
 
-            async updateFile(setFile) {
-                this.computedMedia.file = await getBlob(
-                    this.cropper,
+            updateFile() {
+                const self = this;
+
+                self.getCropperBlob()
+                    .then((blob) => {
+                        self.computedMedia.file_url = URL.createObjectURL(blob);
+                        self.computedMedia.file = blob;
+                        self.computedMedia.is_image = true;
+                        self.closeModal();
+                    });
+            },
+
+            /* @return Promise */
+            getCropperBlob() {
+                return getCanvasBlob(
+                    this.cropper.getCroppedCanvas(),
                     this.croppedImageType
                 );
-
-                this.computedMedia.file_url = getCanvas(this.cropper, 600)
-                    .toDataURL('image/jpeg', 0.8);
-
-                this.computedMedia.is_image = true;
-
-                this.closeModal();
             },
         },
-    };
+    }
 </script>

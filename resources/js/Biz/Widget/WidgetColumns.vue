@@ -5,10 +5,27 @@
             :key="order"
         >
             <component
-                :is="asyncComponents[ widget.component ?? widget.componentModule ]"
+                :is="widget.componentName"
                 class="mb-5"
-                :columns="widget.grid"
+                :columns="widget.columns"
                 :data="widget.data"
+                :order="order"
+                :title="widget.title"
+            />
+        </template>
+    </div>
+
+    <div class="columns is-multiline is-mobile">
+        <template
+            v-for="(widget, order) in moduleWidgets"
+            :key="order"
+        >
+            <component
+                :is="asyncComponents[ widget.componentName ]"
+                class="mb-5"
+                :columns="widget.columns"
+                :data="widget.data"
+                :order="order"
                 :title="widget.title"
             />
         </template>
@@ -16,29 +33,41 @@
 </template>
 
 <script>
-    import { defineAsyncComponent, computed } from 'vue';
+    import PerformerApplicationLink from '@/Biz/Widget/PerformerApplicationLink.vue';
+    import QrCode from '@/Biz/Widget/QrCode.vue';
+    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare.vue';
+    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike.vue';
+    import StripeConnect from '@/Biz/Widget/StripeConnect.vue';
+    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents.vue';
+    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer.vue';
+    import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'BizWidgetColumns',
 
+        components: {
+            PerformerApplicationLink,
+            QrCode,
+            SocialMediaShare,
+            StreetPerformersYouMightLike,
+            StripeConnect,
+            UpcomingEvents,
+            WantToBecomeAStreetPerformer,
+        },
+
         props: {
             widgets: { type: Array, default:() => [] },
+            moduleWidgets: { type: Array, default:() => [] },
         },
 
         setup(props) {
+
             const asyncComponents = {};
-            const widgets = computed(() => props.widgets);
 
-            widgets.value.forEach((widget) => {
-                if (widget.module == 'Booking' && widget.componentModule) {
-                    asyncComponents[widget.componentModule] = defineAsyncComponent(() => import(
-                        `../../../../modules/Booking/Resources/assets/js/Widgets/${widget.componentModule}.vue`)
-                    );
-                }
-
-                if (! widget.componentModule) {
-                    asyncComponents[widget.component] = defineAsyncComponent(() => import(
-                        `../Widget/${widget.component}.vue`)
+            props.moduleWidgets.forEach((widget) => {
+                if (widget.moduleName == 'Booking') {
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import(
+                        `../../../../modules/Booking/Resources/assets/js/Widgets/${widget.componentName}.vue`)
                     );
                 }
             });

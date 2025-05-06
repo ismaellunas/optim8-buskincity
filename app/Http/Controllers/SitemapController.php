@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\SitemapService;
 use App\Services\TranslationService;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class SitemapController extends Controller
 {
@@ -28,16 +27,11 @@ class SitemapController extends Controller
 
     public function urls(string $sitemapName)
     {
-        try {
-            $sitemap = $this->sitemapService->sitemap($sitemapName, $this->locale);
+        $sitemap = $this->sitemapService->sitemap($sitemapName, $this->locale);
 
-            return $this->responseXML('urls', [
-                'urls' => $sitemap->urls($this->locale)
-            ]);
-
-        } catch (FileNotFoundException $e) {
-            return abort(404);
-        }
+        return $this->responseXML('urls', [
+            'urls' => $sitemap->urls($this->locale)
+        ]);
     }
 
     public function sitemaps()

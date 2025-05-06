@@ -2,22 +2,17 @@
 
 namespace App\Services;
 
-use App\Contracts\HasModulePageBuilderComponentInterface;
 use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageTranslation;
-use App\Services\SettingService;
-use App\Traits\HasCache;
+use App\Services\{
+    SettingService,
+};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Modules\Booking\Services\EventsCalendarService;
 
 class PageService
 {
-    use HasCache;
-
     public function getRecords(
         string $term = null,
         int $perPage = 15
@@ -41,7 +36,7 @@ class PageService
 
     private static function getModuleEntityClassName(string $componentName): ?string
     {
-        foreach (app(ModuleService::class)->getEnabledNames() as $moduleName) {
+        foreach (app(ModuleService::class)->getAllEnabledNames() as $moduleName) {
             $className = '\\Modules\\'.$moduleName.'\\Entities\\PageBuilderComponents\\' . $componentName;
 
             if (class_exists($className)) {
@@ -225,107 +220,5 @@ class PageService
             ->values()
             ->all()
         ];
-    }
-
-    public function getModulePageBuilderComponents(): Collection
-    {
-        return collect()->push(
-            [
-                'name' => 'EventsCalendar',
-                'filename' => "events-calendar",
-                'is_enabled' => app(EventsCalendarService::class)->isEnabled(),
-            ],
-        );
-    }
-
-    private function getModuleComponents(Collection|array $moduleServices): Collection
-    {
-        $components = collect();
-
-        foreach ($moduleServices as $moduleServiceClass) {
-            if ($moduleServiceClass instanceof HasModulePageBuilderComponentInterface) {
-                $builderComponents = $moduleServiceClass->getModulePageBuilderComponents();
-
-                if ($builderComponents) {
-                    $components = $components->merge($builderComponents);
-                }
-            }
-        }
-
-        return $components;
-    }
-
-    private function getDisabledComponentNames(): Collection
-    {
-        return $this->staticRemember('disabled_component_names', function () {
-            $moduleService = app(ModuleService::class);
-
-            $moduleServiceClasses = $moduleService->getServiceClasses(
-                $moduleService->disabledModules()
-            );
-
-            return $this
-                ->getModuleComponents($moduleServiceClasses)
-                ->merge(
-                    $this
-                        ->getModulePageBuilderComponents()
-                        ->filter(fn ($moduleComponent) => !Arr::get($moduleComponent, 'is_enabled'))
-                )
-                ->pluck('name');
-        });
-    }
-
-    private function removeComponentsInStructures(
-        array &$structures,
-        Collection $componentIds
-    ) {
-        foreach ($structures as &$columns) {
-            foreach ($columns['columns'] as &$column) {
-                $column['components'] = collect($column['components'])
-                    ->filter(fn ($component) => $componentIds->doesntContain($component['id']))
-                    ->all();
-            }
-        }
-    }
-
-    public function getEnabledModuleComponents(): Collection
-    {
-        $components = $this->getModuleComponents(
-            app(ModuleService::class)->getEnabledModuleServiceClasses()
-        );
-
-        $components = $components->merge(
-            $this->getModulePageBuilderComponents()
-                ->filter(fn ($builderComponent) => Arr::get($builderComponent, 'is_enabled', false))
-                ->all(),
-        ) ;
-
-        return $components;
-    }
-
-    public function sanitizeTranslationFromDisabledComponents(PageTranslation &$pageTranslation): Collection
-    {
-        $data = $pageTranslation->data->toArray();
-
-        $entities = collect($data['entities']);
-
-        $disabledComponentNames = $this->getDisabledComponentNames();
-
-        $disabledEntityIds = $entities
-            ->filter(fn ($entity) => $disabledComponentNames->contains(Arr::get($entity, 'componentName')))
-            ->pluck('id');
-
-        $data['entities'] = $entities
-            ->filter(fn ($entity, $id) => $disabledEntityIds->doesntContain($id))
-            ->all();
-
-        $this->removeComponentsInStructures(
-            $data['structures'],
-            $disabledEntityIds
-        );
-
-        $pageTranslation->data = collect($data);
-
-        return $disabledEntityIds;
     }
 }

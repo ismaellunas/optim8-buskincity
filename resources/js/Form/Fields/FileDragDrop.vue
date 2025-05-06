@@ -10,13 +10,12 @@
             :max-files="schema.max_file_number"
             :max-file-size="schema.max_file_size"
             :media="schema.media"
-            :is-filename-shown="false"
             :message="error(schema.name + '.files', bagName, errors)"
             :placeholder="schema.placeholder"
             :readonly="schema.is_readonly"
             :required="schema.is_required"
-            :dimension="schema.dimension"
-            @add-files="onAddFiles"
+            @on-update-files="onUpdateFiles"
+            @on-add-file="onAddFile()"
         >
             <template #default>
                 <biz-button-icon
@@ -68,7 +67,7 @@
                         :key="index"
                     >
                         <div
-                            v-if="isValidImage(file)"
+                            v-if="isImage(file)"
                             class="column"
                             :class="cardImageClasses"
                         >
@@ -90,7 +89,7 @@
                             <div class="buttons is-pulled-right">
                                 <biz-button
                                     type="button"
-                                    class="is-primary"
+                                    class="is-link"
                                     @click="saveEditedFiles()"
                                 >
                                     Save
@@ -112,11 +111,10 @@
 
         <template v-else>
             <biz-file-drag-drop-modal-image-editor
-                v-if="isModalOpen && isImageEditorEnabled && isValidImage(computedValue.files[0])"
+                v-if="isModalOpen"
                 v-model:medium="computedValue.files[0]"
                 :dimension="schema.dimension"
-                @on-update="saveEditedFiles()"
-                @on-close="cancelEditedFiles()"
+                @on-close="saveEditedFiles()"
             />
         </template>
     </div>
@@ -133,7 +131,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import FormFileUpload from '@/Biz/Form/FileUpload.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { cloneDeep, map, find } from 'lodash';
+    import { cloneDeep, map } from 'lodash';
     import { edit as editIcon } from '@/Libs/icon-class';
 
     export default {
@@ -182,9 +180,10 @@
         data() {
             return {
                 editIcon,
+                hasImage: false,
                 isModalPreviewOpen: false,
+                isMultipleUpload: false,
                 previewImageSrc: null,
-                isSaveEditedFile: false,
             };
         },
 
@@ -192,25 +191,6 @@
             notes() {
                 return this.schema.instructions
                     .concat(this.schema.notes);
-            },
-
-            hasImage() {
-                let hasImage = false;
-
-                this.computedValue.files.forEach((file) => {
-                    if (this.isImage(file)) {
-                        hasImage = true;
-                    }
-                });
-
-                return hasImage;
-            },
-
-            isMultipleUpload() {
-                return (
-                    this.schema.max_file_number > 1
-                    && this.computedValue.files.length > 1
-                );
             },
 
             isImageEditorEnabled() {
@@ -233,29 +213,53 @@
                     .$refs.file_upload.reset();
             },
 
-            isImage(file) {
-                return file.type.startsWith("image") ?? false;
+            onAddFile() {
+                if (this.checkValueHasImage()) {
+                    this.openModal();
+                }
             },
 
-            isValidImage(file) {
-                const errorFiles = this.$refs.file_upload
-                    .$refs.file_upload.errorFiles;
+            checkValueHasImage() {
+                const self = this;
 
-                return (
-                    this.isImage(file)
-                    && typeof find(errorFiles, { name: file.name }) === 'undefined'
+                self.hasImage = false;
+
+                self.computedValue.files.forEach(function (file) {
+                    if (file.type.startsWith("image")) {
+                        self.hasImage = true;
+                    }
+                });
+
+                return self.hasImage;
+            },
+
+            checkValueIsMultipleUpload() {
+                this.isMultipleUpload = (
+                    this.schema.max_file_number > 1
+                    && this.computedValue.files.length > 1
                 );
             },
 
+            isImage(file) {
+                return file.type.startsWith("image");
+            },
+
+            onUpdateFiles() {
+                this.checkValueHasImage();
+                this.checkValueIsMultipleUpload();
+            },
+
             saveEditedFiles() {
-                let newFiles = cloneDeep(this.computedValue.files);
+                const newFiles = cloneDeep(this.computedValue.files);
 
                 this.reset();
 
                 this.$refs.file_upload
                     .$refs.file_upload.addFiles(newFiles);
 
-                this.isSaveEditedFile = true;
+                setTimeout(() => {
+                    this.closeModal();
+                }, 200);
             },
 
             cancelEditedFiles() {
@@ -265,24 +269,6 @@
                 this.computedValue.files = map(files, 'file');
 
                 this.closeModal();
-            },
-
-            onAddFiles(addedFiles) {
-                if (addedFiles.length > 0) {
-                    if (! this.isSaveEditedFile) {
-                        addedFiles.forEach((file) => {
-                            if (this.isImage(file)) {
-                                this.openModal();
-
-                                return;
-                            }
-                        });
-                    } else {
-                        this.closeModal();
-
-                        this.isSaveEditedFile = false;
-                    }
-                }
             },
         },
     };

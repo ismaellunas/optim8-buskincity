@@ -337,7 +337,7 @@ class FormSeeder extends Seeder
                             ],
                             "visibility" => [],
                             "translated" => false,
-                            "left_icon" => 'fa-brands fa-x-twitter',
+                            "left_icon" => 'fa-brands fa-twitter',
                         ],
                         [
                             "type" => "Text",
@@ -452,9 +452,9 @@ class FormSeeder extends Seeder
                             "max_file_number" => 1,
                             "min_file_number" => 0,
                             "is_multiple_upload" => false,
-                            "media_dimension" => [
-                                "width" => config('constants.dimensions.cover.width'),
-                                "height" => config('constants.dimensions.cover.height'),
+                            "image_dimensions" => [
+                                "width" => null,
+                                "height" => null,
                             ],
                             "validation" => [
                                 "rules" => [
@@ -465,7 +465,6 @@ class FormSeeder extends Seeder
                             ],
                             "visibility" => [],
                             "translated" => false,
-                            "is_image_editor_enabled" => true,
                         ],
                         [
                             "type" => "FileDragDrop",
@@ -473,17 +472,15 @@ class FormSeeder extends Seeder
                             "label" => "Gallery",
                             "file_label" => "Choose an image",
                             "placeholder" => "Drop files here...",
-                            "notes" => [
-                                'Recommended dimension: ' . config('constants.recomended_dimensions.gallery') . '.',
-                            ],
+                            "notes" => [],
                             "readonly" => false,
                             "disabled" => false,
                             "max_file_number" => 5,
                             "min_file_number" => 0,
                             "is_multiple_upload" => true,
-                            "media_dimension" => [
-                                "width" => config('constants.dimensions.gallery.width'),
-                                "height" => config('constants.dimensions.gallery.height'),
+                            "image_dimensions" => [
+                                "width" => null,
+                                "height" => null,
                             ],
                             "validation" => [
                                 "rules" => [
@@ -496,7 +493,6 @@ class FormSeeder extends Seeder
                                 "roles" => ["Performer"]
                             ],
                             "translated" => false,
-                            "is_image_editor_enabled" => true,
                         ],
                     ]
                 ]

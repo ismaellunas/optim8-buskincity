@@ -103,6 +103,12 @@
             };
         },
 
+        data() {
+            return {
+                selectedCountryCode: this.defaultCountry,
+            };
+        },
+
         computed: {
             isError() {
                 return !isEmpty(this.message);

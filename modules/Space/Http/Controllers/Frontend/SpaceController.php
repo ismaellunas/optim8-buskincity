@@ -46,6 +46,7 @@ class SpaceController extends Controller
     public function index()
     {
         return view('spaces', [
+            'defaultLogoUrl' => ModuleService::defaultLogoUrl(),
             'metaDescription' => __("Spaces"),
             'metaTitle' => __("Spaces"),
             'spaces' => app(SpaceService::class)->getTopParents(),
@@ -102,48 +103,33 @@ class SpaceController extends Controller
 
     private function showGuest(PageTranslation $pageTranslation)
     {
-        $locale = $this->locale;
-        $page = $this->page;
+        $slug = $pageTranslation->slug;
 
-        if (
-            ! $page->hasTranslation($locale)
-            || ! $page->translate($locale)->isPublished
-        ) {
-            return $this->goToPageWithDefaultLocaleOrFallback($page);
+        if ($pageTranslation->locale != $this->locale) {
+            $pageTranslation = $this->page->translate($this->locale, true);
         }
 
-        return $this->redirectOrShowPage($pageTranslation);
-    }
-
-    private function goToPageWithDefaultLocaleOrFallback(Page $page)
-    {
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-
         if (
-            $page->hasTranslation($defaultLocale)
-            && $page->translate($defaultLocale)->isPublished
+            $pageTranslation
+            && !$pageTranslation->isDraft
         ) {
-
-            return $this->showPage($page->translate($defaultLocale));
-
+            return $this->redirectOrShowPage($pageTranslation, $slug);
         }
 
         throw new PageNotFoundException();
     }
 
-    private function redirectOrShowPage(PageTranslation $pageTranslation)
-    {
-        $locale = $this->locale;
-        $oldSlug = $pageTranslation->slug;
-        $page = $this->page;
-
-        if ($page->translate($locale)->slug !== $oldSlug) {
-            return redirect()->route('frontend.spaces.show', [
-                $page->translate($locale)->slug
-            ]);
+    private function redirectOrShowPage(
+        PageTranslation $pageTranslation,
+        string $oldSlug
+    ) {
+        if ($pageTranslation->slug === $oldSlug) {
+            return $this->showPage($pageTranslation);
         }
 
-        return $this->showPage($pageTranslation);
+        return redirect()->route('frontend.spaces.show', [
+            $pageTranslation->slug
+        ]);
     }
 
     private function showPage(PageTranslation $pageTranslation)

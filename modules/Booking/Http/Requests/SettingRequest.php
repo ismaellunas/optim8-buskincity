@@ -2,9 +2,7 @@
 
 namespace Modules\Booking\Http\Requests;
 
-use App\Services\UserService;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class SettingRequest extends FormRequest
 {
@@ -18,11 +16,6 @@ class SettingRequest extends FormRequest
         $emailRules = [
             'max:5000',
         ];
-
-        $roleIds = app(UserService::class)
-            ->getRoleOptions()
-            ->pluck('id')
-            ->all();
 
         return [
             'email_new_booking' => $emailRules,
@@ -43,17 +36,6 @@ class SettingRequest extends FormRequest
             'check_in_radius.unit' => [
                 'required',
                 'in:m,km',
-            ],
-            'access_common_user' => [
-                'boolean',
-            ],
-            'access_roles' => [
-                'array',
-                'nullable',
-            ],
-            'access_roles.*' => [
-                'numeric',
-                Rule::in($roleIds),
             ],
         ];
     }

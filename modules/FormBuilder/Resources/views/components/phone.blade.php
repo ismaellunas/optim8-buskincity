@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="control">
                                     <a
-                                        class="button"
+                                        class="button is-small"
                                         @click.prevent="handlers.clearTermOrClose"
                                     >
                                         <x-icon icon="fa-times" is-small />

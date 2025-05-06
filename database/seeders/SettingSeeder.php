@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -230,8 +229,6 @@ class SettingSeeder extends Seeder
         $this->populateRecaptchaScoreSetting();
 
         $this->populateCookieConsentSetting();
-
-        $this->populatePublicPageProfileSetting();
     }
 
     private function createSetting($data)
@@ -319,7 +316,6 @@ class SettingSeeder extends Seeder
                 "value" => json_encode([
                     'google',
                     'facebook',
-                    'twitter',
                 ]),
                 "group" => "socialite",
                 "order" => "1",
@@ -403,38 +399,6 @@ class SettingSeeder extends Seeder
                 "value" => null,
                 "group" => "cookie_consent",
                 "order" => 4,
-            ],
-        ];
-
-        foreach ($settings as $setting) {
-            $this->createSetting($setting);
-        }
-    }
-
-    private function populatePublicPageProfileSetting(): void
-    {
-        $role = Role::where('name', config('permission.role_names.performer'))
-            ->first();
-
-        $settings = [
-            [
-                "key" => "public_page_profile_slug_type",
-                "display_name" => null,
-                "value" => 'custom_field',
-                "group" => "settings.public_page_profile_url",
-                "order" => 1,
-            ],
-            [
-                "key" => "public_page_profile_slug_custom_field",
-                "display_name" => null,
-                "value" => json_encode([
-                    [
-                        'role_id' => $role->id ?? null,
-                        'field' => 'stage_name',
-                    ]
-                ]),
-                "group" => "settings.public_page_profile_url",
-                "order" => 1,
             ],
         ];
 

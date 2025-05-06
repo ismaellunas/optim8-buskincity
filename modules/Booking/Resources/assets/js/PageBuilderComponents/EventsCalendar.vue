@@ -2,13 +2,6 @@
     <div class="events-calendar">
         <div class="columns is-multiline is-mobile">
             <div class="column is-6-desktop is-6-tablet is-12-mobile">
-                <div
-                    ref="mapDiv"
-                    :style="screenMapStyle"
-                />
-            </div>
-
-            <div class="column is-6-desktop is-6-tablet is-12-mobile">
                 <div class="columns is-multiline is-mobile">
                     <div class="column is-6-desktop is-12-tablet is-12-mobile">
                         <div class="control has-icons-left">
@@ -58,12 +51,121 @@
                     </div>
                 </div>
 
-                <events-calendar-item
+                <div
                     v-for="record in events.data"
                     :key="record.id"
-                    :record="record"
-                    :screen-type="screenType"
-                />
+                    class="box pb-1 mb-2"
+                >
+                    <div class="columns is-mobile is-multiline">
+                        <div class="column is-4-desktop is-12-tablet is-12-mobile">
+                            <div class="columns is-mobile is-multiline level">
+                                <div class="column is-12-desktop is-6-tablet is-6-mobile level-left">
+                                    <div>
+                                        <figure class="image is-128x128 level-item">
+                                            <img
+                                                :data-src="record.user?.profile_photo_url ?? userImage"
+                                                width="128"
+                                                height="128"
+                                                class="is-rounded lazyload"
+                                            >
+                                        </figure>
+                                    </div>
+                                </div>
+
+                                <div class="column is-12-desktop is-6-tablet is-6-mobile is-hidden-desktop level-right">
+                                    <div class="buttons is-right">
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="button level-item mb-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.direction_url"
+                                        >
+                                            Directions
+                                        </a>
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="button is-primary level-item"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.user.profile_page_url"
+                                        >
+                                            Performer Detail
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="content mb-1">
+                                <p class="has-text-justified mb-1">
+                                    <a
+                                        target="_blank"
+                                        :href="record.user.profile_page_url ?? '#'"
+                                    >
+                                        <template v-if="record.user.stage_name">
+                                            <strong>{{ record.user.stage_name }}</strong> - <small>{{ record.user.name }}</small>
+                                        </template>
+                                        <template v-else>
+                                            <strong>{{ record.user.name }}</strong>
+                                        </template>
+                                    </a>
+                                </p>
+                                <table class="table is-narrow is-borderless mb-2">
+                                    <tbody>
+                                        <tr>
+                                            <td class="m-0 py-0 px-0">
+                                                <biz-icon :icon="icon.locationMark" />
+                                            </td>
+                                            <td class="m-0 py-0 px-0">
+                                                {{ record.location.address }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="m-0 py-0 px-0">
+                                                <biz-icon :icon="bookingIcon.calendar" />
+                                            </td>
+                                            <td class="m-0 py-0 px-0">
+                                                {{ record.event.date }}, {{ record.event.start_end_time }}, {{ record.event.timezone }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="m-0 py-0 px-0">
+                                                <biz-icon :icon="bookingIcon.duration" />
+                                            </td>
+                                            <td class="m-0 py-0 px-0">
+                                                {{ record.event.duration }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <nav class="level is-mobile is-hidden-touch">
+                                    <div class="level-left">
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="level-item button my-0 p-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.direction_url"
+                                        >
+                                            Directions
+                                        </a>
+                                        <a
+                                            v-if="record.user.profile_page_url"
+                                            class="level-item button is-primary my-0 p-2"
+                                            target="_blank"
+                                            :class="{'is-small': screenType == 'mobile'}"
+                                            :href="record.user.profile_page_url"
+                                        >
+                                            Performer Detail
+                                        </a>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <biz-pagination
                     v-if="screenType == 'mobile'"
@@ -77,9 +179,16 @@
                 />
             </div>
 
+            <div class="column is-6-desktop is-6-tablet is-12-mobile">
+                <div
+                    ref="mapDiv"
+                    :style="screenMapStyle"
+                />
+            </div>
+
             <div
                 v-if="screenType != 'mobile'"
-                class="column is-12-desktop is-12-tablet is-12-mobile"
+                class="column is-6-desktop is-12-tablet is-12-mobile"
             >
                 <biz-pagination
                     class="mt-4"
@@ -98,14 +207,16 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import bookingIcon from '@mod/Booking/Resources/assets/js/Libs/booking-icon';
+    import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
-    import { clone, each, find, keys, get, groupBy, merge, map, sortBy, toString } from 'lodash';
-    import { computed, defineAsyncComponent, ref } from 'vue';
-    import { globe } from '@/Libs/icon-class';
-    import { isBlank, useBreakpoints } from '@/Libs/utils';
+    import { clone, each, find, keys, get, groupBy, merge, map, toString } from 'lodash';
+    import { computed, defineAsyncComponent, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
+    import { useModelWrapper, isBlank, useBreakpoints } from '@/Libs/utils';
+    import { userImage } from '@/Libs/defaults';
 
     export default {
         name: 'EventsCalendar',
@@ -125,9 +236,6 @@
             ),
             BizSelect: defineAsyncComponent(() =>
                 import('./../../../../../../resources/js/Biz/Select.vue')
-            ),
-            EventsCalendarItem: defineAsyncComponent(() =>
-                import('./EventsCalendarItem.vue')
             ),
         },
 
@@ -158,9 +266,7 @@
             let mapDiv = ref(null);
             let selectedLocation = ref(null);
 
-            const hasInitPosition = computed(() => !isBlank(props.initPosition));
-
-            if (hasInitPosition.value) {
+            if (!isBlank(props.initPosition)) {
 
                 initPos = {
                     lat: props.initPosition.latitude,
@@ -177,25 +283,27 @@
                 };
             }
 
-            const queryParams = computed(() => merge(
+            const queryParams = merge(
                 {dates: [
                     moment().format('YYYY-MM-DD'),
                     moment().add(6, 'day').format('YYYY-MM-DD'),
                 ]},
                 props.pageQueryParams
-            ));
+            );
 
             const { screenType } = useBreakpoints();
 
             return {
                 availableLocations,
-                dateRange: clone(queryParams.value.dates),
+                bookingIcon,
+                dateRange: clone(queryParams.dates),
                 events,
-                icon: { globe },
+                icon,
                 mapData,
                 mapDiv,
                 queryParams: ref(queryParams),
                 selectedLocation,
+                userImage,
                 infoWindow: ref(null),
                 screenType,
             };
@@ -215,24 +323,19 @@
             locationOptions() {
                 const options = [];
 
-                sortBy(this.availableLocations, [(location, key) => {
-                    return location.country;
-                }])
-                    .forEach((location) => {
+                each(this.availableLocations, (location, key) => {
+                    options.push({
+                        id: key,
+                        value: location.country,
+                    });
+
+                    each(location.cities, (city) => {
                         options.push({
-                            id: location.country_code,
-                            value: location.country,
-                        });
-
-                        location.cities.sort();
-
-                        each(location.cities, (city) => {
-                            options.push({
-                                id: location.country_code +'-'+ city,
-                                value: ' - '+ city,
-                            });
+                            id: key +'-'+ city,
+                            value: ' - '+ city,
                         });
                     });
+                });
 
                 return options;
             },
@@ -250,8 +353,8 @@
                 const locationParts = this.selectedLocation.split('-');
 
                 return {
-                    country: locationParts[0] ?? "",
-                    city: locationParts[1] ?? "",
+                    country: locationParts[0],
+                    city: locationParts[1],
                 };
             },
 
@@ -358,16 +461,15 @@
 
                         const filteredRecords = response.data.pagination.data.filter((record) => {
                             return (
-                                get(record, 'geolocation')
-                                && !isBlank(get(record, 'geolocation.latitude'))
-                                && !isBlank(get(record, 'geolocation.longitude'))
+                                get(record, 'location')
+                                && !isBlank(get(record, 'location.latitude'))
+                                && !isBlank(get(record, 'location.longitude'))
                             );
                         });
 
                         const coordinateGroups = groupBy(filteredRecords, (record) => {
-                            return record.geolocation.latitude+';'+record.geolocation.longitude;
+                            return record.location.latitude+';'+record.location.longitude;
                         });
-
 
                         this.markers = map(coordinateGroups, (records, key) => {
                             const record = records[0];
@@ -375,8 +477,8 @@
 
                             const marker = new google.maps.Marker({
                                 position: {
-                                    lat: record.geolocation.latitude,
-                                    lng: record.geolocation.longitude
+                                    lat: record.location.latitude,
+                                    lng: record.location.longitude
                                 },
                                 label,
                             });
@@ -417,24 +519,17 @@
 
                 let content = (
                     '<div class="content">'+
-                    '<h2>'+record.title+'</h2>'+
+                    '<h2>'+record.product_name+'</h2>'+
+                    '<h4>'+record.location.address+'</h4>'+
                     '<ul>'
                 );
                 records.forEach((record) => {
                     content += (
                         '<li>'+
-                        '<b>'+record.title+'</b>'+
-                        (
-                            record.is_ended_on_same_date
-                                ? (
-                                    ', '+record.formatted_started_date+
-                                    ', '+record.started_time
-                                )
-                                : (
-                                    ', '+record.formatted_started_date+' '+record.started_time+
-                                    ' - '+record.formatted_ended_date+' '+record.ended_time
-                                )
-                        ) + (record.timezone ? ' ('+record.formatted_timezone+')' : '') +
+                        '<b>'+(record.user.stage_name ?? record.user.name)+'</b>'+
+                        ', '+record.event.date+
+                        ', '+record.event.start_end_time+
+                        ' ('+record.event.timezone+')'+
                         '</li>'
                     );
                 });

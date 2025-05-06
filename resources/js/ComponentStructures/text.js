@@ -1,6 +1,7 @@
 import {
     contentSizes,
     defaultOption,
+    alignments,
     textColors
 } from './style-options';
 
@@ -17,6 +18,7 @@ export default {
     config: {
         text: {
             size: null,
+            alignment: null,
             color: null,
         },
         dimension: dimension.config
@@ -32,6 +34,13 @@ export const config = {
                 label: "Size",
                 settings: {
                     options: defaultOption.concat(contentSizes)
+                },
+            },
+            alignment: {
+                component: "ConfigSelect",
+                label: "Alignment",
+                settings: {
+                    options: defaultOption.concat(alignments)
                 },
             },
             color: {

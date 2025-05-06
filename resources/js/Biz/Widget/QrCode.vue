@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="column"
-        :class="columnClasses"
-    >
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
@@ -12,7 +9,7 @@
                     <biz-qr-code
                         :height="data.dimension.default.height"
                         :width="data.dimension.default.width"
-                        :text="data.qrOptions.text"
+                        :text="data.text"
                         :name="data.name"
                         :logo-url="data.logoThumbnailUrl"
                         @on-rendered="setDownloadUrl"
@@ -21,7 +18,7 @@
 
                 <div class="column is-8-desktop is-12-tablet is-12-mobile">
                     <p>
-                        {{ i18n.description }}
+                        {{ data.description }}
                     </p>
 
                     <div class="buttons are-small mt-5">
@@ -30,19 +27,15 @@
                             class="is-primary"
                             @click="download"
                         >
-                            <span class="has-text-weight-bold">
-                                {{ i18n.button_download }}
-                            </span>
+                            <span class="has-text-weight-bold">Download</span>
                         </biz-button>
 
                         <a
-                            :href="route('frontend.print.qrcode', { user: data.uniqueKey, setting: data.setting })"
+                            :href="route('frontend.print.qrcode', { user: data.uniqueKey })"
                             class="button"
                             target="_blank"
                         >
-                            <span class="has-text-weight-bold">
-                                {{ i18n.button_print }}
-                            </span>
+                            <span class="has-text-weight-bold">Print</span>
                         </a>
                     </div>
                 </div>
@@ -53,7 +46,6 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinWidget from '@/Mixins/Widget';
     import BizButton from '@/Biz/Button.vue';
     import BizQrCode from '@/Biz/QrCode.vue';
     import QRCode from 'easyqrcodejs';
@@ -68,12 +60,12 @@
 
         mixins: [
             MixinHasLoader,
-            MixinWidget,
         ],
 
         props: {
             data: {type: Object, required: true},
             title: {type: String, default: ""},
+            order: {type: Number, required: true},
         },
 
         data() {

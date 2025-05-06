@@ -1,14 +1,11 @@
 <template>
-    <div
-        class="column"
-        :class="columnClasses"
-    >
+    <div class="column is-6-desktop is-6-tablet is-12-mobile">
         <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">
             <p>
-                {{ i18n.description }}
+                {{ data.description }}
             </p>
 
             <div class="buttons are-small mt-5">
@@ -20,9 +17,7 @@
                     <span class="icon is-small">
                         <i class="fa-solid fa-arrow-up-right-from-square" />
                     </span>
-                    <span class="has-text-weight-bold">
-                        {{ i18n.button_view }}
-                    </span>
+                    <span class="has-text-weight-bold">View Page</span>
                 </a>
 
                 <biz-social-media-share :data="data.socialMediaShare" />
@@ -32,7 +27,6 @@
 </template>
 
 <script>
-    import MixinWidget from '@/Mixins/Widget';
     import BizSocialMediaShare from '@/Biz/SocialMediaShare.vue';
 
     export default {
@@ -42,13 +36,10 @@
             BizSocialMediaShare,
         },
 
-        mixins: [
-            MixinWidget,
-        ],
-
         props: {
             data: {type: Object, required: true},
             title: {type: String, default: ""},
+            order: {type: Number, required: true},
         },
     };
 </script>

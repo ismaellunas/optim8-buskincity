@@ -17,7 +17,6 @@ use Illuminate\Support\Collection;
 class LanguageService
 {
     private $supportedLanguages;
-    private $cacheOriginLanguage;
 
     public function getShownLanguageOptions(): Collection
     {
@@ -117,40 +116,23 @@ class LanguageService
         return $language ?? $this->getDefault();
     }
 
-    public function getOriginLanguageFromCookie(string $defaultLocale = null): string
+    public function getOriginLanguageFromCookie(): string
     {
-        $originLanguage = $this->getOriginLanguage();
+        $originLanguage = app(LifetimeCookie::class)->get('origin_language');
 
-        if (! $originLanguage) {
-            $originLanguage = $defaultLocale ?? $this->getOriginFromIP()->code;
+        if (!$originLanguage) {
+            $originLanguage = $this->getOriginFromIP()->code;
         }
 
         if (
             ! app(TranslationService::class)->isSupportedLocale($originLanguage)
         ) {
             $originLanguage = defaultLocale();
-        }
 
-        $this->setOriginLanguage($originLanguage);
+            app(LifetimeCookie::class)->set('origin_language', $originLanguage);
+        }
 
         return $originLanguage;
     }
 
-    public function getOriginLanguage(): ?string
-    {
-        if (! $this->cacheOriginLanguage) {
-            $this->cacheOriginLanguage = app(LifetimeCookie::class)->get('origin_language');
-        }
-
-        return $this->cacheOriginLanguage;
-    }
-
-    public function setOriginLanguage(string $locale): string
-    {
-        app(LifetimeCookie::class)->set('origin_language', $locale);
-
-        $this->cacheOriginLanguage = $locale;
-
-        return $locale;
-    }
 }

@@ -1,6 +1,4 @@
 import { oops as oopsAlert } from '@/Libs/alert';
-import { find } from 'lodash';
-import { emitter } from '@/Libs/utils';
 
 export default {
     name: 'MediaLibraryMixin',
@@ -19,14 +17,6 @@ export default {
         };
     },
 
-    mounted() {
-        const self = this;
-
-        emitter.on('on-save-as-image', () => {
-            self.refreshMediaList();
-        });
-    },
-
     methods: {
         getMediaList(url) {
             const self = this;
@@ -40,9 +30,6 @@ export default {
                     self.onMediaListLoadedFail(error);
                 });
         },
-        refreshMediaList() {
-            this.getMediaList(route(this.mediaListRouteName));
-        },
         setTerm(term) {
             this.mediaListQueryParams['term'] = term;
         },
@@ -54,21 +41,12 @@ export default {
         },
         search(term) {
             this.setTerm(term);
-            this.refreshMediaLists();
+            this.getMediaList(route(this.mediaListRouteName));
         },
         setMedia(media) {
             this.media = media;
         },
         onMediaListLoadedFail() {},
         onMediaListLoadedSuccess() {},
-        refreshMediaListByPageActive() {
-            let url = find(this.media.links, 'active').url ?? null;
-
-            if (url) {
-                this.getMediaList(url);
-            } else {
-                this.refreshMediaList();
-            }
-        },
     },
 }

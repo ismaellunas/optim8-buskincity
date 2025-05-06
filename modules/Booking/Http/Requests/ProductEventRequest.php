@@ -2,12 +2,12 @@
 
 namespace Modules\Booking\Http\Requests;
 
-use App\Http\Requests\BaseFormRequest;
-use App\Rules\CountryCode;
-use App\Rules\Timezone;
+use App\Services\CountryService;
+//use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Booking\Services\ProductEventService;
+use App\Http\Requests\BaseFormRequest;
 
 class ProductEventRequest extends BaseFormRequest
 {
@@ -35,7 +35,14 @@ class ProductEventRequest extends BaseFormRequest
                         ->pluck('id')
                 )
             ],
-            'timezone' => ['required', new Timezone()],
+            'timezone' => [
+                'required',
+                Rule::in(
+                    app(ProductEventService::class)
+                        ->timezoneOptions()
+                        ->pluck('id')
+                )
+            ],
             'weekly_hours' => ['array'],
             'weekly_hours.*.day' => ['integer'],
             'weekly_hours.*.hours' => ['array'],
@@ -50,7 +57,14 @@ class ProductEventRequest extends BaseFormRequest
             'location.latitude' => ['nullable', 'numeric'],
             'location.longitude' => ['nullable', 'numeric'],
             'location.city' => ['required', 'max:64'],
-            'location.country_code' => ['required', new CountryCode()],
+            'location.country_code' => [
+                'required',
+                Rule::in(
+                    app(CountryService::class)
+                        ->getCountryOptions()
+                        ->pluck('id')
+                )
+            ],
         ];
     }
 

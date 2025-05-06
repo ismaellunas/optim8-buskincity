@@ -83,7 +83,6 @@
                         <p v-html="event.short_description" />
 
                         <a
-                            v-if="isReadMoreShown(event.short_description)"
                             href="#"
                             class="has-text-primary has-text-weight-bold"
                             @click.prevent="selectedEvent = event"
@@ -146,7 +145,6 @@
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTag from '@/Biz/Tag.vue';
     import { ref } from 'vue';
-    import { endsWith } from 'lodash';
 
     export default {
         name: 'SpaceEvents',
@@ -233,10 +231,6 @@
 
             closeDescriptionModal() {
                 this.selectedEvent = null;
-            },
-
-            isReadMoreShown(shortDescription) {
-                return endsWith(shortDescription, '...');
             },
         },
     };

@@ -9,9 +9,12 @@ use Modules\Booking\Services\EventsCalendarService;
 
 class EventsCalendarController extends Controller
 {
-    public function __construct(
-        private EventsCalendarService $eventsCalendarService
-    ) {}
+    private $eventsCalendarService;
+
+    public function __construct(EventsCalendarService $eventsCalendarService)
+    {
+        $this->eventsCalendarService = $eventsCalendarService;
+    }
 
     public function index(EventsCalendarRequest $request)
     {

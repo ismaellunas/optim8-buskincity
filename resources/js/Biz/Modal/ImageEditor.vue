@@ -1,10 +1,11 @@
 <template>
     <biz-modal-card
+        :content-class="['is-huge']"
         :is-close-hidden="true"
     >
         <template #header>
-            <p class="modal-card-title is-hidden-touch is-size-5">
-                {{ fileName ?? 'Image Editor' }}
+            <p class="modal-card-title mb-1 is-hidden-touch">
+                Image Editor : {{ fileName ?? '' }}
             </p>
 
             <p class="modal-card-title mb-1 is-hidden-desktop">
@@ -22,50 +23,73 @@
         </template>
 
         <template #footer>
-            <div class="column p-0 m-0">
+            <div class="column is-12">
                 <div class="columns is-multiline is-mobile">
                     <template v-if="isCropState">
-                        <div class="column is-12-mobile is-4-tablet is-3">
-                            <div class="buttons">
-                                <biz-button
-                                    type="button"
-                                    title="Cancel"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    @click="disableState"
-                                >
-                                    Reset
-                                </biz-button>
-                            </div>
+                        <div class="column is-12-mobile is-4-tablet is-4-desktop">
+                            <biz-button
+                                type="button"
+                                :class="{ 'component-configurable': isConfig }"
+                                @click="reset"
+                            >
+                                Reset
+                            </biz-button>
                         </div>
-
                         <div
                             v-if="! hasDimension"
-                            class="column is-12-mobile is-4-tablet is-6"
+                            class="column is-12-mobile is-4-tablet is-4-desktop"
                         >
                             <div class="buttons has-addons is-centered">
                                 <biz-button
-                                    v-for="ratioOption in aspectRatioOptions"
-                                    :key="ratioOption.id"
                                     type="button"
-                                    :class="{'is-primary': (aspectRatio == ratioOption.aspectRatio), 'component-configurable': isConfig}"
+                                    :class="{'is-primary': (aspectRatio == null), 'component-configurable': isConfig}"
                                     :disabled="isProcessing"
-                                    @click.prevent="setAspectRatio(ratioOption.aspectRatio)"
+                                    @click="setAspectRatio(null)"
                                 >
-                                    {{ ratioOption.id }}
+                                    Free
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 16/9), 'component-configurable': isConfig}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(16/9)"
+                                >
+                                    16:9
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 4/3), 'component-configurable': isConfig}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(4/3)"
+                                >
+                                    4:3
+                                </biz-button>
+                                <biz-button
+                                    type="button"
+                                    :class="{'is-primary': (aspectRatio == 1), 'component-configurable': isConfig}"
+                                    :disabled="isProcessing"
+                                    @click="setAspectRatio(1)"
+                                >
+                                    1:1
                                 </biz-button>
                             </div>
                         </div>
-
-                        <div class="column is-12-mobile is-4-tablet is-3">
+                        <div class="column is-12-mobile is-4-tablet is-4-desktop">
                             <div class="is-pulled-right">
+                                <biz-button
+                                    type="button"
+                                    :class="{ 'component-configurable': isConfig }"
+                                    @click="disableState"
+                                >
+                                    Cancel
+                                </biz-button>
                                 <biz-button
                                     class="is-primary"
                                     type="button"
-                                    title="Apply"
                                     :class="{ 'component-configurable': isConfig }"
-                                    @click="cropAndRecreate"
+                                    @click="cropAndReplace"
                                 >
-                                    Apply
+                                    Done
                                 </biz-button>
                             </div>
 
@@ -73,58 +97,126 @@
                         </div>
                     </template>
 
-                    <template v-else>
-                        <div class="column is-3-mobile is-3-tablet has-text-left">
-                            <slot name="leftActions" />
-                        </div>
-
-                        <div class="column is-6-mobile is-6-tablet has-text-centered">
-                            <div class="buttons is-centered">
-                                <biz-button-icon
-                                    v-if="! hasDimension"
-                                    title="Crop"
-                                    type="button"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    :disabled="isProcessing"
-                                    :icon="icon.crop"
-                                    @click="enableCropState"
-                                />
-                                <biz-button-icon
-                                    title="Rotate Counterclockwise"
-                                    type="button"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    :disabled="isProcessing"
-                                    :icon="icon.rotateLeft"
-                                    @click="rotateLeft"
-                                />
-                                <biz-button-icon
-                                    title="Rotate Clockwise"
-                                    type="button"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    :disabled="isProcessing"
-                                    :icon="icon.rotateRight"
-                                    @click="rotateRight"
-                                />
-                                <biz-button-icon
-                                    title="Flip Horizontal"
-                                    type="button"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    :disabled="isProcessing"
-                                    :icon="icon.flipHorizontal"
-                                    @click="flipX($event)"
-                                />
-                                <biz-button-icon
-                                    title="Flip Vertical"
-                                    type="button"
-                                    :class="{ 'component-configurable': isConfig }"
-                                    :disabled="isProcessing"
-                                    :icon="icon.flipVertical"
-                                    @click="flipY($event)"
-                                />
+                    <template v-else-if="isResizeState">
+                        <div class="column is-8">
+                            <div class="columns">
+                                <div class="column">
+                                    <biz-form-field-horizontal>
+                                        <template #label>
+                                            Width
+                                        </template>
+                                        <div class="control">
+                                            <biz-input
+                                                v-model="resize.width"
+                                                :disabled="isProcessing"
+                                            />
+                                        </div>
+                                    </biz-form-field-horizontal>
+                                </div>
+                                <div class="column">
+                                    <biz-form-field-horizontal>
+                                        <template #label>
+                                            Height
+                                        </template>
+                                        <div class="control">
+                                            <biz-input
+                                                v-model="resize.height"
+                                                :disabled="isProcessing"
+                                            />
+                                        </div>
+                                    </biz-form-field-horizontal>
+                                </div>
                             </div>
                         </div>
+                        <div class="column">
+                            <div class="is-pulled-right">
+                                <biz-button
+                                    type="button"
+                                    :class="{ 'component-configurable': isConfig }"
+                                    @click="disableState"
+                                >
+                                    Cancel
+                                </biz-button>
+                                <biz-button
+                                    class="is-primary"
+                                    type="button"
+                                    :class="{ 'component-configurable': isConfig }"
+                                    @click="resizeAndReplace"
+                                >
+                                    Resize
+                                </biz-button>
+                            </div>
+                            <div class="is-clearfix" />
+                        </div>
+                    </template>
 
-                        <div class="column is-3-mobile is-3-tablet">
+                    <template v-else>
+                        <div class="column is-hidden-mobile" />
+                        <div class="column is-12-mobile is-6-tablet has-text-centered">
+                            <div class="columns">
+                                <div class="column py-0">
+                                    <biz-button-icon
+                                        v-if="! hasDimension"
+                                        icon-class="is-small"
+                                        icon="fas fa-crop-alt"
+                                        title="Crop"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="enableCropState"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-undo-alt"
+                                        icon-class="is-small"
+                                        title="Rotate Counterclockwise"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="rotateLeft"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-redo-alt"
+                                        icon-class="is-small"
+                                        title="Rotate Clockwise"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="rotateRight"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-arrows-alt-h"
+                                        icon-class="is-small"
+                                        title="Flip Horizontal"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="flipX($event)"
+                                    />
+                                    <biz-button-icon
+                                        icon="fas fa-arrows-alt-v"
+                                        icon-class="is-small"
+                                        title="Flip Vertical"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="flipY($event)"
+                                    />
+                                    <biz-button-icon
+                                        v-if="isResizeEnabled"
+                                        icon="fas fa-expand"
+                                        icon-class="is-small"
+                                        title="Resize"
+                                        type="button"
+                                        :class="{ 'component-configurable': isConfig }"
+                                        :disabled="isProcessing"
+                                        @click="enableResizeState"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-hidden-mobile" />
+
+                        <div class="column is-12-desktop is-12-tablet is-12-mobile">
                             <div class="is-pulled-right">
                                 <slot
                                     name="actions"
@@ -144,7 +236,7 @@
                 v-bind="cropperOptions"
                 alt="Source Image"
                 :src="previewFileSrc"
-                @ready="cropperReady"
+                @crop="updateImageData"
             />
         </div>
     </biz-modal-card>
@@ -153,14 +245,12 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal.vue';
+    import BizInput from '@/Biz/Input.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { defaultCropperOptions } from '@/Libs/defaults';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
-    import { crop, flipHorizontal, flipVertical, rotateLeft, rotateRight } from '@/Libs/icon-class';
-    import { ref } from 'vue';
 
-    import Cropper from 'cropperjs';
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
 
@@ -168,6 +258,8 @@
         components: {
             BizButton,
             BizButtonIcon,
+            BizFormFieldHorizontal,
+            BizInput,
             BizModalCard,
             VueCropper,
         },
@@ -189,61 +281,47 @@
                     return availableCroppedImageType.includes(value);
                 },
             },
-            cropper: { type:[Object, null], default: null },
+            cropper: {},
             fileName: { type: [String, null], default: "" },
             isDebugMode: { type: Boolean, default: false },
             isProcessing: { type: Boolean, default: false },
             modelValue: { type: [String, null], default: "" },
             dimension: { type: Object, default: () => {} },
+            isResizeEnabled: { type: Boolean, default: true, },
         },
-
         emits: [
             'close',
             'update:cropper',
             'update:modelValue'
         ],
-
         setup(props, { emit }) {
             return {
                 previewFileSrc: useModelWrapper(props, emit),
                 imageCropper: useModelWrapper(props, emit, 'cropper'),
-                icon: {
-                    crop,
-                    flipHorizontal,
-                    flipVertical,
-                    rotateLeft,
-                    rotateRight,
-                },
-                aspectRatioOptions: [
-                    {id: "Free", aspectRatio: null},
-                    {id: "16:9", aspectRatio: 16/9},
-                    {id: "4:3", aspectRatio: 4/3},
-                    {id: "1:1", aspectRatio: 1},
-                ],
-                isOnReadyCachingIsNeeded: ref(true),
-                onReadySkipApplyCache: ref(false),
             };
         },
-
         data() {
             return {
                 aspectRatio: null,
+                imageData: null,
+                resize: {
+                    width: null,
+                    height: null,
+                },
                 state: null,
                 stateOptions: {
                     crop: "crop",
+                    resize: "resize",
                     none: null,
                 },
-
-                cacheData: null,
-
-                meta: null,
-                afterReady: () => {},
             }
         },
-
         computed: {
             isCropState() {
                 return this.state === this.stateOptions.crop;
+            },
+            isResizeState() {
+                return this.state === this.stateOptions.resize;
             },
             hasDimension() {
                 return (
@@ -260,226 +338,124 @@
             cropperOptions() {
                 if (this.hasDimension) {
                     return {
-                        ...defaultCropperOptions,
-                        ...{
-                            autoCrop: true,
-                            autoCropArea: this.ratio > 0.95 ? 0.95 : this.ratio,
-                            cropBoxMovable: false,
-                            cropBoxResizable: false,
-                            initialAspectRatio: this.ratio,
-                            zoomable: true,
-                        },
-                    };
+                        autoCrop: true,
+                        autoCropArea: this.ratio > 1 ? 1 : this.ratio,
+                        checkCrossOrigin: true,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        dragMode: "move",
+                        initialAspectRatio: this.ratio,
+                        minContainerHeight: 400,
+                    }
                 }
 
                 return {
-                    ...defaultCropperOptions,
-                    ...{
-                        autoCrop: false,
-                        autoCropArea: 0.9,
-                        checkCrossOrigin: true,
-                        zoomable: false,
-                    }
+                    autoCrop: false,
+                    autoCropArea: 1,
+                    checkCrossOrigin: true,
+                    dragMode: "move",
+                    minContainerHeight: 400,
                 };
             },
         },
-        async mounted() {
+        mounted() {
             this.imageCropper = this.$refs.cropper;
-
-            const img = await this.getMeta(
-                this.$refs.cropper.$refs.img.src
-            );
-
-            this.meta = {
-                width: img.naturalWidth,
-                height: img.naturalHeight,
-            };
         },
         methods: {
-            async getMeta(url) {
-                const img = new Image();
-                img.src = url;
-                await img.decode();
-                return img
-            },
-
-            cacheCropperData() {
-                this.cacheData = this.imageCropper.getData();
-            },
-
-            applyCropperData() {
-                this.imageCropper.setData(this.cacheData);
-            },
-
             enableCropState() {
                 this.state = this.stateOptions.crop;
-
-                this.setAspectRatio(null);
-
-                this.imageCropper.initCrop()
+                this.imageCropper
+                    .initCrop()
+                    .setDragMode("crop");
             },
-
-            quitCropState() {
-                this.disabledState();
+            enableResizeState() {
+                this.state = this.stateOptions.resize;
             },
-
-            disableState(options) {
-                const { recreateOptions, disableRecreate } = options;
-
-                if (! disableRecreate) {
-                    this.recreate(recreateOptions);
+            disableState() {
+                if (this.hasDimension) {
+                    this.imageCropper
+                        .reset()
+                        .setDragMode('crop');
+                } else {
+                    this.imageCropper
+                        .reset()
+                        .clear()
+                        .setDragMode('move');
                 }
 
-                this.afterReady = () => {
-                    if (this.hasDimension) {
-                        this.imageCropper
-                            .reset()
-                            .setDragMode('crop');
+                this.state = null;
+            },
+            cropAndReplace() {
+                const self = this;
+                getCanvasBlob(
+                    self.imageCropper.getCroppedCanvas(),
+                    self.croppedImageType
+                )
+                    .then(blob => {
+                        const objectURL = URL.createObjectURL(blob);
+                        self.previewFileSrc = objectURL;
+                        self.imageCropper.replace(objectURL, false);
+                    });
+
+                self.disableState();
+            },
+            resizeAndReplace() {
+                const self = this;
+                let resizeData = {};
+
+                for (const property in self.resize) {
+                    if (!isEmpty(self.resize[property])) {
+                        resizeData[property] = self.resize[property];
                     }
+                }
 
-                    this.imageCropper.clear();
-                    this.aspectRatio = null;
-                    this.state = null;
-                };
+                this.imageCropper.initCrop();
+                getCanvasBlob(this.imageCropper.getCroppedCanvas(resizeData))
+                    .then(blob => {
+                        const objectURL = URL.createObjectURL(blob);
+                        self.previewFileSrc = objectURL;
+                        self.imageCropper.replace(objectURL, false);
+
+                        self.resize.width = null;
+                        self.resize.height = null;
+
+                        self.disableState();
+                    });
             },
-
-            recreate(options) {
-                this.imageCropper.destroy();
-
-                this.imageCropper.cropper = new Cropper(
-                    this.imageCropper.$refs.img,
-                    options ?? this.cropperOptions
-                );
-            },
-
-            async cropAndRecreate() {
-                this.$refs.cropper.$refs.img.src = this.imageCropper.getCroppedCanvas().toDataURL();
-
-                this.onReadySkipApplyCache = true;
-                this.isOnReadyCachingIsNeeded = true;
-
-                this.disableState({
-                    recreateOptions: {
-                        ...this.cropperOptions,
-                        ...{
-                            zoomable: false,
-                        },
-                    },
-                });
-            },
-
             rotateRight() {
                 this.imageCropper.rotate(90);
-
-                this.cacheCropperData();
             },
-
             rotateLeft() {
                 this.imageCropper.rotate(-90);
-
-                this.cacheCropperData();
             },
-
             flipY(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
                 this.imageCropper.scaleY(scale);
                 dom.setAttribute('data-scale', scale);
-
-                this.cacheCropperData();
             },
-
             flipX(event) {
                 const dom = event.currentTarget;
                 let scale = dom.getAttribute('data-scale');
                 scale = scale ? -scale : -1;
                 this.imageCropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
-
-                this.cacheCropperData();
             },
-
-            cropperReady() {
-                if (this.isCropState) {
-                    this.imageCropper.initCrop();
-                }
-
-                if (this.isOnReadyCachingIsNeeded) {
-
-                    this.cacheCropperData();
-                }
-
-                if (! this.onReadySkipApplyCache) {
-                    this.applyCropperData();
-                }
-
-                this.afterReady();
-
-                this.isOnReadyCachingIsNeeded = false;
-                this.onReadySkipApplyCache = false;
-                this.afterReady = () => {};
+            reset() {
+                this.imageCropper
+                    .reset()
+                    .setAspectRatio(null);
+                this.aspectRatio = null;
             },
-
             setAspectRatio(ratio) {
-                let minCropBoxWidth = 500;
-
-                if (this.meta.width < minCropBoxWidth) {
-                    minCropBoxWidth = this.meta.width;
-                }
-
-                const defaultOptions = {
-                    ...this.cropperOptions,
-                    ...{
-                        dragMode: "move",
-                        zoomable: true,
-                    },
-                };
-
-                if (ratio != null && this.aspectRatio == null) {
-
-                    this.afterReady = () => {
-                        this.applyCropperData();
-                    };
-
-                    this.recreate({
-                        ...defaultOptions,
-                        ...{
-                            autoCropArea: 0.9,
-                            cropBoxMovable: false,
-                            cropBoxResizable: false,
-                            minCropBoxWidth,
-                        },
-                    });
-                }
-
-                if (ratio === null) {
-                    this.afterReady = () => {
-                        this.applyCropperData();
-
-                        const canvasData = this.imageCropper.getCanvasData();
-                        const width = canvasData.width * 7 / 10;
-                        const height = canvasData.height * 6 / 10;
-
-                        this.imageCropper.setCropBoxData({
-                            width,
-                            height,
-                            left: (canvasData.width - width) / 2,
-                            top: (canvasData.height - height) / 2,
-                        })
-                    };
-
-                    this.recreate({
-                        ...defaultOptions,
-                        ...{
-                            autoCropArea: 0.9,
-                            cropBoxResizable: true,
-                        },
-                    });
-                }
-
-                this.imageCropper.setAspectRatio(ratio ?? null);
+                this.imageCropper.setAspectRatio(ratio);
                 this.aspectRatio = ratio;
+            },
+            updateImageData() {
+                if (this.isDebugMode) {
+                    this.imageData = this.imageCropper.getData(true)
+                }
             },
         },
     };

@@ -68,13 +68,11 @@
             :data="modalImages"
             :instructions="instructions?.mediaLibrary"
             :is-download-enabled="can.media.read"
-            :is-edit-enabled="can.media.edit"
             :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
             :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
-            @on-close-edit-modal="refreshImageListByPageActive()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -137,6 +135,7 @@
                 entityImage: this.entity.content.cardImage.figure.image,
                 images: this.dataImages,
                 isFormOpen: false,
+                modalImages: [],
             };
         },
         computed: {
@@ -167,6 +166,7 @@
             cardContentClass() {
                 return concat(
                     this.configContent?.size,
+                    this.configContent?.alignment
                 ).filter(Boolean);
             },
             cardClasses() {
@@ -224,6 +224,9 @@
             onShownModal() { /* @overide */
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
+            },
+            onImageListLoadedSuccess(data) { /* @override MixinContentHasMediaLibrary */
+                this.modalImages = data;
             },
             onImageListLoadedFail(error) { /* @override MixinContentHasMediaLibrary */
                 this.closeModal();

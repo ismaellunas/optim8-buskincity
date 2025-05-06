@@ -114,9 +114,7 @@
         },
         methods: {
             onSelectedIcon(icon) {
-                this.icon = null;
-
-                setTimeout(() => { this.icon = icon }, 250);
+                this.icon = icon;
             },
         },
     };

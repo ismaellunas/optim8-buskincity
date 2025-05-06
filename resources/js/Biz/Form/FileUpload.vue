@@ -8,13 +8,10 @@
 
         <component
             :is="mediaComponent"
-            :media="computedListMedia"
-            :is-edit-button-for-image="true"
-            :is-edit-enabled="true"
-            :is-filename-shown="isFilenameShown"
+            :media="listMedia"
+            :is-edit-enabled="false"
             :is-scrolled="true"
             @on-delete-clicked="onDeleteMedium"
-            @on-edit-clicked="onEditMedium"
         />
 
         <div class="control">
@@ -29,8 +26,8 @@
                 :max-total-file-size="maxTotalFileSizeUpload"
                 :placeholder="placeholder"
                 :required="isRequired"
-                @update-files="onUpdateFiles"
-                @add-files="onAddFiles"
+                @on-update-files="onUpdateFiles"
+                @on-add-file="$emit('on-add-file')"
             />
         </div>
 
@@ -55,31 +52,17 @@
         <template #error>
             <biz-input-error :message="message" />
         </template>
-
-        <biz-file-drag-drop-modal-image-editor
-            v-if="isModalOpen"
-            v-model:medium="editedMedium.image"
-            :medium-url="editedMedium.image.file_url"
-            :dimension="dimension"
-            @on-close="closeModal()"
-            @on-update="saveEditedFile()"
-        />
     </biz-form-field>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasModal from '@/Mixins/HasModal';
     import BizFileUpload from '@/Biz/FileUpload.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizMediaGallery from '@/Biz/Media/Gallery.vue';
     import BizMediaText from '@/Biz/Media/Text.vue';
-    import BizFileDragDropModalImageEditor from '@/Biz/FileDragDropModalImageEditor.vue';
-    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
-    import { cloneDeep } from 'lodash';
-    import { serialize } from 'object-to-formdata';
 
     export default {
         name: 'FileUpload',
@@ -90,13 +73,7 @@
             BizInputError,
             BizMediaGallery,
             BizMediaText,
-            BizFileDragDropModalImageEditor,
         },
-
-        mixins: [
-            MixinHasLoader,
-            MixinHasModal,
-        ],
 
         inheritAttrs: false,
 
@@ -124,10 +101,6 @@
             media: {
                 type: Array,
                 default:() => []
-            },
-            isFilenameShown: {
-                type: Boolean,
-                default: true,
             },
             mediaComponent: {
                 type: String,
@@ -161,24 +134,17 @@
                 type: [Number, String, null],
                 default: null
             },
-            dimension: { type: Object, default: () => {} },
         },
 
         emits: [
-            'add-files',
+            'on-add-file',
             'on-file-picked',
+            'on-update-files',
         ],
 
         setup(props, { emit }) {
             return {
                 fileUploadField: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
-                editedMedium: {},
-                listMedia: this.media,
             };
         },
 
@@ -210,10 +176,10 @@
                 return this.maxTotalFileSize ? this.maxTotalFileSize + `KB` : null;
             },
 
-            computedListMedia() {
+            listMedia() {
                 const self = this;
 
-                return this.listMedia.filter((medium) => {
+                return this.media.filter((medium) => {
                     return !self
                         .fileUploadField
                         .deleted_media
@@ -226,19 +192,11 @@
             },
         },
 
-        watch: {
-            media(newData) {
-                this.listMedia = newData;
-            }
-        },
-
         methods: {
             onUpdateFiles(files) {
                 this.fileUploadField.files = files;
-            },
 
-            onAddFiles(addedFiles) {
-                this.$emit('add-files', addedFiles);
+                this.$emit('on-update-files');
             },
 
             onDeleteMedium(medium) {
@@ -249,53 +207,6 @@
                         self.fileUploadField.deleted_media.push(medium.id);
                     }
                 });
-            },
-
-            onEditMedium(medium) {
-                this.openModal();
-
-                this.editedMedium.image = medium;
-                this.editedMedium.media_id = medium.id;
-            },
-
-            async saveEditedFile() {
-                const self = this;
-                let editedFile = cloneDeep(self.editedMedium);
-
-                editedFile.image = await editedFile.image;
-
-                self.closeModal();
-
-                self.onStartLoadingOverlay();
-
-                axios.post(
-                    route('admin.api.media.replace'),
-                    serialize(editedFile)
-                )
-                    .then((response) => {
-                        let data = response.data;
-
-                        successAlert(data.message);
-
-                        self.listMedia = self.listMedia.map((medium) => {
-                            if (medium.id === data.media.id) {
-                                return data.media;
-                            }
-
-                            return medium;
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        oopsAlert();
-                    })
-                    .then(() => {
-                        self.onEndLoadingOverlay();
-                    });
-            },
-
-            onCloseModal() {
-                this.editedMedium = {};
             },
 
             reset() {

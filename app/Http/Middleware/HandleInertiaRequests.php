@@ -61,10 +61,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $user = $request->user();
         $sharedUserData = Inertia::getShared('user')() ?? [];
 
-        $sharedData = [
+        return array_merge(parent::share($request), [
             'csrfToken' => csrf_token(),
             'debug' => config('app.debug'),
             'flash' => [
@@ -83,6 +82,7 @@ class HandleInertiaRequests extends Middleware
             },
             'appLogoUrl' => $this->settingService->getLogoOrDefaultUrl(),
             'menus' => $this->getHeaderMenus($request),
+            'footerMenus' => $this->getFooterMenus($request),
             'currentLanguage' => currentLocale(),
             'defaultLanguage' => defaultLocale(),
             'languageOptions' => app(TranslationSv::class)->getLocaleOptions(),
@@ -93,23 +93,8 @@ class HandleInertiaRequests extends Middleware
                 return $this->removeSensitiveDataExposure($sharedUserData);
             },
             'userOriginLanguage' => $request->user()->origin_language_code ?? null,
-            'modules' => app(ModuleService::class)->getEnabledNames() ?? [],
-        ];
-
-        if (
-            $user
-            && ! $request->routeIs('admin.*')
-            && ! $user->can('system.dashboard')
-        ) {
-            $sharedData['headerLayout'] = $this->settingService->getHeaderLayout();
-            $sharedData['footerMenus'] = app(MenuService::class)->getFrontendUserFooterMenus($request);
-            $sharedData['socialMediaMenus'] = app(MenuService::class)->getSocialMediaMenus($request);
-        }
-
-        return array_merge(
-            parent::share($request),
-            $sharedData
-        );
+            'modules' => app(ModuleService::class)->getAllEnabledNames() ?? [],
+        ]);
     }
 
     private function removeSensitiveDataExposure(array $sharedUserData): array
@@ -148,6 +133,24 @@ class HandleInertiaRequests extends Middleware
                 return app(MenuService::class)->getBackendNavMenus($request);
             } else {
                 return app(MenuService::class)->getFrontendUserMenus($request);
+            }
+        }
+
+        return [];
+    }
+
+    private function getFooterMenus($request): array
+    {
+        $user = $request->user();
+
+        if ($user) {
+            if (
+                $request->routeIs('admin.*')
+                && $user->can('system.dashboard')
+            ) {
+                return [];
+            } else {
+                return app(MenuService::class)->getFrontendUserFooterMenus($request);
             }
         }
 

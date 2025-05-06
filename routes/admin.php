@@ -12,7 +12,6 @@ use App\Http\Controllers\{
     ErrorLogController,
     LanguageController,
     MediaController,
-    ModuleController,
     PageController,
     PasswordResetLinkController,
     PostController,
@@ -25,9 +24,9 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontController,
     ThemeFooterController,
-    ThemeFooterNavigationController,
+    ThemeFooterMenuController,
     ThemeHeaderController,
-    ThemeHeaderNavigationController,
+    ThemeHeaderMenuController,
     ThemeSeoController,
     TranslationManagerController,
     TwoFactorAuthenticatedSessionController,
@@ -97,8 +96,7 @@ Route::middleware(array_filter([
     Route::post('users/password-reset/send', SendUserPasswordResetEmailController::class)
         ->name('users.password-reset.send');
 
-    Route::resource('/roles', RoleController::class)
-        ->except(['show']);
+    Route::resource('/roles', RoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -113,13 +111,13 @@ Route::middleware(array_filter([
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
             Route::post('/layout', [ThemeHeaderController::class, 'update'])->name('layout.update');
-            Route::post('/navigation', [ThemeHeaderNavigationController::class, 'update'])->name('navigation.update');
+            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
         });
 
         Route::prefix('footer')->name('footer.')->group(function () {
             Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
             Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
-            Route::post('/menu-item', [ThemeFooterNavigationController::class, 'update'])->name('navigation.update');
+            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
         });
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
@@ -133,38 +131,6 @@ Route::middleware(array_filter([
     });
 
     Route::name('settings.')->prefix('settings')->group(function () {
-        Route::name('modules.')->prefix('/modules')->middleware('role:Super Administrator')->group(function () {
-            Route::get('/', [ModuleController::class, 'index'])
-                ->name('index');
-
-            Route::post('/update-order', [ModuleController::class, 'updateOrder'])
-                ->name('update-order');
-
-            Route::get('/{module}', [ModuleController::class, 'edit'])
-                ->name('edit');
-
-            Route::put('/{module}', [ModuleController::class, 'update'])
-                ->name('update');
-
-            Route::get('/{module}/navigations', [modulecontroller::class, 'editNavigations'])
-                ->name('navigations.edit');
-
-            Route::put('/{module}/navigations', [ModuleController::class, 'updateNavigations'])
-                ->name('navigations.update');
-
-            Route::post('/{module}/activate', [ModuleController::class, 'activate'])
-                ->name('activate');
-
-            Route::post('/{module}/deactivate', [ModuleController::class, 'deactivate'])
-                ->name('deactivate');
-
-            Route::get('/{module}/confirm-activation', [ModuleController::class, 'confirmActivation'])
-                ->name('confirm-activate');
-
-            Route::get('/{module}/confirm-deactivation', [ModuleController::class, 'confirmDeactivation'])
-                ->name('confirm-deactivate');
-        });
-
         Route::middleware('can:system.language')->group(function () {
             Route::get('/languages', [LanguageController::class, 'edit'])
                 ->name('languages.edit');
@@ -253,10 +219,8 @@ Route::name('api.')
     ->group(function () {
         Route::post('/media', [MediaController::class, 'apiStore'])
             ->name('media.store');
-        Route::post('/media/replace', [MediaController::class, 'apiReplace'])
-            ->name('media.replace');
 
-        Route::post('/theme/header/menu-item', [ThemeHeaderNavigationController::class, 'apiValidateMenuItem'])
+        Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
             ->name('theme.header.menu-item.validate');
 
         Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
@@ -266,6 +230,9 @@ Route::name('api.')
             ->middleware('can:page.edit')
             ->name('pages.is-used-by-menu');
 
+        Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
+            ->name('page-builder.country-options');
+
         Route::get('/page-builder/type-options', [ApiPageBuilderController::class, 'typeOptions'])
             ->name('page-builder.type-options');
 
@@ -274,12 +241,6 @@ Route::name('api.')
 
         Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
             ->name('options.phone-countries');
-
-        Route::get('/options/countries', [ApiOptionController::class, 'countryOptions'])
-            ->name('options.countries');
-
-        Route::get('/options/timezones', [ApiOptionController::class, 'timezoneOptions'])
-            ->name('options.timezones');
 
         Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
             ->name('page-builder.post.category-options');

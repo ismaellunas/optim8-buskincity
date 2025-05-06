@@ -45,14 +45,32 @@
             </div>
         </div>
 
-        <biz-form-fieldset-location
-            v-model:address="space.address"
-            v-model:city="space.city"
-            v-model:country-code="space.country_code"
-            v-model:latitude="space.latitude"
-            v-model:longitude="space.longitude"
-            :is-city-required="false"
+        <biz-form-textarea
+            v-model="space.address"
+            :label="i18n.address"
+            placeholder="Address"
+            rows="2"
+            maxlength="500"
+            :message="error('address')"
         />
+
+        <div class="columns">
+            <div class="column is-half">
+                <biz-form-input
+                    v-model="space.latitude"
+                    :label="i18n.latitude"
+                    :message="error('latitude')"
+                />
+            </div>
+
+            <div class="column is-half">
+                <biz-form-input
+                    v-model="space.longitude"
+                    :label="i18n.longitude"
+                    :message="error('longitude')"
+                />
+            </div>
+        </div>
 
         <div class="columns">
             <div class="column is-half">
@@ -61,9 +79,7 @@
                         v-model="space.logo"
                         :label="i18n.logo"
                         image-preview-size="6"
-                        :is-browse-enabled="can?.media?.browse ?? false"
                         :is-download-enabled="can?.media?.read ?? false"
-                        :is-edit-enabled="can?.media?.edit ?? false"
                         :is-upload-enabled="can?.media?.add ?? false"
                         :medium="logoMedia"
                         :dimension="dimensions.logo"
@@ -78,9 +94,7 @@
                         v-model="space.cover"
                         :label="i18n.cover"
                         image-preview-size="8"
-                        :is-browse-enabled="can?.media?.browse ?? false"
                         :is-download-enabled="can?.media?.read ?? false"
-                        :is-edit-enabled="can?.media?.edit ?? false"
                         :is-image-preview-thumbnail="false"
                         :is-upload-enabled="can?.media?.add ?? false"
                         :medium="coverMedia"
@@ -152,9 +166,9 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
-    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import BizLabel from '@/Biz/Label.vue';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
@@ -167,12 +181,12 @@
         components: {
             BizButtonIcon,
             BizCard,
-            BizFormFieldsetLocation,
             BizFormInput,
-            BizFormMediaLibrary,
             BizFormSelect,
+            BizFormTextarea,
             BizIcon,
             BizLabel,
+            BizFormMediaLibrary,
             SpaceModalContact,
         },
 

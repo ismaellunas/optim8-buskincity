@@ -6,7 +6,6 @@ use App\Http\Controllers\CrudController;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\Form;
@@ -21,7 +20,7 @@ class FormBuilderController extends CrudController
     protected $baseRouteName = 'admin.form-builders';
     protected $baseRouteNameSetting = 'admin.form-builders.settings';
     protected $recordsPerPage = 10;
-    protected $title = ':form_builder_term.form_builder';
+    protected $title = 'Form Builder';
 
     public function __construct(
         private FormBuilderService $formBuilderService,
@@ -46,16 +45,14 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
                 'create_new' => __('Create new'),
                 'name' => __('Name'),
                 'form_id' => __('Form ID'),
-                'entries' => __(':Form_builder_term.entries'),
+                'entries' => __('Entries'),
                 'actions' => __('Actions'),
                 'are_you_sure' => __('Are you sure?'),
-                'list_entries' => __('List entries'),
             ],
         ]));
     }
@@ -91,7 +88,7 @@ class FormBuilderController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __('Form')
         ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $form->id);
@@ -147,10 +144,10 @@ class FormBuilderController extends CrudController
             $fieldGroup->syncFieldGroups($inputs['field_groups'], $formBuilder->id);
         }
 
-        $this->automateUserCreationService->syncRules($formBuilder);
+        $this->automateUserCreationService->removeUntrackedRules($formBuilder);
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __('Form')
         ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
@@ -161,7 +158,7 @@ class FormBuilderController extends CrudController
         $formBuilder->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __('Form')
         ]);
 
         return redirect()->route($this->baseRouteName.'.index');
@@ -203,7 +200,7 @@ class FormBuilderController extends CrudController
             'name' => __('Name'),
             'form_id' => __('Form ID'),
             'general' => __('General'),
-            'add_field_group' => __('Add :resource', ['resource' => __(':form_builder_term.field_group')]),
+            'add_field_group' => __('Add :resource', ['resource' => __('Field group')]),
             'cancel' => __('Cancel'),
             'create' => __('Create'),
             'update' => __('Update'),
@@ -238,12 +235,6 @@ class FormBuilderController extends CrudController
             'user_properties' => __('User properties'),
             'user_update' => __('User update'),
             'yes' => __('Yes'),
-            'form_name_placeholder' => __('Contact Form'),
-            'form_id_placeholder' => Str::snake(__('Contact Form')),
-            'remove_field_confirmation_text' => __('If you remove this field, it will impact the settings of the "Automate user creation" feature.'),
-            'field_group_title_placeholder' => __('Field group title'),
-            'label' => __('Label'),
-            'name_field_note' => __('Please enter a unique name. This field is required and should not match any existing field names.'),
         ];
     }
 }

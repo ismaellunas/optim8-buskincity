@@ -19,14 +19,7 @@
                 class="button"
                 type="button"
             >
-                <slot name="trigger">
-                    <span>{{ triggerLabel ?? "" }}</span>
-                    <biz-icon
-                        :icon="icon.angleDown"
-                        class="is-small"
-                        aria-hidden="true"
-                    />
-                </slot>
+                <slot name="trigger" />
             </biz-button>
 
             <a
@@ -42,7 +35,7 @@
             v-show="isActive || isHoverable"
             :id="uniqueMenuId"
             ref="dropdownMenu"
-            class="dropdown-menu pb-1"
+            class="dropdown-menu"
             role="menu"
         >
             <div class="dropdown-content">
@@ -54,17 +47,14 @@
 
 <script>
     import BizButton from '@/Biz/Button.vue';
-    import BizIcon from '@/Biz/Icon.vue';
     import { generateElementId } from '@/Libs/utils';
-    import { angleDown } from '@/Libs/icon-class';
-    import { ref, onMounted } from "vue";
+    import { ref } from "vue";
 
     export default {
         name: 'BizDropdown',
 
         components: {
             BizButton,
-            BizIcon,
         },
 
         provide() {
@@ -106,10 +96,6 @@
                 type: Boolean,
                 default: false
             },
-            triggerLabel: {
-                type: [String, Number, null],
-                default: ""
-            },
         },
 
         emits: [
@@ -117,15 +103,8 @@
         ],
 
         setup(props) {
-            const isActive = ref(false);
-
-            onMounted(() => {
-                isActive.value = props.active;
-            });
-
             return {
-                isActive,
-                icon: { angleDown },
+                isActive: ref(props.active),
             };
         },
 

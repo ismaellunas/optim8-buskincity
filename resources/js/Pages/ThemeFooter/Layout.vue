@@ -1,31 +1,19 @@
 <template>
-    <form @submit.prevent="onSubmit">
-        <footer-layout
-            v-model="form.layout"
-        />
+    <section>
+        <form @submit.prevent="onSubmit">
+            <footer-layout
+                v-model="form.layout"
+            />
 
-        <hr>
-
-        <footer-social-media
-            v-model="form.social_media_menus"
-        />
-
-        <div class="field is-grouped is-grouped-right">
-            <div class="control">
-                <biz-button class="is-primary">
-                    <span>
-                        {{ i18n.save }}
-                    </span>
-                </biz-button>
-            </div>
-        </div>
-    </form>
+            <hr>
+            <footer-social-media
+                v-model="form.social_media_menus"
+            />
+        </form>
+    </section>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
-    import BizButton from '@/Biz/Button.vue';
     import FooterLayout from './FooterLayout.vue';
     import FooterSocialMedia from './FooterSocialMedia.vue';
     import { success as successAlert  } from '@/Libs/alert';
@@ -36,15 +24,9 @@
         name: 'ThemeFooterLayoutTab',
 
         components: {
-            BizButton,
             FooterLayout,
             FooterSocialMedia,
         },
-
-        mixins: [
-            MixinHasLoader,
-            MixinHasTranslation,
-        ],
 
         props: {
             settings: {
@@ -65,6 +47,7 @@
 
         data() {
             return {
+                loader: null,
                 form: useForm({
                     layout: parseInt(this.settings.footer_layout.value),
                     social_media_menus: cloneDeep(this.socialMediaMenus),
@@ -90,17 +73,17 @@
 
             onSubmit() {
                 const self = this;
-
-                self.onStartLoadingOverlay();
+                self.loader = self.$loading.show({});
 
                 self.form.post(
                     route(self.baseRouteName+".layout.update"), {
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
-
                             this.form = this.getLayoutForm();
                         },
-                        onFinish: () => self.onEndLoadingOverlay(),
+                        onFinish: () => {
+                            self.loader.hide();
+                        },
                     }
                 );
             },

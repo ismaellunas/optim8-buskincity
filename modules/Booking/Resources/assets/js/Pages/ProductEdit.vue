@@ -68,7 +68,7 @@
                                 <biz-form-select
                                     v-model="eventForm.duration"
                                     :label="i18n.duration"
-                                    :message="error('duration', eventErrorBag)"
+                                    :message="error('duration', 'eventForm')"
                                     has-addons
                                     required
                                     is-fullwidth
@@ -98,7 +98,7 @@
                                     max="365"
                                     min="0"
                                     required
-                                    :message="error('bookable_date_range', eventErrorBag)"
+                                    :message="error('bookable_date_range', 'eventForm')"
                                 >
                                     <template #afterInput>
                                         <p class="control">
@@ -111,15 +111,92 @@
                             </div>
                         </div>
 
-                        <biz-form-fieldset-location
-                            v-model:address="eventForm.location.address"
-                            v-model:city="eventForm.location.city"
-                            v-model:country-code="eventForm.location.country_code"
-                            v-model:latitude="eventForm.location.latitude"
-                            v-model:longitude="eventForm.location.longitude"
-                            :error-bag-name="eventErrorBag"
-                            :error-key="locationFieldsetErrorKeys"
-                        />
+                        <div class="columns">
+                            <div class="column is-6">
+                                <biz-form-textarea
+                                    v-model="eventForm.location.address"
+                                    :label="i18n.address"
+                                    placeholder="Address"
+                                    rows="5"
+                                    maxlength="500"
+                                    :message="error('location.address', eventErrorBag)"
+                                />
+
+                                <biz-form-input
+                                    v-model="eventForm.location.city"
+                                    :label="i18n.city"
+                                    maxlength="64"
+                                    required
+                                    :message="error('location.city', eventErrorBag)"
+                                />
+
+                                <biz-form-select
+                                    v-model="eventForm.location.country_code"
+                                    :label="i18n.country"
+                                    required
+                                >
+                                    <option
+                                        v-for="countryOption in countryOptions"
+                                        :key="countryOption.id"
+                                        :value="countryOption.id"
+                                    >
+                                        {{ countryOption.value }}
+                                    </option>
+                                </biz-form-select>
+                            </div>
+
+                            <div class="column is-5">
+                                <div class="columns is-multiline">
+                                    <div class="column is-12">
+                                        <biz-form-input
+                                            v-model="eventForm.location.latitude"
+                                            :label="i18n.latitude"
+                                            :message="error('location.latitude', eventErrorBag)"
+                                        />
+                                    </div>
+                                    <div class="column is-12">
+                                        <biz-form-input
+                                            v-model="eventForm.location.longitude"
+                                            :label="i18n.longitude"
+                                            :message="error('location.longitude', eventErrorBag)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-1">
+                                <div class="field">
+                                    <label class="label">
+                                        {{ i18n.map }}
+                                    </label>
+                                    <span class="control">
+                                        <biz-button-icon
+                                            type="button"
+                                            class="is-primary"
+                                            :icon="icon.locationMark"
+                                            @click="toggleMap"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="columns is-multiline">
+                            <div
+                                v-if="isMapOpen"
+                                class="column is-8"
+                            >
+                                <div class="card">
+                                    <div class="card-content p-2">
+                                        <biz-gmap-marker
+                                            v-model="eventForm.location"
+                                            :api-key="googleApiKey"
+                                            :init-position="geoLocation"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="box">
@@ -129,15 +206,22 @@
 
                         <hr class="mt-0">
 
-                        <biz-form-timezone
+                        <biz-form-select
                             v-model="eventForm.timezone"
                             :label="i18n.timezone"
-                            :message="error('timezone', eventErrorBag)"
-                            :tooltip-message="i18n.tips.timezone"
+                            :message="error('timezone', 'eventForm')"
                             required
-                        />
+                        >
+                            <option
+                                v-for="timezoneOption in timezoneOptions"
+                                :key="timezoneOption.id"
+                                :value="timezoneOption.id"
+                            >
+                                {{ timezoneOption.value }}
+                            </option>
+                        </biz-form-select>
 
-                        <hr>
+                        <hr class="mt-0">
 
                         <div class="columns">
                             <div class="column">
@@ -145,11 +229,6 @@
                                     <header class="card-header">
                                         <p class="card-header-title">
                                             {{ i18n.weekly_hours }}
-
-                                            <biz-tooltip
-                                                class="ml-1"
-                                                :message="i18n.tips.weekly_hours"
-                                            />
                                         </p>
                                     </header>
                                     <div class="card-content">
@@ -194,19 +273,14 @@
                                 <div class="card">
                                     <header class="card-header">
                                         <p class="card-header-title">
-                                            {{ i18n.date_override }}
-
-                                            <biz-tooltip
-                                                class="ml-1"
-                                                :message="i18n.tips.date_override"
-                                            />
+                                            {{ i18n.date_overrides }}
                                         </p>
                                     </header>
 
                                     <div class="card-content">
                                         <div class="columns is-multiline">
                                             <div class="column is-full has-text-centered">
-                                                {{ i18n.date_override_description }}
+                                                {{ i18n.date_overrides_description }}
                                             </div>
 
                                             <div class="column is-full has-text-centered">
@@ -335,30 +409,6 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
-
-            <biz-provide-inject-tab
-                id="product-space"
-                title="Space"
-                :is-rendered="can.space.manageProductSpace"
-            >
-                <form
-                    class="box"
-                    @submit.prevent="submitSpace()"
-                >
-                    <product-space-form
-                        v-model="spaceForm.space_id"
-                        :space-options="spaceOptions"
-                    />
-
-                    <div class="field is-grouped is-grouped-right mt-4">
-                        <div class="control">
-                            <biz-button class="is-link">
-                                {{ i18n.update }}
-                            </biz-button>
-                        </div>
-                    </div>
-                </form>
-            </biz-provide-inject-tab>
         </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
@@ -383,24 +433,23 @@
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormAssignUser from '@/Biz/Form/AssignUser.vue';
-    import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
-    import BizFormTimezone from '@/Biz/Form/Timezone.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizGmapMarker from '@/Biz/GmapMarker.vue';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import BizTag from '@/Biz/Tag.vue';
-    import BizTooltip from '@/Biz/Tooltip.vue';
-    import ProductSpaceForm from './ProductSpaceForm.vue';
-    import icon from '@/Libs/icon-class';
-    import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
     import ProductForm from './ProductForm.vue';
     import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes.vue';
+    import icon from '@/Libs/icon-class';
+    import moment from 'moment';
     import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
-    import { ref, computed } from 'vue';
+    import { ref } from 'vue';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
@@ -411,18 +460,17 @@
             BizCheckbox,
             BizErrorNotifications,
             BizFormAssignUser,
-            BizFormFieldsetLocation,
+            BizFormInput,
             BizFormNumberAddons,
             BizFormSelect,
-            BizFormTimezone,
+            BizFormTextarea,
+            BizGmapMarker,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
-            BizTooltip,
             ProductEditModalDateOverride,
             ProductForm,
             ScheduleRuleTimes,
-            ProductSpaceForm,
         },
 
         mixins: [
@@ -448,69 +496,77 @@
             dimensions: { type: Object, default: () => {} },
             roleOptions: { type: Array, required: true },
             defaultCountryCode: { type: String, required: true },
+            countryOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
             imageMimes: { type: Array, required: true },
             product: { type: Object, required: true },
             event: { type: Object, required: true },
+            timezoneOptions: { type: Object, required: true },
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
+            geoLocation: { type: Object, required: true },
             managers: { type: Array, default: () => [] },
+            googleApiKey: { type: String, default: null },
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
             productManagerBaseRoute: { type: String, required: true },
             rules: { type: Object, required: true },
             instructions: {type: Object, default: () => {}},
-            spaceOptions: { type: Array, default: () => [] },
-            space: { type: Object, required: true },
-            i18n: { type: Object, default: () => {} },
+            i18n: { type: Object, default: () => ({
+                details : 'Details',
+                cancel : 'Cancel',
+                update : 'Update',
+                product : 'Product',
+                event : 'Event',
+                manager : 'Manager',
+                duration : 'Duration',
+                bookable_date_range : 'Bookable date range (Calendar days into the future)',
+                address : 'Address',
+                city : 'City',
+                country : 'Country',
+                latitude : 'Latitude',
+                longitude : 'Longitude',
+                schedule : 'Schedule',
+                timezone : 'Timezone',
+                weekly_hours : 'Weekly hours',
+                date_overrides : 'Date override',
+                date_overrides_description : 'Add dates when your availability changes from your weekly hours',
+                add_date : 'Add date',
+                map : 'Map',
+                unavailable : 'Unavailable',
+                choose_product_manager : 'Choose product manager',
+
+            }) },
         },
 
         setup(props) {
-            const product = computed(() => props.product);
-            const event = computed(() => props.event);
-            const space = computed(() => props.space);
-
             const form = {
-                name: product.value.name,
-                status: product.value.status,
-                description: product.value.description,
-                short_description: product.value.short_description,
-                roles: product.value.roles,
-                is_check_in_required: product.value.is_check_in_required,
-                gallery: product.value.gallery.map(media => media.id),
+                name: props.product.name,
+                status: props.product.status,
+                description: props.product.description,
+                short_description: props.product.short_description,
+                roles: props.product.roles,
+                is_check_in_required: props.product.is_check_in_required,
+                gallery: props.product.gallery.map(media => media.id),
             };
 
             const eventForm = {
-                location: event.value.location,
-                duration: event.value.duration,
-                bookable_date_range: event.value.bookable_date_range,
-                timezone: event.value.timezone,
-                weekly_hours: computed(() => props.weeklyHours).value,
-                date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
-            };
-
-            const spaceForm = {
-                space_id: space.value.id,
-            };
-
-            const locationFieldsetErrorKeys = {
-                address: 'location.address',
-                city: 'location.city',
-                countryCode: 'location.country_code',
-                latitude: 'location.latitude',
-                longitude: 'location.longitude'
-            };
+                location: props.event.location,
+                duration: props.event.duration,
+                bookable_date_range: props.event.bookable_date_range,
+                timezone: props.event.timezone,
+                weekly_hours: props.weeklyHours,
+                date_overrides: cloneDeep(props.dateOverrides),
+            }
 
             return {
                 form: useForm(form),
-                eventErrorBag: 'updateEvent',
-                eventErrors: ref({}),
                 eventForm: useForm(eventForm),
-                spaceForm: useForm(spaceForm),
                 icon,
-                locationFieldsetErrorKeys,
+                eventErrors: ref({}),
+                eventErrorBag: 'updateEvent',
             };
         },
 
@@ -518,6 +574,7 @@
             return {
                 activeTab: 0,
                 selectedDateOverrideBatch: null,
+                isMapOpen: false,
                 productManagers: this.managers,
                 unusedDates: [],
             };
@@ -808,6 +865,10 @@
                 })
             },
 
+            toggleMap() {
+                this.isMapOpen = !this.isMapOpen;
+            },
+
             submitManager() {
                 const self = this;
                 const form = useForm({managers: map(this.productManagers, 'id')});
@@ -847,25 +908,6 @@
                     this.addTimeRange(index);
                 }
             },
-
-            submitSpace() {
-                const self = this;
-
-                const url = route(
-                    self.baseRouteName+'.spaces.update',
-                    self.product.id
-                );
-
-                self.spaceForm.put(url, {
-                    replace: true,
-                    onStart: () => self.onStartLoadingOverlay(),
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: () => self.onEndLoadingOverlay()
-                });
-            }
         },
     };
 </script>

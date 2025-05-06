@@ -75,7 +75,7 @@ class EventRescheduled extends Mailable
                         ->setTimezone($schedule->timezone)
                         ->format(config('ecommerce.format.date_event_email_body')),
                 ],
-                'timezone' => $schedule->displayTimezone,
+                'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
                 'message' => $rescheduledEvent->message,
             ]);

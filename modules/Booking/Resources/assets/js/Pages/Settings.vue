@@ -116,79 +116,67 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
-
-            <biz-provide-inject-tab
-                :title="startCase(i18n.control_access)"
-                tab-id="access-tab-trigger"
-            >
-                <setting-access
-                    v-model="form"
-                    :role-options="roleOptions"
-                    @submit="submit"
-                />
-            </biz-provide-inject-tab>
         </biz-provide-inject-tabs>
     </div>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import MixinHasTab from '@/Mixins/HasTab';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextEditor from '@/Biz/Form/TextEditor.vue';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
-    import BizSelect from '@/Biz/Select.vue';
-    import SettingAccess from './SettingAccess.vue';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasTab from '@/Mixins/HasTab';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { ref, computed } from 'vue';
-    import { startCase } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
-
+    import { ref } from 'vue';
 
     export default {
         components: {
             BizButton,
-            BizFormNumberAddons,
+            BizSelect,
             BizFormSelect,
             BizFormTextEditor,
+            BizFormNumberAddons,
             BizProvideInjectTab,
             BizProvideInjectTabs,
-            BizSelect,
-            SettingAccess,
         },
 
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
             MixinHasTab,
-            MixinHasTranslation,
         ],
 
         layout: AppLayout,
 
         props: {
             bookingSettings: { type: Object, required: true },
-            roleOptions: { type: Array, default: () => [] },
             title: { type: String, default: "Settings" },
+            i18n: { type: Object, default: () => ({
+                email : 'Email',
+                check_in : 'Check-in',
+                new_booking : 'New booking',
+                booking_remainder : 'Booking remainder',
+                booking_cancellation : 'Booking cancellation',
+                available_check_in : 'Available check-in before',
+                check_in_radius : 'Check-in radius',
+                save : 'Save',
+            }) },
         },
 
         setup(props) {
-            const bookingSettings = computed(() => props.bookingSettings);
-
             const form = {
-                email_new_booking: bookingSettings.value?.booking_email_new_booking ?? "",
-                email_reminder: bookingSettings.value?.booking_email_reminder ?? "",
-                email_cancellation: bookingSettings.value?.booking_email_cancellation ?? "",
-                allowed_early_check_in: bookingSettings.value?.allowed_early_check_in ?? 0,
-                check_in_radius: bookingSettings.value?.check_in_radius ?? {value:null,unit:'m'},
-                access_common_user: bookingSettings.value?.booking_access_common_user ?? false,
-                access_roles: bookingSettings.value?.booking_access_roles ?? [],
+                email_new_booking: props.bookingSettings?.booking_email_new_booking ?? "",
+                email_reminder: props.bookingSettings?.booking_email_reminder ?? "",
+                email_cancellation: props.bookingSettings?.booking_email_cancellation ?? "",
+                allowed_early_check_in: props.bookingSettings?.allowed_early_check_in ?? 0,
+                check_in_radius: props.bookingSettings?.check_in_radius ?? {value:null,unit:'m'},
             };
 
             return {
@@ -217,8 +205,6 @@
                     onFinish: self.onEndLoadingOverlay
                 });
             },
-
-            startCase,
         }
     };
 </script>

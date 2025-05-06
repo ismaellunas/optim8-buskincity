@@ -2,14 +2,10 @@
 
 namespace Modules\Space\Http\Requests;
 
-use App\Enums\PublishingStatus;
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
-use App\Rules\CountryCode;
 use App\Rules\MaxWords;
-use App\Rules\Timezone;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Validation\Rule;
 use Modules\Space\Entities\SpaceEventTranslation;
 
 class SpaceEventRequest extends BaseFormRequest
@@ -47,36 +43,12 @@ class SpaceEventRequest extends BaseFormRequest
                 'required',
                 'date',
             ],
-            'timezone' => ['required', new Timezone()],
-            'is_same_address_as_parent' => ['required', 'boolean'],
-            'address' => ['nullable', 'max:500'],
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
-            'city' => [
-                'required_if:is_same_address_as_parent,false',
-                'max:64'
-            ],
-            'country_code' => [
-                'required_if:is_same_address_as_parent,false',
-                new CountryCode()
-            ],
-            'status' => [
-                'required',
-                Rule::in(PublishingStatus::options()->pluck('id')),
-            ]
         ]);
     }
 
     protected function customAttributes(): array
     {
-        $translatedAttributes = [
-            'timezone' => __('Timezone'),
-            'title' => __('Title'),
-            'started_at' => __('Started at'),
-            'ended_at' => __('Ended at'),
-            'city' => __('City'),
-        ];
-
+        $translatedAttributes = [];
         $locales = array_keys($this->translations);
 
         $attributes = (new SpaceEventTranslation())->getFillable();
@@ -89,13 +61,5 @@ class SpaceEventRequest extends BaseFormRequest
         }
 
         return $translatedAttributes;
-    }
-
-    public function messages()
-    {
-        return [
-            'city.required_if' => __('validation.required'),
-            'country_code.required_if' => __('validation.required'),
-        ];
     }
 }

@@ -37,9 +37,7 @@
                             v-model="form.post_thumbnail"
                             image-preview-size="8"
                             :placeholder="i18n.open_media_library"
-                            :is-browse-enabled="can?.media?.browse ?? false"
                             :is-download-enabled="can?.media?.read ?? false"
-                            :is-edit-enabled="can?.media?.edit ?? false"
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="postThumbnailMedia"
@@ -58,9 +56,7 @@
                             v-model="form.open_graph"
                             image-preview-size="8"
                             :placeholder="i18n.open_media_library"
-                            :is-browse-enabled="can?.media?.browse ?? false"
                             :is-download-enabled="can?.media?.read ?? false"
-                            :is-edit-enabled="can?.media?.edit ?? false"
                             :is-image-preview-thumbnail="false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="openGraphMedia"
@@ -100,12 +96,6 @@
             MixinHasPageErrors,
             MixinHasLoader,
         ],
-
-        provide() {
-            return {
-                i18n: this.i18n,
-            }
-        },
 
         layout: AppLayout,
 

@@ -96,62 +96,36 @@
                     </div>
 
                     @if ($post->author)
-                        @php
-                            $authorDescription = $post->author->getTranslatableMeta('short_description', $currentLanguage) ?? "";
-                            $hasReadMore = (Str::length($authorDescription) > 200);
-                        @endphp
                         <div class="box is-shadowless has-background-light mt-6">
                             <div class="is-flex is-align-items-center">
                                 <div class="pr-2">
                                     <figure class="image is-96x96 mr-3">
-                                        <x-image
-                                            src="{{ $post->author->optimizedProfilePhotoOrDefaultUrl }}"
-                                            alt="Author: {{ $post->author->fullName }}"
-                                            class="is-rounded ls-is-cached"
+                                        <img
                                             width="96"
                                             height="96"
-                                            is-lazyload
-                                        />
+                                            src="{{ $post->author->optimizedProfilePhotoOrDefaultUrl }}"
+                                            class="is-rounded ls-is-cached lazyloaded"
+                                            alt="Author: {{ $post->author->fullName }}"
+                                        >
                                     </figure>
                                 </div>
                                 <div>
-                                    <div class="is-flex is-align-items-center mb-2">
+                                    <div class="is-flex is-align-items-center mb-3">
                                         <h3 class="title is-5 m-0">
                                             {{ $post->author->fullName }}
                                         </h3>
+                                        <p class="is-size-7 is-hidden-touch ml-3">
+                                            {{ __('Author') }}
+                                        </p>
                                     </div>
-
-                                    <p class="is-size-7">
+                                    <p class="is-size-7 is-hidden-desktop">
                                         {{ __('Author') }}
                                     </p>
-
-                                    <span class="is-hidden-touch">
-                                        <p class="content mt-3">
-                                            {{ Str::limit($authorDescription, 200, '...') }}
-
-                                            @if ($hasReadMore)
-                                                <br>
-                                                <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio" onclick="event.preventDefault();">
-                                                    {{ __('Read more') }}
-                                                </a>
-                                            @endif
-                                        </p>
-                                    </span>
+                                    <p>
+                                        {{ $post->author->getTranslatableMeta('short_description', $currentLanguage) }}
+                                    </p>
                                 </div>
                             </div>
-
-                            <span class="is-hidden-desktop">
-                                <p class="content mt-3">
-                                    {{ Str::limit($authorDescription, 200, '...') }}
-
-                                    @if ($hasReadMore)
-                                        <br>
-                                        <a href="#" class="has-text-primary has-text-weight-bold js-modal-trigger" data-target="long-bio" onclick="event.preventDefault();">
-                                            {{ __('Read more') }}
-                                        </a>
-                                    @endif
-                                </p>
-                            </span>
                         </div>
                     @endif
                 </div>
@@ -159,8 +133,8 @@
                 <div class="column is-3-desktop is-3-tablet is-12-mobile is-offset-1">
                     <div class="b752-blog-sidebar">
                         <aside class="menu">
-                            <p class="menu-label content">Table of Contents</p>
-                            <ul class="menu-list content">
+                            <p class="menu-label">Table of Contents</p>
+                            <ul class="menu-list">
                                 @foreach ($tableOfContents as $content)
                                     <li>
                                         <a href="{{ $content['tag'] }}">
@@ -212,19 +186,4 @@
             </div>
         </div>
     @endif
-
-    <!-- Modal: Full performer description is-active -->
-    <x-modal id="long-bio">
-        <div class="modal-content theme-font">
-            <div class="card">
-                <div class="card-content">
-                    <div class="content has-text-justified">
-                        <p class="content">
-                            {{ $post->author->getTranslatableMeta('short_description', $currentLanguage) }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </x-modal>
 </x-layouts.post>

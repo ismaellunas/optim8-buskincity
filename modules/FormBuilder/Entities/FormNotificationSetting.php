@@ -23,9 +23,4 @@ class FormNotificationSetting extends BaseModel
         $this->form_id = $inputs['form_id'];
         $this->save();
     }
-
-    public function scopeActive($query, $isActive = true)
-    {
-        return $query->where('is_active', $isActive);
-    }
 }

@@ -16,7 +16,7 @@ class MaxWords implements Rule
 
     public function passes($attribute, $value)
     {
-        return Str::wordCount($value ?? '') <= $this->max;
+        return Str::wordCount($value) <= $this->max;
     }
 
     public function message()

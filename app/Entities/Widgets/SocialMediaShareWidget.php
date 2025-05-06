@@ -4,11 +4,29 @@ namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
 
-class SocialMediaShareWidget extends BaseWidget implements WidgetInterface
+class SocialMediaShareWidget implements WidgetInterface
 {
-    protected $component = 'SocialMediaShare';
+    protected $data = [];
+    protected $title = "Share your page";
+    protected $componentName = 'SocialMediaShare';
+    protected $user;
 
-    protected function getData(): array
+    public function __construct()
+    {
+        $this->user = auth()->user();
+        $this->data = $this->getWidgetData();
+    }
+
+    public function data(): array
+    {
+        return [
+            'title' => $this->title,
+            'componentName' => $this->componentName,
+            'data' => $this->data,
+        ];
+    }
+
+    private function getWidgetData(): array
     {
         return [
             'profilePageUrl' => $this->user->profile_page_url,
@@ -29,7 +47,7 @@ class SocialMediaShareWidget extends BaseWidget implements WidgetInterface
                     'description' => '',
                     'quote' => '',
                     'hashtags' => '',
-                    'icon' => 'fa-brands fa-x-twitter',
+                    'icon' => 'fa-brands fa-twitter',
                     'class' => null,
                     'text' => 'Twitter',
                 ],
@@ -44,6 +62,13 @@ class SocialMediaShareWidget extends BaseWidget implements WidgetInterface
                     'text' => 'LinkedIn',
                 ],
             ],
+            'description' => __(
+                'As a :role, you have a public page to share with your audience. It\'s just like your unique site within :appName. You can copy the link or share on your social media:',
+                [
+                    'role' => $this->user->roleName,
+                    'appName' => config('app.name'),
+                ]
+            ),
         ];
     }
 
@@ -51,7 +76,6 @@ class SocialMediaShareWidget extends BaseWidget implements WidgetInterface
     {
         $canPublicPage = $this->user->hasPublicPage;
 
-        return parent::canBeAccessed()
-            && $canPublicPage;
+        return $canPublicPage;
     }
 }

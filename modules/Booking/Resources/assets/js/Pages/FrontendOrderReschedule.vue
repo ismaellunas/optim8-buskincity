@@ -56,7 +56,6 @@
                                 :max-date="maxDate"
                                 :min-date="minDate"
                                 :product-id="order.product.id"
-                                :timezone="order.event.display_timezone"
                                 @on-time-confirmed="openModal"
                             />
                         </div>
@@ -94,12 +93,13 @@
     import Layout from '@/Layouts/User.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizIcon from '@/Biz/Icon.vue';
     import BizLink from '@/Biz/Link.vue';
     import BookingTime from '@booking/Pages/BookingTime.vue';
     import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation.vue';
     import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail.vue';
     import moment from 'moment';
-    import { ref, computed } from 'vue';
+    import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
@@ -135,7 +135,7 @@
             const form = {
                 date: null,
                 time: null,
-                timezone: computed(() => props.order.timezone).value,
+                timezone: props.order.timezone,
                 message: null,
             };
 

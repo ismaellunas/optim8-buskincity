@@ -12,7 +12,6 @@ use App\Services\{
     PageService,
     TranslationService,
 };
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,9 +36,7 @@ class PageController extends Controller
 
     private function defaultHomePage()
     {
-        return view('home', [
-            'title' => __('Homepage'),
-        ]);
+        return view('home', ['title' => env('APP_NAME')]);
     }
 
     private function userCanAccessPage(): bool
@@ -51,17 +48,6 @@ class PageController extends Controller
         }
     }
 
-    private function pageTranslationView(
-        PageTranslation $pageTranslation,
-        string $locale
-    ): View {
-        return view('page', [
-            'currentLanguage' => $locale,
-            'images' => $this->getPageImages($pageTranslation),
-            'page' => $pageTranslation,
-        ]);
-    }
-
     private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
         string $locale,
@@ -69,14 +55,14 @@ class PageController extends Controller
     ) {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if (
-            $page->hasTranslation($defaultLocale)
-            && $page->translate($defaultLocale)->isPublished
-        ) {
-            return $this->pageTranslationView(
-                $page->translate($defaultLocale),
-                $locale
-            );
+        if ($page->hasTranslation($defaultLocale)) {
+            $pageTranslation = $page->translate($defaultLocale);
+
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation),
+                'page' => $pageTranslation,
+            ]);
         } else {
             return $fallback;
         }
@@ -121,25 +107,25 @@ class PageController extends Controller
         $locale = $this->translationService->currentLanguage();
         $page = $pageTranslation->page;
 
-        if (
-            !$page->hasTranslation($locale)
-            || (
-                !$page->translate($locale)->isPublished
-                && !$this->userCanAccessPage()
-            )
-        ) {
-
+        if (!$page->hasTranslation($locale)) {
             return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,
                 $locale,
                 $this->redirectFallback()
             );
-
         } else {
+            $newPageTranslation = $page->translate($locale);
 
-            if ($page->translate($locale)->slug !== $pageTranslation->slug) {
+            if (
+                $newPageTranslation->status != PageTranslation::STATUS_PUBLISHED
+                && !$this->userCanAccessPage()
+            ) {
+                return $this->redirectFallback();
+            }
+
+            if ($newPageTranslation->slug !== $pageTranslation->slug) {
                 return redirect()->route($this->baseRouteName.'.show', [
-                    $page->translate($locale)->slug
+                    $newPageTranslation->slug
                 ]);
             }
 
@@ -147,10 +133,11 @@ class PageController extends Controller
                 return $this->redirectFallback();
             }
 
-            return $this->pageTranslationView(
-                $page->translate($locale),
-                $locale
-            );
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($newPageTranslation),
+                'page' => $newPageTranslation,
+            ]);
         }
     }
 
@@ -171,11 +158,13 @@ class PageController extends Controller
                 $this->defaultHomePage()
             );
         } else {
+            $pageTranslation = $page->translate($locale);
 
-            return $this->pageTranslationView(
-                $page->translate($locale),
-                $locale
-            );
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation, $locale),
+                'page' => $pageTranslation,
+            ]);
         }
     }
 }

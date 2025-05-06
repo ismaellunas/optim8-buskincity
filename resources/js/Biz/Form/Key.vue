@@ -30,10 +30,6 @@
                 />
             </div>
         </template>
-
-        <template #note>
-            <slot name="note" />
-        </template>
     </biz-form-input-addons>
 </template>
 

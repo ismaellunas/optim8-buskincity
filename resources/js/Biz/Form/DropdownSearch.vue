@@ -10,16 +10,6 @@
             {{ label }}
         </template>
 
-        <template #tooltip>
-            <slot name="tooltip">
-                <biz-tooltip
-                    v-if="tooltipMessage"
-                    class="ml-1"
-                    :message="tooltipMessage"
-                />
-            </slot>
-        </template>
-
         <biz-dropdown-search
             v-bind="$attrs"
             :disabled="disabled"
@@ -35,8 +25,6 @@
             <slot />
         </biz-dropdown-search>
 
-        <slot name="note" />
-
         <template #error>
             <biz-input-error :message="message" />
         </template>
@@ -44,19 +32,17 @@
 </template>
 
 <script>
-    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
-    import BizTooltip from '@/Biz/Tooltip.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
 
     export default {
         name: 'BizFormDropdownSearch',
 
         components: {
-            BizDropdownSearch,
             BizFormField,
             BizInputError,
-            BizTooltip,
+            BizDropdownSearch,
         },
 
         inheritAttrs: false,
@@ -93,10 +79,6 @@
             isFullwidth: {
                 type: Boolean,
                 default: false
-            },
-            tooltipMessage: {
-                type: String,
-                default: null,
             },
         },
     };

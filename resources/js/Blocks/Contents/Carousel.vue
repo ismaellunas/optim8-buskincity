@@ -36,13 +36,11 @@
             :data="modalImages"
             :instructions="instructions?.mediaLibrary"
             :is-download-enabled="can.media.read"
-            :is-edit-enabled="can.media.edit"
             :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
             :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
-            @on-close-edit-modal="refreshImageListByPageActive()"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
             @on-view-changed="setView"
@@ -110,6 +108,7 @@
                 entityTemplate: this.entity.content.template,
                 images: this.dataImages,
                 indexModify: null,
+                modalImages: [],
                 sliderOptions: [1,2,3,4,5,6],
                 visibleSlide: 0,
             };
@@ -173,6 +172,10 @@
             onShownModal() { /* @override */
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
+            },
+
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
+                this.modalImages = data;
             },
 
             selectImage(image) { /* @override Mixins/ContainImageContent */

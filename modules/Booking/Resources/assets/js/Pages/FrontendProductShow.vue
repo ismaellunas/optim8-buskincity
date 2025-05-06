@@ -60,7 +60,7 @@
                             </tr>
                             <tr>
                                 <th>Timezone</th>
-                                <td>{{ event.display_timezone }}</td>
+                                <td>{{ event.timezone }}</td>
                             </tr>
                         </tbody>
                     </biz-table>
@@ -113,7 +113,7 @@
             <div class="columns is-multiline is-mobile mt-5">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <h2 class="title is-3">
-                        {{ startCase(i18n.event_booking) }}
+                        Event Booking
                     </h2>
                 </div>
 
@@ -145,7 +145,6 @@
                                     :max-date="maxDate"
                                     :min-date="minDate"
                                     :product-id="product.id"
-                                    :timezone="event.display_timezone"
                                     @on-time-confirmed="openModal"
                                 />
                             </div>
@@ -161,7 +160,7 @@
         >
             <template #header>
                 <p class="modal-card-title has-text-weight-bold">
-                    {{ startCase(i18n.booking_event_confirmation) }}
+                    Booking Event Confirmation
                 </p>
 
                 <button
@@ -177,15 +176,15 @@
 
             <biz-table is-fullwidth>
                 <tr>
-                    <th><biz-icon :icon="icon.duration" /></th>
+                    <th><biz-icon :icon="bookingIcon.duration" /></th>
                     <td>{{ event.duration }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="icon.timezone" /></th>
-                    <td>{{ event.display_timezone }}</td>
+                    <th><biz-icon :icon="bookingIcon.timezone" /></th>
+                    <td>{{ event.timezone }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="icon.calendar" /></th>
+                    <th><biz-icon :icon="bookingIcon.calendar" /></th>
                     <td><b>{{ bookedAt }}</b></td>
                 </tr>
             </biz-table>
@@ -228,12 +227,11 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import bookingIcon from '@booking/Libs/booking-icon';
     import moment from 'moment';
-    import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { ref, computed } from 'vue';
-    import { startCase } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
+    import { ref } from 'vue';
 
     export default {
         components: {
@@ -278,11 +276,11 @@
             const form = {
                 date: null,
                 time: null,
-                timezone: computed(() => props.timezone).value,
+                timezone: props.timezone,
             };
 
             return {
-                icon: { calendar, duration, timezone },
+                bookingIcon,
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),
@@ -360,8 +358,6 @@
                         }
                     );
             },
-
-            startCase,
         },
     };
 </script>

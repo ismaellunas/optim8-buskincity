@@ -15,7 +15,6 @@ class DatabaseBasicSeeder extends Seeder
     public function run()
     {
         $this->call([
-            ModuleSeeder::class,
             GlobalOptionSeeder::class,
             CountrySeeder::class,
             RoleSeeder::class,
@@ -25,7 +24,6 @@ class DatabaseBasicSeeder extends Seeder
             TranslationSeeder::class,
             UserAndPermissionSeeder::class,
             LanguageSettingSeeder::class,
-            MenuBasicSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();

@@ -3,7 +3,6 @@
 namespace Modules\FormBuilder\Shortcodes;
 
 use App\Services\SettingService;
-use Modules\FormBuilder\ModuleService;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilder
@@ -12,10 +11,6 @@ class FormBuilder
 
     public function register($shortcode)
     {
-        if (! app(ModuleService::class)->isModuleActive()) {
-            return "";
-        }
-
         $formBuilderService = app(FormBuilderService::class);
         $formBuilder = $formBuilderService->getForm($shortcode->form_id);
         $schema = null;

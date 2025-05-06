@@ -40,8 +40,8 @@ class ThemeAdvanceController extends CrudController
             'locales' => null,
         ];
 
-        $faviconMedia = $this->settingService->getFaviconForMediaLibrary();
-        $qrCodeMedia = $this->settingService->getQrCodePublicPageLogoForMediaLibrary();
+        $faviconMedia = $this->settingService->getFaviconMedia();
+        $qrCodeMedia = $this->settingService->getQrCodePublicPageLogoMedia();
 
         return Inertia::render(
             'ThemeAdvance',
@@ -49,10 +49,8 @@ class ThemeAdvanceController extends CrudController
                 'additionalCodes' => $this->settingService->getAdditionalCodes(),
                 'can' => [
                     'media' => [
-                        'add' => $user->can('media.add'),
-                        'browse' => $user->can('media.browse'),
-                        'edit' => $user->can('media.edit'),
                         'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
                     ]
                 ],
                 'faviconMedia' => $faviconMedia,

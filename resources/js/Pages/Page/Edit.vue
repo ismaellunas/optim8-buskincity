@@ -178,9 +178,9 @@
 
                         if (isUsedByMenu) {
                             const confirmResult = await confirmDelete(
-                                this.i18n.are_you_sure,
-                                this.i18n.affected_menu_warning,
-                                this.i18n.yes,
+                                'Are You Sure?',
+                                'This action will also remove the page on the navigation menu.',
+                                'Yes'
                             );
 
                             return !!confirmResult.value;

@@ -5,12 +5,10 @@ namespace Modules\Space\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Space\Entities\Space;
-use Illuminate\Support\Traits\Macroable;
 
 class SpacePolicy
 {
     use HandlesAuthorization;
-    use Macroable;
 
     public function viewAny(User $user)
     {

@@ -13,10 +13,8 @@
                     :medium="medium"
                     :is-delete-enabled="isDeleteEnabled"
                     :is-download-enabled="isDownloadEnabled"
-                    :is-edit-button-for-image="isEditButtonForImage"
                     :is-edit-enabled="isEditEnabled"
                     :is-preview-enabled="isPreviewEnabled"
-                    :is-filename-shown="isFilenameShown"
                     @on-delete-clicked="$emit('on-delete-clicked', $event)"
                     @on-edit-clicked="$emit('on-edit-clicked', $event)"
                     @on-select-clicked="$emit('on-select-clicked', $event)"
@@ -69,11 +67,9 @@
             columnClass: { type: Array, default: () => ['column','is-3'] },
             isDeleteEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
-            isEditButtonForImage: { type: Boolean, default: false },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
             isScrolled: { type: Boolean, default: false },
-            isFilenameShown: { type: Boolean, default: true },
             maxHeight: { type: Number, default: 700 },
             media: { type: Array, default: () => [] },
         },

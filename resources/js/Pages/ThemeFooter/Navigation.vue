@@ -1,15 +1,12 @@
 <template>
-    <form @submit.prevent="onSubmit">
+    <section>
         <div class="columns">
             <div class="column">
-                <span class="has-text-weight-bold">
-                    {{ i18n.menu_items }}
-                </span>
-
-                <biz-tooltip
-                    class="ml-1"
-                    :message="i18n.tips.menu_items"
-                />
+                <div class="is-pulled-left">
+                    <b>
+                        {{ i18n.menu_items }}
+                    </b>
+                </div>
             </div>
             <div class="column">
                 <biz-language-tab
@@ -21,25 +18,6 @@
             </div>
         </div>
 
-        <div class="field">
-            <div class="control">
-                <biz-button
-                    type="button"
-                    class="is-primary"
-                    :disabled="hasMaxSegment"
-                    @click="addSegment('front')"
-                >
-                    <span class="icon">
-                        <i :class="icon.add" />
-                    </span>
-
-                    <span class="ml-2">
-                        {{ sentenceCase(i18n.add_new_segment) }}
-                    </span>
-                </biz-button>
-            </div>
-        </div>
-
         <navigation-segment
             :locale-options="localeOptions"
             :menu-items="menuForm.menu_items"
@@ -48,10 +26,9 @@
             @open-duplicate-modal="openDuplicateModal"
         />
 
-        <div class="field is-grouped is-justify-content-space-between mt-4">
-            <div class="control">
+        <div class="columns">
+            <div class="column">
                 <biz-button
-                    type="button"
                     class="is-primary"
                     :disabled="hasMaxSegment"
                     @click="addSegment()"
@@ -65,14 +42,6 @@
                     </span>
                 </biz-button>
             </div>
-
-            <div class="control">
-                <biz-button class="is-primary">
-                    <span>
-                        {{ i18n.save }}
-                    </span>
-                </biz-button>
-            </div>
         </div>
 
         <navigation-form-duplicate
@@ -83,19 +52,17 @@
             @close="closeModal()"
             @duplicate-menu-item="duplicateMenuItem"
         />
-    </form>
+    </section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasTranslation from '@/Mixins/HasTranslation';
     import BizButton from '@/Biz/Button.vue';
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
-    import BizTooltip from '@/Biz/Tooltip.vue';
-    import icon from '@/Libs/icon-class';
     import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate.vue';
     import NavigationSegment from './NavigationSegment.vue';
+    import icon from '@/Libs/icon-class';
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/vue3';
@@ -107,7 +74,6 @@
         components: {
             BizButton,
             BizLanguageTab,
-            BizTooltip,
             NavigationFormDuplicate,
             NavigationSegment,
         },
@@ -115,8 +81,14 @@
         mixins: [
             MixinHasModal,
             MixinHasLoader,
-            MixinHasTranslation,
         ],
+
+        inject: {
+            i18n: { default: () => ({
+                menu_items : 'Menu items',
+                add_new_segment : 'Add new segment',
+            }) }
+        },
 
         props: {
             menu: {
@@ -219,23 +191,11 @@
                 }
             },
 
-            addSegment(type = null) {
-                const self = this;
-
-                if (! self.hasMaxSegment) {
-                    switch (type) {
-                    case 'front':
-                        self.menuForm.menu_items.unshift(
-                            cloneDeep(self.emptySegment)
-                        );
-                        break;
-
-                    default:
-                        self.menuForm.menu_items.push(
-                            cloneDeep(self.emptySegment)
-                        );
-                        break;
-                    }
+            addSegment() {
+                if (!this.hasMaxSegment) {
+                    this.menuForm.menu_items.push(
+                        cloneDeep(this.emptySegment)
+                    );
                 }
             },
 
@@ -300,14 +260,19 @@
                 this.selectedMenuItem['menu_itemable_id'] = menuItem['menu_itemable_id'];
             },
 
-            onSubmit() {
+            updateMenuItems() {
                 const self = this;
-
-                this.menuForm.post(route(this.baseRouteName+'.navigation.update'), {
+                this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
-                    onStart: () => self.onStartLoadingOverlay(),
-                    onSuccess: (page) => successAlert(page.props.flash.message),
-                    onFinish: () => self.onEndLoadingOverlay(),
+                    onStart: visit => {
+                        self.onStartLoadingOverlay();
+                    },
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onFinish: visit => {
+                        self.onEndLoadingOverlay();
+                    },
                 });
             },
 

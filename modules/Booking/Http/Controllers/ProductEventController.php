@@ -15,7 +15,7 @@ class ProductEventController extends CrudController
 {
     private $productEventService;
 
-    protected $title = ':booking_term.product :booking_term.event';
+    protected $title = 'Product Event';
 
     public function __construct(ProductEventService $productEventService)
     {
@@ -71,7 +71,7 @@ class ProductEventController extends CrudController
         $this->productEventService->saveDateOverrides(collect($inputs['date_overrides']), $schedule);
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title()
+            'resource' => $this->title
         ]);
 
         return back();

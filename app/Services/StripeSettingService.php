@@ -175,7 +175,7 @@ class StripeSettingService
             $media = Media::find($mediaId);
 
             if ($media) {
-                $media->transformMediaLibrary();
+                $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
             }
         }
 
@@ -217,19 +217,5 @@ class StripeSettingService
     public function maxLogoSize(): int
     {
         return config('constants.one_megabyte') / 2;
-    }
-
-    private function getMinimalAmounts(): array
-    {
-        $values = Setting::key('stripe_minimal_amounts')
-            ->group('stripe')
-            ->value('value');
-
-        return json_decode($values, TRUE);
-    }
-
-    public function getMinimalAmountByCurrency(string $currency)
-    {
-        return $this->getMinimalAmounts()[$currency] ?? 0;
     }
 }

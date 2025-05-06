@@ -1,7 +1,10 @@
 <div @class($uniqueClass)>
-    @if ($embed)
+    @if (
+        $url
+        && OEmbed::get($url)
+    )
         <figure class="image is-16by9">
-            {!! $embed->html(['class' => 'has-ratio']) !!}
+            {!! OEmbed::get($url)->html(['class' => 'has-ratio']) !!}
         </figure>
     @else
         <div class="hero is-medium is-primary is-radius">

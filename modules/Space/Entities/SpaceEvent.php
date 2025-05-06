@@ -2,8 +2,6 @@
 
 namespace Modules\Space\Entities;
 
-use App\Enums\PublishingStatus;
-use App\Services\CountryService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,12 +35,6 @@ class SpaceEvent extends Model implements TranslatableContract
         'address',
         'started_at',
         'ended_at',
-        'status',
-    ];
-
-    protected $casts = [
-        'latitude' => 'double',
-        'longitude' => 'double',
     ];
 
     protected static function newFactory()
@@ -89,39 +81,5 @@ class SpaceEvent extends Model implements TranslatableContract
     public function scopeHasSpace($query, int $spaceId)
     {
         $query->where('space_id', $spaceId);
-    }
-
-    public function getFullAddressAttribute(): string
-    {
-        if ($this->is_same_address_as_parent) {
-            return $this->space->fullAddress;
-        }
-
-        return collect([
-            $this->address,
-            $this->city,
-            (
-                $this->country_code
-                ? app(CountryService::class)->getCountryName($this->country_code)
-                : null
-            ),
-        ])->filter()->implode(', ');
-    }
-
-    public function scopePublished(Builder $query)
-    {
-        return $query->where('status', PublishingStatus::PUBLISHED->value);
-    }
-
-    public function getDisplayStatusAttribute(): string
-    {
-        return PublishingStatus::options()
-            ->firstWhere('id', $this->status)['value'] ?? "";
-    }
-
-    public function setAsDraft(): void
-    {
-        $this->status = PublishingStatus::DRAFT->value;
-        $this->save();
     }
 }

@@ -60,8 +60,6 @@ class ProductService
             return (object) [
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
-                'city' => $record->displayCity,
-                'country' => $record->displayCountry,
                 'status' => Str::title($record->status),
                 'can' => [
                     'edit' => $user->can('update', $record),
@@ -125,8 +123,6 @@ class ProductService
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
-                'city' => $record->displayCity,
-                'country' => $record->displayCountry,
                 'coverUrl' => $record->getCoverThumbnailUrl(),
             ];
         });
@@ -134,9 +130,10 @@ class ProductService
 
     public function roleOptions(): Collection
     {
-        return collect()
-            ->push(['id' => null, 'value' => '- '.__('Select').' -'])
-            ->merge(app(UserService::class)->getRoleOptions());
+        return collect(array_merge(
+            [['id' => null, 'value' => '- '.__('Select').' -']],
+            app(UserService::class)->getRoleOptions()
+        ));
     }
 
     public function upload(
@@ -188,9 +185,6 @@ class ProductService
                 'file_url' => $media->file_url,
                 'is_image' => $media->isImage,
                 'thumbnail_url' => $media->thumbnailUrl,
-                'file_name_without_extension' => $media->fileNameWithoutExtension,
-                'can_edit_existing_media' => auth()->user()->can('update', $media),
-                'translations' => $media->translations,
             ]),
         ];
     }
@@ -224,10 +218,7 @@ class ProductService
 
         return User::available()
             ->backend()
-            ->notInRoleNames([
-                config('permission.role_names.super_admin'),
-                config('permission.role_names.admin'),
-            ])
+            ->notInRoleNames([config('permission.super_admin_role')])
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })

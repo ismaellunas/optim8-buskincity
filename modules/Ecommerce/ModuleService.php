@@ -2,11 +2,15 @@
 
 namespace Modules\Ecommerce;
 
-use App\Services\BaseModuleService;
 use Illuminate\Support\Collection;
 
-class ModuleService extends BaseModuleService
+class ModuleService
 {
+    public static function getName()
+    {
+        return config('ecommerce.name');
+    }
+
     public static function permissions(): Collection
     {
         return collect(config('ecommerce.permissions'));

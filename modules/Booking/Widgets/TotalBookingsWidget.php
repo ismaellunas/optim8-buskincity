@@ -5,7 +5,6 @@ namespace Modules\Booking\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Models\User;
 use Modules\Booking\Enums\BookingStatus;
-use Modules\Booking\ModuleService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 
@@ -50,8 +49,7 @@ class TotalBookingsWidget implements WidgetInterface
     public function canBeAccessed(): bool
     {
         return (
-            app(ModuleService::class)->isModuleActive()
-            && $this->user->can('viewAny', Order::class)
+            $this->user->can('viewAny', Order::class)
             || $this->user->isProductManager()
         );
     }

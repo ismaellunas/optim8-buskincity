@@ -6,7 +6,6 @@ use App\Contracts\WidgetInterface;
 use Illuminate\Support\Arr;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FormEntry;
-use Modules\FormBuilder\ModuleService;
 
 class TotalEntriesWidget implements WidgetInterface
 {
@@ -51,10 +50,7 @@ class TotalEntriesWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return (
-            app(ModuleService::class)->isModuleActive()
-            && auth()->user()->can('viewAny', Form::class)
-        );
+        return auth()->user()->can('viewAny', Form::class);
     }
 
     public function response()

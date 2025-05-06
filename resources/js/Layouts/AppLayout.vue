@@ -11,7 +11,7 @@
             <div class="hero-body">
                 <div class="container">
                     <h3 class="title is-size-3">
-                        {{ title ?? titleChild }}
+                        {{ startCase(title ?? titleChild) }}
                     </h3>
                 </div>
             </div>
@@ -49,7 +49,7 @@
     import BizFlashExpired from '@/Biz/FlashExpired.vue';
     import BizNavbarMenu from '@/Biz/NavbarMenu.vue';
     import { Head as HeadTag } from '@inertiajs/vue3';
-    import { head, isEmpty } from 'lodash';
+    import { head, isEmpty, startCase } from 'lodash';
 
     export default {
         name: 'AppLayout',
@@ -78,6 +78,10 @@
             hasSideBreadcrumbsSlot() {
                 return !!this.$slots.sideBreadcrumbs;
             },
+        },
+
+        methods: {
+            startCase,
         },
     };
 </script>

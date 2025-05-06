@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Rules\HexadecimalColor;
-use App\Rules\StripeMinimalAmount;
-use App\Rules\StripeMinimalAmountOption;
 use App\Services\StripeService;
 use App\Services\StripeSettingService;
 use Illuminate\Validation\Rule;
@@ -19,6 +17,7 @@ class StripeSettingRequest extends BaseFormRequest
     public function rules(): array
     {
         $stripeService = app(StripeService::class);
+        $stripeSettingService = app(StripeSettingService::class);
 
         $countries = $stripeService
             ->getCountryOptions()
@@ -31,14 +30,14 @@ class StripeSettingRequest extends BaseFormRequest
 
         return [
             'amount_options' => [
-                'array',
-                new StripeMinimalAmountOption($this->minimal_amounts),
+                'array'
             ],
             'amount_options.*' => [
                 'array',
             ],
             'amount_options.*.*' => [
                 'numeric',
+                'gt:0',
             ],
             'application_fee_percentage' => [
                 'numeric',
@@ -56,12 +55,12 @@ class StripeSettingRequest extends BaseFormRequest
                 'exists:media,id',
             ],
             'minimal_amounts' => [
-                'array',
-                new StripeMinimalAmount()
+                'array'
             ],
             'minimal_amounts.*' => [
                 'nullable',
                 'numeric',
+                'gt:0',
             ],
             'payment_currencies' => [
                 'array'
@@ -82,7 +81,7 @@ class StripeSettingRequest extends BaseFormRequest
     {
         $attributes = [];
 
-        $displayNames = app(StripeSettingService::class)->displayNames();
+        $displayNames = (new StripeSettingService())->displayNames();
 
         foreach ($displayNames as $key => $displayName) {
             $key = str_replace("stripe_", "", $key);

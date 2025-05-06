@@ -26,7 +26,7 @@ class TranslationUpdateRequest extends BaseFormRequest
     public function rules()
     {
         $locale = config('translatable.locales');
-        $groups = app(TranslationManagerService::class)->getGroups($this->get('module'));
+        $groups = (new TranslationManagerService())->getGroups();
 
         $uniqueRule = $this->getUniqueRule();
 
@@ -82,7 +82,6 @@ class TranslationUpdateRequest extends BaseFormRequest
         $ignoreIds = $this->input('translations.*.id');
         $groups = $this->input('translations.*.group');
         $keys = $this->input('translations.*.key');
-        $module = $this->route('module');
 
         $ignoreIds = $this->getIgnoreIds($ignoreIds);
 
@@ -91,11 +90,6 @@ class TranslationUpdateRequest extends BaseFormRequest
                 return $query->whereNotIn('id', $ignoreIds)
                     ->where('group', $groups)
                     ->where('key', $keys);
-            })
-            ->when($module, function ($query, $module) {
-                $query->where('module', $module);
-            }, function ($query) {
-                $query->whereNull('module');
             });
     }
 

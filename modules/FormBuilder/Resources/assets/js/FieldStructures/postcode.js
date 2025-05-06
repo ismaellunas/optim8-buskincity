@@ -4,8 +4,8 @@ export default {
     type: "Postcode",
     title: "Postcode",
     column: 'is-full',
-    label: "",
-    name: "",
+    label: "Postcode",
+    name: "postcode",
     placeholder: null,
     notes: [],
     default_value: "",
@@ -27,8 +27,17 @@ export const config = {
     properties: {
         label: "Properties",
         config: {
-            labelName: {
-                component: "ConfigLabelName",
+            label: {
+                component: "ConfigInput",
+                label: "Label",
+            },
+            name: {
+                component: "ConfigAutoGenerateKey",
+                label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             placeholder: {
                 component: "ConfigInput",
