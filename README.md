@@ -1,6 +1,19 @@
-## About Platform 752
+## Installation steps
+
+### Requirements
+- Php 8.1
+- RedisCLI
 
 ### Laravel
+- cp .env.example .env
+- cp .env.dusk.local.example .env.dusk.local
+- cp .env.sail.example .env.sail
+- composer install
+- sail up -d
+- sail artisan key:generate
+- sail artisan migrate:fresh --seed
+- yarn && yarn build
+- sail artisan optimize:clear
 ### InertiaJs
 ### Vue3
 
