@@ -33,7 +33,7 @@ class Translation extends Model implements TranslationLoader
         $translationCache = app(TranslationCache::class);
 
         try {
-            return $translationCache->rememberForGroup(
+            $cache = $translationCache->rememberForGroup(
                 $locale,
                 function () use ($locale, $group) {
                     return self::select([
@@ -59,6 +59,9 @@ class Translation extends Model implements TranslationLoader
                 return [];
             }
         }
+
+        //temporary until we figure out how to use this
+        return [];
     }
 
     // Scope
