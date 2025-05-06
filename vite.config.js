@@ -7,8 +7,8 @@ export default defineConfig((command, mode) => {
     let input = [
         'resources/js/app.js',
         'resources/js/bulma-misc.js',
+        'resources/js/fontawesome.js',
         'resources/sass/app.sass',
-        'resources/sass/fontawesome-local.sass',
         'themes/biz/js/donation.js',
         'themes/biz/js/page-space.js',
         'themes/biz/js/page.js',
@@ -32,12 +32,7 @@ export default defineConfig((command, mode) => {
         ]),
     ];
 
-    const define = {
-        "process.env.fontawesomeFree": env.FONTAWESOME_FREE ?? false,
-    };
-
     return {
-        define,
         plugins: [
             laravel({
                 input,
