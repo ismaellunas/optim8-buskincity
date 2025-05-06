@@ -13,7 +13,9 @@ class TranslationService
 {
     public static $localeKey = 'locale';
 
-    private static $defaultLocale;
+    //initial composer install fails due to query initiated even though the database are still empty
+    //this is currently set to 'en' just to proceed with the installation
+    private static $defaultLocale = 'en';
 
     private $localeOptions;
 
