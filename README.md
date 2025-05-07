@@ -2,17 +2,20 @@
 
 ### Requirements
 - Php 8.1
-- RedisCLI
+- Docker
+- NodeJS
 
 ### Laravel
 - cp .env.example .env
 - cp .env.dusk.local.example .env.dusk.local
 - cp .env.sail.example .env.sail
-- composer install
+- composer install (Expect to receive an error at the end because the translation service expects to query on our non existent database)
 - sail up -d
+- sail composer install
 - sail artisan key:generate
 - sail artisan migrate:fresh --seed
-- yarn && yarn build
+- sail yarn install
+- sail yarn build
 - sail artisan optimize:clear
 ### InertiaJs
 ### Vue3
