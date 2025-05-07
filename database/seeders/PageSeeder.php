@@ -1776,7 +1776,7 @@ class PageSeeder extends Seeder
             ],
         ];
 
-        $adminUser = User::find(1);
+        $adminUser = User::first();
 
         $homepage = $this->addPage($pages['homepage'], $adminUser);
 
