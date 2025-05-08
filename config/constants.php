@@ -3,9 +3,9 @@
 return [
     'domain' => env('APP_DOMAIN', 'biz752.com'),
 
-    'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
+    'fontawesome_local' => env('VITE_FONTAWESOME_LOCAL', false),
 
-    'fontawesome_free' => env('FONTAWESOME_FREE', false),
+    'fontawesome_free' => env('VITE_FONTAWESOME_FREE', false),
 
     'error_reporting' => env('ERROR_REPORTING', false),
 
