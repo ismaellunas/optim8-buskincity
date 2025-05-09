@@ -10,9 +10,9 @@ class CloudinaryStorage implements MediaStorageInterface
 {
     public function upload(
         UploadedFile $file,
-        string $fileName = null,
-        string $extension = null,
-        string $folder = null,
+        ?string $fileName = null,
+        ?string $extension = null,
+        ?string $folder = null,
         bool $invalidate = false
     ): CloudinaryAsset {
 

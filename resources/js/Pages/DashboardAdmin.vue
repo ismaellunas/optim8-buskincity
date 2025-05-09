@@ -14,7 +14,6 @@
                         />
                     </template>
                 </div>
-
                 <component
                     :is="asyncComponents['BizWidgetColumnsAdmin']"
                     :widgets="widgets"
