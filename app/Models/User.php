@@ -340,7 +340,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function deleteProfilePhoto(): void
     {
-        $media = Media::find($this->profile_photo_media_id);
+        $media = Media::where('id', $this->profile_photo_media_id)->first();
 
         if ($media) {
             app(MediaService::class)->destroy($media, new CloudinaryStorage());
