@@ -27,9 +27,11 @@ class SettingController extends CrudController
             'booking_access_roles',
         ])->get()->pluck('value', 'key')->all();
 
-        $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
-        $settings['booking_access_common_user'] = (bool)$settings['booking_access_common_user'];
-        $settings['booking_access_roles'] = json_decode($settings['booking_access_roles']);
+        if (!empty($settings)) {
+            $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
+            $settings['booking_access_common_user'] = (bool)$settings['booking_access_common_user'];
+            $settings['booking_access_roles'] = json_decode($settings['booking_access_roles']);
+        }
 
         Inertia::share('i18n', $this->translations());
 
