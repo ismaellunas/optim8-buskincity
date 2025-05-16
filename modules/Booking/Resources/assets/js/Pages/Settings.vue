@@ -191,8 +191,6 @@
                 access_roles: bookingSettings.value?.booking_access_roles ?? [],
             };
 
-            console.log(form);
-
             return {
                 form: useForm(form),
                 earlyCheckInOptions:[0, 5, 15, 30, 45, 60],
