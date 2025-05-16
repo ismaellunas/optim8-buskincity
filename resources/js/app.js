@@ -8,7 +8,8 @@ import { createInertiaApp, router } from '@inertiajs/vue3';
 import { loadingOptions } from './Libs/defaults';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import VueSweetalert2 from 'vue-sweetalert2';
-import VueSocialSharing from 'vue-social-sharing'
+import VueSocialSharing from 'vue-social-sharing';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 window.inertiaEventsCount = {
     navigateCount: 0,

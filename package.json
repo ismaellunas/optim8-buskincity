@@ -51,6 +51,7 @@
         "object-to-formdata": "^4.4.2",
         "sass": "^1.43.2",
         "sass-loader": "^12.2.0",
+        "sweetalert2": "^11.21.0",
         "vue-cropperjs": "^5.0.0",
         "vue-filepond": "^7.0.3",
         "vue-loading-overlay": "^6.0.3",

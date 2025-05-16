@@ -27,11 +27,7 @@ class SettingController extends CrudController
             'booking_access_roles',
         ])->get()->pluck('value', 'key')->all();
 
-        if (!empty($settings)) {
-            $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
-            $settings['booking_access_common_user'] = (bool)$settings['booking_access_common_user'];
-            $settings['booking_access_roles'] = json_decode($settings['booking_access_roles']);
-        }
+        $settings = $this->settingToDecode($settings);
 
         Inertia::share('i18n', $this->translations());
 
@@ -73,7 +69,7 @@ class SettingController extends CrudController
                 'key' => 'check_in_radius',
                 'group' => 'booking'
             ],
-            ['value' => $inputs['check_in_radius']]
+            ['value' => json_encode($inputs['check_in_radius'])]
         );
 
         Setting::updateOrCreate(
@@ -116,5 +112,22 @@ class SettingController extends CrudController
             'new_booking' => __('New booking'),
             'save' => __('Save'),
         ];
+    }
+
+    private function settingToDecode(array $settings): array
+    {
+        $settingsToDecode = [
+            'check_in_radius',
+            'booking_access_common_user',
+            'booking_access_roles',
+        ];
+
+        foreach ($settings as $key => $value) {
+            if (in_array($key, $settingsToDecode)) {
+                $settings[$key] = json_decode($value);
+            }
+        }
+
+        return $settings;
     }
 }
