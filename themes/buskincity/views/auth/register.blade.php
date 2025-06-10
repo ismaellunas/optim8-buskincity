@@ -188,12 +188,12 @@
                                 <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
                                     <button type="button" class="button" tabindex="-1">
                                         <span class="icon">
-                                            <x-icon icon="fa-eye" />
+                                            <i class="fa-solid fa-eye"></i>
                                         </span>
                                     </button>
                                     <button type="button" class="button is-hidden" tabindex="-1">
                                         <span class="icon">
-                                            <x-icon icon="fa-eye-slash" />
+                                            <i class="fa-solid fa-eye-slash"></i>
                                         </span>
                                     </button>
                                 </div>
