@@ -2,19 +2,22 @@
 
 namespace Modules\FormBuilder\Http\Controllers;
 
-use App\Http\Controllers\CrudController;
-use App\Services\UserService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
+use App\Models\User;
 use Inertia\Inertia;
-use Modules\FormBuilder\Entities\FieldGroup;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\UserService;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Modules\FormBuilder\Entities\Form;
+use App\Http\Controllers\CrudController;
+use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Events\FormSubmitted;
-use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
+use App\Mail\StreetPerformerApplicationReceived;
+use Modules\FormBuilder\Services\FormBuilderService;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 use Modules\FormBuilder\Services\AutomateUserCreationService;
-use Modules\FormBuilder\Services\FormBuilderService;
+use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 
 class FormBuilderController extends CrudController
 {
@@ -188,6 +191,21 @@ class FormBuilderController extends CrudController
 
         FormSubmitted::dispatch($formEntry);
 
+        $formId = $inputs['form_id'] ?? null;
+        if (!empty($formId) && $formId === 'performer_application') {
+            $superAdmin = User::role('Super Administrator')->first();
+            $streetPerformerData = [
+                'name' => $inputs['first_name'] . ' ' . $inputs['last_name'],
+                'stageName' => $inputs['stage_name'],
+                'country' => $inputs['country'],
+                'discipline' => $inputs['discipline'],
+                'videoLink' => $inputs['promotional_video'],
+                'performancePhoto' => $inputs['performance_photo'],
+            ];
+            Mail::to(users: $superAdmin)->send(mailable: new StreetPerformerApplicationReceived(streetPerformerData: $streetPerformerData));
+        }
+        //get form_id and match it for performer_application value then send the email
+
         return [
             'success' => true,
             'message' => __('Thank you for filling out the form.'),
@@ -216,7 +234,6 @@ class FormBuilderController extends CrudController
             'submit_button' => __('Submit button'),
             'text' => __('Text'),
             'position' => __('Position'),
-            'update' => __('Update'),
             'add' => __('Add'),
             'automate_user_creation' => __('Automate user creation'),
             'change_role_confirmation_text' => __('All mapping rules will be removed. Are you sure you want to change the role?'),
