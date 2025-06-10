@@ -64,6 +64,11 @@ export default defineConfig((command, mode) => {
         },
         build: {
             target: 'esnext',
+            manifest: true,
+            outDir: 'public/build',
+            rollupOptions: {
+                input: input, // Ensure input is properly resolved
+            },
         },
     };
 });
