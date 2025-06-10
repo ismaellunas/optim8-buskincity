@@ -204,7 +204,6 @@ class FormBuilderController extends CrudController
             ];
             Mail::to(users: $superAdmin)->send(mailable: new StreetPerformerApplicationReceived(streetPerformerData: $streetPerformerData));
         }
-        //get form_id and match it for performer_application value then send the email
 
         return [
             'success' => true,
