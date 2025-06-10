@@ -20,7 +20,6 @@ class FormBuilder
         $formBuilder = $formBuilderService->getForm($shortcode->form_id);
         $schema = null;
         $form = [];
-
         if (
             !empty($formBuilder)
             && $formBuilder->canBeAccessed()
