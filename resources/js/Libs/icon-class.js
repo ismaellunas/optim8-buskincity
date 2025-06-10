@@ -2,8 +2,10 @@ import icons from "../Json/icon-list.json";
 import { last } from 'lodash';
 
 export function iconFormatter(iconClasses) {
-    const iconStyle = process.env.fontawesomeFree ? 'fa-solid' : 'fa-light';
-    const iconClass = process.env.fontawesomeFree ? iconClasses[0] : last(iconClasses);
+    var isFree = import.meta.env.VITE_FONTAWESOME_FREE === 'true';
+
+    const iconStyle = isFree ? 'fa-solid' : 'fa-light';
+    const iconClass = isFree ? iconClasses[0] : last(iconClasses);
 
     return iconStyle + ' ' + iconClass;
 }

@@ -1,15 +1,8 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @setup
-    function logSuccess($message) { return "echo '\033[0;32m" .$message. "\033[0m';\n"; }
-    function logWarn($message)    { return "echo '\033[0;31m" .$message. "\033[0m';\n"; }
-    function logInfo($message)    { return "echo '\033[1;33m" .$message. "\033[0m';\n"; }
-    function logLine($message)    { return "echo '" .$message. "';\n"; }
-
-    $deployEnvironments = ['staging', 'prod'];
-
     if (empty($env)) {
-        $env = "local";
+        $env = "deploy";
     }
 
     if ($env == "local") {
@@ -20,11 +13,11 @@
 
     $dotenv->safeLoad();
 
-    $branch = $_ENV['HEROKU_BRANCH'] ?? 'main';
-    $git_remote = $_ENV['HEROKU_REMOTE'] ?? 'remote_is_empty';
+    $branch = "main";
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
-    $heroku_app = $_ENV['HEROKU_APP'] ?? '';
+    $git_remote = $_ENV['GIT_REMOTE'] ?? 'heroku';
 
+    $heroku_app = $_ENV['HEROKU_APP'];
     $heroku_vars = [
         'APP_DEBUG',
         'APP_DOMAIN',
@@ -38,8 +31,6 @@
         'DB_CONNECTION',
         'ERROR_REPORTING',
         'FOLDER_PREFIX',
-        'FONTAWESOME_FREE',
-        'FONTAWESOME_KIT_NAME',
         'MAIL_ENCRYPTION',
         'MAIL_FROM_ADDRESS',
         'MAIL_FROM_NAME',
@@ -61,14 +52,13 @@
 @endsetup
 
 @story('heroku:deploy')
-    check-deploy-environment
     git-restore-and-stash
     git-checkout
+    git-commit-deployment
     heroku:maintenance-on
     heroku:push
     heroku:migration
     heroku:generate-css
-    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -77,15 +67,14 @@
 @endstory
 
 @story('heroku:deploy-full')
-    check-deploy-environment
     git-restore-and-stash
     git-checkout
+    git-commit-deployment
     heroku:maintenance-on
     heroku:config-set
     heroku:push
     heroku:migration
     heroku:generate-css
-    heroku:add-translations
     heroku:route-list
     heroku:restart
     heroku:clean-after-deploy
@@ -93,61 +82,19 @@
     git-push
 @endstory
 
-@story('heroku:deploy-tag')
-    check-deploy-environment
-    check-tag
-    git-restore-and-stash
-    heroku:maintenance-on
-    heroku:backup-db
-    git-create-branch-from-tag
-    heroku:push-tag
-    heroku:migration
-    heroku:generate-css
-    heroku:add-translations
-    heroku:route-list
-    heroku:restart
-    heroku:clean-after-deploy
-    heroku:maintenance-off
-    git-delete-tag-branch
-@endstory
-
-@story('heroku:populate-data-basic')
-    check-deploy-environment
-    heroku:seed-basic
-@endstory
-
-@story('fetch-tag')
-    check-tag
-    git-fetch-tag
-@endstory
-
 @task('heroku:migration')
     @if (! $skipMigration)
-        heroku run -r {{ $git_remote }} -- php artisan migrate --force
+        heroku run -a {{ $heroku_app }} php artisan migrate --force
     @endif
-@endtask
-
-@task('heroku:seed-basic')
-    heroku run -r {{ $git_remote }} -- php artisan db:seed --class=DatabaseBasicSeeder --force
-    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=SpaceDatabaseBasicSeeder Space --force
-    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=EcommerceDatabaseBasicSeeder Ecommerce --force
-    heroku run -r {{ $git_remote }} -- php artisan module:seed Booking --force
-    heroku run -r {{ $git_remote }} -- php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder --force
 @endtask
 
 @task('heroku:clean-after-deploy')
-    heroku run -r {{ $git_remote }} php artisan optimize:clear
-    heroku run -r {{ $git_remote }} rm Envoy.blade.php
-@endtask
-
-@task('heroku:add-translations')
-    @if (! $skipFixTranslations)
-        heroku run -r {{ $git_remote }} -- php artisan fix:translation-source
-    @endif
+    heroku run -a {{ $heroku_app }} php artisan optimize:clear
+    heroku run -a {{ $heroku_app }} rm Envoy.blade.php
 @endtask
 
 @task('heroku:restart')
-    heroku restart -r {{ $git_remote }} worker
+    heroku restart -a {{ $heroku_app }} worker
 @endtask
 
 @task('install-dependencies')
@@ -156,16 +103,20 @@
 @endtask
 
 @task('git-restore-and-stash')
+    rm -rf public/build
     git restore public/css/app.css
+    git restore public/js/app.js
     git restore public/mix-manifest.json
     git stash -u
 @endtask
 
 @task('git-checkout')
     git checkout {{ $branch }}
+    git fetch origin master
+    git merge master
 @endtask
 
-@task('git-commit-changes-before-deployment')
+@task('git-commit-deployment')
     git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
@@ -174,23 +125,23 @@
 @endtask
 
 @task('heroku:maintenance-on')
-    heroku maintenance:on -r {{ $git_remote }}
+    heroku maintenance:on -a {{ $heroku_app }}
 @endtask
 
 @task('heroku:maintenance-off')
-    heroku maintenance:off -r {{ $git_remote }}
+    heroku maintenance:off -a {{ $heroku_app }}
 @endtask
 
 @task('heroku:config-set')
     @foreach ($_ENV as $key => $value)
         @if (in_array($key, $heroku_vars))
-            heroku config:set {{ $key }}={{ $value }} -r {{ $git_remote }}
+            heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
         @endif
     @endforeach
 @endtask
 
 @task('heroku:generate-css')
-    heroku run -r {{ $git_remote }} php artisan generate:theme-css
+    heroku run -a {{ $heroku_app }} php artisan generate:theme-css
 @endtask
 
 @task('heroku:push')
@@ -202,28 +153,15 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run -r {{ $git_remote }} -- php artisan route:list --path="admin"
+    heroku run -a {{ $heroku_app }} php artisan route:list --path="admin"
 @endtask
 
-@task('heroku:backup-db')
-    heroku pg:backups:capture -a {{ $heroku_app }}
+@task('nwatch')
+    npm run watch-poll
 @endtask
 
-@task('heroku:push-tag')
-    git push {{ $git_remote }} {{ $tag }}_branch:{{ $branch }} --force
-@endtask
-
-@task('git-create-branch-from-tag')
-    git checkout tags/{{ $tag }} -b {{ $tag }}_branch
-@endtask
-
-@task('git-delete-tag-branch')
-    git checkout {{ $branch }}
-    git branch --delete {{ $tag }}_branch
-@endtask
-
-@task('git-fetch-tag')
-    git fetch platform tag {{ $tag }} --no-tags
+@task('nwatch-theme')
+    npm run watch-poll --theme={{ $theme }}
 @endtask
 
 @task('sail:fresh')
@@ -233,6 +171,19 @@
     sail artisan module:seed Space
     sail artisan module:seed Ecommerce
     sail artisan module:seed Booking
+@endtask
+
+@task('sail:watch')
+    sail npm run watch-poll
+@endtask
+
+@task('sail:watch-theme')
+    sail npm run watch-poll --theme={{ $theme }}
+@endtask
+
+@task('sail:dev')
+    sail npm run dev
+    sail npm run dev --theme={{ $theme }}
 @endtask
 
 @task('sail:queue')
@@ -259,26 +210,3 @@
     php artisan module:seed Booking
     php artisan module:seed --class=FormBuilderDatabaseBasicSeeder FormBuilder
 @endtask
-
-@task('check-deploy-environment')
-    @if (! in_array($env, $deployEnvironments))
-        {{ logWarn("Env is NOT for deployment") }}
-        exit;
-    @endif
-
-    {{ logInfo("Deployment is starting ---") }}
-@endtask
-
-@task('check-tag')
-    @if (empty($tag))
-        {{ logWarn("Tag is not specified") }}
-        exit;
-    @endif
-
-    {{ logInfo("Tag name is: ".$tag) }}
-@endtask
-
-@error
-    echo "[x] $task is failed";
-    exit;
-@enderror

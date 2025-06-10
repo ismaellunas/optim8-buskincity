@@ -195,7 +195,7 @@ class SpaceService
         );
     }
 
-    public function typeOptions(string $noneLabel = null): Collection
+    public function typeOptions(?string $noneLabel = null): Collection
     {
         $options = collect();
 
@@ -220,7 +220,7 @@ class SpaceService
         });
     }
 
-    public function editableRecord(Space $space = null): array
+    public function editableRecord(?Space $space = null): array
     {
         if (is_null($space)) {
             $space = new Space();

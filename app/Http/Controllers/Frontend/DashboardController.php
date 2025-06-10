@@ -36,7 +36,7 @@ class DashboardController extends Controller
         return $this->baseWidgetFrontendNamespace();
     }
 
-    private function baseWidgetFrontendNamespace(string $appId = null): string
+    private function baseWidgetFrontendNamespace(?string $appId = null): string
     {
         return "\\App\\Services\\WidgetFrontend" . ($appId ? Str::studly($appId) : '') . "Service";
     }
