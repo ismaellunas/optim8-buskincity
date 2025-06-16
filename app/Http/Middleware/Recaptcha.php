@@ -30,7 +30,8 @@ class Recaptcha
             dd([
                 'token' => $recaptchaToken,
                 'keys' => $recaptchaKeys,
-                'secret' => $secretKey
+                'secret' => $secretKey,
+                'response' => $response
             ]);
 
             if (! $response->isSuccess()) {
