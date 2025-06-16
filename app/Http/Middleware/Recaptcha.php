@@ -25,15 +25,15 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
-            $recaptchaToken = $request->input('g-recaptcha-response');
+            // $recaptchaToken = $request->input('g-recaptcha-response');
 
-            dd([
-                'token' => $recaptchaToken,
-                'keys' => $recaptchaKeys,
-                'secret' => $secretKey,
-                'response' => $response,
-                'score' => $response->getScore(),
-            ]);
+            // dd([
+            //     'token' => $recaptchaToken,
+            //     'keys' => $recaptchaKeys,
+            //     'secret' => $secretKey,
+            //     'response' => $response,
+            //     'score' => $response->getScore(),
+            // ]);
 
             if (! $response->isSuccess()) {
 
