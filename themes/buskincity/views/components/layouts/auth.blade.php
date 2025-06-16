@@ -22,14 +22,14 @@
 
         @env ('production')
             <!-- Scripts -->
-            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+            <script src="https://kit.fontawesome.com/4c291301ad.js" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
             @if (config('constants.fontawesome_local'))
                 @vite(['resources/js/fontawesome.js'])
             @else
-                <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+                <script src="https://kit.fontawesome.com/4c291301ad.js" crossorigin="anonymous"></script>
             @endif
         @endenv
 
