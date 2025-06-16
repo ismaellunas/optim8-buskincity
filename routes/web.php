@@ -219,13 +219,13 @@ Route::prefix(Localization::setLocale())
             ->middleware('redirectOriginLanguage');
 
         Route::middleware('adjustOriginLanguage')->group(function () {
-            Route::get(trans('blog.index'), [PostController::class, 'index'])
+            Route::get(trans('routes.blog.index'), [PostController::class, 'index'])
                 ->name('blog.index');
 
-            Route::get(trans('blog.category.index'), [PostCategoryController::class, 'index'])
+            Route::get(trans('routes.blog.category.index'), [PostCategoryController::class, 'index'])
                 ->name('blog.category.index');
 
-            Route::get(trans('routes.blog.show'), [PostController::class, 'show'])
+            Route::get(trans('routes.routes.blog.show'), [PostController::class, 'show'])
                 ->where('slug', '[\w\d\-\_]+')
                 ->name('blog.show');
 
@@ -237,7 +237,7 @@ Route::prefix(Localization::setLocale())
                 ->name('frontend.pages.show');
         });
 
-        Route::get(trans('frontend.profile'), [FrontendProfileController::class, 'show'])
+        Route::get(trans('routes.frontend.profile'), [FrontendProfileController::class, 'show'])
             ->name('frontend.profile')
             ->middleware('publicPage:profile')
             ->scopeBindings();
