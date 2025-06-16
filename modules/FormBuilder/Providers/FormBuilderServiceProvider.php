@@ -86,17 +86,35 @@ class FormBuilderServiceProvider extends ServiceProvider
     }
 
     /**
+     * Converts a PascalCase or camelCase string to snake_case.
+     *
+     * Example:
+     *   "FormBuilder" => "form_builder"
+     *   "HTMLParser"  => "html_parser"
+     *
+     * @param string $input The input string in PascalCase or camelCase.
+     * @return string The converted string in snake_case.
+     */
+    function snake_case($input) {
+        // Insert underscore before each uppercase letter (except the first), then convert to lowercase
+        $pattern = '/(?<!^)[A-Z]/';
+        return strtolower(preg_replace($pattern, '_$0', $input));
+    }
+
+
+    /**
      * Register translations.
      *
      * @return void
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
+        $moduleNameSnake = $this->snake_case($this->moduleName);
+        $langPath = resource_path('lang/modules/' . $moduleNameSnake);
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
-            $this->loadJsonTranslationsFrom($langPath, $this->moduleNameLower);
+            $this->loadTranslationsFrom($langPath, $moduleNameSnake);
+            $this->loadJsonTranslationsFrom($langPath, $moduleNameSnake);
         } else {
             $this->loadTranslationsFrom(module_path($this->moduleName, 'Resources/lang'), $this->moduleNameLower);
             $this->loadJsonTranslationsFrom(module_path($this->moduleName, 'Resources/lang'), $this->moduleNameLower);

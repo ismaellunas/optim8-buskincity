@@ -15,7 +15,7 @@ class ProductEventController extends CrudController
 {
     private $productEventService;
 
-    protected $title = ':booking_term.product :booking_term.event';
+    protected $title = 'booking_module::terms.product booking_module::terms.event';
 
     public function __construct(ProductEventService $productEventService)
     {

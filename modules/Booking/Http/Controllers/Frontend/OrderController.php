@@ -22,7 +22,7 @@ class OrderController extends CrudController
     private $orderService;
     private $productEventService;
 
-    protected $title = ":Booking_term.booking";
+    protected $title = "booking_module::terms.booking";
     protected $baseRouteName = "booking.orders";
 
     public function __construct(

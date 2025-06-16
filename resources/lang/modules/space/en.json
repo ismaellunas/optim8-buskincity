@@ -1,12 +1,12 @@
 {
     "//Space": "Space",
     "//Spaces": "Spaces",
-    "Space setting": ":Space_term.space setting",
-    "Space type": ":Space_term.space type",
-    "Users who are assigned as managers will be unassigned from space module.": "Users who are assigned as managers will be unassigned from :space_term.space module.",
-    "Pages managed by space will be set to draft.": "Pages managed by :space_term.space will be set to draft.",
-    "Events managed by space will be set to draft.": "Events managed by :space_term.space will be set to draft.",
-    "Select space": "Select :space_term.space",
-    "The :resource can only have one space.": "The :resource can only have one :space_term.space.",
-    "Spaces will be unassigned from the :resource in the :module module.": ":Space_term.space will be unassigned from the :resource in the :module module."
+    "Space setting": "space_module::terms.space setting",
+    "Space type": "space_module::terms.space type",
+    "Users who are assigned as managers will be unassigned from space module.": "Users who are assigned as managers will be unassigned from space_module::terms.space module.",
+    "Pages managed by space will be set to draft.": "Pages managed by space_module::terms.space will be set to draft.",
+    "Events managed by space will be set to draft.": "Events managed by space_module::terms.space will be set to draft.",
+    "Select space": "Select space_module::terms.space",
+    "The :resource can only have one space.": "The :resource can only have one space_module::terms.space.",
+    "Spaces will be unassigned from the :resource in the :module module.": "space_module::terms.space will be unassigned from the :resource in the :module module."
 }

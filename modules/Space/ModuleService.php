@@ -107,7 +107,7 @@ class ModuleService extends BaseModuleService implements
                 'module' => $this->model()->title,
             ]),
             __("Spaces will be unassigned from the :resource in the :module module.", [
-                'resource' => __(':booking_term.products'),
+                'resource' => __('booking_module::terms.products'),
                 'module' => app(BookingModuleService::class)->model()->title,
             ])
         ];

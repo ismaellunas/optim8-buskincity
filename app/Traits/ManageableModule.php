@@ -39,7 +39,13 @@ trait ManageableModule
     public function adminMenus(Request $request): array
     {
         $user = $request->user();
-        $children = collect($this->menusFromNavigations($user, $request));
+        $children = collect($this->menusFromNavigations($user, $request))
+            ->map(function ($child) {
+                if (isset($child['title'])) {
+                    $child['title'] = Str::title(__($child['title']));
+                }
+                return $child;
+            });
 
         return [
             'title' => Str::title(__($this->model()->title)),

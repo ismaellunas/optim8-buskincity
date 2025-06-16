@@ -23,7 +23,7 @@ class SpaceController extends CrudController
 {
     protected $model = Space::class;
     protected $baseRouteName = 'admin.spaces';
-    protected $title = ":space_term.space";
+    protected $title = "space_module::terms.space";
 
     public function __construct(
         private SpaceService $spaceService,
@@ -371,7 +371,7 @@ class SpaceController extends CrudController
     {
         return [
             ...[
-                'space' => __(':Space_term.space'),
+                'space' => __('space_module::terms.space'),
                 'event' => __('Event'),
                 'manager' => __('Manager'),
                 'page' => __('Page'),

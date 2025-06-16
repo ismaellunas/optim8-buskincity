@@ -24,7 +24,7 @@ class FormBuilderController extends CrudController
     protected $baseRouteName = 'admin.form-builders';
     protected $baseRouteNameSetting = 'admin.form-builders.settings';
     protected $recordsPerPage = 10;
-    protected $title = ':form_builder_term.form_builder';
+    protected $title = 'form_builder::terms.form_builder';
 
     public function __construct(
         private FormBuilderService $formBuilderService,
@@ -55,7 +55,7 @@ class FormBuilderController extends CrudController
                 'create_new' => __('Create new'),
                 'name' => __('Name'),
                 'form_id' => __('Form ID'),
-                'entries' => __(':Form_builder_term.entries'),
+                'entries' => Str::title(__('form_builder::terms.entries')),
                 'actions' => __('Actions'),
                 'are_you_sure' => __('Are you sure?'),
                 'list_entries' => __('List entries'),
@@ -94,7 +94,7 @@ class FormBuilderController extends CrudController
         }
 
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __(':form_builder::terms.form')
         ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $form->id);
@@ -153,7 +153,7 @@ class FormBuilderController extends CrudController
         $this->automateUserCreationService->syncRules($formBuilder);
 
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __(':form_builder::terms.form')
         ]);
 
         return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
@@ -164,7 +164,7 @@ class FormBuilderController extends CrudController
         $formBuilder->delete();
 
         $this->generateFlashMessage('The :resource was deleted!', [
-            'resource' => __(':form_builder_term.form')
+            'resource' => __(':form_builder::terms.form')
         ]);
 
         return redirect()->route($this->baseRouteName.'.index');
@@ -220,7 +220,7 @@ class FormBuilderController extends CrudController
             'name' => __('Name'),
             'form_id' => __('Form ID'),
             'general' => __('General'),
-            'add_field_group' => __('Add :resource', ['resource' => __(':form_builder_term.field_group')]),
+            'add_field_group' => __('Add :resource', ['resource' => trans('form_builder::terms.field_group')]),
             'cancel' => __('Cancel'),
             'create' => __('Create'),
             'update' => __('Update'),
