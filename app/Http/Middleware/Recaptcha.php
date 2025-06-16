@@ -31,7 +31,8 @@ class Recaptcha
                 'token' => $recaptchaToken,
                 'keys' => $recaptchaKeys,
                 'secret' => $secretKey,
-                'response' => $response
+                'response' => $response,
+                'score' => $response->getScore(),
             ]);
 
             if (! $response->isSuccess()) {

@@ -33,6 +33,8 @@
                                         .then((response) => {
                                             document.getElementById('g-recaptcha-response').value = response;
 
+                                            console.log('reCAPTCHA response:', response);
+
                                             event.target.submit();
                                         });
                                 } catch (error) {
