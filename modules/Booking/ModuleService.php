@@ -38,13 +38,13 @@ class ModuleService extends BaseModuleService implements
             [
                 'route' => 'admin.booking.products.index',
                 'routeIs' => 'admin.booking.products.index',
-                'title' => ":Booking_term.products",
+                'title' => "booking::terms.products",
                 'default' => true,
             ],
             [
                 'route' => 'admin.booking.orders.index',
                 'routeIs' => 'admin.booking.orders.index',
-                'title' => ":Booking_term.bookings",
+                'title' => "booking::term.bookings",
                 'default' => true,
             ],
             [
@@ -62,13 +62,13 @@ class ModuleService extends BaseModuleService implements
 
         return [
             [
-                'title' => Str::title(__(":booking_term.products")),
+                'title' => Str::title(__("booking::terms.products")),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => $user->can('showFrontendProduct', Product::class),
             ],
             [
-                'title' => Str::title(__(':booking_term.bookings')),
+                'title' => Str::title(__('booking::term.bookings')),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
                 'isEnabled' => $user->can('showFrontendOrder', Order::class),
@@ -122,7 +122,7 @@ class ModuleService extends BaseModuleService implements
                 'module' => $this->model()->title,
             ]),
             __("Spaces will be unassigned from the :resource in the :module module.", [
-                'resource' => __(':booking_term.products'),
+                'resource' => __('booking::terms.products'),
                 'module' => $this->model()->title,
             ])
         ];

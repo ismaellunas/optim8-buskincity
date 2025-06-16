@@ -18,7 +18,7 @@ class FormEntryController extends CrudController
 {
     protected $baseRouteName = 'admin.form-builders.entries';
     protected $recordsPerPage = 10;
-    protected $title = ':form_builder_term.entry';
+    protected $title = ':form_builder::terms.entry';
 
     private $formEntryService;
 
@@ -68,7 +68,7 @@ class FormEntryController extends CrudController
 
     public function index(FormBuilderService $formBuilderService, Request $request, Form $formBuilder)
     {
-        $title = __(':Form_builder_term.entries - :formName', [
+        $title = __(':form_builder::terms.entries - :formName', [
             'formName' => $formBuilder->name
         ]);
 
@@ -85,7 +85,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => Str::title(__(':Form_builder_term.form_builders')),
+                    'title' => Str::title(__('form_builder::terms.form_builders')),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
@@ -115,7 +115,7 @@ class FormEntryController extends CrudController
                 'forceDelete' => $user->can('delete', $formBuilder),
             ],
             'i18n' => [
-                'entries' => __(':Form_builder_term.entries'),
+                'entries' => __(':form_builder::terms.entries'),
                 'archived' => __('Archived'),
                 'search' => __('Search'),
                 'filter' => __('Filter'),
@@ -150,7 +150,7 @@ class FormEntryController extends CrudController
             );
         }
 
-        $title = __(':Form_builder_term.entry: :formName # :entryId', [
+        $title = __(':Form_builder::terms.entry: :formName # :entryId', [
             'formName' => $formBuilder->name,
             'entryId' => $formEntry->id,
         ]);
@@ -158,7 +158,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => Str::title(__(':Form_builder_term.form_builders')),
+                    'title' => Str::title(__('form_builder::terms.form_builders')),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
@@ -185,7 +185,7 @@ class FormEntryController extends CrudController
                 'automate_user_creation' => $user->can('automateUserCreation', $formEntry),
             ],
             'i18n' => [
-                'entry' => __(':Form_builder_term.entry'),
+                'entry' => __(':Form_builder::terms.entry'),
                 'entry_id' => __('Entry ID'),
                 'user_ip' => __('User IP'),
                 'user' => __('User'),

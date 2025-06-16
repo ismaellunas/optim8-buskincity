@@ -17,7 +17,7 @@ class ModuleSeeder extends Seeder
         $modules = [
             [
                 'name' => 'FormBuilder',
-                'title' => ':form_builder_term.form_builder',
+                'title' => 'form_builder::terms.form_builder',
                 'navigations' => app('\Modules\FormBuilder\ModuleService')->defaultNavigations(),
                 'is_manageable' => true,
                 'order' => 0,
