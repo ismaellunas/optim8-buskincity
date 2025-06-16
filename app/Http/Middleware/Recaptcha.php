@@ -25,7 +25,14 @@ class Recaptcha
             $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
-            dd($recaptchaKeys, $secretKey, $response);
+            $recaptchaToken = $request->input('g-recaptcha-response');
+
+            dd([
+                'token' => $recaptchaToken,
+                'keys' => $recaptchaKeys,
+                'secret' => $secretKey
+            ]);
+
             if (! $response->isSuccess()) {
 
                 return $this->failRequestAction($request);
