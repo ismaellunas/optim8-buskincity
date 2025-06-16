@@ -225,7 +225,7 @@ Route::prefix(Localization::setLocale())
             Route::get(trans('routes.blog.category.index'), [PostCategoryController::class, 'index'])
                 ->name('blog.category.index');
 
-            Route::get(trans('routes.routes.blog.show'), [PostController::class, 'show'])
+            Route::get(trans('routes.blog.show'), [PostController::class, 'show'])
                 ->where('slug', '[\w\d\-\_]+')
                 ->name('blog.show');
 
