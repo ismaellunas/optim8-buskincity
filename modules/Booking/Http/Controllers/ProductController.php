@@ -385,7 +385,7 @@ class ProductController extends CrudController
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose product manager'),
-                'space' => __(':space_term.space'),
+                'space' => __('space_module::terms.space'),
                 'select_space' => __('Select space'),
                 'select_space_note' => __('The :resource can only have one space.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [

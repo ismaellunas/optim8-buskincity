@@ -31,7 +31,7 @@ class ModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Space',
-                'title' => ':space_term.space',
+                'title' => 'space_module::terms.space',
                 'navigations' => app('\Modules\Space\ModuleService')->defaultNavigations(),
                 'is_manageable' => true,
                 'order' => 2,
