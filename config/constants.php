@@ -388,7 +388,7 @@ return [
     ],
 
     'icon' => [
-        'type' => 'fa-light',
+        'type' => 'fa-solid',
     ],
 
     /*
