@@ -29,7 +29,7 @@ use Modules\Space\Entities\Space;
 
 class ProductController extends CrudController
 {
-    protected $title = ":booking_term.product";
+    protected $title = "booking_module::terms.product";
     protected $baseRouteName = "admin.booking.products";
 
     public function __construct(
@@ -366,8 +366,8 @@ class ProductController extends CrudController
                 'cancel' => __('Cancel'),
                 'create' => __('Create'),
                 'update' => __('Update'),
-                'product' => __(':Booking_term.product'),
-                'event' => __(':Booking_term.'),
+                'product' => __('booking_module::terms.product'),
+                'event' => __('booking_module::terms.'),
                 'manager' => __('Manager'),
                 'duration' => __('Duration'),
                 'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),
@@ -387,7 +387,7 @@ class ProductController extends CrudController
                 'choose_product_manager' => __('Choose product manager'),
                 'space' => __(':space_term.space'),
                 'select_space' => __('Select space'),
-                'select_space_note' => __('The :resource can only have one space.', ['resource' => __(':booking_term.product')]),
+                'select_space_note' => __('The :resource can only have one space.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),

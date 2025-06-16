@@ -38,13 +38,13 @@ class ModuleService extends BaseModuleService implements
             [
                 'route' => 'admin.booking.products.index',
                 'routeIs' => 'admin.booking.products.index',
-                'title' => "booking::terms.products",
+                'title' => "booking_module::terms.products",
                 'default' => true,
             ],
             [
                 'route' => 'admin.booking.orders.index',
                 'routeIs' => 'admin.booking.orders.index',
-                'title' => "booking::term.bookings",
+                'title' => "booking_module::terms.bookings",
                 'default' => true,
             ],
             [
@@ -58,17 +58,18 @@ class ModuleService extends BaseModuleService implements
 
     public static function frontendMenus(Request $request): array
     {
+
         $user = $request->user();
 
         return [
             [
-                'title' => Str::title(__("booking::terms.products")),
+                'title' => Str::title(__("booking_module::terms.products")),
                 'link' => route('booking.products.index'),
                 'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => $user->can('showFrontendProduct', Product::class),
             ],
             [
-                'title' => Str::title(__('booking::term.bookings')),
+                'title' => Str::title(__('booking_module::terms.bookings')),
                 'link' => route('booking.orders.index'),
                 'isActive' => $request->routeIs('booking.orders.index'),
                 'isEnabled' => $user->can('showFrontendOrder', Order::class),
@@ -122,7 +123,7 @@ class ModuleService extends BaseModuleService implements
                 'module' => $this->model()->title,
             ]),
             __("Spaces will be unassigned from the :resource in the :module module.", [
-                'resource' => __('booking::terms.products'),
+                'resource' => __('booking_module::terms.products'),
                 'module' => $this->model()->title,
             ])
         ];

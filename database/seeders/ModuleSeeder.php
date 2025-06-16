@@ -24,7 +24,7 @@ class ModuleSeeder extends Seeder
             ],
             [
                 'name' => 'Booking',
-                'title' => ':booking_term.booking',
+                'title' => 'booking_module::terms.booking',
                 'navigations' => app('\Modules\Booking\ModuleService')->defaultNavigations(),
                 'is_manageable' => true,
                 'order' => 1,

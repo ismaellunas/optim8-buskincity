@@ -14,7 +14,7 @@ use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController
 {
-    protected $title = ":Booking_term.product";
+    protected $title = "booking_module::terms.product";
     protected $baseRouteName = "booking.products";
 
     public function __construct(
@@ -84,7 +84,7 @@ class ProductController extends CrudController
             'timezone' => $schedule->timezone,
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'i18n' => [
-                'products' => __(':Booking_term.products'),
+                'products' => __('booking_module::terms.products'),
                 'event_booking' => __('Event booking'),
                 'booking_event_confirmation' => __('Booking event confirmation'),
             ],
