@@ -58,6 +58,45 @@
                     </div>
                 </div>
 
+                <!-- Debug information (remove in production) -->
+                <div
+                    v-if="debugMode"
+                    class="notification is-info mb-4"
+                >
+                    <h4>Debug Information:</h4>
+                    <p><strong>Events Data:</strong> {{ events }}</p>
+                    <p><strong>Events Count:</strong> {{ events.data ? events.data.length : 0 }}</p>
+                    <p><strong>Query Params:</strong> {{ queryParams }}</p>
+                    <p><strong>Selected Location:</strong> {{ selectedLocation }}</p>
+                    <p><strong>Location Parts:</strong> {{ locationParts }}</p>
+                </div>
+
+                <!-- No results message -->
+                <div
+                    v-if="events.data && events.data.length === 0"
+                    class="notification is-warning"
+                >
+                    <h4>No Events Found</h4>
+                    <p>No events were found for the selected criteria. Try adjusting your search parameters.</p>
+                </div>
+
+                <!-- Loading state -->
+                <div
+                    v-if="isLoading"
+                    class="notification is-info"
+                >
+                    <p>Loading events...</p>
+                </div>
+
+                <!-- Error state -->
+                <div
+                    v-if="hasError"
+                    class="notification is-danger"
+                >
+                    <h4>Error Loading Events</h4>
+                    <p>{{ errorMessage }}</p>
+                </div>
+
                 <events-calendar-item
                     v-for="record in events.data"
                     :key="record.id"
@@ -208,6 +247,10 @@
                 markerClusterer: null,
                 map: null,
                 markers: [],
+                debugMode: false, // Set to true to enable debug information
+                isLoading: false,
+                hasError: false,
+                errorMessage: '',
             };
         },
 
@@ -335,77 +378,138 @@
             getEvents(url) {
                 let currentUrl = url ?? this.urls.getEvents;
 
+                // Clear previous errors
+                this.hasError = false;
+                this.errorMessage = '';
+
+                // Prepare query parameters
                 this.queryParams.country = this.locationParts.country;
                 this.queryParams.city = this.locationParts.city;
                 this.queryParams.dates = this.queryParams.dates.filter(Boolean);
 
+                // Debug logging
+                if (this.debugMode) {
+                    console.log('EventsCalendar: Making API request to:', currentUrl);
+                    console.log('EventsCalendar: Query params:', this.queryParams);
+                }
+
+                this.isLoading = true;
                 this.onStartLoadingOverlay();
 
                 axios
                     .get(currentUrl, {params: this.queryParams})
                     .then((response) => {
+                        if (this.debugMode) {
+                            console.log('EventsCalendar: API Response:', response.data);
+                        }
+
+                        // Check if response has the expected structure
+                        if (!response.data || !response.data.pagination) {
+                            throw new Error('Invalid API response structure');
+                        }
+
                         this.events = response.data.pagination;
                         this.mapData = response.data.map;
 
+                        // Update map markers
                         this.markerClusterer.clearMarkers(true);
 
-                        this.map.setZoom(response.data.map.zoom);
+                        if (response.data.map && response.data.map.center) {
+                            this.map.setZoom(response.data.map.zoom);
+                            this.map.panTo({
+                                lat: parseFloat(response.data.map.center.latitude),
+                                lng: parseFloat(response.data.map.center.longitude),
+                            });
+                        }
 
-                        this.map.panTo({
-                            lat: parseFloat(response.data.map.center.latitude),
-                            lng: parseFloat(response.data.map.center.longitude),
-                        });
-
-                        const filteredRecords = response.data.pagination.data.filter((record) => {
-                            return (
-                                get(record, 'geolocation')
-                                && !isBlank(get(record, 'geolocation.latitude'))
-                                && !isBlank(get(record, 'geolocation.longitude'))
-                            );
-                        });
-
-                        const coordinateGroups = groupBy(filteredRecords, (record) => {
-                            return record.geolocation.latitude+';'+record.geolocation.longitude;
-                        });
-
-
-                        this.markers = map(coordinateGroups, (records, key) => {
-                            const record = records[0];
-                            const label = "" + records.length;
-
-                            const marker = new google.maps.Marker({
-                                position: {
-                                    lat: record.geolocation.latitude,
-                                    lng: record.geolocation.longitude
-                                },
-                                label,
+                        // Process markers for events with geolocation
+                        if (this.events.data && this.events.data.length > 0) {
+                            const filteredRecords = this.events.data.filter((record) => {
+                                return (
+                                    get(record, 'geolocation')
+                                    && !isBlank(get(record, 'geolocation.latitude'))
+                                    && !isBlank(get(record, 'geolocation.longitude'))
+                                );
                             });
 
-                            marker.addListener("click", () => {
-                                this.map.panTo(marker.getPosition());
-                                this.infoWindow.setContent(this.infoWindowContent(records));
-                                this.infoWindow.open(this.map, marker);
+                            const coordinateGroups = groupBy(filteredRecords, (record) => {
+                                return record.geolocation.latitude+';'+record.geolocation.longitude;
                             });
 
-                            return marker;
-                        })
+                            this.markers = map(coordinateGroups, (records, key) => {
+                                const record = records[0];
+                                const label = "" + records.length;
 
-                        this.markerClusterer.addMarkers(this.markers, true);
+                                const marker = new google.maps.Marker({
+                                    position: {
+                                        lat: record.geolocation.latitude,
+                                        lng: record.geolocation.longitude
+                                    },
+                                    label,
+                                });
+
+                                marker.addListener("click", () => {
+                                    this.map.panTo(marker.getPosition());
+                                    this.infoWindow.setContent(this.infoWindowContent(records));
+                                    this.infoWindow.open(this.map, marker);
+                                });
+
+                                return marker;
+                            });
+
+                            this.markerClusterer.addMarkers(this.markers, true);
+                        }
+
+                        if (this.debugMode) {
+                            console.log('EventsCalendar: Processed events:', this.events.data?.length || 0);
+                        }
                     })
-                    .catch(function (error) {
-                        console.log(error);
+                    .catch((error) => {
+                        console.error('EventsCalendar: API Error:', error);
+                        
+                        this.hasError = true;
+                        
+                        if (error.response) {
+                            // Server responded with error status
+                            this.errorMessage = `Server error: ${error.response.status} - ${error.response.data?.message || error.response.statusText}`;
+                        } else if (error.request) {
+                            // Request was made but no response received
+                            this.errorMessage = 'Network error: Unable to connect to server';
+                        } else {
+                            // Something else happened
+                            this.errorMessage = `Error: ${error.message}`;
+                        }
                     })
-                    .then(() => {
+                    .finally(() => {
+                        this.isLoading = false;
                         this.onEndLoadingOverlay();
                     });
             },
 
             getLocationOptions(after) {
+                if (this.debugMode) {
+                    console.log('EventsCalendar: Getting location options from:', this.urls.getLocationOptions);
+                }
+
                 axios
                     .get(this.urls.getLocationOptions)
                     .then((response) => {
+                        if (this.debugMode) {
+                            console.log('EventsCalendar: Location options response:', response.data);
+                        }
+
                         this.availableLocations = response.data;
 
+                        if (after) {
+                            after(this.availableLocations);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('EventsCalendar: Error getting location options:', error);
+                        
+                        // Set empty locations if API fails
+                        this.availableLocations = {};
+                        
                         if (after) {
                             after(this.availableLocations);
                         }

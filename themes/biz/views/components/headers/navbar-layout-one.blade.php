@@ -133,6 +133,12 @@
 <script>
     function onLogout(e) {
         e.preventDefault();
+        
+        localStorage.removeItem('buskincity_auth_token');
+        localStorage.removeItem('buskincity_auth_expiry');
+        document.cookie = 'buskincity_auth_client=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'buskincity_auth_client_expiry=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    
         document.getElementById('form-logout').submit();
     }
 </script>

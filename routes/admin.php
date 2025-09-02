@@ -50,6 +50,7 @@ use Laravel\Fortify\Http\Controllers\NewPasswordController;
 Route::middleware(array_filter([
     'auth:sanctum',
     'verified',
+    'setClientAuthToken',
     'can:system.dashboard',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
 ]))->group(function () {
