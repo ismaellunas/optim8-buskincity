@@ -77,9 +77,9 @@ Route::prefix(Localization::setLocale())
     ->middleware(['redirectIfModuleIsDisabled:Space', 'localizationRedirect', 'adjustOriginLanguage'])
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->group(function () {
-        Route::get(LaravelLocalization::transRoute('frontend.spaces.index'), [FrontendSpaceController::class, 'index'])
+        Route::get('spaces', [FrontendSpaceController::class, 'index'])
             ->name('frontend.spaces.index');
-        Route::get(LaravelLocalization::transRoute('frontend.spaces.show'), [FrontendSpaceController::class, 'show'])
+        Route::get('spaces/{slugs}', [FrontendSpaceController::class, 'show'])
             ->name('frontend.spaces.show')
             ->where('slugs', '.+');
 });

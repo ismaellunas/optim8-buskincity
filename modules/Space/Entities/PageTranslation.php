@@ -74,13 +74,12 @@ class PageTranslation extends AppPageTranslation
         $slugs = $this->getSlugs();
 
         if (!is_null($slugs)) {
-            return LaravelLocalization::getURLFromRouteNameTranslated(
-                $this->locale,
-                'frontend.spaces.show',
-                [
-                    'slugs' => $slugs,
-                ]
-            );
+            // Use the same approach as Space::pageLocalizeURL()
+            // First generate the route URL, then localize it
+            $routeUrl = route('frontend.spaces.show', ['slugs' => $slugs]);
+            
+            // Use LaravelLocalization::localizeURL() to get the localized version
+            return LaravelLocalization::localizeURL($routeUrl, $this->locale);
         }
 
         return null;
