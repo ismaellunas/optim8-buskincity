@@ -35,7 +35,7 @@ class EventsCalendarService
 
     private function defaultZoom(): int
     {
-        return 8;
+        return 15;
     }
 
     private function minZoom(): int
