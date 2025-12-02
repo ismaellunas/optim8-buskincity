@@ -1296,14 +1296,422 @@ Events handled:
 ## Setup & Configuration Guide
 
 ### Prerequisites
-- PHP 8.1 or higher
-- Composer
-- Node.js & NPM/Yarn
-- PostgreSQL 12+
-- Redis (optional but recommended)
-- Docker (recommended)
 
-### Local Development Setup
+- Docker Desktop 20.10 or higher
+- Docker Compose 2.0 or higher  
+- 4GB RAM minimum (8GB recommended)
+- Git
+
+**Note**: Laravel Sail handles PHP, Composer, and Node.js inside containers, so you don't need them installed locally!
+
+---
+
+## Laravel Sail Setup (Recommended)
+
+BuskinCity uses **Laravel Sail**, Laravel's official Docker development environment. Sail provides a simple command-line interface for interacting with Laravel's default Docker configuration.
+
+### Quick Start with Sail
+
+#### 1. First-Time Setup
+
+```bash
+# Clone the repository (if not already done)
+cd /path/to/buskincity
+
+# Copy environment file
+cp .env.sail.example .env
+
+# Install Composer dependencies (one-time, requires local Composer)
+# If you don't have Composer locally, see "Without Local Composer" below
+composer install
+
+# Start Sail containers
+./vendor/bin/sail up -d
+
+# Generate application key
+./vendor/bin/sail artisan key:generate
+
+# Run migrations and seed database
+./vendor/bin/sail artisan migrate:fresh --seed
+
+# Install frontend dependencies
+./vendor/bin/sail yarn install
+
+# Build assets
+./vendor/bin/sail yarn build
+
+# Clear caches
+./vendor/bin/sail artisan optimize:clear
+```
+
+**Access the application:**
+- Frontend: http://localhost
+- Admin: http://localhost/admin/login
+
+#### 2. Without Local Composer
+
+If you don't have Composer installed locally:
+
+```bash
+# Use Docker to install Composer dependencies
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php81-composer:latest \
+    composer install --ignore-platform-reqs
+
+# Then start Sail
+./vendor/bin/sail up -d
+```
+
+### Creating a Sail Alias
+
+To avoid typing `./vendor/bin/sail` every time, create an alias:
+
+```bash
+# Add to your ~/.zshrc or ~/.bashrc
+alias sail='./vendor/bin/sail'
+
+# Reload your shell
+source ~/.zshrc  # or ~/.bashrc
+
+# Now you can use:
+sail up
+sail artisan migrate
+sail yarn dev
+```
+
+### Common Sail Commands
+
+#### Container Management
+```bash
+sail up          # Start containers (add -d for detached mode)
+sail up -d       # Start in background
+sail down        # Stop containers
+sail stop        # Stop without removing containers
+sail restart     # Restart containers
+sail ps          # List running containers
+```
+
+#### Application Commands
+```bash
+# Artisan
+sail artisan migrate
+sail artisan tinker
+sail artisan queue:work
+sail artisan make:controller UserController
+
+# Composer
+sail composer install
+sail composer require package/name
+sail composer update
+
+# NPM/Yarn
+sail npm install
+sail npm run dev
+sail npm run build
+sail yarn install
+sail yarn dev
+sail yarn build
+
+# Testing
+sail test
+sail artisan test
+sail dusk  # Browser tests
+```
+
+#### Database Commands
+```bash
+# Migrations
+sail artisan migrate
+sail artisan migrate:fresh
+sail artisan migrate:fresh --seed
+sail artisan migrate:rollback
+
+# Seeders
+sail artisan db:seed
+sail artisan db:seed --class=UserSeeder
+
+# Tinker (Laravel REPL)
+sail tinker
+```
+
+#### Shell Access
+```bash
+sail shell          # Laravel app container (as sail user)
+sail root-shell     # Laravel app container (as root)
+sail psql           # PostgreSQL shell
+sail redis          # Redis CLI
+```
+
+#### Logs & Debugging
+```bash
+sail logs           # View all logs
+sail logs app       # View app container logs
+sail logs -f        # Follow logs (live)
+```
+
+### Sail Services
+
+The existing `docker-compose.yml` defines these services:
+
+| Service | Description | Port |
+|---------|-------------|------|
+| **laravel.test** | PHP 8.1-FPM app | 80, 443 |
+| **pgsql** | PostgreSQL 14 | 5432 |
+| **redis** | Redis 7 | 6379 |
+| **mailhog** | Email testing | 8025, 1025 |
+
+### Environment Configuration for Sail
+
+Your `.env.sail.example` should have:
+
+```env
+APP_URL=http://localhost
+APP_PORT=80
+
+# Database (uses Sail service names)
+DB_CONNECTION=pgsql
+DB_HOST=pgsql
+DB_PORT=5432
+DB_DATABASE=buskincity
+DB_USERNAME=sail
+DB_PASSWORD=password
+
+# Redis (uses Sail service name)
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# Cache & Sessions
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+
+# Mail (MailHog)
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+```
+
+### Common Workflows
+
+#### Daily Development
+```bash
+# Start your day
+sail up -d
+
+# Watch and compile assets
+sail yarn dev
+
+# Run migrations if needed
+sail artisan migrate
+
+# View logs if issues arise
+sail logs -f
+
+# Stop when done
+sail down
+```
+
+#### Making Database Changes
+```bash
+# Create migration
+sail artisan make:migration create_events_table
+
+# Run migration
+sail artisan migrate
+
+# Reset and reseed (⚠️ Deletes all data!)
+sail artisan migrate:fresh --seed
+```
+
+#### Running Tests
+```bash
+# PHPUnit tests
+sail test
+
+# Run specific test
+sail test --filter=UserTest
+
+# Browser tests (Dusk)
+sail dusk
+
+# With coverage
+sail test --coverage
+```
+
+#### Building for Production
+```bash
+# Install production dependencies
+sail composer install --no-dev --optimize-autoloader
+
+# Build production assets
+sail yarn build
+
+# Cache config for better performance
+sail artisan config:cache
+sail artisan route:cache
+sail artisan view:cache
+```
+
+### Sail Customization
+
+#### Publishing Sail Configuration
+
+If you need to customize Sail's Docker configuration:
+
+```bash
+# Publish Sail's docker files
+sail artisan sail:publish
+
+# This creates:
+# - docker/8.1/Dockerfile
+# - docker-compose.yml (editable copy)
+```
+
+#### Adding Services
+
+To add services (like Meilisearch, Minio, etc.), edit `docker-compose.yml`:
+
+```bash
+sail artisan sail:install
+```
+
+### Troubleshooting Sail
+
+#### Port Conflicts
+If port 80 is already in use:
+
+```bash
+# Change APP_PORT in .env
+APP_PORT=8000
+
+# Or stop the conflicting service
+# For example, stop Apache on macOS:
+sudo apachectl stop
+```
+
+#### Permission Issues
+```bash
+# Fix storage permissions
+sail root-shell
+chown -R sail:sail /var/www/html/storage
+chown -R sail:sail /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage
+chmod -R 775 /var/www/html/bootstrap/cache
+exit
+```
+
+#### Database Connection Issues
+```bash
+# Make sure database is ready
+sail ps
+
+# Reset database
+sail artisan migrate:fresh
+
+# Check database connection
+sail artisan db:show
+```
+
+#### Clear Everything and Start Fresh
+```bash
+# Stop containers
+sail down
+
+# Remove volumes (⚠️ Deletes database!)
+sail down -v
+
+# Rebuild containers
+sail build --no-cache
+
+# Start fresh
+sail up -d
+sail artisan migrate:fresh --seed
+```
+
+#### Check Service Health
+```bash
+# Check all services are running
+sail ps
+
+# Check logs for errors
+sail logs
+
+# Test specific service
+sail psql  # Should open PostgreSQL
+sail redis  # Should open Redis CLI
+```
+
+### Performance Optimization
+
+#### For macOS Users
+
+Docker on macOS can be slow due to file system performance. To improve:
+
+1. **Allocate more resources** in Docker Desktop:
+   - Settings → Resources
+   - CPUs: 4+
+   - Memory: 8GB+
+   - Swap: 2GB+
+
+2. **Use mutagen for faster file sync** (advanced):
+   ```bash
+   sail artisan sail:install --with=mutagen
+   ```
+
+3. **Exclude unnecessary directories** from sync:
+   - Add `vendor/` and `node_modules/` to `.dockerignore`
+
+#### Asset Compilation
+```bash
+# Use Vite's dev server for hot reload (faster)
+sail yarn dev
+
+# Build for production (slower but optimized)
+sail yarn build
+```
+
+### Database Backups with Sail
+
+#### Backup Database
+```bash
+# Create backup
+sail exec pgsql pg_dump -U sail buskincity > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Or with better formatting
+mkdir -p backups
+sail exec pgsql pg_dump -U sail -d buskincity -F c -f /tmp/backup.dump
+sail cp pgsql:/tmp/backup.dump ./backups/backup_$(date +%Y%m%d_%H%M%S).dump
+```
+
+#### Restore Database
+```bash
+# From SQL file
+sail exec -T pgsql psql -U sail -d buskincity < backup.sql
+
+# From dump file
+sail exec pgsql pg_restore -U sail -d buskincity /tmp/backup.dump
+```
+
+### Sail vs Native Installation
+
+| Aspect | Sail | Native |
+|--------|------|--------|
+| **Setup** | One command | Install PHP, Composer, PostgreSQL, Redis, Node |
+| **Isolation** | Containers | Local machine |
+| **Version control** | Easy (Docker images) | Manual |
+| **Team consistency** | Everyone has same environment | Varies by machine |
+| **Performance** | Slightly slower on macOS | Native speed |
+| **Reverting changes** | Easy (rebuild containers) | Can affect local system |
+
+**Recommendation**: Use Sail for development, especially for team projects.
+
+---
+
+### Alternative: Running Without Docker
 
 #### 1. Clone and Configure
 ```bash

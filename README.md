@@ -1,31 +1,129 @@
-## Installation steps
+## Quick Start with Laravel Sail
 
 ### Requirements
-- Php 8.1
-- Docker
-- NodeJS
+- Docker Desktop
+- Git
 
-### Laravel
-- cp .env.example .env
-- cp .env.dusk.local.example .env.dusk.local
-- cp .env.sail.example .env.sail
-- composer install (Expect to receive an error at the end because the translation service expects to query on our non existent database)
-- sail up -d
-- sail composer install
-- sail artisan key:generate
+### Installation Steps
 
-**⚠️ IMPORTANT: Database Migration Warning**
-- **DO NOT** run `sail artisan migrate:fresh --seed` if your database server is not localhost
-- Only run migrations when you have a local development database or are sure about the database connection
-- Check your `.env` file to verify `DB_HOST` is set to `localhost` or `127.0.0.1`
+#### 1. Copy Environment File
+```bash
+cp .env.sail.example .env
+```
 
-- sail artisan migrate:fresh --seed (Only if using local database)
-- sail yarn install
-- sail yarn build
-- sail artisan optimize:clear
+#### 2. Install Dependencies
 
-### InertiaJs
-### Vue3
+**Option A: With Composer installed locally**
+```bash
+composer install
+```
+
+**Option B: Without Composer (using Docker)**
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php81-composer:latest \
+    composer install --ignore-platform-reqs
+```
+
+#### 3. Start Sail & Initialize
+```bash
+# Start containers
+./vendor/bin/sail up -d
+
+# Generate app key
+./vendor/bin/sail artisan key:generate
+
+# Run migrations and seed database
+./vendor/bin/sail artisan migrate:fresh --seed
+
+# Install frontend dependencies
+./vendor/bin/sail yarn install
+
+# Build assets
+./vendor/bin/sail yarn build
+
+# Clear caches
+./vendor/bin/sail artisan optimize:clear
+```
+
+#### 4. Access Application
+- **Frontend**: http://localhost
+- **Admin**: http://localhost/admin/login
+
+### Create Sail Alias (Optional but Recommended)
+
+Add to your `~/.zshrc` or `~/.bashrc`:
+```bash
+alias sail='./vendor/bin/sail'
+```
+
+Then reload: `source ~/.zshrc`
+
+Now you can use `sail` instead of `./vendor/bin/sail`:
+```bash
+sail up
+sail artisan migrate
+sail yarn dev
+```
+
+### Daily Development
+
+```bash
+# Start containers
+sail up -d
+
+# Watch and compile assets
+sail yarn dev
+
+# Run migrations
+sail artisan migrate
+
+# View logs
+sail logs -f
+
+# Stop containers
+sail down
+```
+
+### Common Commands
+
+```bash
+# Container management
+sail up -d          # Start containers
+sail down           # Stop containers
+sail restart        # Restart
+sail ps             # Status
+
+# Application
+sail artisan <command>
+sail composer <command>
+sail yarn <command>
+
+# Database
+sail artisan migrate
+sail artisan migrate:fresh --seed
+sail psql            # PostgreSQL shell
+
+# Testing
+sail test
+sail dusk
+
+# Shell access
+sail shell           # App container
+sail root-shell      # Root access
+```
+
+### Documentation
+
+- **[SAIL_GUIDE.md](./SAIL_GUIDE.md)** - Quick Sail reference
+- **[CODEBASE_DOCUMENTATION.md](./CODEBASE_DOCUMENTATION.md)** - Complete documentation
+
+### Laravel Sail
+This project uses Laravel Sail for Docker development.  
+Documentation: https://laravel.com/docs/9.x/sail
 
 ## Security Vulnerabilities
 
