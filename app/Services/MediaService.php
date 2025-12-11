@@ -538,6 +538,7 @@ class MediaService
 
     public static function logoMediaLibraryInstructions(): array
     {
+        $minDims = config('constants.min_dimensions.logo');
         return [
             __('Accepted file extensions: :extensions.', [
                 'extensions' => implode(', ', config('constants.extensions.image'))
@@ -547,14 +548,19 @@ class MediaService
                     SettingService::maxFileSize() * 1024
                 )
             ]),
+            __('Minimum dimension: :dimension.', [
+                'dimension' => $minDims['width'] . ' x ' . $minDims['height'] . 'px',
+            ]),
             __('Recommended dimension: :dimension.', [
                 'dimension' => config('constants.recomended_dimensions.logo')
             ]),
+            __('Must be square (1:1 aspect ratio)'),
         ];
     }
 
     public static function profilePictureInstructions(): array
     {
+        $minDims = config('constants.min_dimensions.profile_picture');
         return [
             __('Accepted file extensions: :extensions.', [
                 'extensions' => implode(', ', config('constants.extensions.image'))
@@ -564,9 +570,13 @@ class MediaService
                     config('constants.file_size.profile_picture') * 1024
                 )
             ]),
+            __('Minimum dimension: :dimension.', [
+                'dimension' => $minDims['width'] . ' x ' . $minDims['height'] . 'px',
+            ]),
             __('Recommended dimension: :dimension.', [
                 'dimension' => config('constants.recomended_dimensions.profile_picture'),
             ]),
+            __('Must be square (1:1 aspect ratio)'),
         ];
     }
 

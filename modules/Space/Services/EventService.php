@@ -55,12 +55,14 @@ class EventService
     public function getEditableRecord(SpaceEvent $event)
     {
         $event->load('translation');
+        $event->load('city');
 
         return [
             ...$event->only([
                 'id',
                 'address',
                 'city',
+                'city_id',
                 'country_code',
                 'latitude',
                 'longitude',
@@ -73,6 +75,7 @@ class EventService
                 'ended_at' => $event->ended_at->toIso8601String(),
                 'started_at' => $event->started_at->toIso8601String(),
                 'translations' => $event->getTranslationsArray(),
+                'city_relation' => $event->city,
             ]
         ];
     }
@@ -100,12 +103,14 @@ class EventService
         if ($event->is_same_address_as_parent) {
             $event->address = null;
             $event->city = null;
+            $event->city_id = null;
             $event->country_code = null;
             $event->latitude = null;
             $event->longitude = null;
         } else {
             $event->address = Arr::get($inputs, 'address');
             $event->city = Arr::get($inputs, 'city');
+            $event->city_id = Arr::get($inputs, 'city_id');
             $event->country_code = Arr::get($inputs, 'country_code');
             $event->latitude = Arr::get($inputs, 'latitude');
             $event->longitude = Arr::get($inputs, 'longitude');

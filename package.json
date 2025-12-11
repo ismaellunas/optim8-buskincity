@@ -36,6 +36,7 @@
         "bulma": "^0.9.3",
         "change-case": "^4.1.2",
         "compressorjs": "^1.0.7",
+        "country-state-city": "^3.2.1",
         "css-loader": "^6.7.1",
         "css-minimizer-webpack-plugin": "^4.2.2",
         "easyqrcodejs": "^4.4.10",

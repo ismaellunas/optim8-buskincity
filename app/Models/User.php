@@ -440,4 +440,29 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->optimizedProfilePhotoUrl
             ?? config('constants.profile_photo_path');
     }
+
+    /**
+     * Cities this user administers
+     */
+    public function adminCities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(City::class, 'city_user');
+    }
+
+    /**
+     * Check if user is a City Administrator for a specific city
+     */
+    public function isCityAdmin(int $cityId): bool
+    {
+        return $this->hasRole('city_administrator')
+            && $this->adminCities()->where('cities.id', $cityId)->exists();
+    }
+
+    /**
+     * Check if user is a City Administrator (any city)
+     */
+    public function isCityAdministrator(): bool
+    {
+        return $this->hasRole('city_administrator');
+    }
 }

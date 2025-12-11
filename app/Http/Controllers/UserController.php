@@ -133,6 +133,11 @@ class UserController extends CrudController
             $user->assignRole($request->role);
         }
 
+        // Sync cities for city administrator role
+        if ($request->has('cities') && is_array($request->cities)) {
+            $user->adminCities()->sync($request->cities);
+        }
+
         $this->generateFlashMessage('The :resource was created!', [
             'resource' => __('User')
         ]);
@@ -147,7 +152,7 @@ class UserController extends CrudController
         $user->load(['roles' => function ($query) {
             $query->select(['id', 'name']);
             $query->limit(1);
-        }]);
+        }, 'adminCities']);
 
         $user->append(
             'isSuperAdministrator',

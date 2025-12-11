@@ -11,12 +11,14 @@
                 :required="isAddressRequired"
             />
 
-            <biz-form-input
-                v-model="modelCity"
+            <biz-form-city-select
+                v-model="modelCityId"
                 :label="i18n.city ?? 'City'"
-                :maxlength="maxlengthCity"
                 :message="error(mergedErrorKey.city, errorBagName, errorBag)"
                 :required="isCityRequired"
+                :country-code="modelCountryCode"
+                :initial-city="initialCity"
+                @select="onCitySelect"
             />
 
             <biz-form-select
@@ -57,6 +59,7 @@
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizFormFieldsetGeoLocation from '@/Biz/Form/FieldsetGeoLocation.vue';
+    import BizFormCitySelect from '@/Biz/Form/CitySelect.vue';
     import BizGmapMarker from '@/Biz/GmapMarker.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { computed, ref } from 'vue';
@@ -69,6 +72,7 @@
             BizFormInput,
             BizFormSelect,
             BizFormTextarea,
+            BizFormCitySelect,
         },
 
         mixins: [
@@ -80,6 +84,8 @@
         props: {
             address: { type: [String, null], default: null },
             city: { type: [String, null], default: null },
+            cityId: { type: [Number, String, null], default: null },
+            initialCity: { type: Object, default: null },
             countryCode: { type: [String, null], default: null },
             latitude: { type: [Number, String, null], default: null },
             longitude: { type: [Number, String, null], default: null },
@@ -102,6 +108,7 @@
             'update:longitude',
             'update:address',
             'update:city',
+            'update:cityId',
             'update:countryCode',
         ],
 
@@ -110,6 +117,7 @@
                 countryOptions: ref([]),
                 modelAddress: useModelWrapper(props, emit, 'address'),
                 modelCity: useModelWrapper(props, emit, 'city'),
+                modelCityId: useModelWrapper(props, emit, 'cityId'),
                 modelCountryCode: useModelWrapper(props, emit, 'countryCode'),
                 modelLatitude: useModelWrapper(props, emit, 'latitude'),
                 modelLongitude: useModelWrapper(props, emit, 'longitude'),
@@ -148,6 +156,13 @@
                 this.modelLatitude = marker.latitude;
                 this.modelLongitude = marker.longitude;
             },
+
+            onCitySelect(city) {
+                this.modelCity = city.name;
+                this.modelCountryCode = city.country_code;
+                if (city.latitude) this.modelLatitude = city.latitude;
+                if (city.longitude) this.modelLongitude = city.longitude;
+            }
         },
     };
 </script>

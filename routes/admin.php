@@ -34,6 +34,8 @@ use App\Http\Controllers\{
     UserController,
     UserProfileController,
     VerifyEmailController,
+    Api\CityController,
+    Api\CityUserController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -296,6 +298,17 @@ Route::name('api.')
 
         Route::get('/setting/max-file-size', [ApiSettingController::class, 'maxFileSize'])
             ->name('setting.max-file-size');
+
+        Route::get('/cities', [CityController::class, 'index'])
+            ->name('cities.index');
+
+        Route::get('/users/{user}/cities', [CityUserController::class, 'index'])
+            ->name('users.cities.index')
+            ->can('update', 'user');
+
+        Route::post('/users/{user}/cities', [CityUserController::class, 'update'])
+            ->name('users.cities.update')
+            ->can('update', 'user');
     });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

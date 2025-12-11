@@ -35,6 +35,7 @@ class SpaceEvent extends Model implements TranslatableContract
 
     protected $fillable = [
         'address',
+        'city_id',
         'started_at',
         'ended_at',
         'status',
@@ -53,6 +54,11 @@ class SpaceEvent extends Model implements TranslatableContract
     public function space()
     {
         return $this->belongsTo(Space::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(\App\Models\City::class);
     }
 
     public function scopeSearch($query, string $term)

@@ -236,6 +236,7 @@ class SpaceService
         }
 
         $spaceData['managers'] = $space->managers;
+        $spaceData['city_relation'] = $space->city;
 
         if ($space->translations->isEmpty()) {
             $space->translateOrNew();

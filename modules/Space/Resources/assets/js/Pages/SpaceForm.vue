@@ -48,6 +48,8 @@
         <biz-form-fieldset-location
             v-model:address="space.address"
             v-model:city="space.city"
+            v-model:city-id="space.city_id"
+            :initial-city="space.city_relation"
             v-model:country-code="space.country_code"
             v-model:latitude="space.latitude"
             v-model:longitude="space.longitude"

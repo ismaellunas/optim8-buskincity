@@ -53,6 +53,72 @@
                 </div>
             </form>
 
+            <div v-if="isAdminCitiesVisible" class="columns mb-6">
+                <div class="column">
+                    <fieldset class="box" :disabled="isFormDisabled">
+                        <h3 class="title is-3">
+                            {{ i18n.administered_cities ?? 'Administered Cities' }}
+                        </h3>
+                        <hr>
+
+                        <div class="columns">
+                            <div class="column is-6">
+                                <biz-form-city-select
+                                    v-model="newCityId"
+                                    :label="i18n.add_city ?? 'Add City'"
+                                    placeholder="Search to add a city..."
+                                    @select="addCity"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="table is-fullwidth is-striped is-hoverable">
+                                <thead>
+                                    <tr>
+                                        <th>{{ i18n.city ?? 'City' }}</th>
+                                        <th>{{ i18n.country ?? 'Country' }}</th>
+                                        <th class="has-text-right">{{ i18n.actions ?? 'Actions' }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="city in adminCities" :key="city.id">
+                                        <td>{{ city.name }}</td>
+                                        <td>{{ city.country_code }}</td>
+                                        <td class="has-text-right">
+                                            <biz-button
+                                                class="is-danger is-small"
+                                                type="button"
+                                                @click="removeCity(city)"
+                                            >
+                                                {{ i18n.remove ?? 'Remove' }}
+                                            </biz-button>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="adminCities.length === 0">
+                                        <td colspan="3" class="has-text-centered has-text-grey">
+                                            {{ i18n.no_cities_assigned ?? 'No cities assigned.' }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="field is-grouped is-grouped-right mt-4">
+                            <div class="control">
+                                <biz-button 
+                                    class="is-link" 
+                                    @click="saveCities"
+                                    :loading="isSavingCities"
+                                >
+                                    {{ i18n.save_cities ?? 'Save Cities' }}
+                                </biz-button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
             <form
                 v-if="showPasswordForm"
                 class="columns"
@@ -160,6 +226,8 @@
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
+    import BizFormCitySelect from '@/Biz/Form/CitySelect.vue';
+
     export default {
         name: 'UserEdit',
 
@@ -171,6 +239,7 @@
             FormUserPassword,
             FormUserProfile,
             ModalFormResetPassword,
+            BizFormCitySelect,
         },
 
         mixins: [
@@ -200,6 +269,14 @@
                 profile : 'Profile',
                 profile_information : 'Profile information',
                 password : 'Password',
+                administered_cities: 'Administered Cities',
+                add_city: 'Add City',
+                city: 'City',
+                country: 'Country',
+                actions: 'Actions',
+                remove: 'Remove',
+                no_cities_assigned: 'No cities assigned.',
+                save_cities: 'Save Cities',
             }) },
             instructions: { type: Object, default: () => {} },
         },
@@ -239,6 +316,9 @@
                 photoUrl: this.record.optimizedProfilePhotoUrl,
                 isFormBuilderShown: false,
                 isProcessing: false,
+                adminCities: this.record.admin_cities || [],
+                newCityId: null,
+                isSavingCities: false,
             };
         },
 
@@ -251,6 +331,23 @@
             showPasswordForm() {
                 return this.can.update_password
                     && ! this.isFormDisabled;
+            },
+
+            isAdminCitiesVisible() {
+                // Check if user has city_administrator role
+                // The role ID for city_administrator should be checked or name
+                // Assuming we can check role name from record.roles
+                const cityAdminRole = this.roleOptions.find(r => r.value === 'City Administrator'); // Adjust based on actual role name/value
+                const currentRoleId = this.profileForm.role;
+                
+                // Or check if the user record has the role
+                const hasRole = this.record.roles && this.record.roles.some(r => r.name === 'city_administrator');
+                
+                // Also check if the selected role in form is city administrator (if changing role)
+                // But profileForm.role is ID.
+                
+                // Simplest: check if record has role. If they change role, they might need to save first.
+                return hasRole;
             },
         },
 
@@ -326,6 +423,35 @@
                         }
                     );
             },
+
+            addCity(city) {
+                if (!this.adminCities.find(c => c.id === city.id)) {
+                    this.adminCities.push(city);
+                }
+                this.newCityId = null; // Reset selection
+            },
+
+            removeCity(city) {
+                this.adminCities = this.adminCities.filter(c => c.id !== city.id);
+            },
+
+            saveCities() {
+                this.isSavingCities = true;
+                axios.post(route('admin.api.users.cities.update', this.record.id), {
+                    cities: this.adminCities.map(c => c.id)
+                })
+                .then(response => {
+                    successAlert(response.data.message);
+                    this.adminCities = response.data.cities;
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Handle error
+                })
+                .finally(() => {
+                    this.isSavingCities = false;
+                });
+            }
         },
     };
 </script>

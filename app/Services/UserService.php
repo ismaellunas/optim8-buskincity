@@ -160,7 +160,7 @@ class UserService
             ->map(function ($role) {
                 return [
                     'id' => $role->id,
-                    'value' => $role->name,
+                    'value' => \Illuminate\Support\Str::headline($role->name),
                 ];
             });
     }

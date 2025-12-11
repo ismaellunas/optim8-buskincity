@@ -89,6 +89,8 @@
                 v-if="!form.is_same_address_as_parent"
                 v-model:address="form.address"
                 v-model:city="form.city"
+                v-model:city-id="form.city_id"
+                :initial-city="form.city_relation"
                 v-model:country-code="form.country_code"
                 v-model:latitude="form.latitude"
                 v-model:longitude="form.longitude"
@@ -314,6 +316,7 @@
                     started_at: null,
                     ended_at: null,
                     city: null,
+                    city_id: null,
                     country_code: null,
                     latitude: null,
                     longitude: null,

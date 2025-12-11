@@ -387,6 +387,84 @@ return [
         ],
     ],
 
+    // Minimum dimension requirements for uploaded images (validation)
+    'min_dimensions' => [
+        'profile_picture' => [
+            'width' => 180,   // Based on Facebook minimum
+            'height' => 180,
+        ],
+        'cover' => [
+            'width' => 400,   // Based on Facebook minimum
+            'height' => 150,
+        ],
+        'gallery' => [
+            'width' => 600,
+            'height' => 400,
+        ],
+        'post_thumbnail' => [
+            'width' => 400,
+            'height' => 300,
+        ],
+        'logo' => [
+            'width' => 180,
+            'height' => 180,
+        ],
+        'favicon' => [
+            'width' => 180,
+            'height' => 180,
+        ],
+        'open_graph' => [
+            'width' => 1200,
+            'height' => 630,
+        ],
+    ],
+
+    // Maximum dimension limits for uploaded images (validation)
+    'max_dimensions' => [
+        'profile_picture' => [
+            'width' => 4096,
+            'height' => 4096,
+        ],
+        'cover' => [
+            'width' => 5000,
+            'height' => 2000,
+        ],
+        'gallery' => [
+            'width' => 5000,
+            'height' => 5000,
+        ],
+        'post_thumbnail' => [
+            'width' => 2000,
+            'height' => 2000,
+        ],
+        'logo' => [
+            'width' => 2000,
+            'height' => 2000,
+        ],
+        'favicon' => [
+            'width' => 512,
+            'height' => 512,
+        ],
+        'open_graph' => [
+            'width' => 5000,
+            'height' => 3000,
+        ],
+    ],
+
+    // Expected aspect ratios for specific image types
+    'aspect_ratios' => [
+        'profile_picture' => 1.0,      // 1:1 square
+        'logo' => 1.0,                 // 1:1 square
+        'favicon' => 1.0,              // 1:1 square
+        'cover' => 3.2,                // ~820:360 (Facebook standard)
+        'open_graph' => 1.91,          // 1200:630 (OG standard)
+        'qr_code_logo' => 1.0,         // 1:1 square
+    ],
+
+    // Tolerance level for aspect ratio validation (10% by default)
+    'aspect_ratio_tolerance' => 0.1,
+
+
     'icon' => [
         'type' => 'fa-solid',
     ],

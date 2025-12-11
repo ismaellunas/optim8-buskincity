@@ -40,6 +40,7 @@ class Space extends BaseModel implements TranslatableContract
     protected $fillable = [
         'address',
         'city',
+        'city_id',
         'contacts',
         'country_code',
         'is_page_enabled',
@@ -64,6 +65,11 @@ class Space extends BaseModel implements TranslatableContract
     public function managers()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(\App\Models\City::class);
     }
 
     public function page()
