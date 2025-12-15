@@ -10,6 +10,8 @@
                 :type-options="typeOptions"
                 :default-country="defaultCountry"
                 :instructions="instructions"
+                :is-city-admin="isCityAdmin"
+                :user-cities="userCities"
             />
             <div class="field is-grouped is-grouped-right mt-4">
                 <div class="control">
@@ -70,6 +72,8 @@
             parentOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
             typeOptions: { type: Object, default: () => {} },
+            isCityAdmin: { type: Boolean, default: false },
+            userCities: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 cancel: 'Cancel',
                 create: 'Create',

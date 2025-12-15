@@ -37,7 +37,16 @@ class GlobalOptionService
 
     public function getOptionByType(string $type): EloquentCollection
     {
-        return GlobalOption::type($type)->get();
+        $key = "options_by_type_{$type}";
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                GlobalOption::type($type)->get()
+            );
+        }
+
+        return $this->getLoadedKey($key);
     }
 
     public function getDisciplineOptions(): Collection

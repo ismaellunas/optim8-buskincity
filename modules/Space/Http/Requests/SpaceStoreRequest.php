@@ -113,6 +113,14 @@ class SpaceStoreRequest extends FormRequest
 
         $rules['parent_id'] = ['integer'];
 
+        if ($user->hasRole('city_administrator')) {
+            $rules['parent_id'][] = 'required';
+            $rules['parent_id'][] = Rule::in(
+                $spaceService->cityAdminParentOptions($user)->pluck('id')
+            );
+            return;
+        }
+
         if ($user->can('space.add')) {
 
             $rules['parent_id'][] = 'nullable';
@@ -136,6 +144,6 @@ class SpaceStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('create', Space::class);
+        return auth()->user()->hasRole('city_administrator') || auth()->user()->can('create', Space::class);
     }
 }

@@ -15,8 +15,8 @@
             </span>
         </template>
 
-        <!-- Show hint when no search yet -->
-        <div v-if="cities.length === 0 && !hasSearched && !isLoading" class="dropdown-item has-text-grey">
+        <!-- Show hint when no search yet (only for API search, not restricted) -->
+        <div v-if="cities.length === 0 && !hasSearched && !isLoading && !isRestricted" class="dropdown-item has-text-grey">
             Type to search cities...
         </div>
         
@@ -59,6 +59,7 @@ export default {
         placeholder: { type: String, default: 'Search for a city...' },
         countryCode: { type: String, default: null },
         initialCity: { type: Object, default: null },
+        restrictedCities: { type: Array, default: () => [] },
     },
     emits: ['update:modelValue', 'select'],
     data() {
@@ -69,6 +70,11 @@ export default {
             isLoading: false,
         };
     },
+    computed: {
+        isRestricted() {
+            return this.restrictedCities && this.restrictedCities.length > 0;
+        }
+    },
     watch: {
         initialCity: {
             handler(val) {
@@ -78,10 +84,50 @@ export default {
             },
             deep: true
         },
+        // When restricted cities are provided, show them immediately
+        restrictedCities: {
+            handler(cities) {
+                if (cities && cities.length > 0) {
+                    this.cities = cities.map(c => ({
+                        id: c.id,
+                        name: c.name,
+                        country_code: c.country_code
+                    }));
+                }
+            },
+            immediate: true
+        }
     },
     methods: {
         onSearch: debounce(function(query) {
-            // Reset state when clearing search
+            // If using restricted cities, filter locally
+            if (this.isRestricted) {
+                if (!query || query.length === 0) {
+                    this.cities = this.restrictedCities.map(c => ({
+                        id: c.id,
+                        name: c.name,
+                        country_code: c.country_code
+                    }));
+                    this.hasSearched = false;
+                    return;
+                }
+                
+                const searchTerm = query.toLowerCase();
+                this.cities = this.restrictedCities
+                    .filter(c => 
+                        c.name.toLowerCase().includes(searchTerm) ||
+                        c.country_code.toLowerCase().includes(searchTerm)
+                    )
+                    .map(c => ({
+                        id: c.id,
+                        name: c.name,
+                        country_code: c.country_code
+                    }));
+                this.hasSearched = true;
+                return;
+            }
+            
+            // Normal API-based search
             if (!query || query.length === 0) {
                 this.cities = [];
                 this.hasSearched = false;
@@ -89,7 +135,6 @@ export default {
                 return;
             }
             
-            // Start search immediately on any input (1+ chars)
             this.isLoading = true;
             this.hasSearched = true;
             
@@ -103,7 +148,7 @@ export default {
             }).finally(() => {
                 this.isLoading = false;
             });
-        }, 200), // Short debounce for responsiveness
+        }, 200),
         selectCity(city) {
             this.selectedCity = city;
             this.$emit('update:modelValue', city.id);
@@ -112,3 +157,4 @@ export default {
     }
 }
 </script>
+

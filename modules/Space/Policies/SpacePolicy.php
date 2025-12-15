@@ -12,11 +12,19 @@ class SpacePolicy
     use HandlesAuthorization;
     use Macroable;
 
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdministrator) {
+            return true;
+        }
+    }
+
     public function viewAny(User $user)
     {
         return (
             $user->can('space.browse')
             || $user->spaces->isNotEmpty()
+            || $user->hasRole('city_administrator')
         );
     }
 
@@ -25,6 +33,7 @@ class SpacePolicy
         return (
             $user->can('space.add')
             || $user->spaces->contains(fn ($space) => $space->isParentable)
+            || $user->hasRole('city_administrator')
         );
     }
 

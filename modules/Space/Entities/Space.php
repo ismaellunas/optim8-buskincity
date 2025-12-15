@@ -190,6 +190,11 @@ class Space extends BaseModel implements TranslatableContract
         $query->whereIn('type_id', $types);
     }
 
+    public function scopeInCities($query, array $cityIds = [])
+    {
+        $query->whereIn('city_id', $cityIds);
+    }
+
     public function getIsParentableAttribute(): bool
     {
         return $this->depth < ModuleService::maxParentDepth();

@@ -118,7 +118,7 @@
 
                                 <biz-navbar-item
                                     ref="logout"
-                                    url=""
+                                    :url="route('logout')"
                                     @click.prevent="logout"
                                 >
                                     Logout

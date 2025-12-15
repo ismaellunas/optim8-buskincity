@@ -23,6 +23,7 @@ class CityAdministratorSeeder extends Seeder
 
         // Define permissions
         $permissions = [
+            'system.dashboard',     // Required to access admin panel
             'city.manage_events',  // Can create/edit/delete events in their cities
             'city.view_reports',   // Can view reports for their cities
         ];

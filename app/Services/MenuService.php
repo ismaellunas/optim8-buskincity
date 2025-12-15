@@ -272,179 +272,195 @@ class MenuService
         ];
 
         if ($request->routeIs('admin.*')) {
-            $menuLogo = [
-                'title' => __('Dashboard'),
-                'link' => route('admin.dashboard'),
-            ];
-
-            $menus = [
-                [
+            // Check if user is City Administrator
+            $isCityAdmin = $user->hasRole('city_administrator') && !$user->can('system.dashboard');
+            
+            // Set logo based on role
+            if ($isCityAdmin) {
+                $menuLogo = [
+                    'title' => __('Spaces'),
+                    'link' => route('admin.spaces.index'),
+                ];
+            } else {
+                $menuLogo = [
                     'title' => __('Dashboard'),
                     'link' => route('admin.dashboard'),
-                    'isActive' => $request->routeIs('admin.dashboard'),
-                    'isEnabled' => true,
-                ],
-                [
-                    'title' => __('Pages'),
-                    'link' => route('admin.pages.index'),
-                    'isActive' => $request->routeIs('admin.pages.*'),
-                    'isEnabled' => $user->can('viewAny', Page::class),
-                ],
-                [
-                    'title' => __('Blog'),
-                    'isActive' => (
-                        $request->routeIs('admin.posts.*')
-                        || $request->routeIs('admin.categories.*')
-                    ),
-                    'isEnabled' => (
-                        $user->can('viewAny', Post::class)
-                        || $user->can('viewAny', Category::class)
-                    ),
-                    'children' => [
-                        [
-                            'title' => __('Posts'),
-                            'link' => route('admin.posts.index'),
-                            'isActive' => $request->routeIs('admin.posts.*'),
-                            'isEnabled' => $user->can('viewAny', Post::class),
-                        ],
-                        [
-                            'title' => __('Categories'),
-                            'link' => route('admin.categories.index'),
-                            'isActive' => $request->routeIs('admin.categories.*'),
-                            'isEnabled' => $user->can('viewAny', Category::class),
+                ];
+            }
+
+            // City Administrators only see module menus (Space), not core menus
+            if ($isCityAdmin) {
+                $menus = [];
+            } else {
+                $menus = [
+                    [
+                        'title' => __('Dashboard'),
+                        'link' => route('admin.dashboard'),
+                        'isActive' => $request->routeIs('admin.dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => __('Pages'),
+                        'link' => route('admin.pages.index'),
+                        'isActive' => $request->routeIs('admin.pages.*'),
+                        'isEnabled' => $user->can('viewAny', Page::class),
+                    ],
+                    [
+                        'title' => __('Blog'),
+                        'isActive' => (
+                            $request->routeIs('admin.posts.*')
+                            || $request->routeIs('admin.categories.*')
+                        ),
+                        'isEnabled' => (
+                            $user->can('viewAny', Post::class)
+                            || $user->can('viewAny', Category::class)
+                        ),
+                        'children' => [
+                            [
+                                'title' => __('Posts'),
+                                'link' => route('admin.posts.index'),
+                                'isActive' => $request->routeIs('admin.posts.*'),
+                                'isEnabled' => $user->can('viewAny', Post::class),
+                            ],
+                            [
+                                'title' => __('Categories'),
+                                'link' => route('admin.categories.index'),
+                                'isActive' => $request->routeIs('admin.categories.*'),
+                                'isEnabled' => $user->can('viewAny', Category::class),
+                            ],
                         ],
                     ],
-                ],
-                [
-                    'title' => __('Media'),
-                    'link' => route('admin.media.index'),
-                    'isActive' => $request->routeIs('admin.media.*'),
-                    'isEnabled' => $user->can('viewAny', Media::class),
-                ],
-                [
-                    'title' => __('Theme'),
-                    'isActive' => $request->routeIs('admin.theme.*'),
-                    'isEnabled' => $user->can('system.theme'),
-                    'children' => [
-                        [
-                            'title' => __('Header'),
-                            'link' => route('admin.theme.header.edit'),
-                            'isActive' => $request->routeIs('admin.theme.header.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
-                            'title' => __('Footer'),
-                            'link' => route('admin.theme.footer.edit'),
-                            'isActive' => $request->routeIs('admin.theme.footer.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
-                            'title' => __('Colors'),
-                            'link' => route('admin.theme.color.edit'),
-                            'isActive' => $request->routeIs('admin.theme.color.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
-                            'title' => __('Fonts'),
-                            'link' => route('admin.theme.fonts.edit'),
-                            'isActive' => $request->routeIs('admin.theme.fonts.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
-                            'title' => __('Advanced'),
-                            'link' => route('admin.theme.advance.edit'),
-                            'isActive' => $request->routeIs('admin.theme.advance.*'),
-                            'isEnabled' => true,
-                        ],
-                        [
-                            'title' => Str::upper(__('Seo')),
-                            'link' => route('admin.theme.seo.edit'),
-                            'isActive' => $request->routeIs('admin.theme.seo.*'),
-                            'isEnabled' => true,
+                    [
+                        'title' => __('Media'),
+                        'link' => route('admin.media.index'),
+                        'isActive' => $request->routeIs('admin.media.*'),
+                        'isEnabled' => $user->can('viewAny', Media::class),
+                    ],
+                    [
+                        'title' => __('Theme'),
+                        'isActive' => $request->routeIs('admin.theme.*'),
+                        'isEnabled' => $user->can('system.theme'),
+                        'children' => [
+                            [
+                                'title' => __('Header'),
+                                'link' => route('admin.theme.header.edit'),
+                                'isActive' => $request->routeIs('admin.theme.header.*'),
+                                'isEnabled' => true,
+                            ],
+                            [
+                                'title' => __('Footer'),
+                                'link' => route('admin.theme.footer.edit'),
+                                'isActive' => $request->routeIs('admin.theme.footer.*'),
+                                'isEnabled' => true,
+                            ],
+                            [
+                                'title' => __('Colors'),
+                                'link' => route('admin.theme.color.edit'),
+                                'isActive' => $request->routeIs('admin.theme.color.*'),
+                                'isEnabled' => true,
+                            ],
+                            [
+                                'title' => __('Fonts'),
+                                'link' => route('admin.theme.fonts.edit'),
+                                'isActive' => $request->routeIs('admin.theme.fonts.*'),
+                                'isEnabled' => true,
+                            ],
+                            [
+                                'title' => __('Advanced'),
+                                'link' => route('admin.theme.advance.edit'),
+                                'isActive' => $request->routeIs('admin.theme.advance.*'),
+                                'isEnabled' => true,
+                            ],
+                            [
+                                'title' => Str::upper(__('Seo')),
+                                'link' => route('admin.theme.seo.edit'),
+                                'isActive' => $request->routeIs('admin.theme.seo.*'),
+                                'isEnabled' => true,
+                            ],
                         ],
                     ],
-                ],
-                [
-                    'title' => __('Settings'),
-                    'isActive' => $request->routeIs('admin.setting.*'),
-                    'isEnabled' => (
-                        $user->can('system.language')
-                        || $user->can('system.translation')
-                        || $user->can('system.payment')
-                        || $user->can('system.log')
-                        || $user->can('manageKeys', Setting::class)
-                    ),
-                    'children' => [
-                        [
-                            'title' => __('Languages'),
-                            'link' => route('admin.settings.languages.edit'),
-                            'isActive' => $request->routeIs('admin.settings.languages.edit'),
-                            'isEnabled' => $user->can('system.language'),
-                        ],
-                        [
-                            'title' => Str::title(__('Translation manager')),
-                            'link' => route('admin.settings.translation-manager.edit'),
-                            'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
-                            'isEnabled' => $user->can('system.translation'),
-                        ],
-                        [
-                            'title' => __('Stripe'),
-                            'link' => route('admin.settings.stripe.edit'),
-                            'isActive' => $request->routeIs('admin.settings.stripe.edit'),
-                            'isEnabled' => Gate::check('manageStripeSetting', $user),
-                        ],
-                        [
-                            'title' => __('Keys'),
-                            'link' => route('admin.settings.keys.edit'),
-                            'isActive' => $request->routeIs('admin.settings.keys.edit'),
-                            'isEnabled' => $user->can('manageKeys', Setting::class),
-                        ],
-                        [
-                            'title' => Str::title(__('System log')),
-                            'link' => route('admin.system-log.index'),
-                            'isActive' => $request->routeIs('admin.system-log.*'),
-                            'isEnabled' => $user->can('system.log'),
-                        ],
-                        [
-                            'title' => Str::title(__('Error log')),
-                            'link' => route('admin.error-log.index'),
-                            'isActive' => $request->routeIs('admin.error-log.*'),
-                            'isEnabled' => $user->can('viewAny', ErrorLog::class),
-                        ],
-                        [
-                            'title' => __('GDPR Cookie Consent'),
-                            'link' => route('admin.settings.cookie-consent.edit'),
-                            'isActive' => $request->routeIs('admin.settings.cookie-consent.*'),
-                            'isEnabled' => $user->can('system.cookie_consent'),
-                        ],
-                        [
-                            'title' => __('Module'),
-                            'link' => route('admin.settings.modules.index'),
-                            'isActive' => $request->routeIs('admin.settings.modules.*'),
-                            'isEnabled' => $user->isSuperAdministrator,
-                        ],
-                    ],
-                ],
-                [
-                    'title' => __('Users'),
-                    'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
-                    'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
-                    'children' => [
-                        [
-                            'title' => Str::title(__('All users')),
-                            'link' => route('admin.users.index'),
-                            'isActive' => $request->routeIs('admin.users.*'),
-                            'isEnabled' => $user->can('viewAny', User::class),
-                        ],
-                        [
-                            'title' => __('Roles'),
-                            'link' => route('admin.roles.index'),
-                            'isActive' => $request->routeIs('admin.roles.*'),
-                            'isEnabled' => $user->can('viewAny', Role::class),
+                    [
+                        'title' => __('Settings'),
+                        'isActive' => $request->routeIs('admin.setting.*'),
+                        'isEnabled' => (
+                            $user->can('system.language')
+                            || $user->can('system.translation')
+                            || $user->can('system.payment')
+                            || $user->can('system.log')
+                            || $user->can('manageKeys', Setting::class)
+                        ),
+                        'children' => [
+                            [
+                                'title' => __('Languages'),
+                                'link' => route('admin.settings.languages.edit'),
+                                'isActive' => $request->routeIs('admin.settings.languages.edit'),
+                                'isEnabled' => $user->can('system.language'),
+                            ],
+                            [
+                                'title' => Str::title(__('Translation manager')),
+                                'link' => route('admin.settings.translation-manager.edit'),
+                                'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
+                                'isEnabled' => $user->can('system.translation'),
+                            ],
+                            [
+                                'title' => __('Stripe'),
+                                'link' => route('admin.settings.stripe.edit'),
+                                'isActive' => $request->routeIs('admin.settings.stripe.edit'),
+                                'isEnabled' => Gate::check('manageStripeSetting', $user),
+                            ],
+                            [
+                                'title' => __('Keys'),
+                                'link' => route('admin.settings.keys.edit'),
+                                'isActive' => $request->routeIs('admin.settings.keys.edit'),
+                                'isEnabled' => $user->can('manageKeys', Setting::class),
+                            ],
+                            [
+                                'title' => Str::title(__('System log')),
+                                'link' => route('admin.system-log.index'),
+                                'isActive' => $request->routeIs('admin.system-log.*'),
+                                'isEnabled' => $user->can('system.log'),
+                            ],
+                            [
+                                'title' => Str::title(__('Error log')),
+                                'link' => route('admin.error-log.index'),
+                                'isActive' => $request->routeIs('admin.error-log.*'),
+                                'isEnabled' => $user->can('viewAny', ErrorLog::class),
+                            ],
+                            [
+                                'title' => __('GDPR Cookie Consent'),
+                                'link' => route('admin.settings.cookie-consent.edit'),
+                                'isActive' => $request->routeIs('admin.settings.cookie-consent.*'),
+                                'isEnabled' => $user->can('system.cookie_consent'),
+                            ],
+                            [
+                                'title' => __('Module'),
+                                'link' => route('admin.settings.modules.index'),
+                                'isActive' => $request->routeIs('admin.settings.modules.*'),
+                                'isEnabled' => $user->isSuperAdministrator,
+                            ],
                         ],
                     ],
-                ],
-            ];
+                    [
+                        'title' => __('Users'),
+                        'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
+                        'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
+                        'children' => [
+                            [
+                                'title' => Str::title(__('All users')),
+                                'link' => route('admin.users.index'),
+                                'isActive' => $request->routeIs('admin.users.*'),
+                                'isEnabled' => $user->can('viewAny', User::class),
+                            ],
+                            [
+                                'title' => __('Roles'),
+                                'link' => route('admin.roles.index'),
+                                'isActive' => $request->routeIs('admin.roles.*'),
+                                'isEnabled' => $user->can('viewAny', Role::class),
+                            ],
+                        ],
+                    ],
+                ];
+            }
 
             $moduleMenus = $this->moduleMenus($request);
 

@@ -3,7 +3,7 @@
         <biz-form-input
             v-model="space.name"
             :label="i18n.name"
-            placeholder="e.g My Location"
+            :placeholder="isCityAdmin ? 'e.g Pitch name' : 'e.g My Location'"
             required
             maxlength="128"
             :message="error('name')"
@@ -54,6 +54,7 @@
             v-model:latitude="space.latitude"
             v-model:longitude="space.longitude"
             :is-city-required="false"
+            :restricted-cities="userCities"
         />
 
         <div class="columns">
@@ -210,6 +211,8 @@
             parentOptions: { type: Object, required: true },
             typeOptions: { type: Object, required: true },
             canChangeParent: { type: Boolean, default: true },
+            isCityAdmin: { type: Boolean, default: false },
+            userCities: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {

@@ -6,6 +6,12 @@ use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 use Spatie\Permission\Models\Role;
 
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = require_once __DIR__ . '/../bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
+
 // 1. Verify Cities
 $cityCount = City::count();
 echo "✅ Cities count: " . $cityCount . "\n";
@@ -59,6 +65,29 @@ echo "   Can view event in London? " . ($canViewLondon ? "✅ YES" : "❌ NO") .
 $canViewParis = $policy->view($user, $eventInParis);
 echo "   Can view event in Paris? " . (!$canViewParis ? "✅ NO (Correct)" : "❌ YES (Incorrect)") . "\n";
 
+// 5. Test SpaceService Options
+echo "\nTesting SpaceService Options:\n";
+$spaceService = app(\Modules\Space\Services\SpaceService::class);
+
+// Ensure spaces exist (mimic Controller logic)
+$spaceService->ensureCitySpacesExist($user);
+
+$parentOptions = $spaceService->cityAdminParentOptions($user);
+echo "   Parent Options count: " . $parentOptions->count() . "\n";
+if ($parentOptions->isNotEmpty()) {
+    echo "   Parent Option 1: " . $parentOptions->first()['value'] . "\n";
+}
+
+$typeOptions = $spaceService->cityAdminTypeOptions();
+echo "   Type Options count: " . $typeOptions->count() . "\n";
+$typeNames = $typeOptions->pluck('value')->toArray();
+echo "   Types: " . implode(', ', $typeNames) . "\n";
+
 // Cleanup
+$spaceService->getRecords($user, [], ['inCities' => [$london->id]])
+    ->getCollection()
+    ->each(function($space) {
+        $space->delete();
+    });
 $user->delete();
 echo "\n✅ Test user deleted\n";

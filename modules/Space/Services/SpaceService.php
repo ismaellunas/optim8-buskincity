@@ -210,6 +210,70 @@ class SpaceService
         return $options;
     }
 
+    /**
+     * Get parent options for City Administrator users.
+     * Returns only City-type Spaces that match the user's administered cities.
+     */
+    public function cityAdminParentOptions(User $user): Collection
+    {
+        $adminCityIds = $user->adminCities->pluck('id');
+        
+        // Get the "City" type ID
+        $cityType = $this->types()->firstWhere('name', 'City');
+        
+        if (!$cityType || $adminCityIds->isEmpty()) {
+            return collect();
+        }
+
+        return Space::select(['id', 'name as value'])
+            ->where('type_id', $cityType->id)
+            ->whereIn('city_id', $adminCityIds)
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Get type options for City Administrator users.
+     * Returns only Pitch and Special Events / Festivals types.
+     */
+    public function cityAdminTypeOptions(): Collection
+    {
+        $allowedTypes = ['Pitch', 'Special Events / Festivals'];
+        
+        return $this->types()
+            ->filter(fn($type) => in_array($type->name, $allowedTypes))
+            ->map(fn($type) => ['id' => $type->id, 'value' => __($type->name)])
+            ->values();
+    }
+
+    public function ensureCitySpacesExist(User $user): void
+    {
+        // Get the "City" type ID
+        $cityType = $this->types()->firstWhere('name', 'City');
+
+        if (!$cityType) {
+            return;
+        }
+
+        foreach ($user->adminCities as $city) {
+            $exists = Space::where('type_id', $cityType->id)
+                ->where('city_id', $city->id)
+                ->exists();
+
+            if (!$exists) {
+                Space::create([
+                    'name' => $city->name,
+                    'type_id' => $cityType->id,
+                    'city_id' => $city->id,
+                    'country_code' => $city->country_code,
+                    'latitude' => $city->latitude,
+                    'longitude' => $city->longitude,
+                    'is_page_enabled' => false,
+                ]);
+            }
+        }
+    }
+
     public function formattedManagers(Space $space): Collection
     {
         return $space->managers->map(function ($manager) {
@@ -367,13 +431,17 @@ class SpaceService
     public function totalSpaceByType(Authenticatable $user, int $typeId): int
     {
         $spaceIds = null;
+        $scopes = [];
 
-        if (! $user->can('space.viewAny')) {
+        if ($user->hasRole('city_administrator')) {
+            $scopes['inCities'] = $user->adminCities->pluck('id')->toArray();
+        } elseif (! $user->can('space.viewAny')) {
             $spaceIds = $user->spaces->pluck('id')->all();
         }
 
-        return $this->conditionsBuilder($spaceIds, [
-            'inType' => [$typeId],
-        ])->count();
+        return $this->conditionsBuilder($spaceIds, array_merge(
+            ['inType' => [$typeId]],
+            $scopes
+        ))->count();
     }
 }

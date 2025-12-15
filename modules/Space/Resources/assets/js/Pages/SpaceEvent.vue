@@ -199,6 +199,7 @@
 
             afterSubmit() {
                 this.getRecords();
+                this.closeModal();
             },
         },
     };

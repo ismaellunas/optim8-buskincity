@@ -18,6 +18,7 @@
                 :required="isCityRequired"
                 :country-code="modelCountryCode"
                 :initial-city="initialCity"
+                :restricted-cities="restrictedCities"
                 @select="onCitySelect"
             />
 
@@ -101,6 +102,7 @@
             initLocation: { type: String, default: null },
             maxlengthAddress: { type: [Number], default: 500 },
             maxlengthCity: { type: [Number], default: 64 },
+            restrictedCities: { type: Array, default: () => [] },
         },
 
         emits: [

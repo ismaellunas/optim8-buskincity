@@ -112,4 +112,5 @@ class CityAdministratorTest extends TestCase
 
         $this->assertFalse($user->can('update', $event));
     }
+
 }

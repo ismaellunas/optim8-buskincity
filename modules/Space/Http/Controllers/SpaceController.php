@@ -44,7 +44,9 @@ class SpaceController extends CrudController
         ];
         $scopes = array_filter($scopes);
 
-        if (! $user->can('space.viewAny')) {
+        if ($user->hasRole('city_administrator')) {
+            $scopes['inCities'] = $user->adminCities->pluck('id')->toArray();
+        } elseif (! $user->can('space.viewAny')) {
             $managedSpaces = $user->spaces;
 
             $spaceIds = $managedSpaces->pluck('id')->all();
@@ -109,20 +111,37 @@ class SpaceController extends CrudController
     public function create(Request $request)
     {
         $user = auth()->user();
+        $isCityAdmin = $user->hasRole('city_administrator');
 
-        if ($request->parent) {
-            $parentOptions = [Space::select('id', 'name as value')->find($request->parent)];
+        // For City Administrators, use restricted options
+        if ($isCityAdmin) {
+            $this->spaceService->ensureCitySpacesExist($user);
+            $parentOptions = $this->spaceService->cityAdminParentOptions($user);
+            $typeOptions = $this->spaceService->cityAdminTypeOptions();
+            $userCities = $user->adminCities->map(fn($city) => [
+                'id' => $city->id,
+                'name' => $city->name,
+                'country_code' => $city->country_code,
+            ]);
         } else {
-            $managedSpaces = null;
+            // Existing logic for other users
+            if ($request->parent) {
+                $parentSpace = Space::select('id', 'name as value')->find($request->parent);
+                $parentOptions = $parentSpace ? collect([$parentSpace]) : collect();
+            } else {
+                $managedSpaces = null;
 
-            if (! $user->can('space.store')) {
-                $managedSpaces = $user->spaces;
+                if (! $user->can('space.store')) {
+                    $managedSpaces = $user->spaces;
+                }
+
+                $parentOptions = $this->spaceService->parentOptions(
+                    $managedSpaces,
+                    $user->can('space.add') ? __("None") : null
+                );
             }
-
-            $parentOptions = $this->spaceService->parentOptions(
-                $managedSpaces,
-                $user->can('space.add') ? __("None") : null
-            );
+            $typeOptions = $this->spaceService->typeOptions(__('None'));
+            $userCities = collect();
         }
 
         Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
@@ -132,7 +151,9 @@ class SpaceController extends CrudController
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
-            'typeOptions' => $this->spaceService->typeOptions(__('None')),
+            'typeOptions' => $typeOptions,
+            'isCityAdmin' => $isCityAdmin,
+            'userCities' => $userCities,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
@@ -170,6 +191,12 @@ class SpaceController extends CrudController
         $inputs = $request->validated();
 
         $space->saveFromInputs($inputs);
+
+        // Attach City Administrator to the space they created
+        $user = auth()->user();
+        if ($user->hasRole('city_administrator') && !$user->can('space.edit')) {
+            $user->spaces()->syncWithoutDetaching([$space->id]);
+        }
 
         if ($request->has('logo')) {
             $this->spaceService->replaceLogo($space, $request->logo);

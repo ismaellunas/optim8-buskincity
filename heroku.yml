@@ -1,0 +1,9 @@
+# Heroku configuration for container deployment
+build:
+  docker:
+    web: Dockerfile.heroku
+
+run:
+  web: apache2-foreground
+  worker: php artisan schedule:work
+

@@ -11,7 +11,7 @@ This document outlines the steps to add a **"City Administrator"** role that can
 1. **Create Role & Permission**
    - Add a seeder (`CityAdminRoleSeeder` / `CityAdminPermissionSeeder`) that creates:
      - Role: `city_administrator`
-     - Permission: `manage city events`
+     - Permission: `manage city events`, `system.dashboard`
    - Assign the permission to the role.
 2. **Pivot Table**
    - Migration `create_city_user_table` with columns `user_id`, `city_id`.
