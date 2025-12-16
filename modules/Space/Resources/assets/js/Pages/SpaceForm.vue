@@ -250,7 +250,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizCard from '@/Biz/Card.vue';
-    import BizFormCheckbox from '@/Biz/Form/Checkbox.vue';
+    import BizFormCheckbox from '@/Biz/Checkbox.vue';
     import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
