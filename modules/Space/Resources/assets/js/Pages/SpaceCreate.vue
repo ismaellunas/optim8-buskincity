@@ -12,6 +12,9 @@
                 :instructions="instructions"
                 :is-city-admin="isCityAdmin"
                 :user-cities="userCities"
+                :can-create-product="can.createProduct"
+                :product-role-options="productRoleOptions"
+                :product-status-options="productStatusOptions"
             />
             <div class="field is-grouped is-grouped-right mt-4">
                 <div class="control">
@@ -74,6 +77,8 @@
             typeOptions: { type: Object, default: () => {} },
             isCityAdmin: { type: Boolean, default: false },
             userCities: { type: Array, default: () => [] },
+            productRoleOptions: { type: Array, default: () => [] },
+            productStatusOptions: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 cancel: 'Cancel',
                 create: 'Create',
@@ -98,6 +103,13 @@
                     contacts: [],
                     logo: null,
                     cover: null,
+                    create_product: false,
+                    product_name: null,
+                    product_description: null,
+                    product_short_description: null,
+                    product_status: 'draft',
+                    product_roles: null,
+                    product_is_check_in_required: false,
                 },
             };
         },

@@ -14,7 +14,24 @@ class ProductSpaceService
         $user = auth()->user();
         $spaces = null;
 
-        if ($user->isSpaceManagerOnlyAccess()) {
+        // For City Administrators, limit to their managed spaces and city spaces
+        if ($user->hasRole('city_administrator')) {
+            $managedSpaces = $user->spaces;
+            $managedSpaceIds = $managedSpaces->pluck('id')->all();
+            
+            // Get all space IDs from their cities
+            $cityIds = $user->adminCities->pluck('id')->toArray();
+            $citySpaceIds = Space::whereIn('city_id', $cityIds)
+                ->pluck('id')
+                ->all();
+            
+            // Combine both sets of IDs
+            $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
+            
+            $spaces = Space::whereIn('id', $spaceIds)
+                ->get()
+                ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));
+        } elseif ($user->isSpaceManagerOnlyAccess()) {
             $spaces = $user
                 ->spaces
                 ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));

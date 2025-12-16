@@ -98,7 +98,7 @@ class WidgetSeeder extends Seeder
                             'mobile' => 12,
                         ],
                         'setting' => [
-                            'url' => route('booking.products.index'),
+                            'url' => '/booking/products',
                         ],
                         'i18n' => [
                             'description' => ':appName collaborates with cities to enable you to effortlessly book your own tours',

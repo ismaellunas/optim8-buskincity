@@ -73,7 +73,7 @@ class ProductController extends CrudController
             'countryOptions' => $this->productEventService->getCountryOptions(),
             'cityOptions' => $this->productEventService->getCityOptions(),
             'can' => [
-                'add' => $user->can('product.add'),
+                'add' => $user->can('create', Product::class),
             ],
             'i18n' => $this->translationIndexPage(),
         ]));
@@ -100,6 +100,9 @@ class ProductController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
                 ],
+                'space' => [
+                    'manageProductSpace' => $user->can('manageProductSpace', Space::class),
+                ],
             ],
             'title' => $this->getCreateTitle(),
             'statusOptions' => [
@@ -122,6 +125,7 @@ class ProductController extends CrudController
             'dimensions' => [
                 'gallery' => config('constants.dimensions.gallery'),
             ],
+            'spaceOptions' => $this->productSpaceService->getSpaceOptions(),
         ]));
     }
 
@@ -134,6 +138,8 @@ class ProductController extends CrudController
         $product = Product::create([
             'product_type_id' => $productType->id,
             'status' => $inputs['status'],
+            'productable_type' => !empty($inputs['space_id']) ? Space::class : null,
+            'productable_id' => $inputs['space_id'] ?? null,
             'attribute_data' => [
                 'name' => new TranslatedText(collect([
                     'en' => new Text($inputs['name']),
@@ -159,6 +165,21 @@ class ProductController extends CrudController
             'sku' => 'EVENT-'.$product->id,
         ]);
 
+        // If a space is selected, get location from space
+        $locations = [];
+        if (!empty($inputs['space_id'])) {
+            $space = Space::find($inputs['space_id']);
+            if ($space) {
+                $locations = [[
+                    'city' => $space->city,
+                    'country_code' => $space->country_code,
+                    'latitude' => $space->latitude,
+                    'longitude' => $space->longitude,
+                    'address' => $space->address,
+                ]];
+            }
+        }
+
         $meta = [
             'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
             'duration' => 60,
@@ -168,8 +189,18 @@ class ProductController extends CrudController
             'is_check_in_required' => (bool) $inputs['is_check_in_required'],
         ];
 
+        if (!empty($locations)) {
+            $meta['locations'] = $locations;
+        }
+
         $product->setMeta($meta);
         $product->save();
+
+        // Attach City Administrator as product manager
+        $user = auth()->user();
+        if ($user->hasRole('city_administrator') && !$user->can('product.edit')) {
+            $user->products()->syncWithoutDetaching([$product->id]);
+        }
 
         Schedule::factory()->state([
             'schedulable_type' => Product::class,

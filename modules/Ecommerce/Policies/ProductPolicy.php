@@ -22,10 +22,19 @@ class ProductPolicy extends BasePermissionPolicy
             return (
                 $user->can('product.browse')
                 || $user->isProductManager()
+                || $user->hasRole('city_administrator')
             );
         }
 
         return true;
+    }
+
+    public function create(User $user)
+    {
+        return (
+            parent::create($user)
+            || $user->hasRole('city_administrator')
+        );
     }
 
     public function update(User $user, Model $product)
@@ -33,6 +42,7 @@ class ProductPolicy extends BasePermissionPolicy
         return (
             parent::update($user, $product)
             || $user->products->contains($product)
+            || $this->canManageProductSpace($user, $product)
         );
     }
 
@@ -41,7 +51,33 @@ class ProductPolicy extends BasePermissionPolicy
         return (
             parent::delete($user, $product)
             || $user->products->contains($product)
+            || $this->canManageProductSpace($user, $product)
         );
+    }
+
+    /**
+     * Check if a city administrator can manage a product through its linked space
+     */
+    private function canManageProductSpace(User $user, Model $product): bool
+    {
+        if (!$user->hasRole('city_administrator')) {
+            return false;
+        }
+
+        // Check if product is linked to a Space
+        if ($product->productable_type !== 'Modules\Space\Entities\Space' || !$product->productable_id) {
+            return false;
+        }
+
+        $space = $product->productable;
+        
+        if (!$space) {
+            return false;
+        }
+
+        // Check if user manages the space or the space is in their cities
+        return $user->spaces->contains('id', $space->id) 
+            || $user->adminCities->contains('id', $space->city_id);
     }
 
     public function manageManager(User $user)

@@ -99,6 +99,15 @@ class SpaceStoreRequest extends FormRequest
             $rules['is_page_enabled'] = [ 'boolean' ];
         }
 
+        // Add product creation fields (optional)
+        $rules['create_product'] = ['boolean'];
+        $rules['product_name'] = ['required_if:create_product,true', 'max:255'];
+        $rules['product_description'] = ['nullable', 'max:5000'];
+        $rules['product_short_description'] = ['nullable', 'max:500'];
+        $rules['product_status'] = ['required_if:create_product,true', Rule::in(['draft', 'published'])];
+        $rules['product_roles'] = ['nullable', 'integer', 'exists:roles,id'];
+        $rules['product_is_check_in_required'] = ['boolean'];
+
         $this->additionalRules($rules);
 
         return $rules;

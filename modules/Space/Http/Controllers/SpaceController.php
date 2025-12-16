@@ -8,8 +8,16 @@ use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
 use App\Services\SettingService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Lunar\FieldTypes\Text;
+use Lunar\FieldTypes\TranslatedText;
+use Lunar\Models\ProductType;
+use Lunar\Models\TaxClass;
+use Modules\Booking\Entities\Schedule;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
@@ -45,7 +53,20 @@ class SpaceController extends CrudController
         $scopes = array_filter($scopes);
 
         if ($user->hasRole('city_administrator')) {
-            $scopes['inCities'] = $user->adminCities->pluck('id')->toArray();
+            // City administrators should see both:
+            // 1. All spaces they manage (created by them)
+            // 2. All spaces in their administered cities
+            $managedSpaces = $user->spaces;
+            $managedSpaceIds = $managedSpaces->pluck('id')->all();
+            
+            // Get all space IDs from their cities
+            $cityIds = $user->adminCities->pluck('id')->toArray();
+            $citySpaceIds = Space::whereIn('city_id', $cityIds)
+                ->pluck('id')
+                ->all();
+            
+            // Combine both sets of IDs (spaces they manage + spaces in their cities)
+            $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
         } elseif (! $user->can('space.viewAny')) {
             $managedSpaces = $user->spaces;
 
@@ -147,6 +168,14 @@ class SpaceController extends CrudController
         Inertia::share('googleApiKey', app(SettingService::class)->getGoogleApi());
         Inertia::share('geoLocation', app(IPService::class)->getGeoLocation());
 
+        // Get product-related options for optional product creation (only if Booking module is enabled)
+        $isBookingEnabled = \Nwidart\Modules\Facades\Module::has('Booking') && \Nwidart\Modules\Facades\Module::isEnabled('Booking');
+        $canCreateProduct = $isBookingEnabled && $user->can('product.add');
+        
+        $roleOptions = collect()
+            ->push(['id' => null, 'value' => '- '.__('Select').' -'])
+            ->merge(app(UserService::class)->getRoleOptions());
+
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
@@ -176,10 +205,17 @@ class SpaceController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'read' => $user->can('media.read'),
                 ],
+                'createProduct' => $canCreateProduct,
             ],
             'dimensions' => [
                 'logo' => config('constants.dimensions.logo'),
                 'cover' => config('constants.dimensions.cover'),
+            ],
+            // Product creation options
+            'productRoleOptions' => $roleOptions,
+            'productStatusOptions' => [
+                ['id' => 'draft', 'value' => 'Draft'],
+                ['id' => 'published', 'value' => 'Published'],
             ],
         ]));
     }
@@ -206,11 +242,90 @@ class SpaceController extends CrudController
             $this->spaceService->replaceCover($space, $request->cover);
         }
 
+        // Create Product if requested and Booking module is enabled
+        if ($request->input('create_product', false) && \Nwidart\Modules\Facades\Module::has('Booking') && \Nwidart\Modules\Facades\Module::isEnabled('Booking')) {
+            $this->createProductForSpace($space, $request);
+        }
+
         $this->generateFlashMessage('The :resource was created!', [
             'resource' => $this->title()
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
+    }
+
+    /**
+     * Create a Product linked to the Space
+     */
+    private function createProductForSpace(Space $space, SpaceStoreRequest $request): void
+    {
+        $productType = ProductType::where('name', 'Event')->first();
+
+        if (!$productType) {
+            return;
+        }
+
+        $product = Product::create([
+            'product_type_id' => $productType->id,
+            'status' => $request->input('product_status', 'draft'),
+            'productable_type' => Space::class,
+            'productable_id' => $space->id,
+            'attribute_data' => [
+                'name' => new TranslatedText(collect([
+                    'en' => new Text($request->input('product_name')),
+                ])),
+                'description' => new TranslatedText(collect([
+                    'en' => new Text($request->input('product_description', '')),
+                ])),
+                'short_description' => new TranslatedText(collect([
+                    'en' => new Text($request->input('product_short_description', '')),
+                ])),
+            ],
+        ]);
+
+        $taxClass = TaxClass::getDefault();
+
+        ProductVariant::create([
+            'product_id' => $product->id,
+            'tax_class_id' => $taxClass->id,
+            'purchasable' => 'always',
+            'shippable' => false,
+            'stock' => 0,
+            'backorder' => 0,
+            'sku' => 'EVENT-'.$product->id,
+        ]);
+
+        // Set product metadata including location from space
+        $meta = [
+            'roles' => empty($request->input('product_roles')) ? [] : [(int) $request->input('product_roles')],
+            'duration' => 60,
+            'duration_unit' => 'minute',
+            'bookable_date_range_type' => 'calendar_days_into_the_future',
+            'bookable_date_range' => 60,
+            'is_check_in_required' => (bool) $request->input('product_is_check_in_required', false),
+            'locations' => [[
+                'city' => $space->city,
+                'country_code' => $space->country_code,
+                'latitude' => $space->latitude,
+                'longitude' => $space->longitude,
+                'address' => $space->address,
+            ]],
+        ];
+
+        $product->setMeta($meta);
+        $product->save();
+
+        // Attach City Administrator as product manager
+        $user = auth()->user();
+        if ($user->hasRole('city_administrator') && !$user->can('product.edit')) {
+            $user->products()->syncWithoutDetaching([$product->id]);
+        }
+
+        // Create schedule for the product
+        Schedule::factory()->state([
+            'schedulable_type' => Product::class,
+            'schedulable_id' => $product->id,
+        ])->create();
     }
 
     private function makePage(): Page
@@ -445,6 +560,16 @@ class SpaceController extends CrudController
                 'timezone' => __('Timezone'),
                 'is_same_address_as_parent' => __("Is it the same address as the parent?"),
                 'affected_menu_warning' => __('This page update may affect the navigation menu on the Theme Header and Footer.'),
+                // Product creation translations
+                'create_product' => __('Create a bookable product for this space'),
+                'product_details' => __('Product Details'),
+                'product_name' => __('Product Name'),
+                'product_description' => __('Product Description'),
+                'product_short_description' => __('Product Short Description'),
+                'product_status' => __('Product Status'),
+                'product_roles' => __('Visible to Role'),
+                'product_check_in_required' => __('Is check-in required?'),
+                'product_note' => __('The product will be automatically linked to this space and will inherit the space\'s location details.'),
                 'tips' => [
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                 ]

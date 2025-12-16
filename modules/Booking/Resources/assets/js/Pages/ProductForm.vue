@@ -64,6 +64,18 @@
             </option>
         </biz-form-select>
 
+        <!-- Space Selection -->
+        <div v-if="can?.space?.manageProductSpace && spaceOptions && spaceOptions.length > 0" class="mt-5">
+            <h5 class="title is-5 mb-3">
+                {{ i18n.space }}
+            </h5>
+
+            <product-space-form
+                v-model="form.space_id"
+                :space-options="spaceOptions"
+            />
+        </div>
+
         <h5 class="title is-5 mt-5 mb-3">
             {{ i18n.gallery }}
         </h5>
@@ -92,6 +104,7 @@
     import BizFormMultipleMediaLibrary from '@/Biz/Form/MultipleMediaLibrary.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import ProductSpaceForm from './ProductSpaceForm.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -101,6 +114,7 @@
             BizFormMultipleMediaLibrary,
             BizFormSelect,
             BizFormTextarea,
+            ProductSpaceForm,
         },
 
         mixins: [
@@ -133,6 +147,7 @@
             rules: { type: Object, required: true },
             imageMimes: { type: Array, required: true },
             instructions: {type: Object, default: () => {}},
+            spaceOptions: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {

@@ -11,6 +11,7 @@ use Modules\Ecommerce\Entities\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductService
@@ -28,7 +29,42 @@ class ProductService
     ): LengthAwarePaginator {
         $productIds = null;
 
-        if (!$user->can('product.browse')) {
+        if ($user->hasRole('city_administrator')) {
+            // City administrators see products they manage AND products linked to their spaces/cities
+            $managedProductIds = $user->products->pluck('id')->all();
+            
+            // Get spaces the city admin manages
+            $managedSpaceIds = $user->spaces->pluck('id')->all();
+            
+            // Get spaces from their cities
+            $cityIds = $user->adminCities->pluck('id')->toArray();
+            $cityNames = $user->adminCities->pluck('name')->toArray();
+            $citySpaceIds = \Modules\Space\Entities\Space::whereIn('city_id', $cityIds)
+                ->pluck('id')
+                ->all();
+            
+            // Combine all space IDs
+            $allSpaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
+            
+            // Get products linked to these spaces
+            $spaceProductIds = Product::where('productable_type', 'Modules\Space\Entities\Space')
+                ->whereIn('productable_id', $allSpaceIds)
+                ->pluck('id')
+                ->all();
+            
+            // Get products whose location metadata matches their cities
+            $cityProductIds = Product::whereHas('metas', function ($query) use ($cityNames) {
+                $query->where('key', 'locations')
+                    ->where(function ($q) use ($cityNames) {
+                        foreach ($cityNames as $cityName) {
+                            $q->orWhere(DB::raw("value::json->0->>'city'"), 'ILIKE', $cityName);
+                        }
+                    });
+            })->pluck('id')->all();
+            
+            // Combine managed products, space-linked products, and city products
+            $productIds = collect(array_unique(array_merge($managedProductIds, $spaceProductIds, $cityProductIds)));
+        } elseif (!$user->can('product.browse')) {
             $productIds = $user->products->pluck('id');
         }
 

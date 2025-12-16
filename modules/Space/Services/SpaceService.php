@@ -434,7 +434,17 @@ class SpaceService
         $scopes = [];
 
         if ($user->hasRole('city_administrator')) {
-            $scopes['inCities'] = $user->adminCities->pluck('id')->toArray();
+            // Get spaces they manage
+            $managedSpaceIds = $user->spaces->pluck('id')->all();
+            
+            // Get spaces from their cities
+            $cityIds = $user->adminCities->pluck('id')->toArray();
+            $citySpaceIds = Space::whereIn('city_id', $cityIds)
+                ->pluck('id')
+                ->all();
+            
+            // Combine both sets
+            $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
         } elseif (! $user->can('space.viewAny')) {
             $spaceIds = $user->spaces->pluck('id')->all();
         }

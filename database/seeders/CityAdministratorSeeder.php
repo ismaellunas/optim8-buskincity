@@ -26,6 +26,7 @@ class CityAdministratorSeeder extends Seeder
             'system.dashboard',     // Required to access admin panel
             'city.manage_events',  // Can create/edit/delete events in their cities
             'city.view_reports',   // Can view reports for their cities
+            'product.add',         // Can create products (bookable events)
         ];
 
         // Create permissions
@@ -37,6 +38,6 @@ class CityAdministratorSeeder extends Seeder
         }
 
         // Assign permissions to role
-        $role->syncPermissions($permissions);
+        $role->givePermissionTo($permissions);
     }
 }

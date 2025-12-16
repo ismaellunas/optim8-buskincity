@@ -15,6 +15,7 @@
                         :role-options="roleOptions"
                         :rules="rules"
                         :status-options="statusOptions"
+                        :space-options="spaceOptions"
                     />
 
                     <hr>
@@ -83,6 +84,7 @@
             roleOptions: { type: Array, required: true },
             rules: { type: Object, required: true },
             statusOptions: { type: Array, required: true },
+            spaceOptions: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 cancel : 'Cancel',
                 create : 'Create',
@@ -98,6 +100,7 @@
                 roles: null,
                 is_check_in_required: false,
                 gallery: [],
+                space_id: null,
             };
 
             return {
