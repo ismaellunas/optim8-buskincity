@@ -1,5 +1,16 @@
 <template>
     <div class="events-calendar">
+        <!-- Geolocation notification for mobile -->
+        <div v-if="geoError && isMobile" class="notification is-warning mb-3">
+            <p>📍 {{ geoError }}</p>
+            <p class="is-size-7 mt-2">Events will show your server-detected location. For accurate location, please enable location services.</p>
+        </div>
+        
+        <div v-if="!isSecureContext && isMobile" class="notification is-danger mb-3">
+            <p>🔒 Location services require HTTPS</p>
+            <p class="is-size-7 mt-2">Please access this site via HTTPS to use location-based features.</p>
+        </div>
+
         <div class="columns is-multiline is-mobile">
             <div class="column is-6-desktop is-6-tablet is-12-mobile">
                 <div
@@ -197,7 +208,7 @@
             let selectedLocation = ref(null);
 
             // Use browser geolocation ONLY (no server IP location!)
-            const { coords, isLoading: geoLoading, error: geoError } = useGeolocation();
+            const { coords, isLoading: geoLoading, error: geoError, isSecureContext, isMobile } = useGeolocation();
 
             // Compute position - ONLY from browser, never from server IP
             const initPos = computed(() => {
@@ -245,6 +256,8 @@
                 screenType,
                 geoLoading,
                 geoError,
+                isSecureContext,
+                isMobile,
             };
         },
 
