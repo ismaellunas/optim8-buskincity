@@ -115,6 +115,7 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
+
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
     $loginLimiter = config('fortify.limiters.login');
 

@@ -21,7 +21,7 @@
 
 <script>
     import { Loader } from '@googlemaps/js-api-loader';
-    import { computed, onMounted, onUnmounted, ref, toRaw } from 'vue';
+    import { computed, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
     import { isFunction } from 'lodash';
     import { useGeolocation } from '@/Libs/map';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -42,36 +42,42 @@
         setup(props, { emit }) {
             const markerPosition = useModelWrapper(props, emit);
 
-            let initPos = null;
+            // Use browser geolocation with loading state
+            const { coords, isLoading, error } = useGeolocation();
 
-            if (
-                !isBlank(props.modelValue)
-                && !isBlank(props.modelValue.longitude)
-                && !isBlank(props.modelValue.latitude)
-            ) {
-                initPos = {
-                    lat: markerPosition.value.latitude,
-                    lng: markerPosition.value.longitude,
+            // Compute initial position - ONLY from user action or browser
+            const currPos = computed(() => {
+                // Priority 1: Existing model value (user has already set a location)
+                if (
+                    !isBlank(props.modelValue)
+                    && !isBlank(props.modelValue.longitude)
+                    && !isBlank(props.modelValue.latitude)
+                ) {
+                    return {
+                        lat: markerPosition.value.latitude,
+                        lng: markerPosition.value.longitude,
+                    };
+                }
+
+                // Priority 2: Browser geolocation (ONLY accurate source!)
+                if (
+                    !isBlank(coords.value.latitude)
+                    && !isBlank(coords.value.longitude)
+                    && coords.value.latitude !== null
+                    && coords.value.longitude !== null
+                ) {
+                    return {
+                        lat: coords.value.latitude,
+                        lng: coords.value.longitude,
+                    };
+                }
+
+                // Priority 3: Default center (world view)
+                return {
+                    lat: 0,
+                    lng: 0,
                 };
-
-            } else if (!isBlank(props.initPosition)) {
-
-                initPos = {
-                    lat: props.initPosition.latitude,
-                    lng: props.initPosition.longitude,
-                };
-
-            } else {
-
-                const { coords } = useGeolocation();
-
-                initPos = {
-                    lat: coords.value.latitude,
-                    lng: coords.value.longitude,
-                };
-            }
-
-            const currPos = computed(() => (initPos));
+            });
             const markers = ref([]);
             const mapDiv = ref(null);
             const searchInput = ref(null);
@@ -122,12 +128,32 @@
             onMounted(async () => {
                 await loader.load();
 
+                // Wait longer for geolocation to resolve
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const initialPos = currPos.value;
+                const hasValidPosition = initialPos.lat !== 0 || initialPos.lng !== 0;
+
                 map.value = new google.maps.Map(mapDiv.value, {
-                    center: currPos.value,
-                    zoom: 11,
+                    center: initialPos,
+                    zoom: hasValidPosition ? 11 : 2,
                     draggable: props.isDraggable,
                     streetViewControl: false,
                 });
+
+                // Only watch for position updates if we started without a valid position
+                if (!hasValidPosition) {
+                    let hasUpdated = false;
+                    
+                    const stopWatch = watch(currPos, (newPos) => {
+                        if ((newPos.lat !== 0 || newPos.lng !== 0) && !hasUpdated) {
+                            map.value.setCenter(newPos);
+                            map.value.setZoom(11);
+                            hasUpdated = true;
+                            stopWatch();
+                        }
+                    });
+                }
 
                 if (props.enableSearchBox) {
                     searchBox.value = new google.maps.places.SearchBox(searchInput.value);
@@ -206,6 +232,8 @@
                 markers,
                 mapDiv,
                 searchInput,
+                isLoading,
+                error,
 
                 hideMarkers,
                 showMarkers,

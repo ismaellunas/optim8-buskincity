@@ -191,30 +191,35 @@
         setup(props) {
             let availableLocations = ref({});
             let events = ref({});
-            let initPos = null;
             let map = ref(null);
             let mapData = ref(null);
             let mapDiv = ref(null);
             let selectedLocation = ref(null);
 
-            const hasInitPosition = computed(() => !isBlank(props.initPosition));
+            // Use browser geolocation ONLY (no server IP location!)
+            const { coords, isLoading: geoLoading, error: geoError } = useGeolocation();
 
-            if (hasInitPosition.value) {
+            // Compute position - ONLY from browser, never from server IP
+            const initPos = computed(() => {
+                // Use ONLY browser geolocation
+                if (
+                    !isBlank(coords.value.latitude)
+                    && !isBlank(coords.value.longitude)
+                    && coords.value.latitude !== null
+                    && coords.value.longitude !== null
+                ) {
+                    return {
+                        lat: coords.value.latitude,
+                        lng: coords.value.longitude,
+                    };
+                }
 
-                initPos = {
-                    lat: props.initPosition.latitude,
-                    lng: props.initPosition.longitude,
+                // If browser geolocation not available yet or failed, default to world view
+                return {
+                    lat: 0,
+                    lng: 0,
                 };
-
-            } else {
-
-                const { coords } = useGeolocation();
-
-                initPos = {
-                    lat: coords.value.latitude,
-                    lng: coords.value.longitude,
-                };
-            }
+            });
 
             const queryParams = computed(() => merge(
                 {dates: [
@@ -231,12 +236,15 @@
                 dateRange: clone(queryParams.value.dates),
                 events,
                 icon: { globe },
+                initPos,
                 mapData,
                 mapDiv,
                 queryParams: ref(queryParams),
                 selectedLocation,
                 infoWindow: ref(null),
                 screenType,
+                geoLoading,
+                geoError,
             };
         },
 
@@ -251,6 +259,7 @@
                 isLoading: false,
                 hasError: false,
                 errorMessage: '',
+                hasInitializedWithBrowserLocation: false, // Track if we've set position from browser
             };
         },
 
@@ -334,18 +343,48 @@
 
             await this.mapLoader.load();
 
+            // Wait for browser geolocation to resolve
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Get center position with safety checks
+            const center = this.initPos || { lat: 0, lng: 0 };
+            const lat = typeof center.lat === 'number' ? center.lat : 0;
+            const lng = typeof center.lng === 'number' ? center.lng : 0;
+
+            // Track if we're using browser location
+            if (lat !== 0 && lng !== 0) {
+                this.hasInitializedWithBrowserLocation = true;
+            }
+
             this.map = new google.maps.Map(this.mapDiv, {
-                center: {
-                    lat: this.initPosition.latitude,
-                    lng: this.initPosition.longitude,
-                },
-                zoom: 4,
+                center: { lat, lng },
+                zoom: (lat === 0 && lng === 0) ? 2 : 11, // Changed from 4 to 11 for city/municipal level
                 draggable: this.isDraggable,
                 streetViewControl: false,
                 styles: drawMapStyle,
                 maxZoom: 17,
                 minZoom: 3,
             });
+
+            // Watch for geolocation updates ONLY if we started with world view
+            if (lat === 0 && lng === 0) {
+                // Watch for when browser location becomes available
+                const stopWatch = this.$watch('initPos', (newPos) => {
+                    if (newPos && newPos.lat !== 0 && newPos.lng !== 0 && !this.hasInitializedWithBrowserLocation) {
+                        this.map.setCenter(newPos);
+                        this.map.setZoom(11);
+                        this.hasInitializedWithBrowserLocation = true;
+                        
+                        // Reload events based on new location
+                        this.getLocationOptions((results) => {
+                            this.setLocationFromCoordinates(newPos, results);
+                            this.getEvents();
+                        });
+                        
+                        stopWatch();
+                    }
+                }, { deep: true });
+            }
 
             this.infoWindow = new google.maps.InfoWindow({
                 content: "",
@@ -357,7 +396,12 @@
             });
 
             this.getLocationOptions((results) => {
-                if (keys(results).includes(this.userCountryCode)) {
+                // If we have browser geolocation, try to match it to a location
+                if (this.hasInitializedWithBrowserLocation && this.initPos) {
+                    // Use reverse geocoding or find closest city
+                    this.setLocationFromCoordinates(this.initPos, results);
+                } else if (keys(results).includes(this.userCountryCode)) {
+                    // Fallback to server-detected country
                     this.selectedLocation = this.userCountryCode;
 
                     const foundedCity = find(
@@ -375,6 +419,30 @@
         },
 
         methods: {
+            setLocationFromCoordinates(coords, locationOptions) {
+                // Find the closest country/city based on coordinates
+                // For Philippines coordinates (8-18°N, 116-127°E)
+                const lat = coords.lat;
+                const lng = coords.lng;
+                
+                // Simple region detection for Philippines
+                if (lat >= 4 && lat <= 22 && lng >= 116 && lng <= 127) {
+                    // User is in Philippines
+                    if (keys(locationOptions).includes('PH')) {
+                        this.selectedLocation = 'PH';
+                        
+                        // Try to match city based on coordinates
+                        const cities = get(locationOptions, 'PH.cities', []);
+                        if (cities.length > 0) {
+                            // For now, just use the first city or you can implement distance calculation
+                            // In a production app, you'd use reverse geocoding API
+                            this.selectedLocation = 'PH-' + cities[0];
+                        }
+                    }
+                }
+                // Add more regions as needed
+            },
+            
             getEvents(url) {
                 let currentUrl = url ?? this.urls.getEvents;
 
@@ -387,22 +455,12 @@
                 this.queryParams.city = this.locationParts.city;
                 this.queryParams.dates = this.queryParams.dates.filter(Boolean);
 
-                // Debug logging
-                if (this.debugMode) {
-                    console.log('EventsCalendar: Making API request to:', currentUrl);
-                    console.log('EventsCalendar: Query params:', this.queryParams);
-                }
-
                 this.isLoading = true;
                 this.onStartLoadingOverlay();
 
                 axios
                     .get(currentUrl, {params: this.queryParams})
                     .then((response) => {
-                        if (this.debugMode) {
-                            console.log('EventsCalendar: API Response:', response.data);
-                        }
-
                         // Check if response has the expected structure
                         if (!response.data || !response.data.pagination) {
                             throw new Error('Invalid API response structure');
@@ -414,7 +472,8 @@
                         // Update map markers
                         this.markerClusterer.clearMarkers(true);
 
-                        if (response.data.map && response.data.map.center) {
+                        // ONLY recenter map if we don't have browser location
+                        if (response.data.map && response.data.map.center && !this.hasInitializedWithBrowserLocation) {
                             this.map.setZoom(response.data.map.zoom);
                             this.map.panTo({
                                 lat: parseFloat(response.data.map.center.latitude),
