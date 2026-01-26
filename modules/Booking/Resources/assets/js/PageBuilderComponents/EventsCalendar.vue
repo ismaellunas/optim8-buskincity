@@ -3,7 +3,7 @@
         <!-- Geolocation notification for mobile -->
         <div v-if="geoError && isMobile" class="notification is-warning mb-3">
             <p>📍 {{ geoError }}</p>
-            <p class="is-size-7 mt-2">Events will show your server-detected location. For accurate location, please enable location services.</p>
+            <p class="is-size-7 mt-2">Showing events from all locations. For location-based filtering, please enable location services.</p>
         </div>
         
         <div v-if="!isSecureContext && isMobile" class="notification is-danger mb-3">
@@ -26,7 +26,6 @@
                             <biz-select
                                 v-model="selectedLocation"
                                 class="is-fullwidth"
-                                placeholder="Any"
                             >
                                 <option
                                     v-for="location in locationOptions"
@@ -278,7 +277,13 @@
 
         computed: {
             locationOptions() {
-                const options = [];
+                const options = [
+                    // Add "Any" option at the top to show all events
+                    {
+                        id: null,
+                        value: 'Any',
+                    }
+                ];
 
                 sortBy(this.availableLocations, [(location, key) => {
                     return location.country;
@@ -391,6 +396,8 @@
                         // Reload events based on new location
                         this.getLocationOptions((results) => {
                             this.setLocationFromCoordinates(newPos, results);
+                            // If no location was auto-selected, selectedLocation will be null
+                            // This will cause getEvents() to load all events
                             this.getEvents();
                         });
                         
@@ -409,24 +416,15 @@
             });
 
             this.getLocationOptions((results) => {
-                // If we have browser geolocation, try to match it to a location
+                // ONLY use browser geolocation (GPS) - DO NOT use server IP detection
+                // Server is in Sweden, so IP detection always shows Sweden regardless of user location
                 if (this.hasInitializedWithBrowserLocation && this.initPos) {
-                    // Use reverse geocoding or find closest city
+                    // Use browser GPS coordinates to detect location
                     this.setLocationFromCoordinates(this.initPos, results);
-                } else if (keys(results).includes(this.userCountryCode)) {
-                    // Fallback to server-detected country
-                    this.selectedLocation = this.userCountryCode;
-
-                    const foundedCity = find(
-                        get(results, this.userCountryCode+'.cities', []),
-                        (city) => city == this.userCity
-                    );
-
-                    if (foundedCity) {
-                        this.selectedLocation += "-" + foundedCity;
-                    }
                 }
-
+                
+                // If browser geolocation failed or was denied, selectedLocation stays null
+                // This will show "Any" and load all events from all locations
                 this.getEvents();
             });
         },
@@ -440,20 +438,53 @@
                 
                 // Simple region detection for Philippines
                 if (lat >= 4 && lat <= 22 && lng >= 116 && lng <= 127) {
-                    // User is in Philippines
+                    // User is in Philippines - check if PH locations exist in available locations
                     if (keys(locationOptions).includes('PH')) {
-                        this.selectedLocation = 'PH';
-                        
-                        // Try to match city based on coordinates
                         const cities = get(locationOptions, 'PH.cities', []);
                         if (cities.length > 0) {
-                            // For now, just use the first city or you can implement distance calculation
-                            // In a production app, you'd use reverse geocoding API
+                            // Only auto-select if there are events in this city
                             this.selectedLocation = 'PH-' + cities[0];
+                        } else {
+                            // Country exists but no cities, just select country
+                            this.selectedLocation = 'PH';
                         }
+                        return; // Exit early since we found a match
                     }
                 }
-                // Add more regions as needed
+                
+                // Add more region detection here for other countries
+                // For example: Sweden (55-69°N, 11-24°E)
+                if (lat >= 55 && lat <= 69 && lng >= 11 && lng <= 24) {
+                    if (keys(locationOptions).includes('SE')) {
+                        const cities = get(locationOptions, 'SE.cities', []);
+                        if (cities.length > 0) {
+                            this.selectedLocation = 'SE-' + cities[0];
+                        } else {
+                            this.selectedLocation = 'SE';
+                        }
+                        return;
+                    }
+                }
+                
+                // Add detection for United States (25-49°N, -125 to -66°E)
+                if (lat >= 25 && lat <= 49 && lng >= -125 && lng <= -66) {
+                    if (keys(locationOptions).includes('US')) {
+                        const cities = get(locationOptions, 'US.cities', []);
+                        if (cities.length > 0) {
+                            this.selectedLocation = 'US-' + cities[0];
+                        } else {
+                            this.selectedLocation = 'US';
+                        }
+                        return;
+                    }
+                }
+                
+                // If we reach here, no matching region was found with available events
+                // Leave selectedLocation as null to show all events (fallback to "Any")
+                if (this.debugMode) {
+                    console.log('No matching region with events found for coordinates:', { lat, lng });
+                    console.log('Available locations:', keys(locationOptions));
+                }
             },
             
             getEvents(url) {

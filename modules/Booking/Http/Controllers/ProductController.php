@@ -231,6 +231,10 @@ class ProductController extends CrudController
 
         $formSpace = $this->productSpaceService->formResource($product);
 
+        // Check if product is missing location data
+        $hasLocation = !empty($product->locations[0]['city'] ?? null) 
+                       && !empty($product->locations[0]['country_code'] ?? null);
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
                 [
@@ -256,6 +260,7 @@ class ProductController extends CrudController
             'defaultCountryCode' => app(IPService::class)->getCountryCode("US"),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'productManagerBaseRoute' => 'admin.ecommerce.products.managers',
+            'missingLocation' => !$hasLocation,
             'rules' => [
                 'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),

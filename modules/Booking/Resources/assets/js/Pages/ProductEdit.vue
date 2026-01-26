@@ -134,9 +134,22 @@
                             </div>
                         </div>
 
+                        <!-- Warning for missing location -->
+                        <div v-if="missingLocation" class="notification is-warning">
+                            <p class="has-text-weight-bold">⚠️ Location Required</p>
+                            <p class="mt-2">
+                                This product is missing location data. Events booked on this product 
+                                <strong>will NOT appear</strong> in the public Events Calendar until you add a location below.
+                            </p>
+                            <p class="mt-2 is-size-7">
+                                Please fill in the City, Country, and coordinates below, then click "Update".
+                            </p>
+                        </div>
+
                         <biz-form-fieldset-location
                             v-model:address="eventForm.location.address"
                             v-model:city="eventForm.location.city"
+                            v-model:city-id="eventForm.location.city_id"
                             v-model:country-code="eventForm.location.country_code"
                             v-model:latitude="eventForm.location.latitude"
                             v-model:longitude="eventForm.location.longitude"
@@ -509,6 +522,7 @@
             spaceOptions: { type: Array, default: () => [] },
             space: { type: Object, required: true },
             i18n: { type: Object, default: () => {} },
+            missingLocation: { type: Boolean, default: false },
         },
 
         setup(props) {
@@ -529,7 +543,10 @@
             };
 
             const eventForm = {
-                location: event.value.location,
+                location: {
+                    ...event.value.location,
+                    city_id: event.value.location?.city_id ?? null, // Initialize city_id for reactivity
+                },
                 duration: event.value.duration,
                 bookable_date_range: event.value.bookable_date_range,
                 timezone: event.value.timezone,
