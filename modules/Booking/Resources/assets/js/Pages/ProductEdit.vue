@@ -389,7 +389,7 @@
 
             <biz-provide-inject-tab
                 id="product-space"
-                title="Space"
+                title="Location"
                 :is-rendered="can.space.manageProductSpace"
             >
                 <form

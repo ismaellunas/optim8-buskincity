@@ -426,8 +426,8 @@ class ProductController extends CrudController
                 'unavailable' => __('Unavailable'),
                 'choose_product_manager' => __('Choose pitch manager'),
                 'space' => __('space_module::terms.space'),
-                'select_space' => __('Select space'),
-                'select_space_note' => __('The :resource can only have one space.', ['resource' => __('booking_module::terms.product')]),
+                'select_space' => __('Select location'),
+                'select_space_note' => __('The :resource can only have one location.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [
                     'pitch_date_range' => __('The overall date range (start and end dates only) when this pitch is available. No bookings can be made outside these dates. The specific booking times are set in the Schedule section below.'),
                     'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly hours for regular availability and date overrides for special dates or closures.'),

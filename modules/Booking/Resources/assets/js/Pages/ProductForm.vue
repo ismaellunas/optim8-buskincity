@@ -64,7 +64,7 @@
             </option>
         </biz-form-select>
 
-        <!-- Space Selection -->
+        <!-- Location Selection -->
         <div v-if="can?.space?.manageProductSpace && spaceOptions && spaceOptions.length > 0" class="mt-5">
             <h5 class="title is-5 mb-3">
                 {{ i18n.space }}

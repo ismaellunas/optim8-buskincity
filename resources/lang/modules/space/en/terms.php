@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'space' => 'space',
-    'spaces' => 'spaces',
+    'space' => 'location',
+    'spaces' => 'locations',
 ];
