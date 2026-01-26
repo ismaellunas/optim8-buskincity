@@ -11,7 +11,7 @@ use Modules\Space\Services\EventService;
 
 class EventController extends Controller
 {
-    private $title = "Event";
+    private $title = 'space_module::terms.space event';
 
     private $eventService;
 
@@ -28,7 +28,7 @@ class EventController extends Controller
 
         return [
             'event' => $this->eventService->getEditableRecord($event),
-            'message' => $this->title.' created successfully!',
+            'message' => __('The :resource was created!', ['resource' => __($this->title)]),
         ];
     }
 
@@ -40,7 +40,7 @@ class EventController extends Controller
 
         return [
             'event' => $this->eventService->getEditableRecord($event),
-            'message' => $this->title.' updated successfully!',
+            'message' => __('The :resource was updated!', ['resource' => __($this->title)]),
         ];
     }
 
@@ -53,7 +53,7 @@ class EventController extends Controller
     {
         $event->delete();
 
-        return response($this->title.' deleted successfully!', 200);
+        return response(__('The :resource was deleted!', ['resource' => __($this->title)]), 200);
     }
 
     public function records(Request $request, Space $space)

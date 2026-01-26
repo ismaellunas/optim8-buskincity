@@ -11,7 +11,7 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductEventCrudController extends Controller
 {
-    private $title = "Event";
+    private $title = 'booking_module::terms.product booking_module::terms.event';
 
     public function __construct(
         private ProductEventCrudService $productEventService
@@ -25,7 +25,7 @@ class ProductEventCrudController extends Controller
 
         return [
             'event' => $this->productEventService->getEditableRecord($event),
-            'message' => $this->title.' created successfully!',
+            'message' => __('The :resource was created!', ['resource' => __($this->title)]),
         ];
     }
 
@@ -41,7 +41,7 @@ class ProductEventCrudController extends Controller
 
         return [
             'event' => $this->productEventService->getEditableRecord($productEvent),
-            'message' => $this->title.' updated successfully!',
+            'message' => __('The :resource was updated!', ['resource' => __($this->title)]),
         ];
     }
 
@@ -62,7 +62,7 @@ class ProductEventCrudController extends Controller
 
         $productEvent->delete();
 
-        return response($this->title.' deleted successfully!', 200);
+        return response(__('The :resource was deleted!', ['resource' => __($this->title)]), 200);
     }
 
     public function records(Request $request, Product $product)
