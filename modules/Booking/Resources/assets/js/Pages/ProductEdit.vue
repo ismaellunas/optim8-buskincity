@@ -10,7 +10,7 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Product"
+                title="Pitch"
                 class="mb-6"
             >
                 <form
@@ -111,6 +111,29 @@
                             </div>
                         </div>
 
+                        <div class="columns">
+                            <div class="column is-6">
+                                <biz-form-date-time
+                                    v-model="pitchDateRange"
+                                    :label="i18n.pitch_date_range"
+                                    range
+                                    :utc="'preserve'"
+                                    required
+                                    :message="error(['pitch_started_at', 'pitch_ended_at'], eventErrorBag)"
+                                    :enable-time-picker="false"
+                                    :tooltip-message="i18n.tips.pitch_date_range"
+                                />
+                            </div>
+                            <div class="column is-6">
+                                <biz-form-timezone
+                                    v-model="eventForm.pitch_timezone"
+                                    :label="i18n.pitch_timezone"
+                                    :message="error('pitch_timezone', eventErrorBag)"
+                                    required
+                                />
+                            </div>
+                        </div>
+
                         <biz-form-fieldset-location
                             v-model:address="eventForm.location.address"
                             v-model:city="eventForm.location.city"
@@ -125,6 +148,11 @@
                     <div class="box">
                         <h5 class="title is-5 mb-2">
                             {{ i18n.schedule }}
+
+                            <biz-tooltip
+                                class="ml-1"
+                                :message="i18n.tips.schedule"
+                            />
                         </h5>
 
                         <hr class="mt-0">
@@ -312,6 +340,16 @@
             </biz-provide-inject-tab>
 
             <biz-provide-inject-tab
+                id="product-events-tab"
+                title="Events"
+                class="mb-6"
+            >
+                <div class="box">
+                    <product-event-list :product="product" />
+                </div>
+            </biz-provide-inject-tab>
+
+            <biz-provide-inject-tab
                 title="Manager"
                 :is-rendered="can.productManager.edit"
             >
@@ -383,6 +421,7 @@
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormAssignUser from '@/Biz/Form/AssignUser.vue';
+    import BizFormDateTime from '@/Biz/Form/DateTime.vue';
     import BizFormFieldsetLocation from '@/Biz/Form/FieldsetLocation.vue';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
@@ -392,6 +431,7 @@
     import BizTag from '@/Biz/Tag.vue';
     import BizTooltip from '@/Biz/Tooltip.vue';
     import ProductSpaceForm from './ProductSpaceForm.vue';
+    import ProductEventList from './ProductEventList.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
@@ -411,6 +451,7 @@
             BizCheckbox,
             BizErrorNotifications,
             BizFormAssignUser,
+            BizFormDateTime,
             BizFormFieldsetLocation,
             BizFormNumberAddons,
             BizFormSelect,
@@ -420,6 +461,7 @@
             BizTag,
             BizTooltip,
             ProductEditModalDateOverride,
+            ProductEventList,
             ProductForm,
             ScheduleRuleTimes,
             ProductSpaceForm,
@@ -437,6 +479,7 @@
                 can: this.can,
                 i18n: this.i18n,
                 dimensions: this.dimensions,
+                eventStatusOptions: this.eventStatusOptions,
             };
         },
 
@@ -450,6 +493,7 @@
             defaultCountryCode: { type: String, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
+            eventStatusOptions: { type: Array, default: () => [] },
             imageMimes: { type: Array, required: true },
             product: { type: Object, required: true },
             event: { type: Object, required: true },
@@ -471,6 +515,8 @@
             const product = computed(() => props.product);
             const event = computed(() => props.event);
             const space = computed(() => props.space);
+            const startTime = ref({ hours: 10, minutes: 0 });
+            const endTime = ref({ hours: 17, minutes: 0 });
 
             const form = {
                 name: product.value.name,
@@ -487,6 +533,9 @@
                 duration: event.value.duration,
                 bookable_date_range: event.value.bookable_date_range,
                 timezone: event.value.timezone,
+                pitch_started_at: event.value.pitch_started_at,
+                pitch_ended_at: event.value.pitch_ended_at,
+                pitch_timezone: event.value.pitch_timezone ?? event.value.timezone,
                 weekly_hours: computed(() => props.weeklyHours).value,
                 date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
             };
@@ -510,6 +559,8 @@
                 eventForm: useForm(eventForm),
                 spaceForm: useForm(spaceForm),
                 icon,
+                startTime,
+                endTime,
                 locationFieldsetErrorKeys,
             };
         },
@@ -524,6 +575,25 @@
         },
 
         computed: {
+            pitchDateRange: {
+                get() {
+                    if (this.eventForm.pitch_started_at) {
+                        return [
+                            this.eventForm.pitch_started_at,
+                            this.eventForm.pitch_ended_at,
+                        ];
+                    }
+                    return [];
+                },
+                set(newValue) {
+                    if (newValue == null) {
+                        this.eventForm.pitch_started_at = this.eventForm.pitch_ended_at = null;
+                    } else {
+                        this.eventForm.pitch_started_at = newValue[0] ?? null;
+                        this.eventForm.pitch_ended_at = newValue[1] ?? null;
+                    }
+                }
+            },
             dateOverrideBatches() {
                 const self = this;
 

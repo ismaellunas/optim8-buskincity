@@ -9,6 +9,8 @@ use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProdu
 use Modules\Booking\Http\Controllers\Frontend\UpcomingEventController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
+use Modules\Booking\Http\Controllers\ProductEventCrudController;
+use Modules\Booking\Http\Controllers\ProductEventScheduleController;
 use Modules\Booking\Http\Controllers\ProductSpaceController;
 
 /*
@@ -35,6 +37,22 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
 
     Route::put('/products/{product}/event', [ProductEventController::class, 'update'])
         ->name('products.events.update')
+        ->can('update', 'product');
+
+    Route::resource('products.product-events', ProductEventCrudController::class)
+        ->only(['store', 'update', 'show', 'destroy'])
+        ->middleware('can:update,product');
+
+    Route::get('products/{product}/product-event-records', [ProductEventCrudController::class, 'records'])
+        ->name('products.product-events.records')
+        ->can('update', 'product');
+
+    Route::get('products/{product}/product-events/{productEvent}/schedule', [ProductEventScheduleController::class, 'edit'])
+        ->name('products.product-events.schedule.edit')
+        ->can('update', 'product');
+
+    Route::put('products/{product}/product-events/{productEvent}/schedule', [ProductEventScheduleController::class, 'update'])
+        ->name('products.product-events.schedule.update')
         ->can('update', 'product');
 
     Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])

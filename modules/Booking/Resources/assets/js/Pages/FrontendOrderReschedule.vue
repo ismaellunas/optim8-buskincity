@@ -51,11 +51,12 @@
                             <booking-time
                                 v-model="form"
                                 :allowed-dates-route="allowedDatesRouteName"
-                                :available-times-param="{product: order.product.id}"
+                                :available-times-param="availableTimesParams"
                                 :available-times-route="availableTimesRouteName"
                                 :max-date="maxDate"
                                 :min-date="minDate"
                                 :product-id="order.product.id"
+                                :product-event-id="order.event.product_event_id"
                                 :timezone="order.event.display_timezone"
                                 @on-time-confirmed="openModal"
                             />
@@ -143,6 +144,15 @@
                 form: useForm(form),
                 details: ref([]),
             };
+        },
+
+        computed: {
+            availableTimesParams() {
+                return {
+                    product: this.order.product.id,
+                    product_event_id: this.order.event.product_event_id,
+                };
+            },
         },
 
         methods: {

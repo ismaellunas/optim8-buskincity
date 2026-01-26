@@ -3,9 +3,11 @@
 namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use App\Services\CityService;
 use App\Services\SettingService;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Http\Requests\ProductEventRequest;
 use Modules\Booking\Services\ProductEventService;
@@ -14,12 +16,14 @@ use Modules\Ecommerce\Entities\Product;
 class ProductEventController extends CrudController
 {
     private $productEventService;
+    private $cityService;
 
     protected $title = 'booking_module::terms.product booking_module::terms.event';
 
-    public function __construct(ProductEventService $productEventService)
+    public function __construct(ProductEventService $productEventService, CityService $cityService)
     {
         $this->productEventService = $productEventService;
+        $this->cityService = $cityService;
     }
 
     public function update(ProductEventRequest $request, Product $product)
@@ -28,6 +32,11 @@ class ProductEventController extends CrudController
 
         $product->duration = $inputs['duration'];
         $product->bookable_date_range = $inputs['bookable_date_range'];
+        $product->setMeta([
+            'pitch_started_at' => $inputs['pitch_started_at'] ?? null,
+            'pitch_ended_at' => $inputs['pitch_ended_at'] ?? null,
+            'pitch_timezone' => $inputs['pitch_timezone'] ?? null,
+        ]);
 
         $location = collect($inputs['location'])->only([
             'address',
@@ -52,6 +61,22 @@ class ProductEventController extends CrudController
                 && $response->json()['status'] != 'REQUEST_DENIED'
             ) {
                 $location['geocode'] = $response->json()['results'][0];
+            }
+        }
+
+        // Auto-create city in database if it doesn't exist (for data consistency)
+        if (!empty($location['city']) && !empty($location['country_code'])) {
+            try {
+                $this->cityService->findOrCreate(
+                    $location['city'],
+                    $location['country_code'],
+                    $location['latitude'],
+                    $location['longitude']
+                );
+            } catch (\Exception $e) {
+                // Log error but don't fail the request
+                // Products can still work with city as text even if DB insert fails
+                Log::warning("Failed to create city in database: {$e->getMessage()}");
             }
         }
 

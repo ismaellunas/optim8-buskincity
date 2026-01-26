@@ -125,7 +125,7 @@ class OrderController extends CrudController
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
 
-        $minDate = $this->productEventService->minBookableDate();
+        $minDate = $this->productEventService->minBookableDate($product);
         $maxDate = $this->productEventService->maxBookableDate($product);
 
         return Inertia::render('Booking::FrontendOrderReschedule', $this->getData([
@@ -157,11 +157,18 @@ class OrderController extends CrudController
     public function bookEvent(EventBookRequest $request, Product $product)
     {
         $inputs = $request->validated();
+        $productEvent = null;
+
+        if (!empty($inputs['product_event_id'])) {
+            $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
+                ->find($inputs['product_event_id']);
+        }
 
         $order = $this->orderService->bookEvent(
             $product,
             Carbon::parse($inputs['date']. ' '.$inputs['time']),
             auth()->user(),
+            $productEvent,
         );
 
         EventBooked::dispatch($order);

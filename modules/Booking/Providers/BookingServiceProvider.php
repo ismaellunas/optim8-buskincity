@@ -11,6 +11,7 @@ use Modules\Booking\Policies\OrderPolicyMixin;
 use Modules\Booking\Policies\ProductPolicyMixin;
 use Modules\Booking\Policies\SpacePolicyMixin;
 use Modules\Booking\Services\EventService;
+use Modules\Booking\Services\ProductEventCrudService;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Services\SettingService;
 use Modules\Ecommerce\Entities\Order;
@@ -33,6 +34,7 @@ class BookingServiceProvider extends ServiceProvider
 
     public $singletons = [
         EventService::class => EventService::class,
+        ProductEventCrudService::class => ProductEventCrudService::class,
         ProductEventService::class => ProductEventService::class,
         SettingService::class => SettingService::class,
     ];

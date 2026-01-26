@@ -22,10 +22,12 @@ use App\Policies\{
     MediaPolicy,
     PagePolicy,
     PostPolicy,
+    ProductEventPolicy,
     RolePolicy,
     SettingPolicy,
     UserPolicy
 };
+use Modules\Booking\Entities\ProductEvent;
 use App\Services\ResetPasswordService;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -46,6 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         Media::class => MediaPolicy::class,
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
+        ProductEvent::class => ProductEventPolicy::class,
         Role::class => RolePolicy::class,
         Setting::class => SettingPolicy::class,
         User::class => UserPolicy::class,

@@ -56,6 +56,9 @@ class ProductEventService
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
             'timezone' => $product->eventSchedule->timezone ?? null,
+            'pitch_started_at' => $product->getMeta('pitch_started_at'),
+            'pitch_ended_at' => $product->getMeta('pitch_ended_at'),
+            'pitch_timezone' => $product->getMeta('pitch_timezone'),
             'location' => $product->locations[0] ?? [
                 'address' => null,
                 'latitude' => null,
@@ -74,6 +77,9 @@ class ProductEventService
             'duration' => $this->displayDuration($product),
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
+            'pitch_started_at' => $product->getMeta('pitch_started_at'),
+            'pitch_ended_at' => $product->getMeta('pitch_ended_at'),
+            'pitch_timezone' => $product->getMeta('pitch_timezone'),
             'location' => $product->locations[0] ?? null,
             'timezone' => $schedule->timezone,
             'display_timezone' => $schedule->displayTimezone,
@@ -139,6 +145,47 @@ class ProductEventService
         return $weeklyHours;
     }
 
+    public function weeklyHoursForSchedule(Schedule $schedule): array
+    {
+        $weeklyHours = [];
+        $rules = $schedule->weeklyHours ?? null;
+
+        for ($day = 1; $day <= 7; $day++) {
+
+            $rule = null;
+            if (!is_null($rules)) {
+                $rule = $rules->first(fn ($rule) => $rule->day == $day);
+            }
+
+            $ruleData = [];
+
+            if ($rule) {
+                $ruleData['id'] = $rule->id;
+                $ruleData['day'] = $rule->day;
+                $ruleData['is_available'] = $rule->is_available;
+                $ruleData['hours'] = [];
+
+                foreach ($rule->times as $time) {
+                    $ruleData['hours'][] = [
+                        'id' => $time->id,
+                        'started_time' => Str::substr($time->started_time, 0 ,5),
+                        'ended_time' => Str::substr($time->ended_time, 0 ,5),
+                    ];
+                }
+            } else {
+                $ruleData = [
+                    'day' => $day,
+                    'is_available' => false,
+                    'hours' => [],
+                ];
+            }
+
+            $weeklyHours[$day] = $ruleData;
+        }
+
+        return $weeklyHours;
+    }
+
     public function weekdays($long = false): Collection
     {
         $weekdays = collect();
@@ -162,6 +209,42 @@ class ProductEventService
 
         return $product
             ->eventSchedule
+            ->dateOverrides()
+            ->select([
+                'id',
+                'started_date',
+                'ended_date',
+                'is_available',
+            ])
+            ->with('times', function ($query) {
+                $query->select([
+                    'id',
+                    'started_time',
+                    'ended_time',
+                    'schedule_rule_id'
+                ]);
+            })
+            ->get()
+            ->map(function ($rule) {
+                return [
+                    'id' => $rule->id,
+                    'started_date' => $rule->formattedStartedDate,
+                    'is_available' => $rule->is_available,
+                    'display_dates' => $rule->displayDates,
+                    'times' => $rule->times->map(function ($time) {
+                        $timeArray = [];
+                        $timeArray['started_time'] = Str::substr($time->started_time, 0, 5);
+                        $timeArray['ended_time'] = !empty($time->ended_time) ? Str::substr($time->ended_time, 0, 5) : null;
+
+                        return $timeArray;
+                    }),
+                ];
+            });
+    }
+
+    public function dateOverridesForSchedule(Schedule $schedule): Collection
+    {
+        return $schedule
             ->dateOverrides()
             ->select([
                 'id',
@@ -332,13 +415,30 @@ class ProductEventService
         }
     }
 
-    public function minBookableDate(): ?Carbon
+    public function minBookableDate(?Product $product = null): ?Carbon
     {
-        return today();
+        $minDate = today();
+
+        if ($product) {
+            $pitchStart = $product->getMeta('pitch_started_at');
+            if ($pitchStart) {
+                $pitchStartDate = Carbon::parse($pitchStart)->startOfDay();
+                if ($pitchStartDate->gt($minDate)) {
+                    $minDate = $pitchStartDate;
+                }
+            }
+        }
+
+        return $minDate;
     }
 
     public function maxBookableDate(Product $product): ?Carbon
     {
+        $pitchEnd = $product->getMeta('pitch_ended_at');
+        if ($pitchEnd) {
+            return Carbon::parse($pitchEnd)->endOfDay();
+        }
+
         return today()->addDays($product->bookable_date_range);
     }
 

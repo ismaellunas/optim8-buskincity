@@ -22,6 +22,7 @@ use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
+use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
@@ -246,6 +247,7 @@ class ProductController extends CrudController
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
             'eventDurationOptions' => $this->productEventService->durationOptions(),
+            'eventStatusOptions' => PublishingStatus::options(),
             'event' => $this->productEventService->formResource($product),
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
@@ -402,6 +404,8 @@ class ProductController extends CrudController
                 'manager' => __('Manager'),
                 'duration' => __('Duration'),
                 'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),
+                'pitch_date_range' => __('Pitch date range'),
+                'pitch_timezone' => __('Pitch timezone'),
                 'address' => __('Address'),
                 'city' => __('City'),
                 'country' => __('Country'),
@@ -415,11 +419,13 @@ class ProductController extends CrudController
                 'add_date' => __('Add :resource', ['resource' => __('Date')]),
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
-                'choose_product_manager' => __('Choose product manager'),
+                'choose_product_manager' => __('Choose pitch manager'),
                 'space' => __('space_module::terms.space'),
                 'select_space' => __('Select space'),
                 'select_space_note' => __('The :resource can only have one space.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [
+                    'pitch_date_range' => __('The overall date range (start and end dates only) when this pitch is available. No bookings can be made outside these dates. The specific booking times are set in the Schedule section below.'),
+                    'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
                     'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
                     'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),

@@ -19,6 +19,7 @@
                 :country-code="modelCountryCode"
                 :initial-city="initialCity"
                 :restricted-cities="restrictedCities"
+                :allow-custom-entry="allowCustomCity"
                 @select="onCitySelect"
             />
 
@@ -103,6 +104,7 @@
             maxlengthAddress: { type: [Number], default: 500 },
             maxlengthCity: { type: [Number], default: 64 },
             restrictedCities: { type: Array, default: () => [] },
+            allowCustomCity: { type: Boolean, default: true }, // Allow custom city entry by default
         },
 
         emits: [
@@ -160,10 +162,21 @@
             },
 
             onCitySelect(city) {
-                this.modelCity = city.name;
-                this.modelCountryCode = city.country_code;
-                if (city.latitude) this.modelLatitude = city.latitude;
-                if (city.longitude) this.modelLongitude = city.longitude;
+                // Handle both database cities and custom text entries
+                if (city.isCustom) {
+                    // Custom city entered by user
+                    this.modelCity = city.name;
+                    this.modelCityId = null; // No ID for custom cities
+                    if (city.country_code) this.modelCountryCode = city.country_code;
+                    // Keep existing coordinates if available
+                } else {
+                    // City selected from database
+                    this.modelCity = city.name;
+                    this.modelCityId = city.id;
+                    this.modelCountryCode = city.country_code;
+                    if (city.latitude) this.modelLatitude = city.latitude;
+                    if (city.longitude) this.modelLongitude = city.longitude;
+                }
             }
         },
     };

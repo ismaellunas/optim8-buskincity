@@ -5,6 +5,6 @@ return [
     'bookings' => 'bookings',
     'event' => 'event',
     'events' => 'events',
-    'product' => 'product',
-    'products' => 'products',
+    'product' => 'pitch',
+    'products' => 'pitches',
 ];

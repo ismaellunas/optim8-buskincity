@@ -1,6 +1,6 @@
 {
-    "//Space": "Space",
-    "//Spaces": "Spaces",
+    "//Space": "Location",
+    "//Spaces": "Locations",
     "Space setting": "space_module::terms.space setting",
     "Space type": "space_module::terms.space type",
     "Users who are assigned as managers will be unassigned from space module.": "Users who are assigned as managers will be unassigned from space_module::terms.space module.",

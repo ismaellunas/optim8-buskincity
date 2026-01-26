@@ -110,6 +110,7 @@
             minDate: { type: String, required: true },
             modelValue: { type: Object, required: true },
             productId: { type: Number, required: true },
+            productEventId: { type: [Number, String, null], default: null },
             timezone: { type: String, default: 'GMT' },
         },
 
@@ -204,6 +205,7 @@
                     product: this.productId,
                     month: month,
                     year: year,
+                    product_event_id: this.productEventId,
                 });
 
                 self.isCalendarDisabled = true;

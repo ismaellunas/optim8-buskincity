@@ -19,6 +19,7 @@ use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Entities\ProductEvent;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineType;
@@ -296,6 +297,11 @@ class OrderService
                 'timezone' => $event->schedule->timezone,
                 'display_timezone' => $event->schedule->displayTimezone,
                 'timezoneOffset' => 'GMT '.$carbonTimeZone->toOffsetName(),
+                'product_event_id' => (
+                    $event->schedule->schedulable instanceof ProductEvent
+                    ? $event->schedule->schedulable->id
+                    : null
+                ),
             ],
         ];
     }
@@ -331,7 +337,12 @@ class OrderService
         return $newEvent;
     }
 
-    public function bookEvent(Product $product, Carbon $dateTime, User $user): Order
+    public function bookEvent(
+        Product $product,
+        Carbon $dateTime,
+        User $user,
+        ?\Modules\Booking\Entities\ProductEvent $productEvent = null
+    ): Order
     {
         $currency = Currency::getDefault();
         $channel = Channel::getDefault();
@@ -371,6 +382,7 @@ class OrderService
             'placed_at' => Carbon::now(),
             'meta' => [
                 'product_id' => $product->id,
+                'product_event_id' => $productEvent?->id,
                 'sku' => $variant->sku,
                 'booked_at' => $dateTime,
                 'duration' => $product->duration,
@@ -386,7 +398,7 @@ class OrderService
 
         $orderLine = $orderModel->lines->first();
 
-        $schedule = $product->eventSchedule;
+        $schedule = $productEvent?->schedule ?? $product->eventSchedule;
 
         Event::factory()->state([
             'schedule_id' => $schedule->id,

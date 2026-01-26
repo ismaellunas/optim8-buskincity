@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Mews\Purifier\Facades\Purifier;
 use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\ProductEvent;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
 use Modules\Booking\Enums\BookingStatus;
@@ -214,9 +215,16 @@ class EventService
 
         $bookedTimes = $this->bookedTimes($schedule, $date);
 
-        $product = $schedule->schedulable;
-        $duration = $product->duration;
-        $method = EventTimeHelper::calculateDurationMethodName($product->duration_unit);
+        $schedulable = $schedule->schedulable;
+        $duration = $schedulable->duration ?? null;
+        $durationUnit = $schedulable->duration_unit ?? null;
+
+        if ($schedulable instanceof ProductEvent) {
+            $duration = $schedulable->product->duration;
+            $durationUnit = $schedulable->product->duration_unit;
+        }
+
+        $method = EventTimeHelper::calculateDurationMethodName($durationUnit);
 
         if (today($schedule->timezone)->equalTo($date)) {
             $todayTime = Carbon::now($schedule->timezone)->$method($duration);

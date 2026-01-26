@@ -44,6 +44,11 @@ class Product extends LunarProduct
         return $this->morphOne(Schedule::class, 'schedulable');
     }
 
+    public function productEvents()
+    {
+        return $this->hasMany(\Modules\Booking\Entities\ProductEvent::class);
+    }
+
     public function productable()
     {
         return $this->morphTo();

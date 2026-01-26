@@ -152,7 +152,7 @@ class OrderController extends CrudController
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
 
-        $minDate = $this->productEventService->minBookableDate();
+        $minDate = $this->productEventService->minBookableDate($product);
         $maxDate = $this->productEventService->maxBookableDate($product);
 
         $product = app(ProductService::class)->formResource($product);
