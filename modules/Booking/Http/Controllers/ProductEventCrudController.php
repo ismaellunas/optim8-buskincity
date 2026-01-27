@@ -17,6 +17,16 @@ class ProductEventCrudController extends Controller
         private ProductEventCrudService $productEventService
     ) {}
 
+    /**
+     * Translate concatenated translation keys properly
+     */
+    private function translateTitle(): string
+    {
+        return \Illuminate\Support\Str::title(
+            __('booking_module::terms.product') . ' ' . __('booking_module::terms.event')
+        );
+    }
+
     public function store(ProductEventCrudRequest $request, Product $product)
     {
         $inputs = $request->validated();
@@ -25,7 +35,7 @@ class ProductEventCrudController extends Controller
 
         return [
             'event' => $this->productEventService->getEditableRecord($event),
-            'message' => __('The :resource was created!', ['resource' => __($this->title)]),
+            'message' => __('The :resource was created!', ['resource' => $this->translateTitle()]),
         ];
     }
 
@@ -41,7 +51,7 @@ class ProductEventCrudController extends Controller
 
         return [
             'event' => $this->productEventService->getEditableRecord($productEvent),
-            'message' => __('The :resource was updated!', ['resource' => __($this->title)]),
+            'message' => __('The :resource was updated!', ['resource' => $this->translateTitle()]),
         ];
     }
 
@@ -62,7 +72,7 @@ class ProductEventCrudController extends Controller
 
         $productEvent->delete();
 
-        return response(__('The :resource was deleted!', ['resource' => __($this->title)]), 200);
+        return response(__('The :resource was deleted!', ['resource' => $this->translateTitle()]), 200);
     }
 
     public function records(Request $request, Product $product)

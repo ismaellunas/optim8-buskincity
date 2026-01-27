@@ -26,6 +26,16 @@ class ProductEventController extends CrudController
         $this->cityService = $cityService;
     }
 
+    /**
+     * Override title method to properly translate concatenated translation keys
+     */
+    protected function title(): string
+    {
+        return \Illuminate\Support\Str::title(
+            __('booking_module::terms.product') . ' ' . __('booking_module::terms.event')
+        );
+    }
+
     public function update(ProductEventRequest $request, Product $product)
     {
         $inputs = $request->all();
