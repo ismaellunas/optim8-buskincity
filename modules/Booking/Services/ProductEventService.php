@@ -242,6 +242,53 @@ class ProductEventService
             });
     }
 
+    public function pitchScheduleInfo(Product $product): array
+    {
+        $schedule = $product->eventSchedule;
+        
+        if (!$schedule) {
+            return [
+                'timezone' => 'Not set',
+                'dateRange' => 'Not set',
+                'availableDays' => 'Not set',
+                'availableHours' => 'Not set',
+            ];
+        }
+
+        // Get available days
+        $weeklyHours = $schedule->weeklyHours->where('is_available', true);
+        $availableDays = $weeklyHours->map(function ($rule) {
+            return $this->weekdays()->get($rule->day)['value'] ?? '';
+        })->filter()->values()->implode(', ');
+
+        // Get typical hours (from first available day)
+        $firstAvailableDay = $weeklyHours->first();
+        $availableHours = 'Not set';
+        
+        if ($firstAvailableDay && $firstAvailableDay->times->isNotEmpty()) {
+            $times = $firstAvailableDay->times->map(function ($time) {
+                return Str::substr($time->started_time, 0, 5) . '-' . Str::substr($time->ended_time, 0, 5);
+            })->implode(', ');
+            $availableHours = $times;
+        }
+
+        // Get date range
+        $pitchStart = $product->getMeta('pitch_started_at');
+        $pitchEnd = $product->getMeta('pitch_ended_at');
+        $dateRange = 'Not set';
+        
+        if ($pitchStart && $pitchEnd) {
+            $dateRange = Carbon::parse($pitchStart)->format('Y-m-d') . ' to ' . Carbon::parse($pitchEnd)->format('Y-m-d');
+        }
+
+        return [
+            'timezone' => $schedule->timezone ?? 'UTC',
+            'dateRange' => $dateRange,
+            'availableDays' => $availableDays ?: 'None',
+            'availableHours' => $availableHours,
+        ];
+    }
+
     public function dateOverridesForSchedule(Schedule $schedule): Collection
     {
         return $schedule

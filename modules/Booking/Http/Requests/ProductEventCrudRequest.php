@@ -48,22 +48,32 @@ class ProductEventCrudRequest extends BaseFormRequest
                 'date',
                 'after_or_equal:started_at',
             ],
-            'timezone' => ['required', new Timezone()],
+            'timezone' => ['nullable', new Timezone()],
             'address' => ['nullable', 'max:500'],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
             'city' => [
-                'required',
+                'nullable',
                 'max:64',
             ],
             'country_code' => [
-                'required',
+                'nullable',
                 new CountryCode()
             ],
             'status' => [
                 'required',
                 Rule::in(PublishingStatus::options()->pluck('id')),
             ],
+            'weekly_hours' => ['nullable', 'array'],
+            'weekly_hours.*.day' => ['integer'],
+            'weekly_hours.*.hours' => ['array'],
+            'weekly_hours.*.hours.*.started_time' => ['date_format:H:i'],
+            'weekly_hours.*.hours.*.ended_time' => [
+                'date_format:H:i',
+                'after:weekly_hours.*.hours.*.started_time',
+            ],
+            'weekly_hours.*.is_available' => ['boolean'],
+            'date_overrides' => ['nullable', 'array'],
         ]);
     }
 

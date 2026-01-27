@@ -256,6 +256,7 @@ class ProductController extends CrudController
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
+            'pitchScheduleInfo' => $this->productEventService->pitchScheduleInfo($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
             'defaultCountryCode' => app(IPService::class)->getCountryCode("US"),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),

@@ -27,172 +27,14 @@
                             :role-options="roleOptions"
                             :rules="rules"
                             :status-options="statusOptions"
-                        />
-
-                        <hr>
-
-                        <div class="field is-grouped is-grouped-right">
-                            <div class="control">
-                                <biz-button-link
-                                    :href="route(baseRouteName+'.index')"
-                                    class="is-link is-light"
-                                >
-                                    {{ i18n.cancel }}
-                                </biz-button-link>
-                            </div>
-                            <div class="control">
-                                <biz-button class="is-link">
-                                    {{ i18n.update }}
-                                </biz-button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </biz-provide-inject-tab>
-
-            <biz-provide-inject-tab
-                id="product-event-tab"
-                title="Event"
-                class="mb-6"
-            >
-                <form @submit.prevent="eventSubmit">
-                    <div class="box">
-                        <h5 class="title is-5 mb-2">
-                            {{ i18n.details }}
-                        </h5>
-
-                        <hr class="mt-0">
-
-                        <div class="columns">
-                            <div class="column is-6">
-                                <biz-form-select
-                                    v-model="eventForm.duration"
-                                    :label="i18n.duration"
-                                    :message="error('duration', eventErrorBag)"
-                                    has-addons
-                                    required
-                                    is-fullwidth
-                                >
-                                    <option
-                                        v-for="durationOption in eventDurationOptions"
-                                        :key="durationOption.id"
-                                        :value="durationOption.id"
-                                    >
-                                        {{ durationOption.value }}
-                                    </option>
-
-                                    <template #afterInput>
-                                        <p class="control">
-                                            <a class="button is-static">
-                                                minute(s)
-                                            </a>
-                                        </p>
-                                    </template>
-                                </biz-form-select>
-                            </div>
-
-                            <div class="column is-6">
-                                <biz-form-number-addons
-                                    v-model="eventForm.bookable_date_range"
-                                    :label="i18n.bookable_date_range"
-                                    max="365"
-                                    min="0"
-                                    required
-                                    :message="error('bookable_date_range', eventErrorBag)"
-                                >
-                                    <template #afterInput>
-                                        <p class="control">
-                                            <a class="button is-static">
-                                                day(s)
-                                            </a>
-                                        </p>
-                                    </template>
-                                </biz-form-number-addons>
-                            </div>
-                        </div>
-
-                        <div class="columns">
-                            <div class="column is-6">
-                                <biz-form-date-time
-                                    v-model="pitchDateRange"
-                                    :label="i18n.pitch_date_range"
-                                    range
-                                    :utc="'preserve'"
-                                    required
-                                    :message="error(['pitch_started_at', 'pitch_ended_at'], eventErrorBag)"
-                                    :enable-time-picker="false"
-                                    :tooltip-message="i18n.tips.pitch_date_range"
-                                />
-                            </div>
-                            <div class="column is-6">
-                                <biz-form-timezone
-                                    v-model="eventForm.pitch_timezone"
-                                    :label="i18n.pitch_timezone"
-                                    :message="error('pitch_timezone', eventErrorBag)"
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <!-- Warning for missing location -->
-                        <div v-if="missingLocation" class="notification is-warning">
-                            <p class="has-text-weight-bold">⚠️ Location Required</p>
-                            <p class="mt-2">
-                                This product is missing location data. Events booked on this product 
-                                <strong>will NOT appear</strong> in the public Events Calendar until you add a location below.
-                            </p>
-                            <p class="mt-2 is-size-7">
-                                Please fill in the City, Country, and coordinates below, then click "Update".
-                            </p>
-                        </div>
-
-                        <biz-form-fieldset-location
-                            v-model:address="eventForm.location.address"
-                            v-model:city="eventForm.location.city"
-                            v-model:city-id="eventForm.location.city_id"
-                            v-model:country-code="eventForm.location.country_code"
-                            v-model:latitude="eventForm.location.latitude"
-                            v-model:longitude="eventForm.location.longitude"
-                            :error-bag-name="eventErrorBag"
-                            :error-key="locationFieldsetErrorKeys"
-                        />
-                    </div>
-
-                    <div class="box">
-                        <h5 class="title is-5 mb-2">
-                            {{ i18n.schedule }}
-
-                            <biz-tooltip
-                                class="ml-1"
-                                :message="i18n.tips.schedule"
-                            />
-                        </h5>
-
-                        <hr class="mt-0">
-
-                        <biz-form-timezone
-                            v-model="eventForm.timezone"
-                            :label="i18n.timezone"
-                            :message="error('timezone', eventErrorBag)"
-                            :tooltip-message="i18n.tips.timezone"
-                            required
-                        />
-
-                        <hr>
-
-                        <div class="columns">
-                            <div class="column">
+                            :event-duration-options="eventDurationOptions"
+                            :location-fieldset-error-keys="locationFieldsetErrorKeys"
+                            :space-options="spaceOptions"
+                            :weekdays="weekdays"
+                            :weekly-hours="form.weekly_hours"
+                        >
+                            <template #schedule>
                                 <div class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            {{ i18n.weekly_hours }}
-
-                                            <biz-tooltip
-                                                class="ml-1"
-                                                :message="i18n.tips.weekly_hours"
-                                            />
-                                        </p>
-                                    </header>
                                     <div class="card-content">
                                         <div class="columns is-multiline">
                                             <div
@@ -203,7 +45,7 @@
                                                 <div class="columns">
                                                     <div class="column is-2">
                                                         <biz-checkbox
-                                                            v-model:checked="eventForm.weekly_hours[index].is_available"
+                                                            v-model:checked="form.weekly_hours[index].is_available"
                                                             @change="checkTimes(index)"
                                                         >
                                                             &nbsp;{{ weekday }}
@@ -212,8 +54,8 @@
                                                     <div class="column">
                                                         <schedule-rule-times
                                                             :ref="'scheduleRuleTime_'+index"
-                                                            v-model="eventForm.weekly_hours[index].hours"
-                                                            :errors="eventErrors"
+                                                            v-model="form.weekly_hours[index].hours"
+                                                            :errors="errors"
                                                             :error-key-prefix="`weekly_hours.${index}.hours`"
                                                             @time-range-removed="timeRangeRemoved(index)"
                                                         />
@@ -230,44 +72,27 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="column">
-                                <div class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            {{ i18n.date_override }}
 
-                                            <biz-tooltip
-                                                class="ml-1"
-                                                :message="i18n.tips.date_override"
-                                            />
-                                        </p>
-                                    </header>
-
-                                    <div class="card-content">
-                                        <div class="columns is-multiline">
-                                            <div class="column is-full has-text-centered">
-                                                {{ i18n.date_override_description }}
-                                            </div>
-
-                                            <div class="column is-full has-text-centered">
+                                <div class="mt-4">
+                                    <p class="has-text-weight-semibold mb-2">{{ i18n.date_override }}</p>
+                                    <p class="help mb-3">{{ i18n.tips?.date_override }}</p>
+                                    
                                                 <biz-button
-                                                    class="is-info is-fullwidth"
+                                        class="is-info is-fullwidth mb-4"
                                                     type="button"
                                                     @click="openDateOverrideModal()"
                                                 >
                                                     {{ i18n.add_date }}
                                                 </biz-button>
-                                            </div>
 
-                                            <div class="column is-full">
                                                 <div
                                                     v-for="(dateOverrideBatch, batch) in dateOverrideBatches"
                                                     :key="batch"
-                                                    class="columns is-multiline"
+                                        class="box"
                                                 >
+                                        <div class="columns is-vcentered">
                                                     <div class="column is-5">
-                                                        {{ displayDates(batch) }}
+                                                <strong>{{ displayDates(batch) }}</strong>
                                                     </div>
 
                                                     <div class="column is-4 has-text-centered">
@@ -296,16 +121,16 @@
                                                             <div class="control">
                                                                 <biz-button-icon
                                                                     type="button"
-                                                                    class="is-danger"
-                                                                    :icon="icon.remove"
-                                                                    @click="removeDateOverride(batch)"
+                                                            :icon="icon.edit"
+                                                            @click="openDateOverrideModal(batch)"
                                                                 />
                                                             </div>
                                                             <div class="control">
                                                                 <biz-button-icon
                                                                     type="button"
-                                                                    :icon="icon.edit"
-                                                                    @click="openDateOverrideModal(batch)"
+                                                            class="is-danger"
+                                                            :icon="icon.remove"
+                                                            @click="removeDateOverride(batch)"
                                                                 />
                                                             </div>
                                                         </div>
@@ -326,10 +151,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            </template>
+                        </product-form>
 
                         <hr>
 
@@ -352,64 +175,26 @@
                 </form>
             </biz-provide-inject-tab>
 
+            <!-- Event tab REMOVED - all booking settings moved to Pitch tab above -->
+
             <biz-provide-inject-tab
                 id="product-events-tab"
                 title="Events"
                 class="mb-6"
             >
                 <div class="box">
-                    <product-event-list :product="product" />
+                    <product-event-list 
+                        :product="product" 
+                        :timezone="event.timezone"
+                        :weekdays="weekdays"
+                        :pitch-schedule="pitchScheduleInfo"
+                    />
                 </div>
             </biz-provide-inject-tab>
 
-            <biz-provide-inject-tab
-                title="Manager"
-                :is-rendered="can.productManager.edit"
-            >
-                <form
-                    v-if="can.productManager.edit"
-                    class="box"
-                    @submit.prevent="submitManager"
-                >
-                    <biz-form-assign-user
-                        v-model="productManagers"
-                        :label="i18n.choose_product_manager"
-                        :get-users-url="route(productManagerBaseRoute+'.search', product.id)"
-                    />
+            <!-- Manager tab REMOVED per user request -->
 
-                    <div class="field is-grouped is-grouped-right mt-4">
-                        <div class="control">
-                            <biz-button class="is-link">
-                                {{ i18n.update }}
-                            </biz-button>
-                        </div>
-                    </div>
-                </form>
-            </biz-provide-inject-tab>
-
-            <biz-provide-inject-tab
-                id="product-space"
-                title="Location"
-                :is-rendered="can.space.manageProductSpace"
-            >
-                <form
-                    class="box"
-                    @submit.prevent="submitSpace()"
-                >
-                    <product-space-form
-                        v-model="spaceForm.space_id"
-                        :space-options="spaceOptions"
-                    />
-
-                    <div class="field is-grouped is-grouped-right mt-4">
-                        <div class="control">
-                            <biz-button class="is-link">
-                                {{ i18n.update }}
-                            </biz-button>
-                        </div>
-                    </div>
-                </form>
-            </biz-provide-inject-tab>
+            <!-- Location tab REMOVED - Space assignment removed, using City/Country metadata only -->
         </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
@@ -513,6 +298,15 @@
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
+            pitchScheduleInfo: { 
+                type: Object, 
+                default: () => ({
+                    timezone: 'Not set',
+                    dateRange: 'Not set',
+                    availableDays: 'Not set',
+                    availableHours: 'Not set',
+                })
+            },
             managers: { type: Array, default: () => [] },
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
@@ -532,7 +326,9 @@
             const startTime = ref({ hours: 10, minutes: 0 });
             const endTime = ref({ hours: 17, minutes: 0 });
 
+            // Merged form: combines product info + location + booking settings + schedule
             const form = {
+                // Basic product info
                 name: product.value.name,
                 status: product.value.status,
                 description: product.value.description,
@@ -540,21 +336,37 @@
                 roles: product.value.roles,
                 is_check_in_required: product.value.is_check_in_required,
                 gallery: product.value.gallery.map(media => media.id),
-            };
 
-            const eventForm = {
+                // Location (from Event tab)
                 location: {
                     ...event.value.location,
-                    city_id: event.value.location?.city_id ?? null, // Initialize city_id for reactivity
+                    city_id: event.value.location?.city_id ?? null,
                 },
+                
+                // Booking settings (from Event tab)
                 duration: event.value.duration,
                 bookable_date_range: event.value.bookable_date_range,
-                timezone: event.value.timezone,
                 pitch_started_at: event.value.pitch_started_at,
                 pitch_ended_at: event.value.pitch_ended_at,
                 pitch_timezone: event.value.pitch_timezone ?? event.value.timezone,
+                
+                // Schedule (from Event tab)
+                timezone: event.value.timezone,
                 weekly_hours: computed(() => props.weeklyHours).value,
                 date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
+            };
+
+            // Keep eventForm for backward compatibility with computed properties
+            const eventForm = {
+                location: form.location,
+                duration: form.duration,
+                bookable_date_range: form.bookable_date_range,
+                timezone: form.timezone,
+                pitch_started_at: form.pitch_started_at,
+                pitch_ended_at: form.pitch_ended_at,
+                pitch_timezone: form.pitch_timezone,
+                weekly_hours: form.weekly_hours,
+                date_overrides: form.date_overrides,
             };
 
             const spaceForm = {
@@ -713,54 +525,74 @@
         methods: {
             submit() {
                 const self = this;
-                const url = route(this.baseRouteName + '.update', {
-                    'product': this.product.id
-                });
 
-                this
-                    .form
-                    .transform((data) => ({
-                        ...data,
-                        _method: 'put',
-                    }))
-                    .post(url, {
-                        forceFormData: true,
-                        onStart: self.onStartLoadingOverlay,
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        },
-                        onError: () => { oopsAlert() },
-                        onFinish: self.onEndLoadingOverlay,
-                    });
-            },
-
-            eventSubmit() {
-                const self = this;
-
-                const url = route(this.baseRouteName + '.events.update', {
-                    product: this.product.id
-                });
-
-                this.eventForm.date_overrides = this.eventForm.date_overrides.filter((dateOverride) => {
+                // Filter out unused date overrides before submitting
+                self.form.date_overrides = self.form.date_overrides.filter((dateOverride) => {
                     return !self.unusedDates.includes(dateOverride.started_date);
                 });
 
-                this.eventForm.put(url, {
-                    errorBag: self.eventErrorBag,
-                    onStart: () => self.onStartLoadingOverlay(),
-                    onSuccess: (page) => {
-                        self.eventForm.date_overrides = cloneDeep(page.props.dateOverrides);
-                        self.eventErrors = {};
+                self.onStartLoadingOverlay();
 
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: (errors) => {
-                        self.eventErrors = errors;
+                // Step 1: Update product basic info
+                const productData = {
+                    name: self.form.name,
+                    status: self.form.status,
+                    description: self.form.description,
+                    short_description: self.form.short_description,
+                    roles: self.form.roles,
+                    is_check_in_required: self.form.is_check_in_required,
+                    gallery: self.form.gallery,
+                        _method: 'put',
+                };
 
+                const productUrl = route(this.baseRouteName + '.update', { product: this.product.id });
+
+                axios.post(productUrl, productData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+                .then(() => {
+                    // Step 2: Update event configuration (location + booking settings + schedule)
+                    const eventData = {
+                        location: self.form.location,
+                        duration: self.form.duration,
+                        bookable_date_range: self.form.bookable_date_range,
+                        pitch_started_at: self.form.pitch_started_at,
+                        pitch_ended_at: self.form.pitch_ended_at,
+                        pitch_timezone: self.form.pitch_timezone,
+                        timezone: self.form.timezone,
+                        weekly_hours: self.form.weekly_hours,
+                        date_overrides: self.form.date_overrides,
+                    };
+
+                    const eventUrl = route(this.baseRouteName + '.events.update', { product: this.product.id });
+
+                    return axios.put(eventUrl, eventData);
+                })
+                .then((response) => {
+                    // Update date_overrides from response
+                    if (response.data && response.data.date_overrides) {
+                        self.form.date_overrides = cloneDeep(response.data.date_overrides);
+                    }
+
+                    successAlert('The pitch was updated successfully!');
+                    self.onEndLoadingOverlay();
+
+                    // Reload page to get fresh data
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                })
+                .catch((error) => {
+                    console.error('Submit error:', error);
+                    self.onEndLoadingOverlay();
                         oopsAlert();
-                    },
-                    onFinish: () => self.onEndLoadingOverlay(),
                 });
+            },
+
+            // Keep eventSubmit for backward compatibility (though Event tab is removed)
+            eventSubmit() {
+                // Redirect to main submit
+                this.submit();
             },
 
             addTimeRange(index) {

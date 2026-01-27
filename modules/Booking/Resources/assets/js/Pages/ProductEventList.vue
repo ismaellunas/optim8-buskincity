@@ -90,6 +90,9 @@
             v-if="isModalOpen"
             :selected-event="selectedEvent"
             :product="product"
+            :timezone="timezone"
+            :weekdays="weekdays"
+            :pitch-schedule="pitchSchedule"
             @close="closeModal()"
             @after-submit="afterSubmit"
         />
@@ -139,6 +142,17 @@
 
         props: {
             product: { type: Object, required: true },
+            timezone: { type: String, default: 'UTC' },
+            weekdays: { type: Object, required: true },
+            pitchSchedule: { 
+                type: Object, 
+                default: () => ({
+                    timezone: 'Not set',
+                    dateRange: 'Not set',
+                    availableDays: 'Not set',
+                    availableHours: 'Not set',
+                })
+            },
         },
 
         data() {
@@ -148,7 +162,15 @@
                 queryParams: {},
                 selectedEvent: {},
                 term: null,
-                events: {},
+                events: {
+                    data: [],
+                    from: 0,
+                    to: 0,
+                    total: 0,
+                    current_page: 1,
+                    last_page: 1,
+                    links: [],
+                },
             };
         },
 
@@ -162,10 +184,17 @@
 
                 url = url ?? route(self.baseRouteName + '.records', this.product.id);
 
+                console.log('ProductEventList: Fetching records from', url);
+                console.log('ProductEventList: Product ID', this.product.id);
+
                 axios.get(url, {
                     params: self.queryParams,
                 }).then((response) => {
+                    console.log('ProductEventList: Received response', response.data);
                     self.events = response.data;
+                }).catch((error) => {
+                    console.error('ProductEventList: Error fetching records', error);
+                    console.error('ProductEventList: Error response', error.response);
                 });
             },
 
@@ -210,8 +239,15 @@
             },
 
             openModalCreate() {
+                console.log('ProductEventList: Opening modal for create', {
+                    product: this.product,
+                    isModalOpen: this.isModalOpen
+                });
                 this.selectedEvent = null;
                 this.openModal();
+                console.log('ProductEventList: Modal opened', {
+                    isModalOpen: this.isModalOpen
+                });
             },
 
             afterSubmit() {

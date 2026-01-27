@@ -218,6 +218,7 @@ class ProductService
             'status' => $product->status,
             'roles' => $product->roles[0] ?? null,
             'is_check_in_required' => (bool) $product->is_check_in_required ?? false,
+            'location' => $product->locations[0] ?? null,
             'gallery' => $product->gallery->map(fn ($media) => [
                 'id' => $media->id,
                 'display_file_name' => $media->displayFileName,

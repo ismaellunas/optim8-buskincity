@@ -13,7 +13,14 @@ class ScheduleRule extends Model
     const TYPE_WEEKLY_HOUR = 'weekly_hour';
     const TYPE_DATE_OVERRIDE = 'date_override';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'schedule_id',
+        'type',
+        'day',
+        'is_available',
+        'started_date',
+        'ended_date',
+    ];
 
     protected $dates = [
         'started_date',

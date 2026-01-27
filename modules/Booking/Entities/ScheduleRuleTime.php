@@ -9,7 +9,11 @@ class ScheduleRuleTime extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'schedule_rule_id',
+        'started_time',
+        'ended_time',
+    ];
 
     protected static function newFactory()
     {
