@@ -3,9 +3,12 @@
 namespace Modules\Booking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\AvailableBookingDate;
 use Modules\Booking\Rules\AvailableBookingTime;
+use Modules\Booking\Rules\BookingWithinProductEventRange;
 use Modules\Booking\Entities\ProductEvent;
+use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Enums\ProductStatus;
 
 class EventBookRequest extends FormRequest
@@ -21,8 +24,10 @@ class EventBookRequest extends FormRequest
         $schedule = $product->eventSchedule;
 
         $productEventId = $this->get('product_event_id');
-        if ($productEventId) {
+        $productEvent = null;
+        if (!empty($productEventId)) {
             $productEvent = ProductEvent::where('product_id', $product->id)
+                ->where('status', PublishingStatus::PUBLISHED->value)
                 ->find($productEventId);
 
             if ($productEvent && $productEvent->schedule) {
@@ -30,13 +35,25 @@ class EventBookRequest extends FormRequest
             }
         }
 
+        $dateRules = [
+            'required',
+            'date_format:Y-m-d',
+            new AvailableBookingDate($schedule),
+        ];
+
+        if ($productEvent) {
+            $dateRules[] = new BookingWithinProductEventRange($productEvent);
+        }
+
         return [
-            'product_event_id' => ['nullable', 'integer', 'exists:product_events,id'],
-            'date' => [
+            'product_event_id' => [
                 'required',
-                'date_format:Y-m-d',
-                new AvailableBookingDate($schedule),
+                'integer',
+                Rule::exists('product_events', 'id')
+                    ->where('product_id', $product->id)
+                    ->where('status', PublishingStatus::PUBLISHED->value),
             ],
+            'date' => $dateRules,
             'time' => [
                 'required',
                 'date_format:H:i',
@@ -56,6 +73,9 @@ class EventBookRequest extends FormRequest
 
         return (
             $product->eventSchedule
+            && $product->productEvents()
+                ->where('status', PublishingStatus::PUBLISHED->value)
+                ->exists()
             && $product->status == ProductStatus::PUBLISHED->value
         );
     }

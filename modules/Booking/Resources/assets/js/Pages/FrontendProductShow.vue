@@ -118,7 +118,16 @@
                 </div>
 
                 <div
-                    v-if="productEvents.length"
+                    v-if="!canBook"
+                    class="column is-12-desktop is-12-tablet is-12-mobile"
+                >
+                    <biz-message type="is-warning">
+                        {{ noEventsMessage }}
+                    </biz-message>
+                </div>
+
+                <div
+                    v-else-if="productEvents.length"
                     class="column is-12-desktop is-12-tablet is-12-mobile"
                 >
                     <biz-form-select
@@ -137,7 +146,7 @@
                 </div>
 
                 <div
-                    v-if="mapPosition.latitude && mapPosition.longitude"
+                    v-if="canBook && mapPosition.latitude && mapPosition.longitude"
                     class="column is-4-desktop is-12-tablet is-12-mobile"
                 >
                     <div class="card">
@@ -152,7 +161,10 @@
                     </div>
                 </div>
 
-                <div class="column is-8-desktop is-12-tablet is-12-mobile">
+                <div
+                    v-if="canBook"
+                    class="column is-8-desktop is-12-tablet is-12-mobile"
+                >
                     <div class="card">
                         <div class="card-content">
                             <div class="content">
@@ -161,8 +173,8 @@
                                     :allowed-dates-route="allowedDatesRouteName"
                                     :available-times-param="availableTimesParams"
                                     :available-times-route="availableTimesRouteName"
-                                    :max-date="maxDate"
-                                    :min-date="minDate"
+                                    :max-date="maxBookableDate"
+                                    :min-date="minBookableDate"
                                     :product-id="product.id"
                                     :product-event-id="selectedProductEventId"
                                     :timezone="currentTimezone"
@@ -242,6 +254,7 @@
     import BizLink from '@/Biz/Link.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizMessage from '@/Biz/Message.vue';
     import BizTable from '@/Biz/Table.vue';
     import BizTag from '@/Biz/Tag.vue';
     import BookingTime from '@booking/Pages/BookingTime.vue';
@@ -268,6 +281,7 @@
             BizTag,
             BookingTime,
             BizGmapMarker,
+            BizMessage,
         },
 
         mixins: [
@@ -283,12 +297,14 @@
             availableTimesRouteName: { type: String, required: true },
             baseRouteName: { type: String, required: true },
             event: { type: Object, required: true },
-            maxDate: { type: String, required: true },
-            minDate: { type: String, required: true },
+            maxDate: { type: String, default: null },
+            minDate: { type: String, default: null },
             product: { type: Object, required: true },
             productEvents: { type: Array, default: () => [] },
             timezone: { type: String, required: true },
             googleApiKey: { type: String, default: null },
+            canBook: { type: Boolean, default: true },
+            noEventsMessage: { type: String, default: 'No events available for booking at this time.' },
             i18n: {
                 type: Object,
                 default: () => ({
@@ -337,6 +353,14 @@
 
             selectedProductEvent() {
                 return this.productEvents.find((productEvent) => productEvent.id == this.selectedProductEventId) ?? null;
+            },
+
+            minBookableDate() {
+                return this.selectedProductEvent?.started_at ?? this.minDate;
+            },
+
+            maxBookableDate() {
+                return this.selectedProductEvent?.ended_at ?? this.maxDate;
             },
 
             selectedImageUrl() {

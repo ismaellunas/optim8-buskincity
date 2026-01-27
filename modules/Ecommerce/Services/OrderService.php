@@ -341,7 +341,7 @@ class OrderService
         Product $product,
         Carbon $dateTime,
         User $user,
-        ?\Modules\Booking\Entities\ProductEvent $productEvent = null
+        \Modules\Booking\Entities\ProductEvent $productEvent
     ): Order
     {
         $currency = Currency::getDefault();
@@ -382,7 +382,7 @@ class OrderService
             'placed_at' => Carbon::now(),
             'meta' => [
                 'product_id' => $product->id,
-                'product_event_id' => $productEvent?->id,
+                'product_event_id' => $productEvent->id,
                 'sku' => $variant->sku,
                 'booked_at' => $dateTime,
                 'duration' => $product->duration,
@@ -398,11 +398,12 @@ class OrderService
 
         $orderLine = $orderModel->lines->first();
 
-        $schedule = $productEvent?->schedule ?? $product->eventSchedule;
+        $schedule = $productEvent->schedule ?? $product->eventSchedule;
 
         Event::factory()->state([
             'schedule_id' => $schedule->id,
             'order_line_id' => $orderLine->id,
+            'product_event_id' => $productEvent->id,
             'booked_at' => $dateTime,
             'duration' => $product->duration,
             'duration_unit' => $product->duration_unit,

@@ -157,12 +157,9 @@ class OrderController extends CrudController
     public function bookEvent(EventBookRequest $request, Product $product)
     {
         $inputs = $request->validated();
-        $productEvent = null;
-
-        if (!empty($inputs['product_event_id'])) {
-            $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
-                ->find($inputs['product_event_id']);
-        }
+        $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
+            ->where('status', \App\Enums\PublishingStatus::PUBLISHED->value)
+            ->findOrFail($inputs['product_event_id']);
 
         $order = $this->orderService->bookEvent(
             $product,

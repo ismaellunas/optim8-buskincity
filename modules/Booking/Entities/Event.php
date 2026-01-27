@@ -10,6 +10,7 @@ use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Helpers\EventTimeHelper;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
+use Modules\Booking\Entities\ProductEvent;
 
 class Event extends BaseModel
 {
@@ -34,6 +35,11 @@ class Event extends BaseModel
     public function orderLine()
     {
         return $this->belongsTo(OrderLine::class);
+    }
+
+    public function productEvent()
+    {
+        return $this->belongsTo(ProductEvent::class);
     }
 
     public function order()

@@ -23,7 +23,6 @@ class EventsCalendarService
     private Collection $cachedEvents;
     private Collection $cachedSpaces;
     private Collection $cachedUsers;
-    private Collection $cachedProducts;
 
     private function getGeo(): Geo
     {
@@ -55,7 +54,6 @@ class EventsCalendarService
 
         if (app(BookingModuleService::class)->isModuleActive()) {
             $types[] = 'booked_event';
-            $types[] = 'product_event';
         }
 
         if (app(SpaceModuleService::class)->isModuleActive()) {
@@ -140,20 +138,6 @@ class EventsCalendarService
             ->get();
     }
 
-    private function setCachedProducts($paginator)
-    {
-        $productIds = $paginator
-            ->getCollection()
-            ->filter(function($record) {
-                return Arr::has($record->entity_ids, 'product_id');
-            })
-            ->map(fn ($record) => $record->entity_ids['product_id'])
-            ->all();
-
-        $this->cachedProducts = \Modules\Ecommerce\Entities\Product::with(['gallery'])
-            ->whereIn('id', $productIds)
-            ->get();
-    }
 
     public function getRecords(
         int $perPage = 15,
@@ -177,7 +161,6 @@ class EventsCalendarService
         $this->setCachedEvents($paginator);
         $this->setCachedSpaces($paginator);
         $this->setCachedUsers($paginator);
-        $this->setCachedProducts($paginator);
 
         $paginator->through(function ($record) use ($fromPosition) {
             $method = Str::camel($record->type).'Record';
@@ -235,26 +218,6 @@ class EventsCalendarService
         ];
     }
 
-    private function productEventRecord($record, array $geoLocation): array
-    {
-        $product = $this->cachedProducts->firstWhere('id', $record->entity_ids['product_id']);
-
-        $data = [
-            'page_url' => (
-                $product
-                ? route('booking.products.show', $product->id)
-                : ''
-            ),
-            'photo_url' => $product?->getCoverThumbnailUrl(),
-            'duration' => null,
-            'direction_url' => $record->directionUrl($geoLocation),
-        ];
-
-        return [
-            ...$record->eventData(),
-            ...$data,
-        ];
-    }
 
     public function getLocationOptions(): array
     {

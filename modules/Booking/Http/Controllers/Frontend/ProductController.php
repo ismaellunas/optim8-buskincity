@@ -11,6 +11,7 @@ use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Entities\ProductEvent;
+use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
 
@@ -72,8 +73,6 @@ class ProductController extends CrudController
     public function show(Product $product)
     {
         $schedule = $product->eventSchedule;
-        $minDate = $this->productEventService->minBookableDate($product);
-        $maxDate = $this->productEventService->maxBookableDate($product);
         $productEvents = $product->productEvents()
             ->published()
             ->with('schedule')
@@ -98,16 +97,22 @@ class ProductController extends CrudController
             })
             ->all();
 
+        $canBook = !empty($productEvents);
+        $minDate = $canBook ? $this->productEventService->minBookableDate($product) : null;
+        $maxDate = $canBook ? $this->productEventService->maxBookableDate($product) : null;
+
         return Inertia::render('Booking::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),
             'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
             'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),
             'event' => $this->productEventService->detailResource($product),
-            'maxDate' => $maxDate->toDateString(),
-            'minDate' => $minDate->toDateString(),
+            'maxDate' => $maxDate?->toDateString(),
+            'minDate' => $minDate?->toDateString(),
             'product' => $this->productService->productDetailResource($product),
             'productEvents' => $productEvents,
             'timezone' => $schedule->timezone,
+            'canBook' => $canBook,
+            'noEventsMessage' => __('No events available for booking at this time.'),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'i18n' => [
                 'products' => __('booking_module::terms.products'),
@@ -121,88 +126,53 @@ class ProductController extends CrudController
     {
         $productEventId = $request->get('product_event_id');
 
-        $schedule = $product->eventSchedule;
-        $productEvent = null;
-
-        if (!empty($productEventId)) {
-            $productEvent = ProductEvent::where('product_id', $product->id)
-                ->find($productEventId);
-
-            if ($productEvent && $productEvent->schedule) {
-                $schedule = $productEvent->schedule;
-            }
+        if (empty($productEventId)) {
+            return collect();
         }
 
-        if ($productEvent) {
-            $date = \Carbon\Carbon::parse($dateTime);
-            if ($date->lt($productEvent->started_at) || $date->gt($productEvent->ended_at)) {
-                return collect();
-            }
-        } else {
-            $pitchStart = $product->getMeta('pitch_started_at');
-            $pitchEnd = $product->getMeta('pitch_ended_at');
-            if ($pitchStart || $pitchEnd) {
-                $date = \Carbon\Carbon::parse($dateTime);
-                if ($pitchStart && $date->lt(\Carbon\Carbon::parse($pitchStart))) {
-                    return collect();
-                }
-                if ($pitchEnd && $date->gt(\Carbon\Carbon::parse($pitchEnd))) {
-                    return collect();
-                }
-            }
+        $productEvent = ProductEvent::where('product_id', $product->id)
+            ->where('status', PublishingStatus::PUBLISHED->value)
+            ->find($productEventId);
+
+        if (!$productEvent || !$productEvent->schedule) {
+            return collect();
         }
 
-        return $this->eventService->availableTimes($schedule, $dateTime);
+        $date = \Carbon\Carbon::parse($dateTime);
+        if ($date->lt($productEvent->started_at) || $date->gt($productEvent->ended_at)) {
+            return collect();
+        }
+
+        return $this->eventService->availableTimes($productEvent->schedule, $dateTime);
     }
 
     public function allowedDates(Request $request, Product $product, string $month, string $year)
     {
         $productEventId = $request->get('product_event_id');
 
-        $schedule = $product->eventSchedule;
-        $productEvent = null;
+        if (empty($productEventId)) {
+            return collect();
+        }
 
-        if (!empty($productEventId)) {
-            $productEvent = ProductEvent::where('product_id', $product->id)
-                ->find($productEventId);
+        $productEvent = ProductEvent::where('product_id', $product->id)
+            ->where('status', PublishingStatus::PUBLISHED->value)
+            ->find($productEventId);
 
-            if ($productEvent && $productEvent->schedule) {
-                $schedule = $productEvent->schedule;
-            }
+        if (!$productEvent || !$productEvent->schedule) {
+            return collect();
         }
 
         $allowedDates = $this->eventService->allowedDates(
-            $schedule,
+            $productEvent->schedule,
             $month,
             $year
         );
 
-        if ($productEvent) {
-            $startDate = $productEvent->started_at->toDateString();
-            $endDate = $productEvent->ended_at->toDateString();
+        $startDate = $productEvent->started_at->toDateString();
+        $endDate = $productEvent->ended_at->toDateString();
 
-            return $allowedDates->filter(function ($date) use ($startDate, $endDate) {
-                return $date >= $startDate && $date <= $endDate;
-            })->values();
-        }
-
-        $pitchStart = $product->getMeta('pitch_started_at');
-        $pitchEnd = $product->getMeta('pitch_ended_at');
-        if ($pitchStart || $pitchEnd) {
-            $startDate = $pitchStart ? \Carbon\Carbon::parse($pitchStart)->toDateString() : null;
-            $endDate = $pitchEnd ? \Carbon\Carbon::parse($pitchEnd)->toDateString() : null;
-
-            return $allowedDates->filter(function ($date) use ($startDate, $endDate) {
-                if ($startDate && $date < $startDate) {
-                    return false;
-                }
-                if ($endDate && $date > $endDate) {
-                    return false;
-                }
-                return true;
-            })->values();
-        }
-
-        return $allowedDates;
+        return $allowedDates->filter(function ($date) use ($startDate, $endDate) {
+            return $date >= $startDate && $date <= $endDate;
+        })->values();
     }
 }
