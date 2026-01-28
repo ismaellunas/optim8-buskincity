@@ -3,6 +3,7 @@
 namespace Modules\Booking\Services;
 
 use App\Enums\PublishingStatus;
+use App\Services\CountryService;
 use Carbon\Carbon;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Arr;
@@ -15,6 +16,93 @@ use Modules\Ecommerce\Entities\Product;
 
 class ProductEventCrudService
 {
+    public function getFrontendRecords(
+        ?string $term = null,
+        array $scopes = [],
+        int $perPage = 15
+    ): AbstractPaginator {
+        return ProductEvent::published()
+            ->with(['product', 'schedule'])
+            ->select([
+                'id',
+                'product_id',
+                'title',
+                'started_at',
+                'ended_at',
+                'city',
+                'country_code',
+                'address',
+                'latitude',
+                'longitude',
+            ])
+            ->when($term, function ($query, $term) {
+                $query->search($term);
+            })
+            ->when($scopes['city'] ?? null, function ($query, $city) {
+                $query->where('city', $city);
+            })
+            ->when($scopes['country'] ?? null, function ($query, $country) {
+                $query->where('country_code', $country);
+            })
+            ->orderBy('started_at', 'ASC')
+            ->orderBy('title')
+            ->paginate($perPage);
+    }
+
+    public function transformFrontendRecords(AbstractPaginator $records): void
+    {
+        $locale = config('app.locale');
+
+        $records->transform(function ($event) use ($locale) {
+            $translation = $event->translateOrDefault($locale);
+
+            return [
+                'id' => $event->id,
+                'title' => $event->title,
+                'pitch_name' => $event->product?->translateAttribute('name', $locale),
+                'description' => $translation?->description,
+                'excerpt' => $translation?->excerpt,
+                'started_at' => $event->started_at->format('M d, Y'),
+                'ended_at' => $event->ended_at->format('M d, Y'),
+                'city' => $event->city,
+                'country' => $event->country_code,
+                'address' => $event->address,
+            ];
+        });
+    }
+
+    public function getFrontendCountryOptions(): array
+    {
+        $events = ProductEvent::published()
+            ->select('country_code')
+            ->whereNotNull('country_code')
+            ->distinct()
+            ->get();
+
+        return $events->map(function ($event) {
+            return [
+                'value' => $event->country_code,
+                'name' => app(CountryService::class)->getCountryName($event->country_code),
+            ];
+        })->all();
+    }
+
+    public function getFrontendCityOptions(): array
+    {
+        return ProductEvent::published()
+            ->select('city', 'country_code')
+            ->whereNotNull('city')
+            ->distinct()
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'value' => $event->city,
+                    'name' => $event->city,
+                    'country_code' => $event->country_code,
+                ];
+            })
+            ->all();
+    }
     public function getRecords(
         Product $product,
         ?string $term = null,
@@ -141,11 +229,17 @@ class ProductEventCrudService
 
         // Create event schedule
         if (!$event->schedule) {
-            // If weekly_hours provided, use them; otherwise inherit from product
-            if (!empty($inputs['weekly_hours'])) {
+            $hasWeeklyHours = $this->hasWeeklyHoursAvailability($inputs['weekly_hours'] ?? []);
+            $hasDateOverrides = $this->hasDateOverrides($inputs['date_overrides'] ?? []);
+
+            if ($hasWeeklyHours) {
                 $this->createEventScheduleFromInput($event, $inputs);
             } else {
                 $this->createEventScheduleFromProduct($event, $product);
+
+                if ($hasDateOverrides) {
+                    $this->applyDateOverrides($event->schedule, $inputs['date_overrides']);
+                }
             }
         }
 
@@ -193,56 +287,15 @@ class ProductEventCrudService
             return;
         }
         
-        // Create event schedule with same timezone
-        $eventSchedule = Schedule::factory()->state([
-            'schedulable_type' => ProductEvent::class,
-            'schedulable_id' => $event->id,
-            'timezone' => $productSchedule->timezone,
-        ])->create();
+        $eventSchedule = $this->ensureEventSchedule($event, $productSchedule->timezone);
+        $eventSchedule->rules()->delete();
         
-        // Copy weekly hours from product schedule
-        foreach ($productSchedule->weeklyHours as $weeklyHour) {
-            $newRule = ScheduleRule::create([
-                'schedule_id' => $eventSchedule->id,
-                'type' => $weeklyHour->type,
-                'day' => $weeklyHour->day,
-                'is_available' => $weeklyHour->is_available,
-            ]);
-            
-            // Copy time ranges
-            foreach ($weeklyHour->times as $time) {
-                ScheduleRuleTime::create([
-                    'schedule_rule_id' => $newRule->id,
-                    'started_time' => $time->started_time,
-                    'ended_time' => $time->ended_time,
-                ]);
-            }
-        }
-        
-        // Copy date overrides that fall within event date range
-        foreach ($productSchedule->dateOverrides as $override) {
-            $overrideDate = Carbon::parse($override->started_date);
-            
-            // Only copy overrides that are within the event's date range
-            if ($overrideDate->between($event->started_at, $event->ended_at)) {
-                $newOverride = ScheduleRule::create([
-                    'schedule_id' => $eventSchedule->id,
-                    'type' => $override->type,
-                    'started_date' => $override->started_date,
-                    'ended_date' => $override->ended_date,
-                    'is_available' => $override->is_available,
-                ]);
-                
-                // Copy time ranges for the override
-                foreach ($override->times as $time) {
-                    ScheduleRuleTime::create([
-                        'schedule_rule_id' => $newOverride->id,
-                        'started_time' => $time->started_time,
-                        'ended_time' => $time->ended_time,
-                    ]);
-                }
-            }
-        }
+        $this->copyScheduleRules(
+            $eventSchedule,
+            $productSchedule,
+            $event->started_at,
+            $event->ended_at
+        );
     }
 
     /**
@@ -251,11 +304,7 @@ class ProductEventCrudService
     private function createEventScheduleFromInput(ProductEvent $event, array $inputs): void
     {
         // Create event schedule
-        $eventSchedule = Schedule::factory()->state([
-            'schedulable_type' => ProductEvent::class,
-            'schedulable_id' => $event->id,
-            'timezone' => $event->timezone,
-        ])->create();
+        $eventSchedule = $this->ensureEventSchedule($event, $event->timezone);
         
         // Save weekly hours from input
         $weeklyHours = $inputs['weekly_hours'] ?? [];
@@ -264,7 +313,7 @@ class ProductEventCrudService
             if (!empty($weeklyHour['is_available'])) {
                 $newRule = ScheduleRule::create([
                     'schedule_id' => $eventSchedule->id,
-                    'type' => 'weekly_hours',
+                    'type' => ScheduleRule::TYPE_WEEKLY_HOUR,
                     'day' => $day,
                     'is_available' => $weeklyHour['is_available'],
                 ]);
@@ -279,6 +328,8 @@ class ProductEventCrudService
                 }
             }
         }
+
+        $this->applyDateOverrides($eventSchedule, $inputs['date_overrides'] ?? []);
     }
 
     public function updateEvent(ProductEvent $event, array $inputs)
@@ -308,9 +359,23 @@ class ProductEventCrudService
             $event->schedule->save();
         }
 
-        // Update schedule if weekly_hours provided
-        if (!empty($inputs['weekly_hours'])) {
+        $hasWeeklyHours = $this->hasWeeklyHoursAvailability($inputs['weekly_hours'] ?? []);
+        $hasDateOverrides = $this->hasDateOverrides($inputs['date_overrides'] ?? []);
+
+        // Update schedule if inputs contain availability or overrides
+        if ($hasWeeklyHours) {
             $this->updateEventSchedule($event, $inputs);
+        } elseif ($hasDateOverrides) {
+            $product = $event->product;
+            if ($product) {
+                $this->createEventScheduleFromProduct($event, $product);
+                $this->applyDateOverrides($event->schedule, $inputs['date_overrides']);
+            }
+        } elseif (array_key_exists('weekly_hours', $inputs) || array_key_exists('date_overrides', $inputs)) {
+            $product = $event->product;
+            if ($product) {
+                $this->createEventScheduleFromProduct($event, $product);
+            }
         }
 
         return $saved;
@@ -321,13 +386,11 @@ class ProductEventCrudService
      */
     private function updateEventSchedule(ProductEvent $event, array $inputs): void
     {
-        if (!$event->schedule) {
-            $this->createEventScheduleFromInput($event, $inputs);
-            return;
-        }
+        $eventSchedule = $this->ensureEventSchedule($event, $event->timezone);
 
         // Delete existing weekly hours
-        $event->schedule->weeklyHours()->delete();
+        $eventSchedule->weeklyHours()->delete();
+        $eventSchedule->dateOverrides()->delete();
 
         // Save new weekly hours from input
         $weeklyHours = $inputs['weekly_hours'] ?? [];
@@ -335,8 +398,8 @@ class ProductEventCrudService
         foreach ($weeklyHours as $day => $weeklyHour) {
             if (!empty($weeklyHour['is_available'])) {
                 $newRule = ScheduleRule::create([
-                    'schedule_id' => $event->schedule->id,
-                    'type' => 'weekly_hours',
+                    'schedule_id' => $eventSchedule->id,
+                    'type' => ScheduleRule::TYPE_WEEKLY_HOUR,
                     'day' => $day,
                     'is_available' => $weeklyHour['is_available'],
                 ]);
@@ -349,6 +412,115 @@ class ProductEventCrudService
                         'ended_time' => $time['ended_time'],
                     ]);
                 }
+            }
+        }
+
+        $this->applyDateOverrides($eventSchedule, $inputs['date_overrides'] ?? []);
+    }
+
+    private function hasWeeklyHoursAvailability(array $weeklyHours): bool
+    {
+        foreach ($weeklyHours as $weeklyHour) {
+            if (!empty($weeklyHour['is_available']) && !empty($weeklyHour['hours'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function hasDateOverrides(array $dateOverrides): bool
+    {
+        return !empty($dateOverrides);
+    }
+
+    private function hasScheduleInput(array $inputs): bool
+    {
+        return $this->hasWeeklyHoursAvailability($inputs['weekly_hours'] ?? [])
+            || $this->hasDateOverrides($inputs['date_overrides'] ?? []);
+    }
+
+    private function ensureEventSchedule(ProductEvent $event, ?string $timezone): Schedule
+    {
+        if ($event->schedule) {
+            if ($timezone) {
+                $event->schedule->timezone = $timezone;
+                $event->schedule->save();
+            }
+
+            return $event->schedule;
+        }
+
+        return Schedule::factory()->state([
+            'schedulable_type' => ProductEvent::class,
+            'schedulable_id' => $event->id,
+            'timezone' => $timezone ?? 'UTC',
+        ])->create();
+    }
+
+    private function copyScheduleRules(
+        Schedule $eventSchedule,
+        Schedule $productSchedule,
+        Carbon $eventStart,
+        Carbon $eventEnd
+    ): void {
+        foreach ($productSchedule->weeklyHours as $weeklyHour) {
+            $newRule = ScheduleRule::create([
+                'schedule_id' => $eventSchedule->id,
+                'type' => $weeklyHour->type,
+                'day' => $weeklyHour->day,
+                'is_available' => $weeklyHour->is_available,
+            ]);
+            
+            foreach ($weeklyHour->times as $time) {
+                ScheduleRuleTime::create([
+                    'schedule_rule_id' => $newRule->id,
+                    'started_time' => $time->started_time,
+                    'ended_time' => $time->ended_time,
+                ]);
+            }
+        }
+        
+        foreach ($productSchedule->dateOverrides as $override) {
+            $overrideDate = Carbon::parse($override->started_date);
+            
+            if ($overrideDate->between($eventStart, $eventEnd)) {
+                $newOverride = ScheduleRule::create([
+                    'schedule_id' => $eventSchedule->id,
+                    'type' => $override->type,
+                    'started_date' => $override->started_date,
+                    'ended_date' => $override->ended_date,
+                    'is_available' => $override->is_available,
+                ]);
+                
+                foreach ($override->times as $time) {
+                    ScheduleRuleTime::create([
+                        'schedule_rule_id' => $newOverride->id,
+                        'started_time' => $time->started_time,
+                        'ended_time' => $time->ended_time,
+                    ]);
+                }
+            }
+        }
+    }
+
+    private function applyDateOverrides(Schedule $eventSchedule, array $dateOverrides): void
+    {
+        foreach ($dateOverrides as $override) {
+            $newOverride = ScheduleRule::create([
+                'schedule_id' => $eventSchedule->id,
+                'type' => ScheduleRule::TYPE_DATE_OVERRIDE,
+                'started_date' => $override['started_date'] ?? null,
+                'ended_date' => $override['ended_date'] ?? null,
+                'is_available' => $override['is_available'] ?? false,
+            ]);
+
+            foreach ($override['times'] ?? [] as $time) {
+                ScheduleRuleTime::create([
+                    'schedule_rule_id' => $newOverride->id,
+                    'started_time' => $time['started_time'] ?? null,
+                    'ended_time' => $time['ended_time'] ?? null,
+                ]);
             }
         }
     }

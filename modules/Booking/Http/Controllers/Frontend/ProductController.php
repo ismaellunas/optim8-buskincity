@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\ProductEventCrudService;
 use Modules\Booking\Entities\ProductEvent;
 use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Entities\Product;
@@ -23,7 +24,8 @@ class ProductController extends CrudController
     public function __construct(
         private EventService $eventService,
         private ProductEventService $productEventService,
-        private ProductService $productService
+        private ProductService $productService,
+        private ProductEventCrudService $productEventCrudService
     ) {}
 
     /**
@@ -32,8 +34,6 @@ class ProductController extends CrudController
      */
     public function index(ProductIndexRequest $request)
     {
-        $user = auth()->user();
-
         $scopes = [
             'orderByColumn' => [
                 'column' => $request->column,
@@ -52,13 +52,16 @@ class ProductController extends CrudController
                 'city',
                 'country',
             )),
-            'products' => $this->productService->getFrontendRecords(
-                $user,
-                $request->term,
-                $scopes,
+            'baseRouteName' => 'booking.events',
+            'events' => tap(
+                $this->productEventCrudService->getFrontendRecords(
+                    $request->term,
+                    $scopes,
+                ),
+                fn ($records) => $this->productEventCrudService->transformFrontendRecords($records),
             ),
-            'countryOptions' => $this->productEventService->getFrontendCountryOptions(),
-            'cityOptions' => $this->productEventService->getFrontendCityOptions(),
+            'countryOptions' => $this->productEventCrudService->getFrontendCountryOptions(),
+            'cityOptions' => $this->productEventCrudService->getFrontendCityOptions(),
             'i18n' => [
                 'book_now' => __('Book now'),
             ],

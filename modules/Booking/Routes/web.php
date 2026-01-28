@@ -6,6 +6,7 @@ use Modules\Booking\Http\Controllers\ApiPageBuilderComponent\EventsCalendarContr
 use Modules\Booking\Http\Controllers\ApiWidgetController;
 use Modules\Booking\Http\Controllers\Frontend\OrderController as FrontendOrderController;
 use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProductController;
+use Modules\Booking\Http\Controllers\Frontend\EventController as FrontendEventController;
 use Modules\Booking\Http\Controllers\Frontend\UpcomingEventController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
@@ -120,6 +121,23 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
             ->can('showFrontendProductEvent', 'product');
     });
 
+    Route::prefix('events')
+        ->name('events.')
+        ->group(function () {
+
+        Route::get('/{event}', [FrontendEventController::class, 'show'])
+            ->name('show')
+            ->can('showFrontendProductEvent', 'event');
+
+        Route::get('/{event}/available-times/{date}', [FrontendEventController::class, 'availableTimes'])
+            ->name('available-times')
+            ->can('showFrontendProductEvent', 'event');
+
+        Route::get('/{event}/allowed-dates/{month}/{year}', [FrontendEventController::class, 'allowedDates'])
+            ->name('allowed-dates')
+            ->can('showFrontendProductEvent', 'event');
+    });
+
     Route::middleware('can:showFrontendOrder,Modules\Ecommerce\Entities\Order')
         ->group(function () {
             Route::resource('/orders', Frontend\OrderController::class)
@@ -144,6 +162,9 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
 
                 Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
                     ->name('book-event');
+
+                Route::post('/{product}/book-event-batch', [FrontendOrderController::class, 'bookEventBatch'])
+                    ->name('book-event-batch');
             });
         });
 });

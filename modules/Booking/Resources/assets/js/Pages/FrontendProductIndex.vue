@@ -44,32 +44,16 @@
         </div>
 
         <biz-table-index
-            :records="products"
+            :records="events"
             :query-params="queryParams"
         >
             <template #thead>
                 <tr>
-                    <biz-table-column-sort
-                        :order="order"
-                        :is-sorted="column == 'name'"
-                        @click="orderColumn('name')"
-                    >
-                        Name
-                    </biz-table-column-sort>
-                    <biz-table-column-sort
-                        :order="order"
-                        :is-sorted="column == 'city'"
-                        @click="orderColumn('city')"
-                    >
-                        City
-                    </biz-table-column-sort>
-                    <biz-table-column-sort
-                        :order="order"
-                        :is-sorted="column == 'country'"
-                        @click="orderColumn('country')"
-                    >
-                        Country
-                    </biz-table-column-sort>
+                    <th>Event Name</th>
+                    <th>Pitch</th>
+                    <th>Event Dates</th>
+                    <th>City</th>
+                    <th>Country</th>
                     <th>
                         <div class="level-right">
                             Actions
@@ -79,17 +63,29 @@
             </template>
 
             <tr
-                v-for="product in products.data"
-                :key="product.id"
+                v-for="event in events.data"
+                :key="event.id"
             >
-                <td>{{ product.name }}</td>
-                <td>{{ product.city }}</td>
-                <td>{{ product.country }}</td>
+                <td>
+                    <div class="content">
+                        <strong>{{ event.title }}</strong>
+                        <p
+                            v-if="event.excerpt || event.description"
+                            class="is-size-7 has-text-grey"
+                        >
+                            {{ event.excerpt || event.description }}
+                        </p>
+                    </div>
+                </td>
+                <td>{{ event.pitch_name }}</td>
+                <td>{{ event.started_at }} - {{ event.ended_at }}</td>
+                <td>{{ event.city }}</td>
+                <td>{{ event.country }}</td>
                 <td>
                     <div class="level-right">
                         <biz-button-link
                             class="is-primary"
-                            :href="route(baseRouteName+'.show', product.id)"
+                            :href="route(baseRouteName+'.show', event.id)"
                         >
                             <biz-icon
                                 class="is-small"
@@ -138,7 +134,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
-            products: { type: Object, required: true },
+            events: { type: Object, required: true },
             countryOptions: { type: Array, default: () => [] },
             cityOptions: { type: Array, default: () => [] },
             i18n: { type: Object, required: true },

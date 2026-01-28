@@ -59,20 +59,49 @@
                         <biz-button
                             class="px-5"
                             type="button"
-                            :class="getTimeClasses(index)"
-                            @click="toggleSelectedIndex(index)"
+                            :class="getTimeClasses(index, time)"
+                            @click="toggleSlot(time, index)"
                         >
                             {{ time }}
                         </biz-button>
 
                         <biz-button
-                            v-if="isIndexSelected(index)"
+                            v-if="!multiSelect && isIndexSelected(index)"
                             class="button is-link px-5"
                             type="button"
                             @click="confirmTime(time)"
                         >
                             Confirm
                         </biz-button>
+                    </div>
+                </div>
+                <div v-if="hasLoadedTimes && !availableTimes.length" class="column is-full">
+                    <p class="has-text-grey has-text-centered">
+                        No available times for this date.
+                    </p>
+                </div>
+            </div>
+
+            <div v-if="multiSelect && selectedSlots.length" class="mt-4">
+                <p class="has-text-weight-bold mb-2">Selected slots</p>
+                <div class="columns is-multiline">
+                    <div
+                        v-for="(slot, idx) in selectedSlots"
+                        :key="slot.key"
+                        class="column is-full py-1"
+                    >
+                        <div class="buttons">
+                            <biz-button class="is-static">
+                                {{ slot.label }}
+                            </biz-button>
+                            <biz-button
+                                class="is-danger"
+                                type="button"
+                                @click="removeSlot(idx)"
+                            >
+                                Remove
+                            </biz-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,9 +138,11 @@
             maxDate: { type: String, required: true },
             minDate: { type: String, required: true },
             modelValue: { type: Object, required: true },
-            productId: { type: Number, required: true },
+            productId: { type: [Number, String, null], default: null },
             productEventId: { type: [Number, String, null], default: null },
+            eventId: { type: [Number, String, null], default: null },
             timezone: { type: String, default: 'GMT' },
+            multiSelect: { type: Boolean, default: false },
         },
 
         emits: [
@@ -123,6 +154,7 @@
                 allowedDates: ref([]),
                 availableTimes: ref([]),
                 form: useModelWrapper(props, emit),
+                hasLoadedTimes: ref(false),
                 isCalendarDisabled: ref(false),
                 selectedIndex: ref(null),
                 yearRange: [
@@ -142,10 +174,20 @@
         async mounted() {
             const minDate = moment(this.minDate);
 
+            if (this.multiSelect) {
+                this.ensureSelectedSlots();
+            }
+
             this.allowedDates = await this.getAllowedDates(minDate.month() + 1, minDate.year());
         },
 
         methods: {
+            ensureSelectedSlots() {
+                if (!this.form.selected_slots) {
+                    this.form.selected_slots = [];
+                }
+            },
+
             getAvailableTimes() {
                 if (! this.form.date) {
                     this.availableTimes = [];
@@ -159,11 +201,16 @@
 
                 self.onStartLoadingOverlay();
                 self.isCalendarDisabled = true;
+                self.hasLoadedTimes = false;
 
                 axios.get(
                     route(self.availableTimesRoute, params),
                 ).then((response) => {
                     self.availableTimes = response.data;
+                    self.hasLoadedTimes = true;
+                }).catch(() => {
+                    self.availableTimes = [];
+                    self.hasLoadedTimes = true;
                 }).then(() => {
                     self.onEndLoadingOverlay();
                     self.isCalendarDisabled = false;
@@ -186,7 +233,49 @@
                 }
             },
 
-            getTimeClasses(index) {
+            toggleSlot(time, index) {
+                if (this.multiSelect) {
+                    this.toggleSlotSelection(time);
+                    return;
+                }
+
+                this.toggleSelectedIndex(index);
+            },
+
+            toggleSlotSelection(time) {
+                if (!this.form.date) {
+                    return;
+                }
+
+                this.ensureSelectedSlots();
+
+                const date = moment(this.form.date).format('YYYY-MM-DD');
+                const existingIndex = this.form.selected_slots.findIndex(
+                    (slot) => slot.date === date && slot.time === time
+                );
+
+                if (existingIndex > -1) {
+                    this.form.selected_slots.splice(existingIndex, 1);
+                } else {
+                    this.form.selected_slots.push({ date, time });
+                }
+            },
+
+            getTimeClasses(index, time) {
+                if (this.multiSelect) {
+                    const date = this.form.date ? moment(this.form.date).format('YYYY-MM-DD') : null;
+                    const isSelected = date
+                        ? (this.form.selected_slots ?? []).some(
+                            (slot) => slot.date === date && slot.time === time
+                        )
+                        : false;
+
+                    return {
+                        'is-danger': isSelected,
+                        'has-text-weight-bold': isSelected,
+                    };
+                }
+
                 return {
                     'is-danger': this.isIndexSelected(index),
                     'has-text-weight-bold': this.isIndexSelected(index),
@@ -202,23 +291,46 @@
                 const self = this;
 
                 const url = route(this.allowedDatesRoute, {
-                    product: this.productId,
+                    ...(this.eventId
+                        ? { event: this.eventId }
+                        : { product: this.productId, product_event_id: this.productEventId }),
                     month: month,
                     year: year,
-                    product_event_id: this.productEventId,
                 });
 
                 self.isCalendarDisabled = true;
 
-                const response =  await axios.get(url);
-
-                self.isCalendarDisabled = false;
-
-                return response.data;
+                try {
+                    const response =  await axios.get(url);
+                    return response.data;
+                } catch (error) {
+                    return [];
+                } finally {
+                    self.isCalendarDisabled = false;
+                }
             },
 
             async handleMonthYear({instance, month, year}) {
                 this.allowedDates = await this.getAllowedDates((month + 1), year);
+            },
+
+            removeSlot(index) {
+                this.ensureSelectedSlots();
+                this.form.selected_slots.splice(index, 1);
+            },
+        },
+
+        computed: {
+            selectedSlots() {
+                return (this.form.selected_slots ?? [])
+                    .map((slot) => {
+                        const dateLabel = moment(slot.date).format('MMM D, YYYY');
+                        return {
+                            key: `${slot.date}-${slot.time}`,
+                            label: `${dateLabel} ${slot.time}`,
+                        };
+                    })
+                    .sort((a, b) => a.key.localeCompare(b.key));
             },
         },
     };

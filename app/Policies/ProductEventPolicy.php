@@ -2,9 +2,12 @@
 
 namespace App\Policies;
 
+use App\Enums\PublishingStatus;
 use App\Models\User;
+use App\Services\LoginService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Booking\Entities\ProductEvent;
+use Modules\Ecommerce\Enums\ProductStatus;
 
 class ProductEventPolicy
 {
@@ -26,6 +29,21 @@ class ProductEventPolicy
     public function view(User $user, ProductEvent $productEvent)
     {
         return $user->can('update', $productEvent->product);
+    }
+
+    public function showFrontendProductEvent(?User $user, ProductEvent $productEvent): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $product = $productEvent->product;
+
+        return LoginService::isUserHomeUrl()
+            && $productEvent->status === PublishingStatus::PUBLISHED->value
+            && $product
+            && $product->status === ProductStatus::PUBLISHED->value
+            && $user->hasRole($product->roles);
     }
 
     /**

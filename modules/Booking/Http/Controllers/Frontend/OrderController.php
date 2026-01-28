@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\Booking\Events\EventBooked;
 use Modules\Booking\Events\EventRescheduled;
+use Modules\Booking\Http\Requests\EventBookBatchRequest;
 use Modules\Booking\Http\Requests\EventBookRequest;
 use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
@@ -16,6 +17,7 @@ use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\OrderService;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends CrudController
 {
@@ -171,6 +173,33 @@ class OrderController extends CrudController
         EventBooked::dispatch($order);
 
         $this->generateFlashMessage('The Event has been booked!');
+
+        return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    public function bookEventBatch(EventBookBatchRequest $request, Product $product)
+    {
+        $inputs = $request->validated();
+        $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
+            ->where('status', \App\Enums\PublishingStatus::PUBLISHED->value)
+            ->findOrFail($inputs['product_event_id']);
+
+        $orders = DB::transaction(function () use ($inputs, $product, $productEvent) {
+            return collect($inputs['slots'])->map(function ($slot) use ($product, $productEvent) {
+                $order = $this->orderService->bookEvent(
+                    $product,
+                    Carbon::parse($slot['date'].' '.$slot['time']),
+                    auth()->user(),
+                    $productEvent,
+                );
+
+                EventBooked::dispatch($order);
+
+                return $order;
+            });
+        });
+
+        $this->generateFlashMessage('The Events have been booked!');
 
         return redirect()->route($this->baseRouteName.'.index');
     }
