@@ -159,14 +159,17 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
 
                 Route::post('/{order}/check-in', Modules\Booking\Http\Controllers\Frontend\CheckInController::class)
                     ->name('check-in');
-
-                Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
-                    ->name('book-event');
-
-                Route::post('/{product}/book-event-batch', [FrontendOrderController::class, 'bookEventBatch'])
-                    ->name('book-event-batch');
             });
         });
+
+    // Book event routes - accessible to authenticated users who can view the product/event
+    Route::prefix('orders')->name('orders.')->middleware('auth')->group(function () {
+        Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
+            ->name('book-event');
+
+        Route::post('/{product}/book-event-batch', [FrontendOrderController::class, 'bookEventBatch'])
+            ->name('book-event-batch');
+    });
 });
 
 Route::prefix('api/booking')
