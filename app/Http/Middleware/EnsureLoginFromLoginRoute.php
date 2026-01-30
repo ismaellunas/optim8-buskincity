@@ -18,18 +18,23 @@ class EnsureLoginFromLoginRoute
      */
     public function handle(Request $request, Closure $next)
     {
-        if (LoginService::hasHomeUrl() && LoginService::isUserHomeUrl()) {
+        // Allow authenticated JSON/Inertia requests to proceed
+        if (auth()->check() && ($request->expectsJson() || $request->header('X-Inertia'))) {
+            if (!LoginService::hasHomeUrl()) {
+                LoginService::setHomeUrl($request);
+            }
+            return $next($request);
+        }
 
+        if (LoginService::hasHomeUrl() && LoginService::isUserHomeUrl()) {
             return $next($request);
 
         } elseif (auth()->check() && !LoginService::hasHomeUrl()) {
-
             LoginService::setHomeUrl($request);
 
             return $next($request);
 
-        } elseif (! $request->expectsJson()) {
-
+        } elseif (! $request->expectsJson() && ! $request->header('X-Inertia')) {
             return redirect(LoginService::getHomeUrl());
         }
 

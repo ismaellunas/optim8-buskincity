@@ -14,10 +14,19 @@ class BookingWithinProductEventRange implements Rule
 
     public function passes($attribute, $value)
     {
-        $date = request()->get('date');
-        $time = request()->get('time');
+        // $attribute is like 'slots.0.date'
+        // $value is the date being validated (e.g., '2026-02-05')
+        
+        // Extract the slot index from the attribute path
+        // e.g., 'slots.0.date' -> get time from 'slots.0.time'
+        $attributePath = str_replace('.date', '', $attribute);
+        $timeAttribute = $attributePath . '.time';
+        
+        // Get the time from the same slot
+        $slotData = data_get(request()->all(), $attributePath);
+        $time = $slotData['time'] ?? null;
 
-        if (empty($date) || empty($time)) {
+        if (empty($value) || empty($time)) {
             return false;
         }
 
@@ -26,7 +35,7 @@ class BookingWithinProductEventRange implements Rule
         }
 
         $requested = Carbon::parse(
-            $date.' '.$time,
+            $value.' '.$time,
             $this->productEvent->timezone ?? config('app.timezone')
         );
 
