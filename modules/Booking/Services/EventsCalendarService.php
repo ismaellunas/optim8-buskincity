@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\CountryService;
 use App\Services\IPService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -13,6 +14,10 @@ use KMLaravel\GeographicalCalculator\Classes\Geo;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\EventCalendar;
 use Modules\Booking\ModuleService as BookingModuleService;
+use Modules\Booking\Enums\BookingStatus;
+use Modules\Ecommerce\Entities\ProductVariant;
+use Modules\Ecommerce\Enums\ProductStatus;
+use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService as SpaceModuleService;
 
@@ -50,17 +55,11 @@ class EventsCalendarService
 
     private function availableTypes(): array
     {
-        $types = [];
-
-        if (app(BookingModuleService::class)->isModuleActive()) {
-            $types[] = 'booked_event';
+        if (! app(BookingModuleService::class)->isModuleActive()) {
+            return [];
         }
 
-        if (app(SpaceModuleService::class)->isModuleActive()) {
-            $types[] = 'space_event';
-        }
-
-        return $types;
+        return ['booked_event'];
     }
 
     private function setCachedEvents($paginator)
@@ -222,26 +221,55 @@ class EventsCalendarService
     public function getLocationOptions(): array
     {
         $countryService = app(CountryService::class);
-
-        $options = EventCalendar::select('country_code', 'city')
-            ->whereNotNull('country_code')
-            ->whereNotNull('city')
-            ->inType($this->availableTypes())
+        $lunarPrefix = EcommerceModuleService::tablePrefix();
+        $locations = DB::table($lunarPrefix.'order_lines as lol')
+            ->join($lunarPrefix.'orders as lo', 'lo.id', '=', 'lol.order_id')
+            ->join('events', 'events.order_line_id', '=', 'lol.id')
+            ->join('schedules', 'schedules.id', '=', 'events.schedule_id')
+            ->join($lunarPrefix.'product_variants as lpv', function ($join) use ($lunarPrefix) {
+                $join
+                    ->on('lpv.id', '=', 'lol.purchasable_id')
+                    ->where('lol.purchasable_type', ProductVariant::class);
+            })
+            ->join($lunarPrefix.'products as lp', function ($join) {
+                $join
+                    ->on('lp.id', '=', 'lpv.product_id')
+                    ->where('lp.status', ProductStatus::PUBLISHED->value);
+            })
+            ->leftJoin(
+                DB::raw("(select lpm.product_id, lpm.value as location from {$lunarPrefix}products_meta lpm where lpm.key = 'locations') sub_loc"),
+                'sub_loc.product_id',
+                '=',
+                'lp.id'
+            )
+            ->where('lol.type', 'event')
+            ->whereIn('events.status', [
+                BookingStatus::UPCOMING->value,
+                BookingStatus::ONGOING->value,
+            ])
+            ->whereNotNull(DB::raw("sub_loc.location::json#>>'{0,country_code}'"))
+            ->whereNotNull(DB::raw("sub_loc.location::json#>>'{0,city}'"))
+            ->selectRaw("sub_loc.location::json#>>'{0,country_code}' as country_code")
+            ->selectRaw("sub_loc.location::json#>>'{0,city}' as city")
             ->distinct()
-            ->get()
+            ->get();
+
+        return collect($locations)
             ->groupBy('country_code')
             ->map(function ($items, $key) use ($countryService) {
                 return [
                     'country_code' => $key,
                     'country' => $countryService->getCountryName($key),
-                    'cities' => $items->map(function ($item) {
-                        return Str::title($item->city);
-                    })->all(),
+                    'cities' => $items
+                        ->map(fn ($item) => Str::title($item->city))
+                        ->filter()
+                        ->unique()
+                        ->values()
+                        ->all(),
                 ];
             })
+            ->values()
             ->all();
-
-        return $options;
     }
 
     public function getCoordinates(LengthAwarePaginator $pagination): array
