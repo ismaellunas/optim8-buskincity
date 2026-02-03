@@ -152,8 +152,17 @@ class ProductEventCrudService
         $weeklyHours = [];
         $dateOverrides = [];
 
+        // Initialize all 7 days with default values
+        for ($day = 1; $day <= 7; $day++) {
+            $weeklyHours[$day] = [
+                'day' => $day,
+                'is_available' => false,
+                'hours' => [],
+            ];
+        }
+
         if ($event->schedule) {
-            // Format weekly hours for frontend
+            // Format weekly hours for frontend, overriding defaults for configured days
             foreach ($event->schedule->weeklyHours as $rule) {
                 $weeklyHours[$rule->day] = [
                     'day' => $rule->day,

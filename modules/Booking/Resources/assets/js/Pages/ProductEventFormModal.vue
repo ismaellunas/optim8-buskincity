@@ -17,7 +17,7 @@
         </template>
 
         <form
-            v-if="!isBlank(form)"
+            v-if="isFormReady"
             @submit.prevent="submit"
         >
             <div class="box">
@@ -499,7 +499,24 @@
             },
 
             isFormReady() {
-                return !isBlank(this.form);
+                if (isBlank(this.form)) {
+                    return false;
+                }
+                
+                // Ensure weekly_hours is properly initialized with all 7 days
+                if (!this.form.weekly_hours) {
+                    return false;
+                }
+                
+                // Check that all 7 days exist and have the required structure
+                for (let day = 1; day <= 7; day++) {
+                    if (!this.form.weekly_hours[day] || 
+                        this.form.weekly_hours[day].is_available === undefined) {
+                        return false;
+                    }
+                }
+                
+                return true;
             },
 
             selectableLocales() {
