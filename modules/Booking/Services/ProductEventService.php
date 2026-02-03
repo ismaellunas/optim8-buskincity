@@ -252,6 +252,10 @@ class ProductEventService
                 'dateRange' => 'Not set',
                 'availableDays' => 'Not set',
                 'availableHours' => 'Not set',
+                'startDate' => null,
+                'endDate' => null,
+                'availableDaysArray' => [],
+                'weeklyHoursData' => [],
             ];
         }
 
@@ -260,6 +264,22 @@ class ProductEventService
         $availableDays = $weeklyHours->map(function ($rule) {
             return $this->weekdays()->get($rule->day)['value'] ?? '';
         })->filter()->values()->implode(', ');
+
+        // Get available day numbers (1-7, where 1 = Monday)
+        $availableDaysArray = $weeklyHours->pluck('day')->values()->toArray();
+
+        // Get weekly hours with time ranges for each day
+        $weeklyHoursData = [];
+        foreach ($schedule->weeklyHours as $rule) {
+            if ($rule->is_available && $rule->times->isNotEmpty()) {
+                $weeklyHoursData[$rule->day] = $rule->times->map(function ($time) {
+                    return [
+                        'started_time' => Str::substr($time->started_time, 0, 5),
+                        'ended_time' => Str::substr($time->ended_time, 0, 5),
+                    ];
+                })->toArray();
+            }
+        }
 
         // Get typical hours (from first available day)
         $firstAvailableDay = $weeklyHours->first();
@@ -286,6 +306,10 @@ class ProductEventService
             'dateRange' => $dateRange,
             'availableDays' => $availableDays ?: 'None',
             'availableHours' => $availableHours,
+            'startDate' => $pitchStart ? Carbon::parse($pitchStart)->format('Y-m-d') : null,
+            'endDate' => $pitchEnd ? Carbon::parse($pitchEnd)->format('Y-m-d') : null,
+            'availableDaysArray' => $availableDaysArray,
+            'weeklyHoursData' => $weeklyHoursData,
         ];
     }
 

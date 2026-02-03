@@ -305,6 +305,10 @@
                     dateRange: 'Not set',
                     availableDays: 'Not set',
                     availableHours: 'Not set',
+                    startDate: null,
+                    endDate: null,
+                    availableDaysArray: [],
+                    weeklyHoursData: {},
                 })
             },
             managers: { type: Array, default: () => [] },

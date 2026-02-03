@@ -10,6 +10,7 @@
         :flow="['calendar', 'time']"
         :month-change-on-scroll="false"
         :action-row="{showCancel: false}"
+        v-bind="$attrs"
     />
 </template>
 
@@ -23,6 +24,8 @@
         components: {
             BizDatepicker,
         },
+
+        inheritAttrs: false,
 
         props: {
             modelValue: {

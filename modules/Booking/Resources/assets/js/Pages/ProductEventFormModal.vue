@@ -53,6 +53,23 @@
                 </div>
             </div>
 
+                    <div class="notification is-info is-light mb-4">
+                        <p class="has-text-weight-semibold mb-2">📅 Pitch Schedule Constraints</p>
+                        <div class="content is-small">
+                            <ul class="mb-0">
+                                <li v-if="pitchSchedule.dateRange && pitchSchedule.startDate">
+                                    <strong>Date Range:</strong> {{ pitchSchedule.dateRange }}
+                                </li>
+                                <li v-if="pitchSchedule.availableDays && pitchSchedule.availableDays !== 'Not set'">
+                                    <strong>Available Days:</strong> {{ pitchSchedule.availableDays }}
+                                </li>
+                                <li v-if="pitchSchedule.availableHours && pitchSchedule.availableHours !== 'Not set'">
+                                    <strong>Typical Hours:</strong> {{ pitchSchedule.availableHours }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <biz-form-date-time
                         v-model="startedEndedAt"
                         :label="i18n.started_and_ended_at"
@@ -61,7 +78,10 @@
                         multi-calendars-solo
                         range
                         :utc="'preserve'"
-                    :enable-time-picker="false"
+                        :enable-time-picker="false"
+                        :min-date="pitchMinDate"
+                        :max-date="pitchMaxDate"
+                        :disabled-week-days="disabledWeekDays"
                         :message="error(['started_at', 'ended_at'], null, formErrors)"
                     />
                 </div>
@@ -94,6 +114,24 @@
                 <p class="help mb-4">
                     Define when this event is available for booking. Schedule must be within the Pitch's constraints.
                 </p>
+
+                <div v-if="hasPitchWeeklyHours" class="notification is-warning is-light mb-4">
+                    <p class="has-text-weight-semibold mb-2">⚠️ Pitch Schedule Hours</p>
+                    <p class="is-size-7">
+                        The Pitch has specific hours set for each day. Your event schedule will be validated against these constraints:
+                    </p>
+                    <div class="content is-small mt-2">
+                        <ul class="mb-0">
+                            <li v-for="(times, day) in pitchSchedule.weeklyHoursData" :key="day">
+                                <strong>{{ weekdays[day] }}:</strong> 
+                                <span v-for="(timeRange, idx) in times" :key="idx">
+                                    {{ timeRange.started_time }}-{{ timeRange.ended_time }}
+                                    <span v-if="idx < times.length - 1">, </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
                 <!-- Weekly Hours -->
                 <div class="card">
@@ -384,6 +422,10 @@
                     dateRange: 'Not set',
                     availableDays: 'Not set',
                     availableHours: 'Not set',
+                    startDate: null,
+                    endDate: null,
+                    availableDaysArray: [],
+                    weeklyHoursData: {},
                 })
             },
         },
@@ -471,6 +513,49 @@
                 const errors = {};
                 // Add error handling if needed
                 return errors;
+            },
+
+            pitchMinDate() {
+                // Return the pitch's start date as minimum date for events
+                if (this.pitchSchedule?.startDate) {
+                    return new Date(this.pitchSchedule.startDate);
+                }
+                return null;
+            },
+
+            pitchMaxDate() {
+                // Return the pitch's end date as maximum date for events
+                if (this.pitchSchedule?.endDate) {
+                    return new Date(this.pitchSchedule.endDate);
+                }
+                return null;
+            },
+
+            disabledWeekDays() {
+                // Disable weekdays that are not available in the pitch schedule
+                // vue-datepicker uses 0=Sunday, 1=Monday, ..., 6=Saturday
+                // Our system uses 1=Monday, 2=Tuesday, ..., 7=Sunday
+                
+                if (!this.pitchSchedule?.availableDaysArray || this.pitchSchedule.availableDaysArray.length === 0) {
+                    return []; // No restrictions if no available days defined
+                }
+
+                const availableDays = this.pitchSchedule.availableDaysArray;
+                const allDays = [0, 1, 2, 3, 4, 5, 6]; // Sunday to Saturday in vue-datepicker format
+                
+                // Convert our format (1=Mon...7=Sun) to vue-datepicker format (0=Sun, 1=Mon...6=Sat)
+                const availableDaysVueDatepicker = availableDays.map(day => {
+                    if (day === 7) return 0; // Sunday
+                    return day; // Monday=1, Tuesday=2, etc.
+                });
+
+                // Return days that should be disabled (all days minus available days)
+                return allDays.filter(day => !availableDaysVueDatepicker.includes(day));
+            },
+
+            hasPitchWeeklyHours() {
+                return this.pitchSchedule?.weeklyHoursData && 
+                       Object.keys(this.pitchSchedule.weeklyHoursData).length > 0;
             },
 
             startedEndedAt: {

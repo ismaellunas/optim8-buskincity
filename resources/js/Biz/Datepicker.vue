@@ -1,6 +1,7 @@
 <template>
     <Datepicker
         v-model="dates"
+        v-bind="$attrs"
     />
 </template>
 
@@ -15,6 +16,8 @@
         components: {
             Datepicker
         },
+
+        inheritAttrs: false,
 
         props: {
             modelValue: { type: [String, Array, Date, null], required: true },
