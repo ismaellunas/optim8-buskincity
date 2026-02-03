@@ -11,7 +11,15 @@
                         <schedule-rule-time
                             v-model="timeRanges[ hourIdx ]"
                             :min="ruleTime.ended_time ?? null"
+                            :pitch-time-ranges="pitchTimeRanges"
                         />
+                        
+                        <!-- Warning if time is outside pitch hours -->
+                        <div v-if="isTimeOutsidePitchHours(timeRanges[hourIdx])" class="notification is-warning is-light mt-2 py-2 px-3">
+                            <p class="is-size-7">
+                                ⚠️ <strong>Warning:</strong> This time range is outside the Pitch's scheduled hours.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -66,6 +74,7 @@
             errorKeyPrefix: { type: String, default: '' },
             errors: { type: Object, default: () => {} },
             timeFormat: { type: String, default: 'HH:mm' },
+            pitchTimeRanges: { type: Array, default: () => [] },
         },
 
         emits: [
@@ -153,6 +162,29 @@
 
             hasErrorByIndex(index) {
                 return (!isEmpty(this.errors) && this.errors[index]);
+            },
+
+            isTimeOutsidePitchHours(timeRange) {
+                // If no pitch time ranges defined, no validation needed
+                if (!this.pitchTimeRanges || this.pitchTimeRanges.length === 0) {
+                    return false;
+                }
+
+                const startTime = moment(timeRange.started_time, this.timeFormat);
+                const endTime = moment(timeRange.ended_time, this.timeFormat);
+
+                // Check if the event time range falls within any of the pitch's time ranges
+                for (const pitchRange of this.pitchTimeRanges) {
+                    const pitchStart = moment(pitchRange.started_time, this.timeFormat);
+                    const pitchEnd = moment(pitchRange.ended_time, this.timeFormat);
+
+                    // Check if event time is completely within this pitch time range
+                    if (startTime.isSameOrAfter(pitchStart) && endTime.isSameOrBefore(pitchEnd)) {
+                        return false; // Within bounds, no warning needed
+                    }
+                }
+
+                return true; // Outside all pitch time ranges
             },
         },
     };

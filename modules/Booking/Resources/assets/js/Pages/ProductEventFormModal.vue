@@ -162,8 +162,22 @@
                                             v-model="form.weekly_hours[index].hours"
                                             :errors="formErrors"
                                             :error-key-prefix="`weekly_hours.${index}.hours`"
+                                            :pitch-time-ranges="getPitchTimeRangesForDay(index)"
                                             @time-range-removed="timeRangeRemoved(index)"
                                         />
+                                        
+                                        <!-- Show pitch constraints for this day -->
+                                        <div v-if="getPitchTimeRangesForDay(index).length > 0" class="notification is-info is-light mt-2 py-2 px-3">
+                                            <p class="is-size-7 mb-1">
+                                                <strong>Pitch hours for {{ weekday }}:</strong>
+                                            </p>
+                                            <p class="is-size-7">
+                                                <span v-for="(range, idx) in getPitchTimeRangesForDay(index)" :key="idx">
+                                                    {{ range.started_time }}-{{ range.ended_time }}
+                                                    <span v-if="idx < getPitchTimeRangesForDay(index).length - 1">, </span>
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
                                     <div class="column is-2">
                                         <biz-button-icon
@@ -517,16 +531,22 @@
 
             pitchMinDate() {
                 // Return the pitch's start date as minimum date for events
+                // Parse as local date to avoid timezone conversion issues
                 if (this.pitchSchedule?.startDate) {
-                    return new Date(this.pitchSchedule.startDate);
+                    const [year, month, day] = this.pitchSchedule.startDate.split('-').map(Number);
+                    // Month is 0-indexed in JavaScript Date
+                    return new Date(year, month - 1, day);
                 }
                 return null;
             },
 
             pitchMaxDate() {
                 // Return the pitch's end date as maximum date for events
+                // Parse as local date to avoid timezone conversion issues
                 if (this.pitchSchedule?.endDate) {
-                    return new Date(this.pitchSchedule.endDate);
+                    const [year, month, day] = this.pitchSchedule.endDate.split('-').map(Number);
+                    // Month is 0-indexed in JavaScript Date
+                    return new Date(year, month - 1, day);
                 }
                 return null;
             },
@@ -800,6 +820,14 @@
                 
                 const dates = overrides.map(o => moment(o.started_date).format('D MMM'));
                 return dates.join(', ');
+            },
+
+            getPitchTimeRangesForDay(dayIndex) {
+                // dayIndex is 1-7 (1=Monday, 7=Sunday)
+                if (!this.pitchSchedule?.weeklyHoursData) {
+                    return [];
+                }
+                return this.pitchSchedule.weeklyHoursData[dayIndex] || [];
             },
         }
     }

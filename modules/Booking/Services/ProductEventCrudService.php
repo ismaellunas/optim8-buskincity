@@ -251,21 +251,96 @@ class ProductEventCrudService
      */
     private function validateEventWithinPitchSchedule(Product $product, array $inputs): void
     {
+        $errors = [];
+        
+        // Validate date range
         $pitchStart = $product->getMeta('pitch_started_at');
         $pitchEnd = $product->getMeta('pitch_ended_at');
         
         if ($pitchStart && $pitchEnd) {
-            $eventStart = Carbon::parse($inputs['started_at']);
-            $eventEnd = Carbon::parse($inputs['ended_at']);
-            $pitchStartDate = Carbon::parse($pitchStart);
-            $pitchEndDate = Carbon::parse($pitchEnd);
+            // Get the pitch timezone for proper date comparison
+            $pitchTimezone = $product->eventSchedule?->timezone ?? $inputs['timezone'] ?? 'UTC';
             
-            if ($eventStart->lt($pitchStartDate) || $eventEnd->gt($pitchEndDate)) {
-                throw ValidationException::withMessages([
-                    'started_at' => 'Event dates must be within Pitch date range (' . 
-                                   $pitchStartDate->format('Y-m-d') . ' to ' . 
-                                   $pitchEndDate->format('Y-m-d') . ')',
-                ]);
+            // Parse dates in the pitch timezone and normalize to date only
+            $eventStart = Carbon::parse($inputs['started_at'], $pitchTimezone)->startOfDay();
+            $eventEnd = Carbon::parse($inputs['ended_at'], $pitchTimezone)->startOfDay();
+            $pitchStartDate = Carbon::parse($pitchStart, $pitchTimezone)->startOfDay();
+            $pitchEndDate = Carbon::parse($pitchEnd, $pitchTimezone)->startOfDay();
+            
+            // Check if event dates are outside the pitch date range
+            if ($eventStart->lessThan($pitchStartDate) || $eventEnd->greaterThan($pitchEndDate)) {
+                $errors['started_at'] = 'Event dates must be within Pitch date range (' . 
+                                       $pitchStartDate->format('Y-m-d') . ' to ' . 
+                                       $pitchEndDate->format('Y-m-d') . '). ' .
+                                       'Selected: ' . $eventStart->format('Y-m-d') . ' to ' . $eventEnd->format('Y-m-d') .
+                                       ' (in ' . $pitchTimezone . ' timezone)';
+            }
+        }
+        
+        // Validate weekly hours against pitch schedule
+        $pitchSchedule = $product->eventSchedule;
+        if ($pitchSchedule && !empty($inputs['weekly_hours'])) {
+            $this->validateWeeklyHoursAgainstPitch($pitchSchedule, $inputs['weekly_hours'], $errors);
+        }
+        
+        if (!empty($errors)) {
+            throw ValidationException::withMessages($errors);
+        }
+    }
+    
+    /**
+     * Validate that event weekly hours are within Pitch schedule hours
+     */
+    private function validateWeeklyHoursAgainstPitch($pitchSchedule, array $weeklyHours, array &$errors): void
+    {
+        // Get pitch weekly hours indexed by day
+        $pitchWeeklyHours = [];
+        foreach ($pitchSchedule->weeklyHours as $rule) {
+            if ($rule->is_available) {
+                $pitchWeeklyHours[$rule->day] = $rule->times->map(function ($time) {
+                    return [
+                        'start' => Carbon::createFromFormat('H:i:s', $time->started_time),
+                        'end' => Carbon::createFromFormat('H:i:s', $time->ended_time),
+                    ];
+                })->toArray();
+            }
+        }
+        
+        // Validate each event weekly hour against pitch schedule
+        foreach ($weeklyHours as $day => $dayData) {
+            if (!$dayData['is_available'] || empty($dayData['hours'])) {
+                continue;
+            }
+            
+            // Check if this day is available in pitch schedule
+            if (!isset($pitchWeeklyHours[$day])) {
+                $errors["weekly_hours.{$day}"] = "This day is not available in the Pitch schedule.";
+                continue;
+            }
+            
+            // Validate each time range
+            foreach ($dayData['hours'] as $hourIdx => $timeRange) {
+                $eventStart = Carbon::createFromFormat('H:i', substr($timeRange['started_time'], 0, 5));
+                $eventEnd = Carbon::createFromFormat('H:i', substr($timeRange['ended_time'], 0, 5));
+                
+                $isWithinPitchHours = false;
+                
+                // Check if event time falls within any pitch time range
+                foreach ($pitchWeeklyHours[$day] as $pitchRange) {
+                    if ($eventStart->gte($pitchRange['start']) && $eventEnd->lte($pitchRange['end'])) {
+                        $isWithinPitchHours = true;
+                        break;
+                    }
+                }
+                
+                if (!$isWithinPitchHours) {
+                    $allowedTimes = collect($pitchWeeklyHours[$day])->map(function ($range) {
+                        return $range['start']->format('H:i') . '-' . $range['end']->format('H:i');
+                    })->join(', ');
+                    
+                    $errors["weekly_hours.{$day}.hours.{$hourIdx}"] = 
+                        "Time range must be within Pitch hours: {$allowedTimes}";
+                }
             }
         }
     }
