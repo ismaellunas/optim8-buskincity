@@ -705,6 +705,32 @@
 
                 form.translations[locale] = form.translations[locale] ?? this.newTranslation();
 
+                // Ensure weekly_hours has all 7 days properly initialized
+                if (!form.weekly_hours || typeof form.weekly_hours !== 'object') {
+                    form.weekly_hours = {};
+                }
+                
+                // Initialize all 7 days if they don't exist
+                for (let day = 1; day <= 7; day++) {
+                    if (!form.weekly_hours[day]) {
+                        form.weekly_hours[day] = {
+                            day: day,
+                            is_available: false,
+                            hours: []
+                        };
+                    } else {
+                        // Ensure the structure is correct even if the day exists
+                        form.weekly_hours[day] = {
+                            day: day,
+                            is_available: form.weekly_hours[day].is_available ?? false,
+                            hours: form.weekly_hours[day].hours ?? []
+                        };
+                    }
+                }
+
+                // Ensure date_overrides is initialized as an array
+                form.date_overrides = form.date_overrides ?? [];
+
                 this.form = useForm(form);
             },
 
