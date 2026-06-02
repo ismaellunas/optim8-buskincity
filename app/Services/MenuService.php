@@ -273,7 +273,7 @@ class MenuService
 
         if ($request->routeIs('admin.*')) {
             // Check if user is City Administrator
-            $isCityAdmin = $user->hasRole('city_administrator') && !$user->can('system.dashboard');
+            $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin')) && !$user->can('system.dashboard');
             
             // Set logo based on role
             if ($isCityAdmin) {

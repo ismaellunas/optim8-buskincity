@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /storage/*.key
+/storage/db-etl
 /vendor
 /dev.backup
 .env

@@ -11,7 +11,7 @@ class CityUserController extends Controller
 {
     public function index(User $user)
     {
-        return response()->json($user->adminCities);
+        return response()->json($user->assignedScopeCities());
     }
 
     public function update(Request $request, User $user)
@@ -21,8 +21,19 @@ class CityUserController extends Controller
             'cities.*' => 'exists:cities,id',
         ]);
 
-        $user->adminCities()->sync($request->input('cities', []));
+        $cities = $request->input('cities', []);
 
-        return response()->json(['message' => 'Cities updated successfully', 'cities' => $user->fresh()->adminCities]);
+        // Route the write to the correct scope role. Special Events Admins are
+        // user_scope-only (no legacy city_user); City Admins dual-write.
+        if ($user->isSpecialEventsAdmin()) {
+            $user->syncScopeCities(config('permission.role_names.special_events_admin'), $cities);
+        } else {
+            $user->syncAdminCities($cities);
+        }
+
+        return response()->json([
+            'message' => 'Cities updated successfully',
+            'cities' => $user->fresh()->assignedScopeCities(),
+        ]);
     }
 }

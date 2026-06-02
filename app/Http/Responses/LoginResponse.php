@@ -19,7 +19,7 @@ class LoginResponse extends FortifyLoginResponse
                 $user = $request->user();
                 
                 // Redirect City Administrators to Spaces
-                if ($user->hasRole('city_administrator') && !$user->can('system.dashboard')) {
+                if ($user->hasRole(config('permission.role_names.city_admin')) && !$user->can('system.dashboard')) {
                     return redirect()->intended(route('admin.spaces.index'));
                 }
                 

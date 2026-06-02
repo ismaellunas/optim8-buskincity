@@ -450,11 +450,121 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Generalized, role-aware authorization scopes (OQ10).
+     */
+    public function userScopes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserScope::class);
+    }
+
+    /**
+     * Scope ids this user holds for a given role + scope type
+     * (e.g. the city ids a city_administrator manages).
+     *
+     * @return array<int, int>
+     */
+    public function scopeIdsFor(string $role, string $scopeType): array
+    {
+        return $this->userScopes()
+            ->where('role', $role)
+            ->where('scope_type', $scopeType)
+            ->pluck('scope_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
+    }
+
+    /**
+     * Whether this user is scoped to a given entity (optionally for a role).
+     */
+    public function inScope(string $scopeType, int $scopeId, ?string $role = null): bool
+    {
+        return $this->userScopes()
+            ->where('scope_type', $scopeType)
+            ->where('scope_id', $scopeId)
+            ->when($role, fn ($query) => $query->where('role', $role))
+            ->exists();
+    }
+
+    /**
+     * Set the cities this user administers, writing BOTH the legacy `city_user`
+     * pivot (kept for dual-read during transition) and the generalized
+     * `user_scope` rows (canonical going forward).
+     *
+     * @param  array<int, int|string>  $cityIds
+     */
+    public function syncAdminCities(array $cityIds): void
+    {
+        $cityIds = array_values(array_unique(array_map('intval', $cityIds)));
+
+        // Legacy dual-write: keep `city_user` in sync during the transition.
+        $this->adminCities()->sync($cityIds);
+
+        $this->syncScopeCities(config('permission.role_names.city_admin'), $cityIds);
+    }
+
+    /**
+     * Generalized, role-aware city-scope writer (OQ10). Writes ONLY the
+     * canonical `user_scope` rows for the given role; callers that also need
+     * the legacy `city_user` pivot (city_administrator) should use
+     * syncAdminCities() which dual-writes.
+     *
+     * @param  array<int, int|string>  $cityIds
+     */
+    public function syncScopeCities(string $role, array $cityIds): void
+    {
+        $cityIds = array_values(array_unique(array_map('intval', $cityIds)));
+
+        $this->userScopes()
+            ->where('role', $role)
+            ->where('scope_type', 'city')
+            ->whereNotIn('scope_id', $cityIds ?: [0])
+            ->delete();
+
+        foreach ($cityIds as $cityId) {
+            $this->userScopes()->updateOrCreate(
+                ['role' => $role, 'scope_type' => 'city', 'scope_id' => $cityId],
+                []
+            );
+        }
+    }
+
+    /**
+     * Cities held for a given scope role, resolved from `user_scope`.
+     */
+    public function scopedCities(string $role): \Illuminate\Support\Collection
+    {
+        $ids = $this->scopeIdsFor($role, 'city');
+
+        if (empty($ids)) {
+            return collect();
+        }
+
+        return City::whereIn('id', $ids)->get(['id', 'name', 'country_code']);
+    }
+
+    /**
+     * Cities assigned to whichever city-scoped role this user currently holds.
+     * Used by the admin "assigned cities" UI for both City and Special Events admins.
+     */
+    public function assignedScopeCities(): \Illuminate\Support\Collection
+    {
+        if ($this->isSpecialEventsAdmin()) {
+            return $this->scopedCities(config('permission.role_names.special_events_admin'));
+        }
+
+        if ($this->isCityAdministrator()) {
+            return $this->adminCities()->get(['cities.id', 'name', 'country_code']);
+        }
+
+        return collect();
+    }
+
+    /**
      * Check if user is a City Administrator for a specific city
      */
     public function isCityAdmin(int $cityId): bool
     {
-        return $this->hasRole('city_administrator')
+        return $this->hasRole(config('permission.role_names.city_admin'))
             && $this->adminCities()->where('cities.id', $cityId)->exists();
     }
 
@@ -463,6 +573,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isCityAdministrator(): bool
     {
-        return $this->hasRole('city_administrator');
+        return $this->hasRole(config('permission.role_names.city_admin'));
+    }
+
+    /**
+     * Check if user is a Special Events Administrator (any city).
+     */
+    public function isSpecialEventsAdmin(): bool
+    {
+        return $this->hasRole(config('permission.role_names.special_events_admin'));
     }
 }

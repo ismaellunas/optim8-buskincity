@@ -24,7 +24,7 @@ class RegisteredUserController extends FortifyRegisteredUserController
             LoginService::setHomeUrl($request);
         }
 
-        $superAdmin = User::role('Super Administrator')->first();
+        $superAdmin = User::role(config('permission.super_admin_role'))->first();
         if ($superAdmin) {
             Notification::send($superAdmin, new NewUserRegisteredNotification(auth()->user()));
         }

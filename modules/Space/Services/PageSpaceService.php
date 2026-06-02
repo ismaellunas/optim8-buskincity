@@ -27,13 +27,26 @@ class PageSpaceService
     {
         if (is_null($this->pageTranslation)) {
 
-            $slugs = collect(explode('/', request()->slugs));
+            $slugs = collect(explode('/', request()->slugs))
+                ->filter(fn ($segment) => $segment !== '' && $segment !== null)
+                ->values();
 
-            if ($slugs->isNotEmpty()) {
-                $this->pageTranslation = PageTranslation::whereSlug($slugs->last())->first();
-            } else {
+            if ($slugs->isEmpty()) {
                 $this->pageTranslation = null;
+
+                return $this->pageTranslation;
             }
+
+            $path = $slugs->implode('/');
+
+            $candidates = PageTranslation::whereSlug($slugs->last())->get();
+
+            // Disambiguate by the full ancestor path so deep URLs with colliding
+            // leaf slugs resolve to the correct page (not just the last segment).
+            // Falls back to prior behavior (first match) when no full path matches.
+            $this->pageTranslation = $candidates
+                ->first(fn (PageTranslation $translation) => $translation->getSlugs() === $path)
+                ?? $candidates->first();
         }
 
         return $this->pageTranslation;

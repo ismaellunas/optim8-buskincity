@@ -25,9 +25,11 @@ use App\Policies\{
     ProductEventPolicy,
     RolePolicy,
     SettingPolicy,
+    SpaceEventPolicy,
     UserPolicy
 };
 use Modules\Booking\Entities\ProductEvent;
+use Modules\Space\Entities\SpaceEvent;
 use App\Services\ResetPasswordService;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -51,6 +53,7 @@ class AuthServiceProvider extends ServiceProvider
         ProductEvent::class => ProductEventPolicy::class,
         Role::class => RolePolicy::class,
         Setting::class => SettingPolicy::class,
+        SpaceEvent::class => SpaceEventPolicy::class,
         User::class => UserPolicy::class,
     ];
 
@@ -66,7 +69,7 @@ class AuthServiceProvider extends ServiceProvider
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::after(function ($user, $ability) {
-            return $user->hasRole('Super Administrator') ? true : null;
+            return $user->hasRole(config('permission.super_admin_role')) ? true : null;
         });
 
         // Customize reset password link based admin and user

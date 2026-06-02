@@ -15,6 +15,7 @@ use App\Services\{
     CountryService,
     LanguageService,
     MediaService,
+    UserRoleService,
     UserService,
 };
 use Illuminate\Http\Request;
@@ -130,12 +131,17 @@ class UserController extends CrudController
         }
 
         if ($request->has('role')) {
-            $user->assignRole($request->role);
+            app(UserRoleService::class)->syncSingleRole($user, $request->role);
         }
 
-        // Sync cities for city administrator role
+        // Sync cities for the user's city-scoped role (City Admin dual-writes
+        // city_user + user_scope; Special Events Admin writes user_scope only).
         if ($request->has('cities') && is_array($request->cities)) {
-            $user->adminCities()->sync($request->cities);
+            if ($user->isSpecialEventsAdmin()) {
+                $user->syncScopeCities(config('permission.role_names.special_events_admin'), $request->cities);
+            } else {
+                $user->syncAdminCities($request->cities);
+            }
         }
 
         $this->generateFlashMessage('The :resource was created!', [
@@ -152,7 +158,7 @@ class UserController extends CrudController
         $user->load(['roles' => function ($query) {
             $query->select(['id', 'name']);
             $query->limit(1);
-        }, 'adminCities']);
+        }]);
 
         $user->append(
             'isSuperAdministrator',
@@ -160,6 +166,10 @@ class UserController extends CrudController
             'optimizedProfilePhotoUrl',
             'profilePageUrl',
         );
+
+        // Cities for whichever city-scoped role the user holds (City or Special
+        // Events Admin). Drives the "assigned cities" panel on the edit page.
+        $user->setAttribute('admin_cities', $user->assignedScopeCities());
 
         $user->roles->makeHidden('pivot');
 
@@ -215,18 +225,7 @@ class UserController extends CrudController
         ]));
 
         if (! $user->isSuperAdministrator) {
-
-            if (! $request->role) {
-
-                $user->roles()->detach();
-
-            } elseif (! $user->hasRole($request->role)) {
-
-                $user->roles()->detach();
-                $user->assignRole($request->role);
-            }
-
-            $user->forgetCachedPermissions();
+            app(UserRoleService::class)->syncSingleRole($user, $request->role);
         }
 
         $this->generateFlashMessage('The :resource was updated!', [

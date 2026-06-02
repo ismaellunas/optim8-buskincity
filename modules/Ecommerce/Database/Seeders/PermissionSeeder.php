@@ -23,7 +23,7 @@ class PermissionSeeder extends Seeder
         $permissions = ModuleService::permissions();
 
         foreach ($permissions as $permission) {
-            Permission::create([
+            Permission::firstOrCreate([
                 'name' => $permission,
                 'guard_name' => 'web',
             ]);

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\LanguageService;
 use App\Services\MediaService;
 use App\Services\ResetPasswordService;
+use App\Services\UserRoleService;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
@@ -337,15 +338,7 @@ class AutomateUserCreationService
 
     private function assignRole(User $user, ?int $roleId)
     {
-        if (! $roleId) {
-
-            $user->roles()->detach();
-
-        } elseif ($user->roleId != $roleId) {
-
-            $user->roles()->detach();
-            $user->assignRole($roleId);
-        }
+        app(UserRoleService::class)->syncSingleRole($user, $roleId, false);
     }
 
     private function updateProfilePhoto(

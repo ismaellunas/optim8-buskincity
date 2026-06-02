@@ -334,20 +334,14 @@
             },
 
             isAdminCitiesVisible() {
-                // Check if user has city_administrator role
-                // The role ID for city_administrator should be checked or name
-                // Assuming we can check role name from record.roles
-                const cityAdminRole = this.roleOptions.find(r => r.value === 'City Administrator'); // Adjust based on actual role name/value
-                const currentRoleId = this.profileForm.role;
-                
-                // Or check if the user record has the role
-                const hasRole = this.record.roles && this.record.roles.some(r => r.name === 'city_administrator');
-                
-                // Also check if the selected role in form is city administrator (if changing role)
-                // But profileForm.role is ID.
-                
-                // Simplest: check if record has role. If they change role, they might need to save first.
-                return hasRole;
+                // Show the assigned-cities panel for any city-scoped role
+                // (City Administrator and Special Events Admin). Reflects the
+                // role currently saved on the record; changing the role requires
+                // saving the profile first.
+                const scopeRoles = ['city_administrator', 'special_events_admin'];
+
+                return !!(this.record.roles
+                    && this.record.roles.some(r => scopeRoles.includes(r.name)));
             },
         },
 

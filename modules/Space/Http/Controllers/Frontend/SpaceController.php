@@ -137,9 +137,14 @@ class SpaceController extends Controller
         $oldSlug = $pageTranslation->slug;
         $page = $this->page;
 
-        if ($page->translate($locale)->slug !== $oldSlug) {
+        $localizedTranslation = $page->translate($locale);
+
+        if ($localizedTranslation->slug !== $oldSlug) {
+            // Pass the full ancestor path under the named `slugs` param; the prior
+            // positional single-slug redirect dropped ancestors and mismatched the
+            // route param, causing 404s / loops on nested pages.
             return redirect()->route('frontend.spaces.show', [
-                $page->translate($locale)->slug
+                'slugs' => $localizedTranslation->getSlugs(),
             ]);
         }
 

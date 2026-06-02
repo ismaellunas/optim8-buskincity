@@ -11,6 +11,19 @@ class SpaceEventPolicy
     use HandlesAuthorization;
 
     /**
+     * Administrators are globally scoped (OQ13): they may act on space events in
+     * any city. Super Administrators already bypass via Gate::after.
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdministrator || $user->isSuperAdministrator) {
+            return true;
+        }
+
+        return null;
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user)

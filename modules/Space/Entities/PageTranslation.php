@@ -62,8 +62,11 @@ class PageTranslation extends AppPageTranslation
                         $translations->firstWhere('locale', $this->locale)
                         ?? $translations->firstWhere('locale', $defaultLocale);
 
-                    return $localeTranslation->slug ?? $localeTranslation->uniqueKey;
-                })->implode('/');
+                    // Column is `unique_key` (the prior `uniqueKey` resolved to null).
+                    return $localeTranslation?->slug ?? $localeTranslation?->unique_key;
+                })
+                ->filter() // never emit null/empty segments (avoids `a//b` paths)
+                ->implode('/');
         }
 
         return null;

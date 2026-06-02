@@ -158,7 +158,10 @@ return [
 
     'role_names' => [
         'admin' => 'Administrator',
+        'author' => 'Author',
         'performer' => 'Performer',
         'super_admin' => 'Super Administrator',
+        'city_admin' => 'city_administrator',
+        'special_events_admin' => 'special_events_admin',
     ],
 ];
