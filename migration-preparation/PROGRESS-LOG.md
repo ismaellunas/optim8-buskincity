@@ -43,6 +43,9 @@
 
 **Apply on RDS:** `./scripts/db-etl.sh safe-migrate` (migrations: `role_applications`, one-per-city index).
 
+**If unique index fails** (duplicate city admins per city): dry-run then execute dedupe before re-migrating:
+`sail artisan user-scope:dedupe-city-admins` → `sail artisan user-scope:dedupe-city-admins --execute`
+
 **URLs:** Public `/apply?role=city_administrator` or `special_events_admin`; Admin `/admin/role-applications` (Administrator/Super Admin).
 
 ---

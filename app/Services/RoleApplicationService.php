@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Entities\CloudinaryStorage;
 use App\Enums\RoleApplicationStatus;
 use App\Models\City;
 use App\Models\RoleApplication;
 use App\Models\User;
+use App\Models\Media;
 use App\Models\UserScope;
 use App\Rules\ProtectedAdminEmail;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image as InterventionImage;
 use Modules\Space\Services\SpaceService;
 
 class RoleApplicationService
@@ -311,7 +314,7 @@ class RoleApplicationService
         ], fn ($value) => ! is_null($value) && $value !== '');
     }
 
-    private function uploadBrandingImage(UploadedFile $file)
+    private function uploadBrandingImage(UploadedFile $file): Media
     {
         $allowed = config('constants.extensions.image');
 
@@ -327,7 +330,34 @@ class RoleApplicationService
             ]
         )->validate();
 
-        return $this->mediaService->upload($file);
+        $stripped = $this->reencodeStrippingExif($file);
+
+        try {
+            return $this->mediaService->upload(
+                $stripped,
+                $this->mediaService->sanitizeFileName($file->getClientOriginalName()),
+                new CloudinaryStorage()
+            );
+        } finally {
+            @unlink($stripped->getPathname());
+        }
+    }
+
+    /**
+     * Re-encode the image via Intervention, discarding all EXIF/metadata.
+     * Returns a temp UploadedFile; caller is responsible for unlinking it.
+     */
+    private function reencodeStrippingExif(UploadedFile $file): UploadedFile
+    {
+        $ext = strtolower($file->getClientOriginalExtension()) ?: 'jpg';
+        $encodeFormat = $ext === 'jpg' ? 'jpeg' : $ext;
+
+        $binary = (string) InterventionImage::make($file->getPathname())->encode($encodeFormat, 90);
+
+        $tmp = tempnam(sys_get_temp_dir(), 'branding_');
+        file_put_contents($tmp, $binary);
+
+        return new UploadedFile($tmp, $file->getClientOriginalName(), $file->getClientMimeType(), null, true);
     }
 
     private function assertPending(RoleApplication $application): void
