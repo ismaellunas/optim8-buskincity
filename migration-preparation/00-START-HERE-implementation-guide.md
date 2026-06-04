@@ -203,7 +203,7 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Files: migration `role_applications` (`user_id?`, `requested_role`, `city_id`, `status`, branding, `reviewed_by`, `reviewed_at`, `reject_reason`); media relations; public application form/endpoint (reuse FormBuilder or dedicated); upload validation (mime allowlist, size via `ApiSettingController::maxFileSize`, re-encode, throttle, reCAPTCHA).
   - References: FRS doc §3.2 FR-ACCT-1/2, §6.1–6.2; SEC doc V6, Phase 5.
   - Verify: application persists with branding; upload validation rejects bad files.
-- [x] **T5.2 — Transactional approval action.** Goal: verified + scoped + branded admin on approve. — **🟢 CODE COMPLETE 2026-06-04**
+- [x] **T5.2 — Transactional approval action.** Goal: verified + scoped + branded admin on approve. — **✅ DONE 2026-06-04** (`RoleApplicationTest` green)
   - Files: new approval controller/service; uses `UserRoleService` (role) + `user_scope` (scope) + email verify + extend `modules/Space/Services/SpaceService.php::ensureCitySpacesExist()` with branding; one-city-admin-per-city via partial unique + `SELECT…FOR UPDATE`; keep protected-email guard (`AutomateUserCreationController::validateFomEntry`).
   - References: SEC doc V2, V5, Phase 5; FRS doc §3.2 FR-ACCT-3/4, §6.1 AC1–AC5; RBAC doc R5; **Blocked by OQ3, OQ13.** Feature-flag the rollout.
   - Verify: approve → role+scope+verified+branded page; reject → no grant + reason; duplicate/concurrent city-admin approval blocked; SE-admin many-per-city allowed; protected-email rejected.
@@ -225,7 +225,7 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Files: `modules/Space/Services/PageSpaceService.php` (full ancestor-path resolution, not last-segment), `modules/Space/Entities/PageTranslation.php` (`unique_key` accessor / null-segment handling), `modules/Space/Http/Controllers/Frontend/SpaceController.php` (redirect param shape).
   - References: FRS doc §2.1, §3.1 FR-NAV-2, §6.5 AC2; SEC doc §8.4.
   - Verify: populated AND empty levels render (no 404 / unique-ID error).
-- [ ] **T7.2 — Data-driven Country→City→Pitch→Events drill-down (FR-NAV-1).** 
+- [x] **T7.2 — Data-driven Country→City→Pitch→Events drill-down (FR-NAV-1).** — **✅ DONE 2026-06-04** (`LandingNavTest` green)
   - Files: `app/Services/MenuService.php`, theme navbar, `PageSpaceService::getLeaves()`; bind to canonical hierarchy.
   - References: FRS doc §3.1 FR-NAV-1, §6.5; **Blocked by OQ6/OQ7/OQ9.**
   - Verify: drill-down generated from data; cached; correct labels.

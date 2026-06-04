@@ -125,10 +125,50 @@ class MenuService
                     $menus = $this->getStructuredHeaderMenu(defaultLocale());
                 }
 
-                return $this->frontendMenuArrayFormater($menus);
+                $cmsMenus = $this->frontendMenuArrayFormater($menus);
+
+                return $this->mergeLandingNavMenus(
+                    $cmsMenus,
+                    app(\Modules\Space\Services\LandingNavService::class)
+                        ->getCountryCityHeaderMenus($locale),
+                    $locale
+                );
             },
             $locale
         );
+    }
+
+    /**
+     * Replace the manual "Country" CMS stub with data-driven country→city menus.
+     *
+     * @param  array<int, array<string, mixed>>  $cmsMenus
+     * @param  array<int, array<string, mixed>>  $landingMenus
+     * @return array<int, array<string, mixed>>
+     */
+    private function mergeLandingNavMenus(
+        array $cmsMenus,
+        array $landingMenus,
+        string $locale
+    ): array {
+        if ($landingMenus === []) {
+            return $cmsMenus;
+        }
+
+        $spacesIndexUrl = route('frontend.spaces.index');
+        $localizedIndexUrl = LaravelLocalization::localizeURL($spacesIndexUrl, $locale);
+
+        $filtered = collect($cmsMenus)
+            ->reject(function (array $menu) use ($spacesIndexUrl, $localizedIndexUrl) {
+                if ($menu['link'] === $spacesIndexUrl || $menu['link'] === $localizedIndexUrl) {
+                    return true;
+                }
+
+                return in_array(strtolower($menu['title']), ['country', 'countries'], true);
+            })
+            ->values()
+            ->all();
+
+        return array_merge($landingMenus, $filtered);
     }
 
     private function menuArrayFormatter(Collection $typedMenus)

@@ -23,16 +23,36 @@
 | **T3.2** Server-side scope validation | 🟢 CODE COMPLETE | `UserScopeService`, scoped validation rules, controller/request wiring. |
 | **T3.3** Space.city_id persistence | 🟢 CODE COMPLETE | `persistCityId()` + parent backfill migration. |
 | **T4.1** Atomic pitch save | 🟢 CODE COMPLETE | See notes above. |
-| **T5.1** role_applications + public apply form | 🟢 CODE COMPLETE | `/apply?role=…`, uploads, reCAPTCHA + throttle. Pending: migrate + test on staging. |
-| **T5.2** Transactional approval + replace | 🟢 CODE COMPLETE | Admin review at `/admin/role-applications`; replace modal; partial unique index on `user_scope`; `RoleApplicationTest` written. |
+| **T5.1** role_applications + public apply form | ✅ DONE | `/apply?role=…`, uploads, reCAPTCHA + throttle. |
+| **T5.2** Transactional approval + replace | ✅ DONE | Admin review at `/admin/role-applications`; replace modal; partial unique index; `RoleApplicationTest` (5 cases) green. |
 | **T6.1** Unified pitch form + labels | 🟢 CODE COMPLETE | All fields on create; timeslot duration ↔ pitch date range swap; single timezone; gallery hidden. Pending: manual verify + tests. |
 | **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan`; advance booking within pitch window; `BookingWithinPitchWindow` on book API; scoped city picker on pitch form. |
-| Phase 7 | ⬜ TODO | Next: T7.2–T7.4 nav, type removal, map pins + search. |
+| **T7.2** Data-driven country→city nav | ✅ DONE | `LandingNavService`; `MenuService::mergeLandingNavMenus()`; `getLeaves()` pitch filter; `LandingNavTest` (2 cases) green. |
+| Phase 7 (T7.3–T7.4) | ⬜ TODO | Type removal + map pins + search. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
 2. Re-run `php artisan db:seed` → assert no errors / no duplicates (idempotency).
 3. `php artisan test` (esp. `tests/Feature/RolePermission/*`, user/role CRUD, `CityAdministratorTest`) → green.
+
+---
+
+**Verify:** browse header — each country dropdown lists its cities; city page lists pitch leaves; empty city shows no pitch cards (not 404).
+
+---
+
+## 2026-06-04 — Phase 7 T7.2 executed (data-driven landing nav)
+| Task | Status | Notes |
+|---|---|---|
+| **T7.2** Country→City header nav | ✅ DONE | `LandingNavService` builds menus from Space tree; replaces CMS "Country" stub in `MenuService`; pitch leaves filtered in `PageSpaceService::getLeaves()`. |
+
+---
+
+## 2026-06-04 — Phase 5 verified (RoleApplicationTest green)
+| Task | Status | Notes |
+|---|---|---|
+| **T5 tests** | ✅ DONE | `RoleApplicationTest` (5 cases) green after: seed `PermissionSeeder` before `RolesAndPermissionsSeeder`; `User::factory()` on approve; `$confirmReplace` in transaction closure. |
+| **T5.1/T5.2** | ✅ DONE | Phase 5 code + automated verification complete. Staging smoke on `/apply` → approve/reject/replace still recommended. |
 
 ---
 
@@ -51,7 +71,7 @@
 |---|---|---|
 | **T5.1** role_applications + branding | 🟢 CODE COMPLETE | `role_applications` table; public `/apply` form; logo/cover upload validation. |
 | **T5.2** Approval + replace | 🟢 CODE COMPLETE | Transactional approve/reject; OQ3 replace confirmation; `user_scope_one_city_admin_per_city` index; branded city Space provisioning. |
-| **T5 tests** | 🟡 WRITTEN, UNRUN | `RoleApplicationTest` (5 cases). |
+| **T5 tests** | ✅ DONE | `RoleApplicationTest` (5 cases) green. |
 
 **Apply on RDS:** `./scripts/db-etl.sh safe-migrate` (migrations: `role_applications`, one-per-city index).
 

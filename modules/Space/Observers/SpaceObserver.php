@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Observers;
 
+use App\Entities\Caches\MenuCache;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\SpaceService;
@@ -19,6 +20,16 @@ class SpaceObserver
 
         $space->page_id = $page->id;
         $space->save();
+    }
+
+    public function saved(Space $space): void
+    {
+        app(MenuCache::class)->flush();
+    }
+
+    public function deleted(Space $space): void
+    {
+        app(MenuCache::class)->flush();
     }
 
     public function deleting(Space $space): void

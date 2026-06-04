@@ -65,12 +65,22 @@ class PageSpaceService
     {
         $locales = collect([currentLocale(), defaultLocale()])->unique()->all();
 
+        $pitchTypeIds = app(SpaceService::class)->types()
+            ->whereIn('name', ['Pitch', 'Special Events / Festivals'])
+            ->pluck('id');
+
         return Space::whereDescendantOf($this->space)
             ->whereIsLeaf()
+            ->when(
+                $pitchTypeIds->isNotEmpty(),
+                fn ($query) => $query->whereIn('type_id', $pitchTypeIds)
+            )
+            ->isPageEnabled(true)
             ->withStructuredUrl($locales)
             ->with('translations', function ($query) use ($locales) {
                 $query->inLanguages($locales);
             })
+            ->orderBy('name')
             ->get();
     }
 
