@@ -229,14 +229,13 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Files: `app/Services/MenuService.php`, theme navbar, `PageSpaceService::getLeaves()`; bind to canonical hierarchy.
   - References: FRS doc §3.1 FR-NAV-1, §6.5; **Blocked by OQ6/OQ7/OQ9.**
   - Verify: drill-down generated from data; cached; correct labels.
-- [ ] **T7.3 — Remove/lock Location type + enforce sibling rules (FR-CA-2).** 
-  - Files: `resources/js/.../SpaceForm.vue` (remove/lock type), `modules/Space/Http/Requests/SpaceStoreRequest.php` (child-of-city; forbid city-as-sibling-of-city), hierarchy model.
+- [x] **T7.3 — Remove/lock Location type + enforce sibling rules (FR-CA-2).** — **✅ DONE 2026-06-04** (`SpaceHierarchyTest` green)
+  - Files: `SpaceForm.vue` (type dropdown removed), `SpaceHierarchyService`, `SpaceStoreRequest`, `SpaceController` store/update.
   - References: FRS doc §2.4, §3.4 FR-CA-2, §6.6 AC1/AC3; **Blocked by OQ6/OQ8.**
   - Verify: no type dropdown; sibling-city / non-city-parent / out-of-scope rejected.
-- [ ] **T7.4 — Color-coded map pins + working search (FR-NAV-3/4).** 
-  - Files: `event_calendars` view (add `is_special_event`/category column; include `space_event`/special types), `modules/Booking/Services/EventsCalendarService.php` (`availableTypes()` include requested types; normalize `country_code` 2-vs-3; sensible default window), `modules/Booking/Resources/assets/js/PageBuilderComponents/EventsCalendar.vue` (per-type marker color; server-side bbox + pagination per §8.5). Note existing `fix-event-calendars-view.sql`.
-  - References: FRS doc §2.1, §3.1 FR-NAV-3/4, §6.5 AC3/AC4; SEC doc §8.5–8.7; **Blocked by OQ5.**
-  - Verify: search returns normal **and** special events for valid criteria; distinct pins; both types visible when browsing a city.
+- [x] **T7.4 — Color-coded map pins + working search (FR-NAV-3/4).** — **✅ DONE**
+  - Files: `database/migrations/2026_06_04_100000_update_event_calendars_view_for_search_and_pins.php`, `EventsCalendarService`, `EventCalendar`, `CountryService`, `EventsCalendar.vue`, `EventsCalendarRequest`.
+  - Verify: search returns normal **and** special events for valid criteria; distinct pins; both types visible when browsing a city. `sail test tests/Feature/EventsCalendarSearchTest.php` — 4 pass.
 
 ### Cross-cutting (carry through all phases)
 - [ ] **T-PERF-CANCEL — Performer cancellation semantics.** Blocked by **OQ4**. Files: `EventCanceled` event + `CancelUpcomingOrOngoingBookings` listener, `OrderService`. Only implement after OQ4 answered.

@@ -48,7 +48,7 @@
                             v-model="queryParams.dates"
                             auto-apply
                             input-class-name="input"
-                            max-range="7"
+                            max-range="30"
                             :clearable="false"
                             :format="'MMM d'"
                             :max-date="maxDate"
@@ -234,7 +234,7 @@
             const queryParams = computed(() => merge(
                 {dates: [
                     moment().format('YYYY-MM-DD'),
-                    moment().add(6, 'day').format('YYYY-MM-DD'),
+                    moment().add(29, 'day').format('YYYY-MM-DD'),
                 ]},
                 props.pageQueryParams
             ));
@@ -430,6 +430,18 @@
         },
 
         methods: {
+            markerFillColor(records) {
+                if (records.some((record) => record.is_special_event)) {
+                    return '#e67e22';
+                }
+
+                if (records.some((record) => record.type === 'space_event')) {
+                    return '#3498db';
+                }
+
+                return '#27ae60';
+            },
+
             setLocationFromCoordinates(coords, locationOptions) {
                 // Find the closest country/city based on coordinates
                 // For Philippines coordinates (8-18°N, 116-127°E)
@@ -549,6 +561,14 @@
                                         lng: record.geolocation.longitude
                                     },
                                     label,
+                                    icon: {
+                                        path: google.maps.SymbolPath.CIRCLE,
+                                        scale: 10,
+                                        fillColor: this.markerFillColor(records),
+                                        fillOpacity: 1,
+                                        strokeColor: '#ffffff',
+                                        strokeWeight: 2,
+                                    },
                                 });
 
                                 marker.addListener("click", () => {

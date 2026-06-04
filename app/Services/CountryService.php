@@ -99,6 +99,8 @@ class CountryService
 
     public function getCountryName(string $alpha2): string
     {
+        $alpha2 = $this->toAlpha2($alpha2) ?? $alpha2;
+
         $country = $this->getCountryOptions()
             ->where('id', $alpha2)
             ->first();
@@ -108,6 +110,36 @@ class CountryService
         }
 
         return "";
+    }
+
+    public function toAlpha2(?string $code): ?string
+    {
+        if (blank($code)) {
+            return null;
+        }
+
+        $code = strtoupper(trim($code));
+
+        if (strlen($code) === 2) {
+            return $code;
+        }
+
+        return Country::where('alpha3', $code)->value('alpha2');
+    }
+
+    public function toAlpha3(?string $code): ?string
+    {
+        if (blank($code)) {
+            return null;
+        }
+
+        $code = strtoupper(trim($code));
+
+        if (strlen($code) === 3) {
+            return $code;
+        }
+
+        return Country::where('alpha2', $code)->value('alpha3');
     }
 
     public function getTimezoneOptions(): Collection

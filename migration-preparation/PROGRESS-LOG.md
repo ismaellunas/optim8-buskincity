@@ -28,7 +28,8 @@
 | **T6.1** Unified pitch form + labels | 🟢 CODE COMPLETE | All fields on create; timeslot duration ↔ pitch date range swap; single timezone; gallery hidden. Pending: manual verify + tests. |
 | **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan`; advance booking within pitch window; `BookingWithinPitchWindow` on book API; scoped city picker on pitch form. |
 | **T7.2** Data-driven country→city nav | ✅ DONE | `LandingNavService`; `MenuService::mergeLandingNavMenus()`; `getLeaves()` pitch filter; `LandingNavTest` (2 cases) green. |
-| Phase 7 (T7.3–T7.4) | ⬜ TODO | Type removal + map pins + search. |
+| **T7.3** Remove type dropdown + hierarchy rules | ✅ DONE | `SpaceHierarchyService`; type inferred from parent/role; `SpaceForm.vue` dropdown removed; `SpaceHierarchyTest` (4 cases) green. |
+| **T7.4** Map pins + event search | ✅ DONE | View adds `is_special_event` + alpha2 country; `space_event` included; 30-day default window; color-coded pins; `EventsCalendarSearchTest` (4 cases) green. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
@@ -38,6 +39,13 @@
 ---
 
 **Verify:** browse header — each country dropdown lists its cities; city page lists pitch leaves; empty city shows no pitch cards (not 404).
+
+---
+
+## 2026-06-04 — Phase 7 T7.4 executed (map pins + event search)
+| Task | Status | Notes |
+|---|---|---|
+| **T7.4** Map pins + event search | ✅ DONE | `event_calendars` view: alpha2 country + `is_special_event`; `availableTypes()` includes `space_event`; 30-day default window; color-coded Google Maps markers; `EventsCalendarSearchTest` (4 cases) green. |
 
 ---
 

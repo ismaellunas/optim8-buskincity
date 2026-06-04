@@ -22,7 +22,7 @@ class EventsCalendarRequest extends FormRequest
                 'date_format:Y-m-d',
             ],
             'country' => [
-                'max:2',
+                'max:3',
             ],
             'city' => [
                 'max:128',

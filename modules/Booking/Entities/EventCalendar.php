@@ -32,7 +32,19 @@ class EventCalendar extends BaseModel
 
     public function scopeCountry(Builder $query, string $countryCode): void
     {
-        $query->where('country_code', 'ILIKE', $countryCode);
+        $countryService = app(CountryService::class);
+
+        $codes = array_values(array_unique(array_filter([
+            $countryCode,
+            $countryService->toAlpha2($countryCode),
+            $countryService->toAlpha3($countryCode),
+        ])));
+
+        $query->where(function (Builder $query) use ($codes) {
+            foreach ($codes as $code) {
+                $query->orWhere('country_code', 'ILIKE', $code);
+            }
+        });
     }
 
     public function scopeDateRange(Builder $query, array $dates): void
@@ -141,6 +153,7 @@ class EventCalendar extends BaseModel
             'formatted_started_date' => $this->startedAt()->format('d M Y'),
             'formatted_ended_date' => $this->endedAt()->format('d M Y'),
             'formatted_timezone' => $this->formattedTimezone(),
+            'is_special_event' => (bool) ($this->is_special_event ?? false),
         ];
     }
 }

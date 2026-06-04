@@ -55,11 +55,17 @@ class EventsCalendarService
 
     private function availableTypes(): array
     {
-        if (! app(BookingModuleService::class)->isModuleActive()) {
-            return [];
+        $types = [];
+
+        if (app(BookingModuleService::class)->isModuleActive()) {
+            $types[] = 'booked_event';
         }
 
-        return ['booked_event'];
+        if (app(SpaceModuleService::class)->isModuleActive()) {
+            $types[] = 'space_event';
+        }
+
+        return $types;
     }
 
     private function setCachedEvents($paginator)
@@ -178,7 +184,7 @@ class EventsCalendarService
         $defaultData = $record->eventData();
 
         $data = [
-            'title' => $record->title_alt ?? $record->title,
+            'title' => ($record->title_alt ?? $record->titla_alt ?? null) ?: $record->title,
             'page_url' => $user->profilePageUrl,
             'photo_url' => $user->optimizedProfilePhotoOrDefaultUrl,
             'duration' => $event->displayDuration,
@@ -255,6 +261,12 @@ class EventsCalendarService
             ->get();
 
         return collect($locations)
+            ->map(function ($item) use ($countryService) {
+                $item->country_code = $countryService->toAlpha2($item->country_code)
+                    ?? $item->country_code;
+
+                return $item;
+            })
             ->groupBy('country_code')
             ->map(function ($items, $key) use ($countryService) {
                 return [
