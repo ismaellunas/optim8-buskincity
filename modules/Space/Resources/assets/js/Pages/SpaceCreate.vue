@@ -7,7 +7,6 @@
             <space-form
                 v-model="space"
                 :parent-options="parentOptions"
-                :type-options="typeOptions"
                 :default-country="defaultCountry"
                 :instructions="instructions"
                 :is-city-admin="isCityAdmin"
@@ -74,7 +73,6 @@
             instructions: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
-            typeOptions: { type: Object, default: () => {} },
             isCityAdmin: { type: Boolean, default: false },
             userCities: { type: Array, default: () => [] },
             productRoleOptions: { type: Array, default: () => [] },

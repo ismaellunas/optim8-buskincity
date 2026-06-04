@@ -47,7 +47,7 @@ class SpaceStoreRequest extends FormRequest
             'type_id' => [
                 'nullable',
                 'integer',
-                Rule::in($types)
+                Rule::in($types),
             ],
             'contacts' => [
                 'nullable',
@@ -129,11 +129,7 @@ class SpaceStoreRequest extends FormRequest
             $rules['parent_id'][] = Rule::in(
                 $spaceService->cityAdminParentOptions($user)->pluck('id')
             );
-            $rules['type_id'] = [
-                'nullable',
-                'integer',
-                Rule::in($spaceService->cityAdminTypeOptions()->pluck('id')->all()),
-            ];
+
             return;
         }
 
@@ -142,6 +138,7 @@ class SpaceStoreRequest extends FormRequest
             $rules['parent_id'][] = Rule::in(
                 $spaceService->cityAdminParentOptions($user)->pluck('id')
             );
+
             return;
         }
 

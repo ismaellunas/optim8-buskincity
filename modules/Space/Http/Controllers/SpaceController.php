@@ -28,6 +28,7 @@ use Modules\Space\Http\Requests\SpaceIndexRequest;
 use Modules\Space\Http\Requests\SpaceStoreRequest;
 use Modules\Space\Http\Requests\SpaceUpdateRequest;
 use Modules\Space\ModuleService;
+use Modules\Space\Services\SpaceHierarchyService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceController extends CrudController
@@ -101,7 +102,7 @@ class SpaceController extends CrudController
             'parentOptions' => $spaceOptions,
             'records' => $records,
             'pageQueryParams' => (object) array_filter($request->only('term', 'parent', 'types')),
-            'typeOptions' => $this->spaceService->typeOptions(),
+            'typeOptions' => $this->spaceService->typeOptions(__('None')),
             'title' => $this->getIndexTitle(),
             'i18n' => [
                 'search' => __('Search'),
@@ -133,14 +134,13 @@ class SpaceController extends CrudController
     public function create(Request $request)
     {
         $user = auth()->user();
-        $isCityAdmin = $user->hasRole('city_administrator');
+        $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin'));
+        $isScopedLocationAdmin = $isCityAdmin || $user->isSpecialEventsAdmin();
 
-        // For City Administrators, use restricted options
-        if ($isCityAdmin) {
+        if ($isScopedLocationAdmin) {
             $this->spaceService->ensureCitySpacesExist($user);
             $parentOptions = $this->spaceService->cityAdminParentOptions($user);
-            $typeOptions = $this->spaceService->cityAdminTypeOptions();
-            $userCities = $user->adminCities->map(fn($city) => [
+            $userCities = $user->assignedScopeCities()->map(fn ($city) => [
                 'id' => $city->id,
                 'name' => $city->name,
                 'country_code' => $city->country_code,
@@ -162,7 +162,6 @@ class SpaceController extends CrudController
                     $user->can('space.add') ? __("None") : null
                 );
             }
-            $typeOptions = $this->spaceService->typeOptions(__('None'));
             $userCities = collect();
         }
 
@@ -181,8 +180,7 @@ class SpaceController extends CrudController
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
-            'typeOptions' => $typeOptions,
-            'isCityAdmin' => $isCityAdmin,
+            'isCityAdmin' => $isScopedLocationAdmin,
             'userCities' => $userCities,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
@@ -225,7 +223,10 @@ class SpaceController extends CrudController
     {
         $space = new Space();
 
-        $inputs = $request->validated();
+        $inputs = app(SpaceHierarchyService::class)->resolveInputs(
+            $request->validated(),
+            auth()->user()
+        );
 
         $space->saveFromInputs($inputs);
 
@@ -429,7 +430,6 @@ class SpaceController extends CrudController
             'parentOptions' => $canChangeParent ? $parentOptions : [$parent],
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
-            'typeOptions' => $this->spaceService->typeOptions(__('None')),
             'coverMedia' => $coverMedia,
             'logoMedia' => $logoMedia,
             'can' => [
@@ -479,7 +479,11 @@ class SpaceController extends CrudController
 
     public function update(SpaceUpdateRequest $request, Space $space)
     {
-        $inputs = $request->validated();
+        $inputs = app(SpaceHierarchyService::class)->resolveInputs(
+            $request->validated(),
+            auth()->user(),
+            $space
+        );
 
         if ($request->has('logo')) {
             $this->spaceService->replaceLogo($space, $request->logo);

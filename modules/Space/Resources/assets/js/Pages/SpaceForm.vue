@@ -10,7 +10,7 @@
         />
 
         <div class="columns">
-            <div class="column is-half">
+            <div class="column">
                 <biz-form-select
                     v-model="space.parent_id"
                     class="is-fullwidth"
@@ -20,22 +20,6 @@
                 >
                     <option
                         v-for="option in parentOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }}
-                    </option>
-                </biz-form-select>
-            </div>
-            <div class="column is-half">
-                <biz-form-select
-                    v-model="space.type_id"
-                    class="is-fullwidth"
-                    :label="i18n.type"
-                    :message="error('type_id')"
-                >
-                    <option
-                        v-for="option in typeOptions"
                         :key="option.id"
                         :value="option.id"
                     >
@@ -306,7 +290,6 @@
             instructions: { type: Object, default: () => {} },
             logoMedia: { type: Object, default: () => {} },
             parentOptions: { type: Object, required: true },
-            typeOptions: { type: Object, required: true },
             canChangeParent: { type: Boolean, default: true },
             isCityAdmin: { type: Boolean, default: false },
             userCities: { type: Array, default: () => [] },

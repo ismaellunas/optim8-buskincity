@@ -33,7 +33,6 @@
                                 :instructions="instructions"
                                 :logo-media="logoMedia"
                                 :parent-options="parentOptions"
-                                :type-options="typeOptions"
                                 :can-change-parent="can.changeParent"
                             >
                                 <biz-form-select
@@ -229,7 +228,6 @@
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
             i18n: { type: Object, default: () => {} },
-            typeOptions: { type: Object, default: () => {} },
         },
 
         setup(props) {

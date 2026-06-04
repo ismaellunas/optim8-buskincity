@@ -7,7 +7,8 @@
       "Bash(php -r \"echo class_exists\\('Intervention\\\\Image\\\\ImageManager'\\) ? 'yes' : 'no';\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('version','?'\\), d.get\\('name','?'\\)\\)\")",
       "Bash(php *)",
-      "Bash(sail test *)"
+      "Bash(sail test *)",
+      "Bash(git *)"
     ]
   }
 }
