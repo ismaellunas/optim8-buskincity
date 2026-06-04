@@ -132,7 +132,7 @@ class RoleApplicationService
             ]);
         }
 
-        return DB::transaction(function () use ($application, $reviewer, $preview) {
+        return DB::transaction(function () use ($application, $reviewer, $preview, $confirmReplace) {
             $application = RoleApplication::whereKey($application->id)
                 ->lockForUpdate()
                 ->firstOrFail();
@@ -262,7 +262,7 @@ class RoleApplicationService
             : User::firstWhere('email', $application->email);
 
         if (! $user) {
-            $user = User::create([
+            $user = User::factory()->create([
                 'email' => $application->email,
                 'first_name' => $application->first_name,
                 'last_name' => $application->last_name,

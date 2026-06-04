@@ -7,7 +7,7 @@ use App\Models\City;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\UserScope;
-use App\Services\UserRoleService;
+use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -21,6 +21,9 @@ class RoleApplicationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // PermissionSeeder must run first so RolesAndPermissionsSeeder can grant
+        // system.* permissions (incl. system.dashboard) required by admin routes.
+        $this->seed(PermissionSeeder::class);
         $this->seed(RolesAndPermissionsSeeder::class);
         $this->seed(\Database\Seeders\GlobalOptionSeeder::class);
         Storage::fake('public');
