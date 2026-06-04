@@ -153,7 +153,7 @@ Route::prefix('booking')->name('booking.')->middleware(array_filter([
                 Route::post('/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
                     ->name('reschedule.update');
 
-                Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
+                Route::post('/{order}/cancel', [FrontendOrderController::class, 'cancel'])
                     ->name('cancel')
                     ->can('cancelBooking', 'order');
 

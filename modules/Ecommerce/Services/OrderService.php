@@ -13,11 +13,13 @@ use Lunar\Models\Currency;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Entities\ProductEvent;
 use Modules\Ecommerce\Entities\Order;
@@ -310,6 +312,26 @@ class OrderService
     {
         $order->status = OrderStatus::CANCELED->value;
         $order->save();
+    }
+
+    /**
+     * Cancel a booking per OQ4: mark order/event canceled so the calendar entry
+     * disappears and the timeslot becomes bookable again.
+     */
+    public function cancelBooking(Order $order, ?string $message = null): void
+    {
+        $order->loadMissing('firstEventLine.latestEvent');
+
+        DB::transaction(function () use ($order, $message) {
+            $this->cancelOrder($order);
+
+            $this->cancelEvent(
+                $order->firstEventLine->latestEvent,
+                $message
+            );
+        });
+
+        EventCanceled::dispatch($order);
     }
 
     public function cancelEvent(Event $booking, ?string $message = null)

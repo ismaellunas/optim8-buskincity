@@ -18,6 +18,6 @@ class OrderCancelRequest extends FormRequest
 
     public function authorize()
     {
-        return true;
+        return $this->user()->can('cancelBooking', $this->route('order'));
     }
 }

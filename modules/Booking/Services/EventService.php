@@ -133,7 +133,7 @@ class EventService
     {
         return $schedule
             ->events()
-            ->where('status', BookingStatus::UPCOMING)
+            ->blockingAvailability()
             ->whereDate('booked_at', $date->toDateString())
             ->get([
                 'id',

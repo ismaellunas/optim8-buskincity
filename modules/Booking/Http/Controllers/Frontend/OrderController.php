@@ -11,6 +11,7 @@ use Modules\Booking\Events\EventBooked;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\EventBookBatchRequest;
 use Modules\Booking\Http\Requests\EventBookRequest;
+use Modules\Booking\Http\Requests\OrderCancelRequest;
 use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Booking\Services\ProductEventService;
@@ -200,6 +201,15 @@ class OrderController extends CrudController
         });
 
         $this->generateFlashMessage('The Events have been booked!');
+
+        return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    public function cancel(OrderCancelRequest $request, Order $order)
+    {
+        $this->orderService->cancelBooking($order, $request->message);
+
+        $this->generateFlashMessage('The Event has been canceled!');
 
         return redirect()->route($this->baseRouteName.'.index');
     }

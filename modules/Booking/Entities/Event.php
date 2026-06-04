@@ -64,6 +64,14 @@ class Event extends BaseModel
         return $query->where('status', BookingStatus::ONGOING);
     }
 
+    public function scopeBlockingAvailability($query)
+    {
+        return $query->whereIn('status', [
+            BookingStatus::UPCOMING->value,
+            BookingStatus::ONGOING->value,
+        ]);
+    }
+
     public function scopePassed($query)
     {
         return $query->where('status', BookingStatus::PASSED);

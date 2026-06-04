@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\OrderCancelRequest;
 use Modules\Booking\Http\Requests\OrderIndexRequest;
@@ -42,14 +41,7 @@ class OrderController extends CrudController
 
     public function cancel(OrderCancelRequest $request, Order $order)
     {
-        $this->orderService->cancelOrder($order);
-
-        $this->orderService->cancelEvent(
-            $order->firstEventLine->latestEvent,
-            $request->message
-        );
-
-        EventCanceled::dispatch($order);
+        $this->orderService->cancelBooking($order, $request->message);
 
         $this->generateFlashMessage('The Event has been canceled!');
 
