@@ -5,10 +5,15 @@ namespace Modules\Booking\Http\Controllers;
 use App\Helpers\HumanReadable;
 use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
-use App\Services\CountryService;
+use App\Services\CityService;
 use App\Services\IPService;
+use App\Services\LocationService;
 use App\Services\MediaService;
 use App\Services\SettingService;
+use App\Services\UserScopeService;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Lunar\FieldTypes\Text;
 use Lunar\FieldTypes\TranslatedText;
 use Lunar\Models\ProductType;
@@ -17,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Http\Requests\ProductPitchRequest;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
@@ -37,7 +43,9 @@ class ProductController extends CrudController
         private ProductService $productService,
         private ProductEventService $productEventService,
         private ProductSpaceService $productSpaceService,
-        private CountryService $countryService,
+        private CityService $cityService,
+        private LocationService $locationService,
+        private UserScopeService $userScopeService,
     ) {
         $this->authorizeResource(Product::class, 'product');
     }
@@ -295,42 +303,118 @@ class ProductController extends CrudController
         ]));
     }
 
-    public function update(ProductRequest $request, Product $product)
+    public function update(ProductPitchRequest $request, Product $product)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
-        $product->attribute_data = [
-            'name' => new TranslatedText(collect([
-                'en' => new Text($inputs['name']),
-            ])),
-            'description' => new TranslatedText(collect([
-                'en' => new Text($inputs['description']),
-            ])),
-            'short_description' => new TranslatedText(collect([
-                'en' => new Text($inputs['short_description']),
-            ])),
-        ];
+        // Build location array and optionally enrich with reverse-geocode data.
+        // This network call happens before the DB transaction to avoid holding an
+        // open connection across a potentially slow external request.
+        $location = collect($inputs['location'])->only([
+            'address', 'city', 'country_code',
+        ])->all();
 
-        $product->status = $inputs['status'];
+        $latitude = data_get($inputs, 'location.latitude');
+        $longitude = data_get($inputs, 'location.longitude');
 
-        $product->setMeta([
-            'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
-            'is_check_in_required' => (bool) $inputs['is_check_in_required'],
-        ]);
+        $location['latitude'] = ! is_null($latitude) ? (float) $latitude : null;
+        $location['longitude'] = ! is_null($longitude) ? (float) $longitude : null;
 
-        $product->save();
+        if ($location['latitude'] && $location['longitude']) {
+            $response = $this->getReversedGeocoding($location['latitude'], $location['longitude']);
 
-        $mediaIds = $inputs['gallery'] ?? [];
-
-        if (! empty($mediaIds)) {
-            $product->syncMedia($mediaIds);
+            if ($response->ok() && $response->json()['status'] !== 'REQUEST_DENIED') {
+                $location['geocode'] = $response->json()['results'][0];
+            }
         }
 
+        DB::transaction(function () use ($inputs, $product, $location) {
+            // Product core fields
+            $product->attribute_data = [
+                'name' => new TranslatedText(collect([
+                    'en' => new Text($inputs['name']),
+                ])),
+                'description' => new TranslatedText(collect([
+                    'en' => new Text($inputs['description'] ?? ''),
+                ])),
+                'short_description' => new TranslatedText(collect([
+                    'en' => new Text($inputs['short_description'] ?? ''),
+                ])),
+            ];
+
+            $product->status = $inputs['status'];
+            $product->duration = $inputs['duration'];
+            $product->bookable_date_range = $inputs['bookable_date_range'];
+
+            $product->setMeta([
+                'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
+                'is_check_in_required' => (bool) $inputs['is_check_in_required'],
+                'pitch_started_at' => $inputs['pitch_started_at'],
+                'pitch_ended_at' => $inputs['pitch_ended_at'],
+                'pitch_timezone' => $inputs['pitch_timezone'],
+            ]);
+
+            // City + Location FKs — any failure propagates and rolls back the transaction.
+            if (! empty($location['city']) && ! empty($location['country_code'])) {
+                $city = $this->cityService->findOrCreate(
+                    $location['city'],
+                    $location['country_code'],
+                    $location['latitude'],
+                    $location['longitude']
+                );
+
+                $this->userScopeService->assertCityInScope($city->id);
+
+                $locationModel = $this->locationService->findOrCreateFromPitchData(
+                    $city,
+                    $location,
+                    $product->productable_type === \Modules\Space\Entities\Space::class
+                        ? $product->productable_id
+                        : null
+                );
+
+                $product->city_id = $city->id;
+                $product->location_id = $locationModel->id;
+            }
+
+            $product->locations = [$location];
+            $product->save();
+
+            // Gallery
+            $mediaIds = $inputs['gallery'] ?? [];
+            if (! empty($mediaIds)) {
+                $product->syncMedia($mediaIds);
+            }
+
+            // Schedule
+            $schedule = $product->eventSchedule ?? Schedule::factory()->state([
+                'schedulable_type' => Product::class,
+                'schedulable_id' => $product->id,
+            ])->make();
+
+            $schedule->timezone = $inputs['timezone'];
+            $schedule->save();
+
+            $this->productEventService->saveWeeklyHours($inputs['weekly_hours'] ?? [], $schedule);
+            $this->productEventService->saveDateOverrides(
+                collect($inputs['date_overrides'] ?? []),
+                $schedule
+            );
+        });
+
         $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title()
+            'resource' => $this->title(),
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
+    }
+
+    private function getReversedGeocoding(float $latitude, float $longitude): Response
+    {
+        return Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
+            'latlng' => $latitude . ',' . $longitude,
+            'key' => app(SettingService::class)->getGoogleApi(),
+        ]);
     }
 
     public function destroy(Product $product)

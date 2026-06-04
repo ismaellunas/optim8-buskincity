@@ -18,7 +18,11 @@
 | **T1.1** Generalized `user_scope` | 🟢 CODE COMPLETE | Table + backfill + dual-write helpers. Partial unique index (one-per-city) DEFERRED → OQ3. Needs safe-migrate + re-seed + verify. |
 | **T1.2** Register SpaceEventPolicy + Admin global | 🟢 CODE COMPLETE | Policy registered + Administrator/Super short-circuit (OQ13). OQ2=NO → creator-only ownership kept (no further change). |
 | **T1.3** Remove dashboard for City Admin (OQ14) | 🟢 CODE COMPLETE | Seeder revokes `system.dashboard`; literals → config; redirect branches kept (now active). Needs re-seed + verify. |
-| Phase 2–6 + rest of 7 | ⛔ BLOCKED | Gated on remaining OQs (OQ1/2/3/5/6/7/8/9/11/12). |
+| Phase 2 (T2.1/T2.2) | 🟢 CODE COMPLETE | SE admin role + scope UI; tests green after CityFactory fix. |
+| **T3.1** locations + pitch FKs | 🟢 CODE COMPLETE | `locations` table + `lunar_products` FK columns + backfill; dual-read meta kept. |
+| **T3.2** Server-side scope validation | 🟢 CODE COMPLETE | `UserScopeService`, scoped validation rules, controller/request wiring. |
+| **T3.3** Space.city_id persistence | 🟢 CODE COMPLETE | `persistCityId()` + parent backfill migration. |
+| **T4.1** Atomic pitch save | 🟢 CODE COMPLETE | `ProductPitchRequest` (unified rules, pitch dates required); `ProductController::update` — single `DB::transaction`, geocoding moved outside tx, city/location failures propagate (no silent catch); `ProductEdit.vue` — `form.put()` replaces two-step axios, pitch date + date_override fields synced from `eventForm` before submit. **Deferred:** `store()` / create form (Phase 6 T6.1); `ProductEventController::update` legacy route (still live, no longer called from UI). Pending: feature tests + `sail artisan test --filter=PitchLocationFkTest`. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
@@ -34,6 +38,16 @@
 - **✅ ALL open questions (OQ1–OQ14) are now answered. No remaining blockers.**
 - **OQ11 spec written:** `req-T-PITCH-BRANDING-logo-cover.md` — pitch logo + cover via existing `mediables.type` pivot (`logo`/`cover`/`gallery`), no new table; controller/form/validation/public-render changes detailed; fallback chain keeps existing pitches unchanged. **Sub-questions resolved:** SQ-A no-cap · SQ-B both required to publish (draft may be empty; existing published pitches grandfathered) · SQ-C hard-enforce dims (logo ~1:1 ≥256², cover ~8:3 ≥1200×450) · SQ-D delete underlying Media on removal unless shared. Spec is now **FINAL**.
 - Net effect: Phase 2 (SE admin), Phase 5 (approval/replace), Phase 6 (14-day + overlap) are unblocked. Phase 3/7 data model still need **OQ9**.
+
+## 2026-06-02 — Phase 3 executed (pitch FKs + locations + scope validation)
+| Task | Status | Notes |
+|---|---|---|
+| **T3.1** locations + pitch FK columns | 🟢 CODE COMPLETE | `locations` table; `lunar_products.city_id/location_id/is_special_event`; backfill from meta + productable Spaces. |
+| **T3.2** Server-side scope validation | 🟢 CODE COMPLETE | `UserScopeService`, `InScopedCityId(s)` rules; wired into ProductEvent, Space, User city sync paths. |
+| **T3.3** Space.city_id persistence | 🟢 CODE COMPLETE | `SpaceService::persistCityId()` + parent backfill migration. |
+| **T3 tests** | 🟡 WRITTEN, UNRUN | `PitchLocationFkTest` (4 cases). Run after `safe-migrate`. |
+
+**Apply on RDS:** `./scripts/db-etl.sh safe-migrate` (3 new migrations: locations, product FKs, spaces city_id backfill).
 
 ## 2026-06-02 — Phase 2 executed (Special Events Admin role)
 | Task | Status | Notes |

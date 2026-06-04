@@ -7,6 +7,8 @@ use App\Http\Controllers\CrudController;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\MenuService;
+use App\Services\CityService;
+use App\Services\LocationService;
 use App\Services\SettingService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -228,6 +230,8 @@ class SpaceController extends CrudController
 
         $space->saveFromInputs($inputs);
 
+        $this->spaceService->persistCityId($space, $inputs);
+
         // Attach City Administrator to the space they created
         $user = auth()->user();
         if ($user->hasRole('city_administrator') && !$user->can('space.edit')) {
@@ -314,6 +318,29 @@ class SpaceController extends CrudController
 
         $product->setMeta($meta);
         $product->save();
+
+        if (! empty($space->city) && ! empty($space->country_code)) {
+            try {
+                $city = app(CityService::class)->findOrCreate(
+                    $space->city,
+                    $space->country_code,
+                    $space->latitude,
+                    $space->longitude
+                );
+
+                $location = app(LocationService::class)->findOrCreateFromPitchData(
+                    $city,
+                    $meta['locations'][0],
+                    $space->id
+                );
+
+                $product->city_id = $city->id;
+                $product->location_id = $location->id;
+                $product->save();
+            } catch (\Throwable) {
+                // Meta dual-read remains the fallback.
+            }
+        }
 
         // Attach City Administrator as product manager
         $user = auth()->user();
@@ -464,6 +491,8 @@ class SpaceController extends CrudController
         }
 
         $space->saveFromInputs($inputs);
+
+        $this->spaceService->persistCityId($space, $inputs);
 
         $this->generateFlashMessage('The :resource was updated!', [
             'resource' => $this->title()

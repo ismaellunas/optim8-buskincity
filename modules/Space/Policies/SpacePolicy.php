@@ -33,7 +33,8 @@ class SpacePolicy
         return (
             $user->can('space.add')
             || $user->spaces->contains(fn ($space) => $space->isParentable)
-            || $user->hasRole('city_administrator')
+            || $user->hasRole(config('permission.role_names.city_admin'))
+            || $user->isSpecialEventsAdmin()
         );
     }
 

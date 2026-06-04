@@ -6,6 +6,7 @@ use App\Enums\PublishingStatus;
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
 use App\Rules\CountryCode;
+use App\Rules\InScopedCityId;
 use App\Rules\MaxWords;
 use App\Rules\Timezone;
 use Astrotomic\Translatable\Validation\RuleFactory;
@@ -55,6 +56,12 @@ class SpaceEventRequest extends BaseFormRequest
             'city' => [
                 'required_if:is_same_address_as_parent,false',
                 'max:64'
+            ],
+            'city_id' => [
+                'nullable',
+                'integer',
+                'exists:cities,id',
+                new InScopedCityId(),
             ],
             'country_code' => [
                 'required_if:is_same_address_as_parent,false',

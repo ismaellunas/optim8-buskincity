@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\User;
+use App\Rules\InScopedCityIds;
 use Illuminate\Http\Request;
 
 class CityUserController extends Controller
@@ -16,10 +17,12 @@ class CityUserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'cities' => 'array',
+        $rules = [
+            'cities' => ['array', new InScopedCityIds()],
             'cities.*' => 'exists:cities,id',
-        ]);
+        ];
+
+        $request->validate($rules);
 
         $cities = $request->input('cities', []);
 

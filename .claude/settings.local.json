@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l modules/Booking/Http/Controllers/ProductController.php)",
+      "Bash(php -l modules/Booking/Http/Requests/ProductPitchRequest.php)",
+      "Bash(sail php *)"
+    ]
+  }
+}

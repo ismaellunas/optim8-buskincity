@@ -3,6 +3,7 @@
 namespace Modules\Space\Http\Requests;
 
 use App\Rules\CountryCode;
+use App\Rules\InScopedCityId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Space\Entities\Space;
@@ -42,6 +43,7 @@ class SpaceStoreRequest extends FormRequest
             'longitude' => ['nullable', 'numeric'],
             'city' => ['max:64'],
             'country_code' => ['required', new CountryCode()],
+            'city_id' => ['nullable', 'integer', 'exists:cities,id', new InScopedCityId()],
             'type_id' => [
                 'nullable',
                 'integer',
@@ -122,7 +124,20 @@ class SpaceStoreRequest extends FormRequest
 
         $rules['parent_id'] = ['integer'];
 
-        if ($user->hasRole('city_administrator')) {
+        if ($user->hasRole(config('permission.role_names.city_admin'))) {
+            $rules['parent_id'][] = 'required';
+            $rules['parent_id'][] = Rule::in(
+                $spaceService->cityAdminParentOptions($user)->pluck('id')
+            );
+            $rules['type_id'] = [
+                'nullable',
+                'integer',
+                Rule::in($spaceService->cityAdminTypeOptions()->pluck('id')->all()),
+            ];
+            return;
+        }
+
+        if ($user->isSpecialEventsAdmin()) {
             $rules['parent_id'][] = 'required';
             $rules['parent_id'][] = Rule::in(
                 $spaceService->cityAdminParentOptions($user)->pluck('id')
@@ -153,6 +168,8 @@ class SpaceStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasRole('city_administrator') || auth()->user()->can('create', Space::class);
+        return auth()->user()->hasRole(config('permission.role_names.city_admin'))
+            || auth()->user()->isSpecialEventsAdmin()
+            || auth()->user()->can('create', Space::class);
     }
 }

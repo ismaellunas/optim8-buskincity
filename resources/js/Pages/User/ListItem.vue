@@ -22,7 +22,7 @@
 
 <script>
     import BizTag from '@/Biz/Tag.vue';
-    import { isEmpty } from 'lodash';
+    import { isEmpty, startCase } from 'lodash';
 
     export default {
         name: 'UserListItem',
@@ -49,7 +49,9 @@
                     return null;
                 }
 
-                return this.user.roles[0].name;
+                // Match UserService::getRoleOptions() — stored names are slugs
+                // (e.g. special_events_admin); display as "Special Events Admin".
+                return startCase(this.user.roles[0].name);
             },
         },
     };

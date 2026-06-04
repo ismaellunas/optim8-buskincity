@@ -4,6 +4,8 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
 use App\Models\User;
+use App\Models\City;
+use App\Models\Location;
 use App\Services\CountryService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +51,16 @@ class Product extends LunarProduct
         return $this->hasMany(\Modules\Booking\Entities\ProductEvent::class);
     }
 
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     public function productable()
     {
         return $this->morphTo();
@@ -58,6 +70,16 @@ class Product extends LunarProduct
     {
         return $this->belongsToMany(User::class, 'product_user')
             ->withPivot(['user_id']);
+    }
+
+    /**
+     * Dual-write: persist FK columns alongside meta `locations` (Phase 3).
+     */
+    public function syncLocationFks(?int $cityId, ?int $locationId): void
+    {
+        $this->city_id = $cityId;
+        $this->location_id = $locationId;
+        $this->save();
     }
 
     public function scopePublished($query)
@@ -151,6 +173,13 @@ class Product extends LunarProduct
             $q->where('key', 'locations');
             $q->where(DB::raw("value::json->0->>'country_code'"), "ILIKE", $country);
         });
+    }
+
+    public function scopeCityId($query, int|array $cityIds)
+    {
+        $cityIds = is_array($cityIds) ? $cityIds : [$cityIds];
+
+        return $query->whereIn('city_id', $cityIds);
     }
 
     public function scopeType($query, string $type)

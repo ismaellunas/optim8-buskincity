@@ -387,7 +387,7 @@
 
             return {
                 form: useForm(form),
-                eventErrorBag: 'updateEvent',
+                eventErrorBag: 'default',
                 eventErrors: ref({}),
                 eventForm: useForm(eventForm),
                 spaceForm: useForm(spaceForm),
@@ -530,72 +530,25 @@
             submit() {
                 const self = this;
 
-                // Filter out unused date overrides before submitting
-                self.form.date_overrides = self.form.date_overrides.filter((dateOverride) => {
+                // Sync pitch date fields — the pitchDateRange computed writes to eventForm, not form
+                self.form.pitch_started_at = self.eventForm.pitch_started_at;
+                self.form.pitch_ended_at = self.eventForm.pitch_ended_at;
+                self.form.pitch_timezone = self.eventForm.pitch_timezone;
+
+                // Sync date_overrides — the modal and removeDateOverride write to eventForm
+                self.form.date_overrides = self.eventForm.date_overrides.filter((dateOverride) => {
                     return !self.unusedDates.includes(dateOverride.started_date);
                 });
 
-                self.onStartLoadingOverlay();
+                const url = route(self.baseRouteName + '.update', { product: self.product.id });
 
-                // Step 1: Update product basic info
-                const productData = {
-                    name: self.form.name,
-                    status: self.form.status,
-                    description: self.form.description,
-                    short_description: self.form.short_description,
-                    roles: self.form.roles,
-                    is_check_in_required: self.form.is_check_in_required,
-                    gallery: self.form.gallery,
-                        _method: 'put',
-                };
-
-                const productUrl = route(this.baseRouteName + '.update', { product: this.product.id });
-
-                axios.post(productUrl, productData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                })
-                .then(() => {
-                    // Step 2: Update event configuration (location + booking settings + schedule)
-                    const eventData = {
-                        location: self.form.location,
-                        duration: self.form.duration,
-                        bookable_date_range: self.form.bookable_date_range,
-                        pitch_started_at: self.form.pitch_started_at,
-                        pitch_ended_at: self.form.pitch_ended_at,
-                        pitch_timezone: self.form.pitch_timezone,
-                        timezone: self.form.timezone,
-                        weekly_hours: self.form.weekly_hours,
-                        date_overrides: self.form.date_overrides,
-                    };
-
-                    const eventUrl = route(this.baseRouteName + '.events.update', { product: this.product.id });
-
-                    return axios.put(eventUrl, eventData);
-                })
-                .then((response) => {
-                    // Update date_overrides from response
-                    if (response.data && response.data.date_overrides) {
-                        self.form.date_overrides = cloneDeep(response.data.date_overrides);
-                    }
-
-                    successAlert('The pitch was updated successfully!');
-                    self.onEndLoadingOverlay();
-
-                    // Reload page to get fresh data
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                })
-                .catch((error) => {
-                    console.error('Submit error:', error);
-                    self.onEndLoadingOverlay();
-                        oopsAlert();
+                self.form.put(url, {
+                    onStart: () => self.onStartLoadingOverlay(),
+                    onFinish: () => self.onEndLoadingOverlay(),
                 });
             },
 
-            // Keep eventSubmit for backward compatibility (though Event tab is removed)
             eventSubmit() {
-                // Redirect to main submit
                 this.submit();
             },
 

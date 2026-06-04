@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\Role;
+use App\Rules\InScopedCityIds;
 use Illuminate\Validation\Rule;
 
 class UserStoreRequest extends BaseFormRequest
@@ -40,6 +41,8 @@ class UserStoreRequest extends BaseFormRequest
                 'max:'.config('constants.file_size.profile_picture'),
             ],
             'language_id' => ['required', 'exists:App\Models\Language,id'],
+            'cities' => ['sometimes', 'array', new InScopedCityIds()],
+            'cities.*' => ['integer', 'exists:cities,id'],
         ];
     }
 

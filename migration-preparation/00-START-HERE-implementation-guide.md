@@ -175,22 +175,25 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - ⏳ Verify: **`tests/Feature/RolePermission/SpecialEventsAdminPermissionTest.php`** written (7 cases: seeded/assignable, scoped perms, NOT dashboard, user_scope-not-city_user, many-per-city, assignedScopeCities, dropdown). **Not yet run — Docker was down.** Run: `sail artisan test --filter=SpecialEventsAdminPermissionTest`.
 
 ### PHASE 3 — Promote Pitch location to FKs + server-side scope (fixes V1, V3)
-*Recommended: confirm OQ6/OQ8/OQ9/OQ10 before starting.*
-- [ ] **T3.1 — Additive pitch FK columns + data migration.** 
-  - Files: migration adding `products.city_id`, `products.location_id`, `products.is_special_event` (+ optional special-event window); forward data migration from meta `locations` (keep meta dual-read).
-  - References: FRS doc §3.6 FR-PITCH-2, §5.2–5.3 ERM; SEC doc V1, §8.3; **Blocked by OQ6/OQ8/OQ9.**
-  - Verify: migration backfills existing pitches; listing still scoped.
-- [ ] **T3.2 — Server-side scope validation on writes (V1, V3).** 
-  - Files: `modules/Booking/Http/Requests/ProductEventRequest.php` / `ProductEventCrudRequest.php` (`city_id`/`location_id` `Rule::in(scopedCities)`, location **required**); `modules/Booking/Http/Controllers/ProductEventController.php`; `modules/Space/Http/Requests/SpaceStoreRequest.php` (restrict `type_id`/`parent_id` to actor subset); `modules/Space/Services/EventService.php` + `SpaceEventRequest` (`city_id` rule); `app/Http/Controllers/Api/CityUserController.php`, `app/Http/Controllers/UserController.php` + `UserStoreRequest` (gate `cities` sync to scoped roles, validate IDs).
-  - References: SEC doc V1, V3; FRS doc §3.4 FR-CA-3/4, §6.6 AC4; **Blocked by OQ1** (SE-admin normal pitches), **OQ2** (cross-admin).
-  - Verify: out-of-scope `city_id`/`location_id`/`type_id`/`cities` **rejected server-side** (IDOR tests); pitch requires location.
-- [ ] **T3.3 — Persist `Space.city_id` on location create (FR-CA-3 gap).** 
-  - Files: `modules/Space/Http/Controllers/SpaceController.php`, `Space::saveFromInputs`, request rules.
-  - References: FRS doc §2.4, §3.4 FR-CA-3.
-  - Verify: child locations always have a valid `city_id`; index scope filter works.
+- [x] **T3.1 — Additive pitch FK columns + data migration.** — **🟢 CODE COMPLETE 2026-06-02**
+  - New `locations` table (`city_id`, name, address, lat/lng, optional `space_id` link).
+  - Additive columns on `lunar_products`: `city_id`, `location_id`, `is_special_event`.
+  - Idempotent backfill from meta `locations` + linked `productable` Spaces. Meta kept for dual-read.
+  - Models: `App\Models\Location`, `LocationService`, `Product::city()`/`location()`/`syncLocationFks()`.
+  - ⏳ Verify: `./scripts/db-etl.sh safe-migrate` then `sail artisan test --filter=PitchLocationFkTest`.
+- [x] **T3.2 — Server-side scope validation on writes (V1, V3).** — **🟢 CODE COMPLETE 2026-06-02**
+  - `UserScopeService` + `InScopedCityId`/`InScopedCityIds` rules.
+  - `ProductEventController` asserts city scope + dual-writes FKs; `ProductEventRequest` accepts optional `city_id`/`location_id` with scope rules.
+  - `SpaceStoreRequest`: scoped `city_id`, city-admin `type_id` subset, SE-admin parent options; `SpacePolicy::create` allows SE admin.
+  - `SpaceEventRequest`: scoped `city_id`; `CityUserController`/`UserStoreRequest`: scoped city assignment.
+  - ⏳ Verify: IDOR tests (out-of-scope city rejected) — add in T-TESTS pass.
+- [x] **T3.3 — Persist `Space.city_id` on location create (FR-CA-3 gap).** — **🟢 CODE COMPLETE 2026-06-02**
+  - `Space::saveFromInputs` accepts `city_id`; `SpaceService::persistCityId()` inherits from parent City node.
+  - Wired in `SpaceController` store/update; migration backfills existing child spaces from parent.
+  - ⏳ Verify: create child space under City node → `city_id` populated.
 
 ### PHASE 4 — Fix pitch-save bug (fixes V4, FR-PITCH-7/8)
-- [ ] **T4.1 — Single transactional pitch save.** 
+- [x] **T4.1 — Single transactional pitch save.** — **🟢 CODE COMPLETE 2026-06-03**
   - Files: `resources/js/Pages/.../ProductEdit.vue` (collapse two-step save), `resources/js/Pages/.../ProductCreate.vue`, `modules/Booking/Http/Controllers/ProductController.php` (use `validated()`, wrap product+location+schedule in `DB::transaction`, return JSON + field errors), `ProductEventController.php`.
   - References: SEC doc V4; FRS doc §2.6, §3.6 FR-PITCH-7/8, §6.3 AC4/AC5.
   - Verify: valid save persists all (incl. city/country/location); any failure rolls back fully with a specific error (no partial pitch); save with zero ProductEvents succeeds; booking regression green.

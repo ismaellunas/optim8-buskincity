@@ -216,7 +216,13 @@ class SpaceService
      */
     public function cityAdminParentOptions(User $user): Collection
     {
-        $adminCityIds = $user->adminCities->pluck('id');
+        if ($user->isSpecialEventsAdmin()) {
+            $adminCityIds = collect(
+                $user->scopeIdsFor(config('permission.role_names.special_events_admin'), 'city')
+            );
+        } else {
+            $adminCityIds = $user->adminCities->pluck('id');
+        }
         
         // Get the "City" type ID
         $cityType = $this->types()->firstWhere('name', 'City');
@@ -244,6 +250,24 @@ class SpaceService
             ->filter(fn($type) => in_array($type->name, $allowedTypes))
             ->map(fn($type) => ['id' => $type->id, 'value' => __($type->name)])
             ->values();
+    }
+
+    /**
+     * Persist `city_id` on a Space from explicit input or inherited parent (T3.3).
+     */
+    public function persistCityId(Space $space, array $inputs): void
+    {
+        $cityId = $inputs['city_id'] ?? null;
+
+        if (! $cityId && ! empty($space->parent_id)) {
+            $parent = Space::find($space->parent_id);
+            $cityId = $parent?->city_id;
+        }
+
+        if ($cityId && (int) $space->city_id !== (int) $cityId) {
+            $space->city_id = (int) $cityId;
+            $space->save();
+        }
     }
 
     public function ensureCitySpacesExist(User $user): void

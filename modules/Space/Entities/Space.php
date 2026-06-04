@@ -239,6 +239,10 @@ class Space extends BaseModel implements TranslatableContract
         $this->city = Arr::get($inputs, 'city');
         $this->country_code = Arr::get($inputs, 'country_code');
 
+        if (array_key_exists('city_id', $inputs) && $inputs['city_id'] !== null) {
+            $this->city_id = (int) $inputs['city_id'];
+        }
+
         if (array_key_exists('parent_id', $inputs)) {
             $this->parent_id = $inputs['parent_id'];
         }

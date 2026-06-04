@@ -4,6 +4,8 @@ namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use App\Services\CityService;
+use App\Services\LocationService;
+use App\Services\UserScopeService;
 use App\Services\SettingService;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -17,13 +19,21 @@ class ProductEventController extends CrudController
 {
     private $productEventService;
     private $cityService;
+    private $locationService;
+    private $userScopeService;
 
     protected $title = 'booking_module::terms.product booking_module::terms.event';
 
-    public function __construct(ProductEventService $productEventService, CityService $cityService)
-    {
+    public function __construct(
+        ProductEventService $productEventService,
+        CityService $cityService,
+        LocationService $locationService,
+        UserScopeService $userScopeService
+    ) {
         $this->productEventService = $productEventService;
         $this->cityService = $cityService;
+        $this->locationService = $locationService;
+        $this->userScopeService = $userScopeService;
     }
 
     /**
@@ -77,12 +87,27 @@ class ProductEventController extends CrudController
         // Auto-create city in database if it doesn't exist (for data consistency)
         if (!empty($location['city']) && !empty($location['country_code'])) {
             try {
-                $this->cityService->findOrCreate(
+                $city = $this->cityService->findOrCreate(
                     $location['city'],
                     $location['country_code'],
                     $location['latitude'],
                     $location['longitude']
                 );
+
+                $this->userScopeService->assertCityInScope($city->id);
+
+                $locationModel = $this->locationService->findOrCreateFromPitchData(
+                    $city,
+                    $location,
+                    $product->productable_type === \Modules\Space\Entities\Space::class
+                        ? $product->productable_id
+                        : null
+                );
+
+                $product->city_id = $city->id;
+                $product->location_id = $locationModel->id;
+            } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+                throw $e;
             } catch (\Exception $e) {
                 // Log error but don't fail the request
                 // Products can still work with city as text even if DB insert fails
