@@ -30,6 +30,7 @@
 | **T7.2** Data-driven country→city nav | ✅ DONE | `LandingNavService`; `MenuService::mergeLandingNavMenus()`; `getLeaves()` pitch filter; `LandingNavTest` (2 cases) green. |
 | **T7.3** Remove type dropdown + hierarchy rules | ✅ DONE | `SpaceHierarchyService`; type inferred from parent/role; `SpaceForm.vue` dropdown removed; `SpaceHierarchyTest` (4 cases) green. |
 | **T7.4** Map pins + event search | ✅ DONE | View adds `is_special_event` + alpha2 country; `space_event` included; 30-day default window; color-coded pins; `EventsCalendarSearchTest` (4 cases) green. |
+| **T-PERF-CANCEL** Performer cancellation | ✅ DONE | `cancelBooking()` transactional flow; `blockingAvailability` scope frees slots; frontend cancel route; `PerformerCancellationTest` green. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
@@ -39,6 +40,13 @@
 ---
 
 **Verify:** browse header — each country dropdown lists its cities; city page lists pitch leaves; empty city shows no pitch cards (not 404).
+
+---
+
+## 2026-06-04 — T-PERF-CANCEL executed (performer cancellation)
+| Task | Status | Notes |
+|---|---|---|
+| **T-PERF-CANCEL** Performer cancellation | ✅ DONE | OQ4: cancel marks order/event `canceled`; slot freed via `blockingAvailability` scope; `OrderService::cancelBooking()`; frontend cancel wired to `FrontendOrderController`. |
 
 ---
 

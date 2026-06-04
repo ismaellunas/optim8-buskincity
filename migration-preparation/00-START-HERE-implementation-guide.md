@@ -238,7 +238,7 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Verify: search returns normal **and** special events for valid criteria; distinct pins; both types visible when browsing a city. `sail test tests/Feature/EventsCalendarSearchTest.php` — 4 pass.
 
 ### Cross-cutting (carry through all phases)
-- [ ] **T-PERF-CANCEL — Performer cancellation semantics.** Blocked by **OQ4**. Files: `EventCanceled` event + `CancelUpcomingOrOngoingBookings` listener, `OrderService`. Only implement after OQ4 answered.
+- [x] **T-PERF-CANCEL — Performer cancellation semantics.** OQ4: performer may cancel; canceled events leave the calendar and free the slot. Files: `OrderService::cancelBooking()`, `Event::scopeBlockingAvailability()`, `EventService::bookedTimes()`, frontend `OrderController::cancel`, `OrderCancelRequest` authorization.
 - [ ] **T-TESTS — Test suite expansion** (per SEC doc §9 "Suggested tests"): role/scope IDOR attempts, atomic save rollback, 14-day cap, visible-not-bookable, approval (verify/scope/one-per-city/concurrency/upload/protected-email), nav empty-level, search country-code normalization, seeder idempotency.
 
 ---
