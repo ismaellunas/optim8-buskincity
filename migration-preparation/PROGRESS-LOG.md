@@ -26,7 +26,7 @@
 | **T5.1** role_applications + public apply form | 🟢 CODE COMPLETE | `/apply?role=…`, uploads, reCAPTCHA + throttle. Pending: migrate + test on staging. |
 | **T5.2** Transactional approval + replace | 🟢 CODE COMPLETE | Admin review at `/admin/role-applications`; replace modal; partial unique index on `user_scope`; `RoleApplicationTest` written. |
 | **T6.1** Unified pitch form + labels | 🟢 CODE COMPLETE | All fields on create; timeslot duration ↔ pitch date range swap; single timezone; gallery hidden. Pending: manual verify + tests. |
-| **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan` rule; SE admin / `is_special_event` pitches; `isWithinBookableWindow()` on frontend show. |
+| **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan`; advance booking within pitch window; `BookingWithinPitchWindow` on book API; scoped city picker on pitch form. |
 | Phase 7 | ⬜ TODO | Next: T7.2–T7.4 nav, type removal, map pins + search. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):

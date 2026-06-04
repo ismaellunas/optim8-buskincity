@@ -25,6 +25,7 @@
                             :image-mimes="imageMimes"
                             :instructions="instructions"
                             :max-pitch-date-span-days="maxPitchDateSpanDays"
+                            :restricted-cities="scopedCities"
                             :role-options="roleOptions"
                             :rules="rules"
                             :status-options="statusOptions"
@@ -324,6 +325,7 @@
             missingLocation: { type: Boolean, default: false },
             isSpecialEventPitch: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
+            scopedCities: { type: Array, default: () => [] },
         },
 
         setup(props) {

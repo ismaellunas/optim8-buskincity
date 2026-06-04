@@ -15,6 +15,7 @@
                         :instructions="instructions"
                         :location-fieldset-error-keys="locationFieldsetErrorKeys"
                         :max-pitch-date-span-days="maxPitchDateSpanDays"
+                        :restricted-cities="scopedCities"
                         :role-options="roleOptions"
                         :rules="rules"
                         :status-options="statusOptions"
@@ -146,6 +147,7 @@
             defaultTimezone: { type: String, required: true },
             isSpecialEventPitch: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
+            scopedCities: { type: Array, default: () => [] },
             i18n: { type: Object, default: () => ({
                 cancel: 'Cancel',
                 create: 'Create',

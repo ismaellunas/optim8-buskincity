@@ -100,10 +100,10 @@ class ProductController extends CrudController
             })
             ->all();
 
-        $canBook = ! empty($productEvents)
-            && $this->productEventService->isWithinBookableWindow($product);
-        $minDate = $canBook ? $this->productEventService->minBookableDate($product) : null;
-        $maxDate = $canBook ? $this->productEventService->maxBookableDate($product) : null;
+        $hasProductEvents = ! empty($productEvents);
+        $canBook = $hasProductEvents;
+        $minDate = $hasProductEvents ? $this->productEventService->minBookableDate($product) : null;
+        $maxDate = $hasProductEvents ? $this->productEventService->maxBookableDate($product) : null;
 
         return Inertia::render('Booking::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),

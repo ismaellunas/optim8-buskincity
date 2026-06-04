@@ -78,6 +78,8 @@
             v-model:latitude="form.location.latitude"
             v-model:longitude="form.location.longitude"
             :error-key="locationFieldsetErrorKeys"
+            :restricted-cities="restrictedCities"
+            :allow-custom-city="restrictedCities.length === 0"
         />
 
         <!-- Booking Settings Section -->
@@ -290,6 +292,7 @@
             weeklyHours: { type: Object, default: () => null },
             showGallery: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
+            restrictedCities: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {

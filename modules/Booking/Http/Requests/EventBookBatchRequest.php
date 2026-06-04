@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Modules\Booking\Entities\ProductEvent;
 use Modules\Booking\Rules\AvailableBookingDate;
 use Modules\Booking\Rules\AvailableBookingTime;
+use Modules\Booking\Rules\BookingWithinPitchWindow;
 use Modules\Booking\Rules\BookingWithinProductEventRange;
 use Modules\Ecommerce\Enums\ProductStatus;
 
@@ -34,6 +35,7 @@ class EventBookBatchRequest extends FormRequest
             'required',
             'date_format:Y-m-d',
             new AvailableBookingDate($schedule),
+            new BookingWithinPitchWindow($product),
         ];
 
         if ($productEvent) {

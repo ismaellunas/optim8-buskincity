@@ -176,25 +176,29 @@ class ProductEventService
         return (bool) ($product?->is_special_event ?? false);
     }
 
-    public function isWithinBookableWindow(Product $product): bool
+    public function isDateWithinPitchWindow(Product $product, string $date): bool
     {
-        if (! $this->requiresFourteenDayBookableWindow($product)) {
-            return true;
-        }
-
         $pitchStart = $product->getMeta('pitch_started_at');
         $pitchEnd = $product->getMeta('pitch_ended_at');
 
         if (! $pitchStart || ! $pitchEnd) {
-            return false;
+            return true;
         }
 
-        $today = today();
+        $parsed = Carbon::parse($date)->startOfDay();
 
-        return $today->between(
+        return $parsed->between(
             Carbon::parse($pitchStart)->startOfDay(),
             Carbon::parse($pitchEnd)->endOfDay()
         );
+    }
+
+    /**
+     * @deprecated Use isDateWithinPitchWindow() — booking is allowed in advance; only slot dates are windowed.
+     */
+    public function isWithinBookableWindow(Product $product): bool
+    {
+        return $this->isDateWithinPitchWindow($product, today()->toDateString());
     }
 
     public function weeklyHoursForSchedule(Schedule $schedule): array

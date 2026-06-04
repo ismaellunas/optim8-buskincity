@@ -142,6 +142,7 @@ class ProductController extends CrudController
                 'gallery' => config('constants.dimensions.gallery'),
             ],
             'spaceOptions' => $this->productSpaceService->getSpaceOptions(),
+            'scopedCities' => $this->scopedCitiesForPitchForm(),
         ]));
     }
 
@@ -246,6 +247,7 @@ class ProductController extends CrudController
             'missingLocation' => !$hasLocation,
             'isSpecialEventPitch' => $isSpecialEventPitch,
             'maxPitchDateSpanDays' => $isSpecialEventPitch ? 14 : null,
+            'scopedCities' => $this->scopedCitiesForPitchForm(),
             'rules' => [
                 'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
@@ -397,6 +399,34 @@ class ProductController extends CrudController
             collect($inputs['date_overrides'] ?? []),
             $schedule
         );
+    }
+
+    /**
+     * Scoped city list for pitch location pickers (FR-PITCH-4).
+     * Empty array = unrestricted API search (global admins and unscoped roles).
+     *
+     * @return array<int, array{id: int, name: string, country_code: string}>
+     */
+    private function scopedCitiesForPitchForm(): array
+    {
+        if ($this->userScopeService->isGloballyScoped()) {
+            return [];
+        }
+
+        $cityIds = $this->userScopeService->scopedCityIds();
+
+        if ($cityIds === []) {
+            return [];
+        }
+
+        return $this->userScopeService->scopedCityOptions()
+            ->map(fn ($city) => [
+                'id' => $city->id,
+                'name' => $city->name,
+                'country_code' => $city->country_code,
+            ])
+            ->values()
+            ->all();
     }
 
     private function getReversedGeocoding(float $latitude, float $longitude): Response
