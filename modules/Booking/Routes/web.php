@@ -28,7 +28,7 @@ use Modules\Booking\Http\Controllers\ProductSpaceController;
 Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter([
     'auth:sanctum',
     'verified',
-    'can:system.dashboard',
+    'can:accessAdminPanel',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
     'verifyModule:Booking',
 ]))->group(function () {

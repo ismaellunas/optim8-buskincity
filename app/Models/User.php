@@ -583,4 +583,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasRole(config('permission.role_names.special_events_admin'));
     }
+
+    /**
+     * Whether the user may use the /admin portal (login + scoped module routes).
+     * Distinct from system.dashboard, which gates the full CMS dashboard.
+     */
+    public function canAccessAdminPanel(): bool
+    {
+        return $this->can('system.dashboard')
+            || $this->isCityAdministrator()
+            || $this->isSpecialEventsAdmin();
+    }
 }

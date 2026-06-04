@@ -23,7 +23,7 @@ use Modules\Space\Http\Middleware\CanManageEvent;
 Route::name('admin.')->prefix('admin/')->middleware([
     'auth:sanctum',
     'verified',
-    'can:system.dashboard',
+    'can:accessAdminPanel',
     'ensureLoginFromAdminLoginRoute',
     'verifyModule:Space',
 ])->group(function () {

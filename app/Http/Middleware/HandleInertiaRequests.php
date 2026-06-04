@@ -143,7 +143,7 @@ class HandleInertiaRequests extends Middleware
         if ($user) {
             if (
                 $request->routeIs('admin.*')
-                && $user->can('system.dashboard')
+                && $user->canAccessAdminPanel()
             ) {
                 return app(MenuService::class)->getBackendNavMenus($request);
             } else {

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin/ecommerce')->name('admin.ecommerce.')->middleware(array_filter([
     'auth:sanctum',
-    'can:system.dashboard',
+    'can:accessAdminPanel',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
     'verifyModule:Booking',
 ]))->group(function () {

@@ -18,9 +18,27 @@ class CityAdministratorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        // Seed roles and permissions
-        $this->seed(\Database\Seeders\CityAdministratorSeeder::class);
+
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    }
+
+    /** @test */
+    public function city_administrator_can_log_in_via_admin_login_without_dashboard_permission(): void
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('secret-password'),
+        ]);
+        $user->assignRole('city_administrator');
+
+        $this->assertFalse($user->can('system.dashboard'));
+
+        $response = $this->post(route('admin.login.attempt'), [
+            'email' => $user->email,
+            'password' => 'secret-password',
+        ]);
+
+        $response->assertRedirect(route('admin.spaces.index'));
+        $this->assertAuthenticatedAs($user);
     }
 
     /** @test */

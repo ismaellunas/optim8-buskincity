@@ -16,7 +16,7 @@ class AuthenticateLoginAttempt
         if (
             $user
             && LoginService::isAdminLoginAttemptRoute($request->route())
-            && !$user->can('system.dashboard')
+            && ! $user->canAccessAdminPanel()
         ) {
             $user = null;
         }

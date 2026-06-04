@@ -15,11 +15,19 @@ class TwoFactorLoginResponse extends FortifyTFLoginResponse
         } else {
             $home = 'dashboard';
 
-            if (
-                LoginService::isAdminTwoFactorLoginAttemptRoute($request->route())
-                && $request->user()->can('system.dashboard')
-            ) {
-                $home = 'admin_dashboard';
+            if (LoginService::isAdminTwoFactorLoginAttemptRoute($request->route())) {
+                $user = $request->user();
+
+                if (
+                    $user->hasRole(config('permission.role_names.city_admin'))
+                    && ! $user->can('system.dashboard')
+                ) {
+                    return redirect()->intended(route('admin.spaces.index'));
+                }
+
+                if ($user->can('system.dashboard')) {
+                    $home = 'admin_dashboard';
+                }
             }
 
             return redirect()->intended(Fortify::redirects($home));
