@@ -278,19 +278,24 @@ class SpaceService
 
     public function ensureCitySpacesExist(User $user): void
     {
-        // Get the "City" type ID
         $cityType = $this->types()->firstWhere('name', 'City');
 
-        if (!$cityType) {
+        if (! $cityType) {
             return;
         }
 
-        foreach ($user->adminCities as $city) {
+        $cities = $user->assignedScopeCities();
+
+        if ($cities->isEmpty()) {
+            $cities = $user->adminCities;
+        }
+
+        foreach ($cities as $city) {
             $exists = Space::where('type_id', $cityType->id)
                 ->where('city_id', $city->id)
                 ->exists();
 
-            if (!$exists) {
+            if (! $exists) {
                 Space::create([
                     'name' => $city->name,
                     'type_id' => $cityType->id,
@@ -301,6 +306,61 @@ class SpaceService
                     'is_page_enabled' => false,
                 ]);
             }
+        }
+    }
+
+    /**
+     * Ensure the city Space node exists and apply application branding (Phase 5).
+     *
+     * @param  array{logo_media_id?: int|null, cover_media_id?: int|null, description?: string|null, excerpt?: string|null}  $branding
+     */
+    public function provisionCitySpaceForApplication(User $user, int $cityId, array $branding = []): Space
+    {
+        $this->ensureCitySpacesExist($user);
+
+        $cityType = $this->types()->firstWhere('name', 'City');
+
+        if (! $cityType) {
+            throw new \RuntimeException('City space type is not configured.');
+        }
+
+        $space = Space::where('type_id', $cityType->id)
+            ->where('city_id', $cityId)
+            ->firstOrFail();
+
+        $this->applyCitySpaceBranding($space, $branding);
+
+        return $space;
+    }
+
+    /**
+     * @param  array{logo_media_id?: int|null, cover_media_id?: int|null, description?: string|null, excerpt?: string|null}  $branding
+     */
+    public function applyCitySpaceBranding(Space $space, array $branding): void
+    {
+        if (! empty($branding['logo_media_id'])) {
+            $this->replaceLogo($space, (int) $branding['logo_media_id']);
+        }
+
+        if (! empty($branding['cover_media_id'])) {
+            $this->replaceCover($space, (int) $branding['cover_media_id']);
+        }
+
+        $locale = defaultLocale();
+        $dirty = false;
+
+        if (! empty($branding['description'])) {
+            $space->translateOrNew($locale)->description = $branding['description'];
+            $dirty = true;
+        }
+
+        if (! empty($branding['excerpt'])) {
+            $space->translateOrNew($locale)->excerpt = $branding['excerpt'];
+            $dirty = true;
+        }
+
+        if ($dirty) {
+            $space->save();
         }
     }
 

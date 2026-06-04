@@ -15,19 +15,35 @@
 | **T0.2** Idempotent consolidated seeder | ✅ DONE | Verified on RDS 2026-06-01: seeder ran (incl. via `safe-migrate` backup), all 5 roles present incl. `city_administrator` with its 4 perms (`system.dashboard, city.manage_events, city.view_reports, product.add`). |
 | **T0.3** Unified role assignment service | ✅ DONE | php -l clean; behavior-preserving. `RolePermission` suite green (2026-06-02). |
 | **T7.1** Slug resolution & broken nav levels | 🟢 CODE COMPLETE | php -l + lint clean; behavior-preserving fallbacks. Manual browse verification pending. |
-| **T1.1** Generalized `user_scope` | 🟢 CODE COMPLETE | Table + backfill + dual-write helpers. Partial unique index (one-per-city) DEFERRED → OQ3. Needs safe-migrate + re-seed + verify. |
+| **T1.1** Generalized `user_scope` | 🟢 CODE COMPLETE | Table + backfill + dual-write helpers. One-per-city partial unique index added in Phase 5 (T5.2). |
 | **T1.2** Register SpaceEventPolicy + Admin global | 🟢 CODE COMPLETE | Policy registered + Administrator/Super short-circuit (OQ13). OQ2=NO → creator-only ownership kept (no further change). |
 | **T1.3** Remove dashboard for City Admin (OQ14) | 🟢 CODE COMPLETE | Seeder revokes `system.dashboard`; literals → config; redirect branches kept (now active). Needs re-seed + verify. |
 | Phase 2 (T2.1/T2.2) | 🟢 CODE COMPLETE | SE admin role + scope UI; tests green after CityFactory fix. |
 | **T3.1** locations + pitch FKs | 🟢 CODE COMPLETE | `locations` table + `lunar_products` FK columns + backfill; dual-read meta kept. |
 | **T3.2** Server-side scope validation | 🟢 CODE COMPLETE | `UserScopeService`, scoped validation rules, controller/request wiring. |
 | **T3.3** Space.city_id persistence | 🟢 CODE COMPLETE | `persistCityId()` + parent backfill migration. |
-| **T4.1** Atomic pitch save | 🟢 CODE COMPLETE | `ProductPitchRequest` (unified rules, pitch dates required); `ProductController::update` — single `DB::transaction`, geocoding moved outside tx, city/location failures propagate (no silent catch); `ProductEdit.vue` — `form.put()` replaces two-step axios, pitch date + date_override fields synced from `eventForm` before submit. **Deferred:** `store()` / create form (Phase 6 T6.1); `ProductEventController::update` legacy route (still live, no longer called from UI). Pending: feature tests + `sail artisan test --filter=PitchLocationFkTest`. |
+| **T4.1** Atomic pitch save | 🟢 CODE COMPLETE | See notes above. |
+| **T5.1** role_applications + public apply form | 🟢 CODE COMPLETE | `/apply?role=…`, uploads, reCAPTCHA + throttle. Pending: migrate + test on staging. |
+| **T5.2** Transactional approval + replace | 🟢 CODE COMPLETE | Admin review at `/admin/role-applications`; replace modal; partial unique index on `user_scope`; `RoleApplicationTest` written. |
+| Phase 6–7 | ⬜ TODO | Next: Phase 6 pitch UX + 14-day rule. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
 2. Re-run `php artisan db:seed` → assert no errors / no duplicates (idempotency).
 3. `php artisan test` (esp. `tests/Feature/RolePermission/*`, user/role CRUD, `CityAdministratorTest`) → green.
+
+---
+
+## 2026-06-04 — Phase 5 executed (application → approval workflow)
+| Task | Status | Notes |
+|---|---|---|
+| **T5.1** role_applications + branding | 🟢 CODE COMPLETE | `role_applications` table; public `/apply` form; logo/cover upload validation. |
+| **T5.2** Approval + replace | 🟢 CODE COMPLETE | Transactional approve/reject; OQ3 replace confirmation; `user_scope_one_city_admin_per_city` index; branded city Space provisioning. |
+| **T5 tests** | 🟡 WRITTEN, UNRUN | `RoleApplicationTest` (5 cases). |
+
+**Apply on RDS:** `./scripts/db-etl.sh safe-migrate` (migrations: `role_applications`, one-per-city index).
+
+**URLs:** Public `/apply?role=city_administrator` or `special_events_admin`; Admin `/admin/role-applications` (Administrator/Super Admin).
 
 ---
 

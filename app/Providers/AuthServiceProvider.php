@@ -11,6 +11,7 @@ use App\Models\{
     Page,
     Post,
     Role,
+    RoleApplication,
     Setting,
     User
 };
@@ -23,6 +24,7 @@ use App\Policies\{
     PagePolicy,
     PostPolicy,
     ProductEventPolicy,
+    RoleApplicationPolicy,
     RolePolicy,
     SettingPolicy,
     SpaceEventPolicy,
@@ -51,6 +53,7 @@ class AuthServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
         ProductEvent::class => ProductEventPolicy::class,
+        RoleApplication::class => RoleApplicationPolicy::class,
         Role::class => RolePolicy::class,
         Setting::class => SettingPolicy::class,
         SpaceEvent::class => SpaceEventPolicy::class,

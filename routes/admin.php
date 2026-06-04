@@ -36,6 +36,7 @@ use App\Http\Controllers\{
     VerifyEmailController,
     Api\CityController,
     Api\CityUserController,
+    Admin\RoleApplicationController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -102,6 +103,16 @@ Route::middleware(array_filter([
 
     Route::resource('/roles', RoleController::class)
         ->except(['show']);
+
+    Route::resource('/role-applications', RoleApplicationController::class)
+        ->only(['index', 'show'])
+        ->parameters(['role-applications' => 'role_application']);
+
+    Route::post('/role-applications/{role_application}/approve', [RoleApplicationController::class, 'approve'])
+        ->name('role-applications.approve');
+
+    Route::post('/role-applications/{role_application}/reject', [RoleApplicationController::class, 'reject'])
+        ->name('role-applications.reject');
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');

@@ -19,6 +19,7 @@ use App\Http\Controllers\{
     NewPasswordController,
     PasswordResetLinkController,
     RegisteredUserController,
+    RoleApplicationController,
     SitemapController,
     StoredCssController,
     TwoFactorAuthenticatedSessionController,
@@ -175,6 +176,16 @@ Route::name('forms.')->prefix('forms')->group(function () {
     Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });
+
+Route::prefix('apply')
+    ->name('role-applications.')
+    ->group(function () {
+        Route::get('/', [RoleApplicationController::class, 'create'])->name('create');
+        Route::post('/', [RoleApplicationController::class, 'store'])
+            ->middleware(['recaptcha', 'throttle:defaultRequest'])
+            ->name('store');
+        Route::get('/submitted', [RoleApplicationController::class, 'submitted'])->name('submitted');
+    });
 
 Route::post('webhooks/stripe', WebhookStripeController::class);
 

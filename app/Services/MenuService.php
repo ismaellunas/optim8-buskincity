@@ -442,7 +442,9 @@ class MenuService
                     ],
                     [
                         'title' => __('Users'),
-                        'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
+                        'isActive' => $request->routeIs('admin.users.*')
+                            || $request->routeIs('admin.roles.*')
+                            || $request->routeIs('admin.role-applications.*'),
                         'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
                         'children' => [
                             [
@@ -456,6 +458,15 @@ class MenuService
                                 'link' => route('admin.roles.index'),
                                 'isActive' => $request->routeIs('admin.roles.*'),
                                 'isEnabled' => $user->can('viewAny', Role::class),
+                            ],
+                            [
+                                'title' => __('Role applications'),
+                                'link' => route('admin.role-applications.index'),
+                                'isActive' => $request->routeIs('admin.role-applications.*'),
+                                'isEnabled' => $user->hasAnyRole([
+                                    config('permission.role_names.admin'),
+                                    config('permission.super_admin_role'),
+                                ]),
                             ],
                         ],
                     ],

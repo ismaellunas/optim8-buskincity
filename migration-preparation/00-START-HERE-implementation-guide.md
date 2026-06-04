@@ -199,12 +199,11 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Verify: valid save persists all (incl. city/country/location); any failure rolls back fully with a specific error (no partial pitch); save with zero ProductEvents succeeds; booking regression green.
 
 ### PHASE 5 — Application → Approval workflow (fixes V2, V5, V6; FR-ACCT-*)
-*Blocked by OQ3 (one-per-city semantics), OQ13 (who approves).*
-- [ ] **T5.1 — `role_applications` entity + branding upload.** 
+- [x] **T5.1 — `role_applications` entity + branding upload.** — **🟢 CODE COMPLETE 2026-06-04**
   - Files: migration `role_applications` (`user_id?`, `requested_role`, `city_id`, `status`, branding, `reviewed_by`, `reviewed_at`, `reject_reason`); media relations; public application form/endpoint (reuse FormBuilder or dedicated); upload validation (mime allowlist, size via `ApiSettingController::maxFileSize`, re-encode, throttle, reCAPTCHA).
   - References: FRS doc §3.2 FR-ACCT-1/2, §6.1–6.2; SEC doc V6, Phase 5.
   - Verify: application persists with branding; upload validation rejects bad files.
-- [ ] **T5.2 — Transactional approval action.** Goal: verified + scoped + branded admin on approve.
+- [x] **T5.2 — Transactional approval action.** Goal: verified + scoped + branded admin on approve. — **🟢 CODE COMPLETE 2026-06-04**
   - Files: new approval controller/service; uses `UserRoleService` (role) + `user_scope` (scope) + email verify + extend `modules/Space/Services/SpaceService.php::ensureCitySpacesExist()` with branding; one-city-admin-per-city via partial unique + `SELECT…FOR UPDATE`; keep protected-email guard (`AutomateUserCreationController::validateFomEntry`).
   - References: SEC doc V2, V5, Phase 5; FRS doc §3.2 FR-ACCT-3/4, §6.1 AC1–AC5; RBAC doc R5; **Blocked by OQ3, OQ13.** Feature-flag the rollout.
   - Verify: approve → role+scope+verified+branded page; reject → no grant + reason; duplicate/concurrent city-admin approval blocked; SE-admin many-per-city allowed; protected-email rejected.
