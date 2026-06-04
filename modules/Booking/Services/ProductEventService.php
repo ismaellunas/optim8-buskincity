@@ -145,6 +145,58 @@ class ProductEventService
         return $weeklyHours;
     }
 
+    /**
+     * Empty weekly schedule template for the unified create form.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function defaultWeeklyHours(): array
+    {
+        $weeklyHours = [];
+
+        for ($day = 1; $day <= 7; $day++) {
+            $weeklyHours[$day] = [
+                'day' => $day,
+                'is_available' => false,
+                'hours' => [],
+            ];
+        }
+
+        return $weeklyHours;
+    }
+
+    public function requiresFourteenDayBookableWindow(?Product $product = null): bool
+    {
+        $user = auth()->user();
+
+        if ($user?->isSpecialEventsAdmin()) {
+            return true;
+        }
+
+        return (bool) ($product?->is_special_event ?? false);
+    }
+
+    public function isWithinBookableWindow(Product $product): bool
+    {
+        if (! $this->requiresFourteenDayBookableWindow($product)) {
+            return true;
+        }
+
+        $pitchStart = $product->getMeta('pitch_started_at');
+        $pitchEnd = $product->getMeta('pitch_ended_at');
+
+        if (! $pitchStart || ! $pitchEnd) {
+            return false;
+        }
+
+        $today = today();
+
+        return $today->between(
+            Carbon::parse($pitchStart)->startOfDay(),
+            Carbon::parse($pitchEnd)->endOfDay()
+        );
+    }
+
     public function weeklyHoursForSchedule(Schedule $schedule): array
     {
         $weeklyHours = [];
@@ -506,11 +558,26 @@ class ProductEventService
     public function maxBookableDate(Product $product): ?Carbon
     {
         $pitchEnd = $product->getMeta('pitch_ended_at');
+
         if ($pitchEnd) {
-            return Carbon::parse($pitchEnd)->endOfDay();
+            $maxDate = Carbon::parse($pitchEnd)->endOfDay();
+        } else {
+            $maxDate = today()->addDays($product->bookable_date_range)->endOfDay();
         }
 
-        return today()->addDays($product->bookable_date_range);
+        if ($this->requiresFourteenDayBookableWindow($product)) {
+            $pitchStart = $product->getMeta('pitch_started_at');
+
+            if ($pitchStart) {
+                $cap = Carbon::parse($pitchStart)->startOfDay()->addDays(13)->endOfDay();
+
+                if ($maxDate->gt($cap)) {
+                    $maxDate = $cap;
+                }
+            }
+        }
+
+        return $maxDate;
     }
 
     public function getGoogleMapDirectionUrl(Product $product, ?array $origin = null): ?string

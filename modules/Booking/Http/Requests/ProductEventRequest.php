@@ -7,20 +7,46 @@ use App\Rules\CountryCode;
 use App\Rules\InScopedCityId;
 use App\Rules\Timezone;
 use Illuminate\Validation\Rule;
+use Modules\Booking\Rules\MaxInclusiveDaySpan;
 use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Ecommerce\Entities\Product;
 
 class ProductEventRequest extends BaseFormRequest
 {
     protected $errorBag = 'updateEvent';
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('timezone')) {
+            $this->merge(['pitch_timezone' => $this->input('timezone')]);
+        }
+    }
+
     public function rules()
     {
+        /** @var ProductEventService $eventService */
+        $eventService = app(ProductEventService::class);
+
+        /** @var Product|null $product */
+        $product = $this->route('product');
+        $requiresFourteenDayCap = $eventService->requiresFourteenDayBookableWindow($product);
+
+        $pitchEndedAtRules = ['required', 'date', 'after_or_equal:pitch_started_at'];
+        if ($requiresFourteenDayCap) {
+            $pitchEndedAtRules[] = new MaxInclusiveDaySpan('pitch_started_at', 14);
+        }
+
         return [
             'pitch_started_at' => ['required', 'date'],
-            'pitch_ended_at' => ['required', 'date', 'after_or_equal:pitch_started_at'],
-            'pitch_timezone' => ['required', new Timezone()],
-            'bookable_date_range' => ['required', 'integer', 'min:0', 'max:365'],
+            'pitch_ended_at' => $pitchEndedAtRules,
+            'pitch_timezone' => ['nullable', new Timezone()],
+            'bookable_date_range' => [
+                'required',
+                'integer',
+                'min:0',
+                'max:'.($requiresFourteenDayCap ? 14 : 365),
+            ],
             'date_overrides' => ['array'],
             'date_overrides.*.ended_date' => ['nullable', 'date_format:Y-m-d'],
             'date_overrides.*.started_date' => ['date_format:Y-m-d'],
@@ -70,7 +96,7 @@ class ProductEventRequest extends BaseFormRequest
         return [
             'pitch_started_at' => 'Pitch Start',
             'pitch_ended_at' => 'Pitch End',
-            'pitch_timezone' => 'Pitch Timezone',
+            'pitch_timezone' => 'Timezone',
             'weekly_hours.*.hours.*.started_time' => 'Start Time',
             'weekly_hours.*.hours.*.ended_time' => 'End Time',
             'date_overrides.*.times.*.started_time' => 'Start Time',

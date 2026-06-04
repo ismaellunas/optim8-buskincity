@@ -24,6 +24,7 @@
                             :gallery="product.gallery"
                             :image-mimes="imageMimes"
                             :instructions="instructions"
+                            :max-pitch-date-span-days="maxPitchDateSpanDays"
                             :role-options="roleOptions"
                             :rules="rules"
                             :status-options="statusOptions"
@@ -321,6 +322,8 @@
             space: { type: Object, required: true },
             i18n: { type: Object, default: () => {} },
             missingLocation: { type: Boolean, default: false },
+            isSpecialEventPitch: { type: Boolean, default: false },
+            maxPitchDateSpanDays: { type: Number, default: null },
         },
 
         setup(props) {
@@ -352,10 +355,9 @@
                 bookable_date_range: event.value.bookable_date_range,
                 pitch_started_at: event.value.pitch_started_at,
                 pitch_ended_at: event.value.pitch_ended_at,
-                pitch_timezone: event.value.pitch_timezone ?? event.value.timezone,
-                
-                // Schedule (from Event tab)
-                timezone: event.value.timezone,
+
+                // Schedule
+                timezone: event.value.timezone ?? event.value.pitch_timezone,
                 weekly_hours: computed(() => props.weeklyHours).value,
                 date_overrides: cloneDeep(computed(() => props.dateOverrides).value),
             };
@@ -368,7 +370,6 @@
                 timezone: form.timezone,
                 pitch_started_at: form.pitch_started_at,
                 pitch_ended_at: form.pitch_ended_at,
-                pitch_timezone: form.pitch_timezone,
                 weekly_hours: form.weekly_hours,
                 date_overrides: form.date_overrides,
             };
@@ -408,25 +409,6 @@
         },
 
         computed: {
-            pitchDateRange: {
-                get() {
-                    if (this.eventForm.pitch_started_at) {
-                        return [
-                            this.eventForm.pitch_started_at,
-                            this.eventForm.pitch_ended_at,
-                        ];
-                    }
-                    return [];
-                },
-                set(newValue) {
-                    if (newValue == null) {
-                        this.eventForm.pitch_started_at = this.eventForm.pitch_ended_at = null;
-                    } else {
-                        this.eventForm.pitch_started_at = newValue[0] ?? null;
-                        this.eventForm.pitch_ended_at = newValue[1] ?? null;
-                    }
-                }
-            },
             dateOverrideBatches() {
                 const self = this;
 
@@ -530,12 +512,6 @@
             submit() {
                 const self = this;
 
-                // Sync pitch date fields — the pitchDateRange computed writes to eventForm, not form
-                self.form.pitch_started_at = self.eventForm.pitch_started_at;
-                self.form.pitch_ended_at = self.eventForm.pitch_ended_at;
-                self.form.pitch_timezone = self.eventForm.pitch_timezone;
-
-                // Sync date_overrides — the modal and removeDateOverride write to eventForm
                 self.form.date_overrides = self.eventForm.date_overrides.filter((dateOverride) => {
                     return !self.unusedDates.includes(dateOverride.started_date);
                 });
@@ -556,8 +532,8 @@
                 const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index][0];
                 scheduleRuleTime.addTimeRange();
 
-                if (this.eventForm.weekly_hours[index].hours.length > 0) {
-                    this.eventForm.weekly_hours[index].is_available = true;
+                if (this.form.weekly_hours[index].hours.length > 0) {
+                    this.form.weekly_hours[index].is_available = true;
                 }
 
                 this.eventErrors = {};
@@ -705,7 +681,7 @@
             },
 
             timeRangeRemoved(index) {
-                const day = this.eventForm.weekly_hours[index];
+                const day = this.form.weekly_hours[index];
 
                 if (day.hours.length == 0) {
                     day.is_available = false;
@@ -715,7 +691,7 @@
             },
 
             checkTimes(index) {
-                const day = this.eventForm.weekly_hours[index];
+                const day = this.form.weekly_hours[index];
 
                 if (! day.is_available) {
                     day.hours = [];

@@ -209,12 +209,12 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Verify: approve → role+scope+verified+branded page; reject → no grant + reason; duplicate/concurrent city-admin approval blocked; SE-admin many-per-city allowed; protected-email rejected.
 
 ### PHASE 6 — Pitch field UX + 14-day Special Events rule (FR-PITCH-3/5/6/9, FR-SE-2/3)
-- [ ] **T6.1 — Unified pitch form + label/field changes.** 
+- [x] **T6.1 — Unified pitch form + label/field changes.** — **🟢 CODE COMPLETE 2026-06-04**
   - Files: `resources/js/Pages/.../ProductForm.vue`, `ProductCreate.vue`, `ProductEdit.vue`; `resources/lang/...` copy.
   - Changes: all fields visible before first save; rename "Duration"→"Timeslot duration" and **swap** with "Pitch date range"; "Weekly hours"→"Weekly days and hours" + new help copy; **consolidate duplicate timezone** (`pitch_timezone` vs schedule `timezone`, FR-PITCH-9); disable gallery (confirm logo/cover via **OQ11**).
   - References: FRS doc §2.6, §3.6 FR-PITCH-3/5/6/9/10, §6.3 AC1; **Blocked by OQ11.**
   - Verify: single timezone persists; label/order snapshots; create form shows all fields.
-- [ ] **T6.2 — 14-day cap + visible-vs-bookable for special events.** 
+- [x] **T6.2 — 14-day cap + visible-vs-bookable for special events.** — **🟢 CODE COMPLETE 2026-06-04**
   - Files: `ProductEventRequest`/`ProductEventCrudRequest` (≤14-day validation), `modules/Booking/Services/ProductEventService.php::maxBookableDate()`, date pickers; visibility decoupled from bookability.
   - References: FRS doc §3.3 FR-SE-2/3, §6.3 AC6/AC7; SEC doc Phase 6; **Blocked by OQ5** (overlap).
   - Verify: >14d rejected, ≤14d accepted; special-events pitch visible year-round but only bookable in window.

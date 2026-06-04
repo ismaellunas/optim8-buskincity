@@ -29,7 +29,6 @@ use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
 use App\Enums\PublishingStatus;
-use Modules\Ecommerce\Http\Requests\ProductRequest;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
 use Modules\Space\Entities\Space;
@@ -91,6 +90,7 @@ class ProductController extends CrudController
     public function create()
     {
         $user = auth()->user();
+        $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow();
 
         return Inertia::render('Booking::ProductCreate', $this->getData([
             'breadcrumbs' => [
@@ -125,6 +125,13 @@ class ProductController extends CrudController
                 ],
             ],
             'roleOptions' => $this->productService->roleOptions(),
+            'eventDurationOptions' => $this->productEventService->durationOptions(),
+            'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
+            'weeklyHours' => $this->productEventService->defaultWeeklyHours(),
+            'defaultCountryCode' => app(IPService::class)->getCountryCode('US'),
+            'defaultTimezone' => app(IPService::class)->getTimezone(),
+            'isSpecialEventPitch' => $isSpecialEventPitch,
+            'maxPitchDateSpanDays' => $isSpecialEventPitch ? 14 : null,
             'imageMimes' => config('constants.extensions.image'),
             'rules' => [
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
@@ -138,92 +145,57 @@ class ProductController extends CrudController
         ]));
     }
 
-    public function store(ProductRequest $request)
+    public function store(ProductPitchRequest $request)
     {
-        $productType = ProductType::where('name', 'Event')->first();
-
-        $inputs = $request->all();
-
-        $product = Product::create([
-            'product_type_id' => $productType->id,
-            'status' => $inputs['status'],
-            'productable_type' => !empty($inputs['space_id']) ? Space::class : null,
-            'productable_id' => $inputs['space_id'] ?? null,
-            'attribute_data' => [
-                'name' => new TranslatedText(collect([
-                    'en' => new Text($inputs['name']),
-                ])),
-                'description' => new TranslatedText(collect([
-                    'en' => new Text($inputs['description']),
-                ])),
-                'short_description' => new TranslatedText(collect([
-                    'en' => new Text($inputs['short_description']),
-                ])),
-            ],
-        ]);
-
-        $taxClass = TaxClass::getDefault();
-
-        ProductVariant::create([
-            'product_id' => $product->id,
-            'tax_class_id' => $taxClass->id,
-            'purchasable' => 'always',
-            'shippable' => false,
-            'stock' => 0,
-            'backorder' => 0,
-            'sku' => 'EVENT-'.$product->id,
-        ]);
-
-        // If a space is selected, get location from space
-        $locations = [];
-        if (!empty($inputs['space_id'])) {
-            $space = Space::find($inputs['space_id']);
-            if ($space) {
-                $locations = [[
-                    'city' => $space->city,
-                    'country_code' => $space->country_code,
-                    'latitude' => $space->latitude,
-                    'longitude' => $space->longitude,
-                    'address' => $space->address,
-                ]];
-            }
-        }
-
-        $meta = [
-            'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
-            'duration' => 60,
-            'duration_unit' => 'minute',
-            'bookable_date_range_type' => 'calendar_days_into_the_future',
-            'bookable_date_range' => 60,
-            'is_check_in_required' => (bool) $inputs['is_check_in_required'],
-        ];
-
-        if (!empty($locations)) {
-            $meta['locations'] = $locations;
-        }
-
-        $product->setMeta($meta);
-        $product->save();
-
-        // Attach City Administrator as product manager
+        $inputs = $request->validated();
         $user = auth()->user();
-        if ($user->hasRole('city_administrator') && !$user->can('product.edit')) {
+        $location = $this->resolveLocationPayload($inputs);
+
+        $product = DB::transaction(function () use ($inputs, $user, $location) {
+            $productType = ProductType::where('name', 'Event')->first();
+
+            $product = Product::create([
+                'product_type_id' => $productType->id,
+                'status' => $inputs['status'],
+                'productable_type' => ! empty($inputs['space_id'] ?? null) ? Space::class : null,
+                'productable_id' => $inputs['space_id'] ?? null,
+                'is_special_event' => $user->isSpecialEventsAdmin(),
+                'attribute_data' => [
+                    'name' => new TranslatedText(collect([
+                        'en' => new Text($inputs['name']),
+                    ])),
+                    'description' => new TranslatedText(collect([
+                        'en' => new Text($inputs['description'] ?? ''),
+                    ])),
+                    'short_description' => new TranslatedText(collect([
+                        'en' => new Text($inputs['short_description'] ?? ''),
+                    ])),
+                ],
+            ]);
+
+            $taxClass = TaxClass::getDefault();
+
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'tax_class_id' => $taxClass->id,
+                'purchasable' => 'always',
+                'shippable' => false,
+                'stock' => 0,
+                'backorder' => 0,
+                'sku' => 'EVENT-'.$product->id,
+            ]);
+
+            $this->persistPitchBookingData($product, $inputs, $location);
+
+            return $product;
+        });
+
+        if ($user->hasRole('city_administrator') && ! $user->can('product.edit')) {
             $user->products()->syncWithoutDetaching([$product->id]);
         }
 
-        Schedule::factory()->state([
-            'schedulable_type' => Product::class,
-            'schedulable_id' => $product->id,
-        ])->create();
-
-        $mediaIds = $inputs['gallery'] ?? [];
-
-        if (! empty($mediaIds)) {
-            $product->syncMedia($mediaIds);
-        }
-
         $this->generateFlashMessage('The :resource was created!', [
-            'resource' => $this->title()
+            'resource' => $this->title(),
         ]);
 
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
@@ -240,8 +212,10 @@ class ProductController extends CrudController
         $formSpace = $this->productSpaceService->formResource($product);
 
         // Check if product is missing location data
-        $hasLocation = !empty($product->locations[0]['city'] ?? null) 
+        $hasLocation = !empty($product->locations[0]['city'] ?? null)
                        && !empty($product->locations[0]['country_code'] ?? null);
+
+        $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow($product);
 
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
@@ -270,6 +244,8 @@ class ProductController extends CrudController
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'productManagerBaseRoute' => 'admin.ecommerce.products.managers',
             'missingLocation' => !$hasLocation,
+            'isSpecialEventPitch' => $isSpecialEventPitch,
+            'maxPitchDateSpanDays' => $isSpecialEventPitch ? 14 : null,
             'rules' => [
                 'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
                 'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
@@ -306,10 +282,25 @@ class ProductController extends CrudController
     public function update(ProductPitchRequest $request, Product $product)
     {
         $inputs = $request->validated();
+        $location = $this->resolveLocationPayload($inputs);
 
-        // Build location array and optionally enrich with reverse-geocode data.
-        // This network call happens before the DB transaction to avoid holding an
-        // open connection across a potentially slow external request.
+        DB::transaction(function () use ($inputs, $product, $location) {
+            $this->persistPitchBookingData($product, $inputs, $location);
+        });
+
+        $this->generateFlashMessage('The :resource was updated!', [
+            'resource' => $this->title(),
+        ]);
+
+        return redirect()->route($this->baseRouteName.'.edit', $product->id);
+    }
+
+    /**
+     * @param  array<string, mixed>  $inputs
+     * @return array<string, mixed>
+     */
+    private function resolveLocationPayload(array $inputs): array
+    {
         $location = collect($inputs['location'])->only([
             'address', 'city', 'country_code',
         ])->all();
@@ -328,85 +319,84 @@ class ProductController extends CrudController
             }
         }
 
-        DB::transaction(function () use ($inputs, $product, $location) {
-            // Product core fields
-            $product->attribute_data = [
-                'name' => new TranslatedText(collect([
-                    'en' => new Text($inputs['name']),
-                ])),
-                'description' => new TranslatedText(collect([
-                    'en' => new Text($inputs['description'] ?? ''),
-                ])),
-                'short_description' => new TranslatedText(collect([
-                    'en' => new Text($inputs['short_description'] ?? ''),
-                ])),
-            ];
+        return $location;
+    }
 
-            $product->status = $inputs['status'];
-            $product->duration = $inputs['duration'];
-            $product->bookable_date_range = $inputs['bookable_date_range'];
+    /**
+     * @param  array<string, mixed>  $inputs
+     * @param  array<string, mixed>  $location
+     */
+    private function persistPitchBookingData(Product $product, array $inputs, array $location): void
+    {
+        $product->attribute_data = [
+            'name' => new TranslatedText(collect([
+                'en' => new Text($inputs['name']),
+            ])),
+            'description' => new TranslatedText(collect([
+                'en' => new Text($inputs['description'] ?? ''),
+            ])),
+            'short_description' => new TranslatedText(collect([
+                'en' => new Text($inputs['short_description'] ?? ''),
+            ])),
+        ];
 
-            $product->setMeta([
-                'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
-                'is_check_in_required' => (bool) $inputs['is_check_in_required'],
-                'pitch_started_at' => $inputs['pitch_started_at'],
-                'pitch_ended_at' => $inputs['pitch_ended_at'],
-                'pitch_timezone' => $inputs['pitch_timezone'],
-            ]);
+        $product->status = $inputs['status'];
+        $product->duration = $inputs['duration'];
+        $product->bookable_date_range = $inputs['bookable_date_range'];
 
-            // City + Location FKs — any failure propagates and rolls back the transaction.
-            if (! empty($location['city']) && ! empty($location['country_code'])) {
-                $city = $this->cityService->findOrCreate(
-                    $location['city'],
-                    $location['country_code'],
-                    $location['latitude'],
-                    $location['longitude']
-                );
-
-                $this->userScopeService->assertCityInScope($city->id);
-
-                $locationModel = $this->locationService->findOrCreateFromPitchData(
-                    $city,
-                    $location,
-                    $product->productable_type === \Modules\Space\Entities\Space::class
-                        ? $product->productable_id
-                        : null
-                );
-
-                $product->city_id = $city->id;
-                $product->location_id = $locationModel->id;
-            }
-
-            $product->locations = [$location];
-            $product->save();
-
-            // Gallery
-            $mediaIds = $inputs['gallery'] ?? [];
-            if (! empty($mediaIds)) {
-                $product->syncMedia($mediaIds);
-            }
-
-            // Schedule
-            $schedule = $product->eventSchedule ?? Schedule::factory()->state([
-                'schedulable_type' => Product::class,
-                'schedulable_id' => $product->id,
-            ])->make();
-
-            $schedule->timezone = $inputs['timezone'];
-            $schedule->save();
-
-            $this->productEventService->saveWeeklyHours($inputs['weekly_hours'] ?? [], $schedule);
-            $this->productEventService->saveDateOverrides(
-                collect($inputs['date_overrides'] ?? []),
-                $schedule
-            );
-        });
-
-        $this->generateFlashMessage('The :resource was updated!', [
-            'resource' => $this->title(),
+        $product->setMeta([
+            'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
+            'is_check_in_required' => (bool) $inputs['is_check_in_required'],
+            'pitch_started_at' => $inputs['pitch_started_at'],
+            'pitch_ended_at' => $inputs['pitch_ended_at'],
+            'pitch_timezone' => $inputs['timezone'],
         ]);
 
-        return redirect()->route($this->baseRouteName.'.edit', $product->id);
+        if (! empty($location['city']) && ! empty($location['country_code'])) {
+            $city = $this->cityService->findOrCreate(
+                $location['city'],
+                $location['country_code'],
+                $location['latitude'],
+                $location['longitude']
+            );
+
+            $this->userScopeService->assertCityInScope($city->id);
+
+            $locationModel = $this->locationService->findOrCreateFromPitchData(
+                $city,
+                $location,
+                $product->productable_type === Space::class
+                    ? $product->productable_id
+                    : null
+            );
+
+            $product->city_id = $city->id;
+            $product->location_id = $locationModel->id;
+        }
+
+        $product->locations = [$location];
+        $product->save();
+
+        $mediaIds = $inputs['gallery'] ?? [];
+        if (! empty($mediaIds)) {
+            $product->syncMedia($mediaIds);
+        } else {
+            $product->detachGallery();
+        }
+
+        $schedule = $product->eventSchedule ?? Schedule::factory()->state([
+            'schedulable_type' => Product::class,
+            'schedulable_id' => $product->id,
+        ])->make();
+
+        $schedule->timezone = $inputs['timezone'];
+        $schedule->save();
+
+        $this->productEventService->saveWeeklyHours($inputs['weekly_hours'] ?? [], $schedule);
+        $this->productEventService->saveDateOverrides(
+            collect($inputs['date_overrides'] ?? []),
+            $schedule
+        );
     }
 
     private function getReversedGeocoding(float $latitude, float $longitude): Response
@@ -492,10 +482,9 @@ class ProductController extends CrudController
                 'product' => __('booking_module::terms.product'),
                 'event' => __('booking_module::terms.'),
                 'manager' => __('Manager'),
-                'duration' => __('Duration'),
+                'duration' => __('Timeslot duration'),
                 'bookable_date_range' => __('Bookable date range (Calendar days into the future)'),
                 'pitch_date_range' => __('Pitch date range'),
-                'pitch_timezone' => __('Pitch timezone'),
                 'address' => __('Address'),
                 'city' => __('City'),
                 'country' => __('Country'),
@@ -503,9 +492,9 @@ class ProductController extends CrudController
                 'longitude' => __('Longitude'),
                 'schedule' => __('Schedule'),
                 'timezone' => __('Timezone'),
-                'weekly_hours' => __('Weekly hours'),
+                'weekly_hours' => __('Weekly days and hours'),
                 'date_override' => __('Date override'),
-                'date_override_description' => __('Add dates when your availability changes from your weekly hours'),
+                'date_override_description' => __('Add dates when your availability changes from your weekly days and hours'),
                 'add_date' => __('Add :resource', ['resource' => __('Date')]),
                 'map' => __('Map'),
                 'unavailable' => __('Unavailable'),
@@ -515,10 +504,11 @@ class ProductController extends CrudController
                 'select_space_note' => __('The :resource can only have one location.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [
                     'pitch_date_range' => __('The overall date range (start and end dates only) when this pitch is available. No bookings can be made outside these dates. The specific booking times are set in the Schedule section below.'),
-                    'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly hours for regular availability and date overrides for special dates or closures.'),
+                    'special_event_date_range' => __('Special event pitches may have a bookable window of up to 14 days. The pitch remains visible year-round, but bookings are only accepted within this window.'),
+                    'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly days and hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
-                    'weekly_hours' => __('Specify the available event hours that can be booked by performers on a weekly basis.'),
-                    'date_override' => __('Use this field to manually select a specific date, overriding the weekly event hours.'),
+                    'weekly_hours' => __('Use this option to manually override day(s)/hours within the pitch date range.'),
+                    'date_override' => __('Use this field to manually select a specific date, overriding the weekly days and hours.'),
                 ],
             ],
             ...MediaService::defaultMediaLibraryTranslations(),

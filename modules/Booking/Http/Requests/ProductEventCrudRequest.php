@@ -11,6 +11,9 @@ use App\Rules\Timezone;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Entities\ProductEventTranslation;
+use Modules\Booking\Rules\MaxInclusiveDaySpan;
+use Modules\Booking\Services\ProductEventService;
+use Modules\Ecommerce\Entities\Product;
 
 class ProductEventCrudRequest extends BaseFormRequest
 {
@@ -34,6 +37,21 @@ class ProductEventCrudRequest extends BaseFormRequest
             ],
         ]);
 
+        /** @var Product|null $product */
+        $product = $this->route('product');
+        $requiresFourteenDayCap = app(ProductEventService::class)
+            ->requiresFourteenDayBookableWindow($product);
+
+        $endedAtRules = [
+            'required',
+            'date',
+            'after_or_equal:started_at',
+        ];
+
+        if ($requiresFourteenDayCap) {
+            $endedAtRules[] = new MaxInclusiveDaySpan('started_at', 14);
+        }
+
         return array_merge($translationRules, [
             'title' => [
                 'required',
@@ -43,11 +61,7 @@ class ProductEventCrudRequest extends BaseFormRequest
                 'required',
                 'date',
             ],
-            'ended_at' => [
-                'required',
-                'date',
-                'after_or_equal:started_at',
-            ],
+            'ended_at' => $endedAtRules,
             'timezone' => ['nullable', new Timezone()],
             'address' => ['nullable', 'max:500'],
             'latitude' => ['nullable', 'numeric'],

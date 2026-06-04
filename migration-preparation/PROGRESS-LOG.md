@@ -25,12 +25,24 @@
 | **T4.1** Atomic pitch save | 🟢 CODE COMPLETE | See notes above. |
 | **T5.1** role_applications + public apply form | 🟢 CODE COMPLETE | `/apply?role=…`, uploads, reCAPTCHA + throttle. Pending: migrate + test on staging. |
 | **T5.2** Transactional approval + replace | 🟢 CODE COMPLETE | Admin review at `/admin/role-applications`; replace modal; partial unique index on `user_scope`; `RoleApplicationTest` written. |
-| Phase 6–7 | ⬜ TODO | Next: Phase 6 pitch UX + 14-day rule. |
+| **T6.1** Unified pitch form + labels | 🟢 CODE COMPLETE | All fields on create; timeslot duration ↔ pitch date range swap; single timezone; gallery hidden. Pending: manual verify + tests. |
+| **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan` rule; SE admin / `is_special_event` pitches; `isWithinBookableWindow()` on frontend show. |
+| Phase 7 | ⬜ TODO | Next: T7.2–T7.4 nav, type removal, map pins + search. |
 
 **Verification still required to mark Phase 0 ✅ DONE** (needs a configured DB; not run here to avoid touching local data):
 1. `php artisan migrate:fresh --seed` → assert all 5 roles exist incl. `city_administrator`, and the role→permission map matches the pre-refactor state.
 2. Re-run `php artisan db:seed` → assert no errors / no duplicates (idempotency).
 3. `php artisan test` (esp. `tests/Feature/RolePermission/*`, user/role CRUD, `CityAdministratorTest`) → green.
+
+---
+
+## 2026-06-04 — Phase 6 executed (pitch UX + 14-day rule)
+| Task | Status | Notes |
+|---|---|---|
+| **T6.1** Unified pitch form | 🟢 CODE COMPLETE | `ProductForm.vue` field order/labels; gallery disabled; `ProductCreate.vue` full form + transactional `store()` via `ProductPitchRequest`. |
+| **T6.2** 14-day cap | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan`; SE admin pitches get `is_special_event`; frontend `canBook` gated by `isWithinBookableWindow()`. |
+
+**Verify:** create pitch as city admin (no 14d cap) + as SE admin (≤14d); confirm single timezone saves; booking UI hidden outside SE window.
 
 ---
 

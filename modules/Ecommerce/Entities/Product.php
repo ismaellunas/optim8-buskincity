@@ -25,6 +25,10 @@ class Product extends LunarProduct
 
     protected $metaKeyName = 'product_id';
 
+    protected $casts = [
+        'is_special_event' => 'boolean',
+    ];
+
     public function getMetaTable(): string
     {
         return config('lunar.database.table_prefix').'products_meta';

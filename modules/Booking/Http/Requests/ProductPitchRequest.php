@@ -7,8 +7,10 @@ use App\Rules\CountryCode;
 use App\Rules\InScopedCityId;
 use App\Rules\Timezone;
 use Illuminate\Validation\Rule;
+use Modules\Booking\Rules\MaxInclusiveDaySpan;
 use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
@@ -16,8 +18,27 @@ use Modules\Ecommerce\Services\ProductService;
 
 class ProductPitchRequest extends BaseFormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('timezone')) {
+            $this->merge(['pitch_timezone' => $this->input('timezone')]);
+        }
+    }
+
     public function rules(): array
     {
+        /** @var ProductEventService $eventService */
+        $eventService = app(ProductEventService::class);
+
+        /** @var Product|null $product */
+        $product = $this->route('product');
+        $requiresFourteenDayCap = $eventService->requiresFourteenDayBookableWindow($product);
+
+        $pitchEndedAtRules = ['required', 'date', 'after_or_equal:pitch_started_at'];
+        if ($requiresFourteenDayCap) {
+            $pitchEndedAtRules[] = new MaxInclusiveDaySpan('pitch_started_at', 14);
+        }
+
         $rules = [
             // Product
             'name' => ['required', 'max:200'],
@@ -31,9 +52,14 @@ class ProductPitchRequest extends BaseFormRequest
 
             // Pitch dates — required per T4.1 decision
             'pitch_started_at' => ['required', 'date'],
-            'pitch_ended_at' => ['required', 'date', 'after_or_equal:pitch_started_at'],
-            'pitch_timezone' => ['required', new Timezone()],
-            'bookable_date_range' => ['required', 'integer', 'min:0', 'max:365'],
+            'pitch_ended_at' => $pitchEndedAtRules,
+            'pitch_timezone' => ['nullable', new Timezone()],
+            'bookable_date_range' => [
+                'required',
+                'integer',
+                'min:0',
+                'max:'.($requiresFourteenDayCap ? 14 : 365),
+            ],
             'duration' => ['required', Rule::in(
                 app(ProductEventService::class)->durationOptions()->pluck('id')
             )],

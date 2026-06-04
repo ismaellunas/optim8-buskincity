@@ -100,7 +100,8 @@ class ProductController extends CrudController
             })
             ->all();
 
-        $canBook = !empty($productEvents);
+        $canBook = ! empty($productEvents)
+            && $this->productEventService->isWithinBookableWindow($product);
         $minDate = $canBook ? $this->productEventService->minBookableDate($product) : null;
         $maxDate = $canBook ? $this->productEventService->maxBookableDate($product) : null;
 

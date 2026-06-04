@@ -55,7 +55,7 @@ class ProductEventController extends CrudController
         $product->setMeta([
             'pitch_started_at' => $inputs['pitch_started_at'] ?? null,
             'pitch_ended_at' => $inputs['pitch_ended_at'] ?? null,
-            'pitch_timezone' => $inputs['pitch_timezone'] ?? null,
+            'pitch_timezone' => $inputs['timezone'] ?? $inputs['pitch_timezone'] ?? null,
         ]);
 
         $location = collect($inputs['location'])->only([

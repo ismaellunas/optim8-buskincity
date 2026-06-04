@@ -85,6 +85,48 @@
             {{ i18n.booking_settings }}
         </h5>
 
+        <p
+            v-if="maxPitchDateSpanDays"
+            class="help mb-3"
+        >
+            {{ i18n.tips?.special_event_date_range }}
+        </p>
+
+        <div class="columns">
+            <div class="column is-6">
+                <biz-form-date-time
+                    v-if="pitchDateRange !== undefined"
+                    v-model="pitchDateRange"
+                    :label="i18n.pitch_date_range"
+                    range
+                    :utc="'preserve'"
+                    required
+                    :message="error(['pitch_started_at', 'pitch_ended_at'])"
+                    :enable-time-picker="false"
+                    :tooltip-message="i18n.tips?.pitch_date_range"
+                />
+            </div>
+            <div class="column is-6">
+                <biz-form-number-addons
+                    v-if="form.bookable_date_range !== undefined"
+                    v-model="form.bookable_date_range"
+                    :label="i18n.bookable_date_range"
+                    :max="maxBookableDateRange"
+                    min="0"
+                    required
+                    :message="error('bookable_date_range')"
+                >
+                    <template #afterInput>
+                        <p class="control">
+                            <a class="button is-static">
+                                day(s)
+                            </a>
+                        </p>
+                    </template>
+                </biz-form-number-addons>
+            </div>
+        </div>
+
         <div class="columns">
             <div class="column is-6">
                 <biz-form-select
@@ -113,51 +155,6 @@
                     </template>
                 </biz-form-select>
             </div>
-
-            <div class="column is-6">
-                <biz-form-number-addons
-                    v-if="form.bookable_date_range !== undefined"
-                    v-model="form.bookable_date_range"
-                    :label="i18n.bookable_date_range"
-                    max="365"
-                    min="0"
-                    required
-                    :message="error('bookable_date_range')"
-                >
-                    <template #afterInput>
-                        <p class="control">
-                            <a class="button is-static">
-                                day(s)
-                            </a>
-                        </p>
-                    </template>
-                </biz-form-number-addons>
-            </div>
-        </div>
-
-        <div class="columns">
-            <div class="column is-6">
-                <biz-form-date-time
-                    v-if="pitchDateRange !== undefined"
-                    v-model="pitchDateRange"
-                    :label="i18n.pitch_date_range"
-                    range
-                    :utc="'preserve'"
-                    required
-                    :message="error(['pitch_started_at', 'pitch_ended_at'])"
-                    :enable-time-picker="false"
-                    :tooltip-message="i18n.tips?.pitch_date_range"
-                />
-            </div>
-            <div class="column is-6">
-                <biz-form-timezone
-                    v-if="form.pitch_timezone !== undefined"
-                    v-model="form.pitch_timezone"
-                    :label="i18n.pitch_timezone"
-                    :message="error('pitch_timezone')"
-                    required
-                />
-            </div>
         </div>
 
         <!-- Schedule Section -->
@@ -182,28 +179,30 @@
         <div v-if="weekdays && weeklyHours" class="mt-4">
             <p class="has-text-weight-semibold mb-2">{{ i18n.weekly_hours }}</p>
             <p class="help mb-3">{{ i18n.tips?.weekly_hours }}</p>
-            
+
             <slot name="schedule" />
         </div>
 
-        <h5 class="title is-5 mt-5 mb-3">
-            {{ i18n.gallery }}
-        </h5>
+        <template v-if="showGallery">
+            <h5 class="title is-5 mt-5 mb-3">
+                {{ i18n.gallery }}
+            </h5>
 
-        <biz-form-multiple-media-library
-            v-model="form.gallery"
-            :label="i18n.upload"
-            :is-download-enabled="can?.media?.read ?? false"
-            :is-upload-enabled="can?.media?.add ?? false"
-            :is-edit-enabled="can?.media?.edit ?? false"
-            :is-browse-enabled="can?.media?.browse ?? false"
-            :mediums="gallery"
-            :dimension="dimensions.gallery"
-            :allow-multiple="true"
-            :max-files="rules.maxProductFileNumber"
-            :instructions="instructions.mediaLibrary"
-            :message="error('gallery')"
-        />
+            <biz-form-multiple-media-library
+                v-model="form.gallery"
+                :label="i18n.upload"
+                :is-download-enabled="can?.media?.read ?? false"
+                :is-upload-enabled="can?.media?.add ?? false"
+                :is-edit-enabled="can?.media?.edit ?? false"
+                :is-browse-enabled="can?.media?.browse ?? false"
+                :mediums="gallery"
+                :dimension="dimensions.gallery"
+                :allow-multiple="true"
+                :max-files="rules.maxProductFileNumber"
+                :instructions="instructions.mediaLibrary"
+                :message="error('gallery')"
+            />
+        </template>
     </div>
 </template>
 
@@ -256,13 +255,12 @@
                 select: 'Select',
                 location: 'Location',
                 booking_settings: 'Booking Settings',
-                duration: 'Duration',
-                bookable_date_range: 'Bookable Date Range',
-                pitch_date_range: 'Pitch Date Range',
-                pitch_timezone: 'Pitch Timezone',
+                duration: 'Timeslot duration',
+                bookable_date_range: 'Bookable date range (Calendar days into the future)',
+                pitch_date_range: 'Pitch date range',
                 schedule: 'Schedule',
                 timezone: 'Timezone',
-                weekly_hours: 'Weekly Hours',
+                weekly_hours: 'Weekly days and hours',
                 space: 'Space',
                 gallery: 'Gallery',
                 upload: 'Upload',
@@ -290,6 +288,8 @@
             }) },
             weekdays: { type: Object, default: () => null },
             weeklyHours: { type: Object, default: () => null },
+            showGallery: { type: Boolean, default: false },
+            maxPitchDateSpanDays: { type: Number, default: null },
         },
 
         setup(props, { emit }) {
@@ -315,9 +315,14 @@
                 }
             });
 
+            const maxBookableDateRange = computed(() => (
+                props.maxPitchDateSpanDays ?? 365
+            ));
+
             return {
                 form,
                 pitchDateRange,
+                maxBookableDateRange,
             };
         },
     };
