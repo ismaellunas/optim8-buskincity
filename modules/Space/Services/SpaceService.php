@@ -22,7 +22,13 @@ class SpaceService
     ): Builder {
         $spaces = null;
 
-        if ($ids) {
+        // null  = no id restriction (global admin)
+        // []    = scoped user with no visible spaces — must not fall through to "show all"
+        if ($ids !== null) {
+            if ($ids === []) {
+                return Space::whereRaw('1 = 0');
+            }
+
             $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
         }
 

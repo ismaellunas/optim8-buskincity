@@ -75,4 +75,15 @@ class PitchLocationFkTest extends TestCase
         $this->assertTrue(Schema::hasColumn($table, 'location_id'));
         $this->assertTrue(Schema::hasColumn($table, 'is_special_event'));
     }
+
+    /** @test */
+    public function empty_space_id_scope_returns_no_spaces(): void
+    {
+        $service = app(\Modules\Space\Services\SpaceService::class);
+        $user = User::factory()->create();
+
+        $records = $service->getRecords($user, [], null);
+
+        $this->assertSame(0, $records->total());
+    }
 }

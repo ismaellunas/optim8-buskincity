@@ -6,8 +6,10 @@ use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Models\Media;
 use App\Models\User;
 use App\Services\MediaService;
+use App\Services\UserScopeService;
 use App\Services\UserService;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Space\Entities\Space;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -27,45 +29,56 @@ class ProductService
         ?array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
+        $user->loadMissing(['products', 'spaces', 'adminCities']);
+
         $productIds = null;
 
-        if ($user->hasRole('city_administrator')) {
-            // City administrators see products they manage AND products linked to their spaces/cities
+        if ($user->isCityAdministrator() || $user->isSpecialEventsAdmin()) {
+            $scopeService = app(UserScopeService::class);
+            $cityIds = $scopeService->scopedCityIds($user);
+            $cityNames = $scopeService->scopedCityOptions($user)->pluck('name')->all();
+
             $managedProductIds = $user->products->pluck('id')->all();
-            
-            // Get spaces the city admin manages
             $managedSpaceIds = $user->spaces->pluck('id')->all();
-            
-            // Get spaces from their cities
-            $cityIds = $user->adminCities->pluck('id')->toArray();
-            $cityNames = $user->adminCities->pluck('name')->toArray();
-            $citySpaceIds = \Modules\Space\Entities\Space::whereIn('city_id', $cityIds)
-                ->pluck('id')
-                ->all();
-            
-            // Combine all space IDs
-            $allSpaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
-            
-            // Get products linked to these spaces
-            $spaceProductIds = Product::where('productable_type', 'Modules\Space\Entities\Space')
-                ->whereIn('productable_id', $allSpaceIds)
-                ->pluck('id')
-                ->all();
-            
-            // Get products whose location metadata matches their cities
-            $cityProductIds = Product::whereHas('metas', function ($query) use ($cityNames) {
-                $query->where('key', 'locations')
-                    ->where(function ($q) use ($cityNames) {
-                        foreach ($cityNames as $cityName) {
-                            $q->orWhere(DB::raw("value::json->0->>'city'"), 'ILIKE', $cityName);
-                        }
-                    });
-            })->pluck('id')->all();
-            
-            // Combine managed products, space-linked products, and city products
-            $productIds = collect(array_unique(array_merge($managedProductIds, $spaceProductIds, $cityProductIds)));
-        } elseif (!$user->can('product.browse')) {
-            $productIds = $user->products->pluck('id');
+
+            $citySpaceIds = $cityIds === []
+                ? []
+                : Space::whereIn('city_id', $cityIds)->pluck('id')->all();
+
+            $allSpaceIds = array_values(array_unique(array_merge($managedSpaceIds, $citySpaceIds)));
+
+            $spaceProductIds = $allSpaceIds === []
+                ? []
+                : Product::where('productable_type', Space::class)
+                    ->whereIn('productable_id', $allSpaceIds)
+                    ->pluck('id')
+                    ->all();
+
+            $fkProductIds = $cityIds === []
+                ? []
+                : Product::whereIn('city_id', $cityIds)->pluck('id')->all();
+
+            $metaProductIds = [];
+
+            if ($cityNames !== []) {
+                $metaProductIds = Product::whereHas('metas', function ($query) use ($cityNames) {
+                    $query->where('key', 'locations')
+                        ->where(function ($q) use ($cityNames) {
+                            foreach ($cityNames as $cityName) {
+                                $q->orWhere(DB::raw("value::json->0->>'city'"), 'ILIKE', $cityName);
+                            }
+                        });
+                })->pluck('id')->all();
+            }
+
+            $productIds = array_values(array_unique(array_merge(
+                $managedProductIds,
+                $spaceProductIds,
+                $fkProductIds,
+                $metaProductIds
+            )));
+        } elseif (! $user->can('product.browse')) {
+            $productIds = $user->products->pluck('id')->all();
         }
 
         $records = Product::orderBy('id', 'DESC')
@@ -73,8 +86,12 @@ class ProductService
             ->when($term, function ($query) use ($term) {
                 $query->searchWithoutScout($term);
             })
-            ->when($productIds, function ($query, $productIds) {
-                $query->whereIn('id', $productIds);
+            ->when($productIds !== null, function ($query) use ($productIds) {
+                if ($productIds === []) {
+                    $query->whereRaw('1 = 0');
+                } else {
+                    $query->whereIn('id', $productIds);
+                }
             })
             ->when($scopes, function ($query, $scopes) {
                 foreach ($scopes as $scopeName => $value) {

@@ -10,6 +10,7 @@ use App\Services\MenuService;
 use App\Services\CityService;
 use App\Services\LocationService;
 use App\Services\SettingService;
+use App\Services\UserScopeService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,7 +38,8 @@ class SpaceController extends CrudController
 
     public function __construct(
         private SpaceService $spaceService,
-        private IPService $ipService
+        private IPService $ipService,
+        private UserScopeService $userScopeService,
     ) {
         $this->authorizeResource(Space::class, 'space');
     }
@@ -45,6 +47,8 @@ class SpaceController extends CrudController
     public function index(SpaceIndexRequest $request)
     {
         $user = auth()->user();
+        $user->loadMissing(['spaces', 'adminCities']);
+
         $managedSpaces = null;
         $spaceIds = null;
 
@@ -54,21 +58,16 @@ class SpaceController extends CrudController
         ];
         $scopes = array_filter($scopes);
 
-        if ($user->hasRole('city_administrator')) {
-            // City administrators should see both:
-            // 1. All spaces they manage (created by them)
-            // 2. All spaces in their administered cities
+        if ($user->isCityAdministrator() || $user->isSpecialEventsAdmin()) {
             $managedSpaces = $user->spaces;
             $managedSpaceIds = $managedSpaces->pluck('id')->all();
-            
-            // Get all space IDs from their cities
-            $cityIds = $user->adminCities->pluck('id')->toArray();
-            $citySpaceIds = Space::whereIn('city_id', $cityIds)
-                ->pluck('id')
-                ->all();
-            
-            // Combine both sets of IDs (spaces they manage + spaces in their cities)
-            $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
+
+            $cityIds = $this->userScopeService->scopedCityIds($user);
+            $citySpaceIds = $cityIds === []
+                ? []
+                : Space::whereIn('city_id', $cityIds)->pluck('id')->all();
+
+            $spaceIds = array_values(array_unique(array_merge($managedSpaceIds, $citySpaceIds)));
         } elseif (! $user->can('space.viewAny')) {
             $managedSpaces = $user->spaces;
 
