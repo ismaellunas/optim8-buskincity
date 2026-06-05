@@ -55,12 +55,14 @@ class CityAdministratorTest extends TestCase
     public function it_can_assign_cities_to_administrator()
     {
         $user = User::factory()->create();
-        $city = City::factory()->create();
+        $user->assignRole(config('permission.role_names.city_admin'));
 
-        $user->adminCities()->attach($city);
+        $city = City::factory()->create();
+        $user->syncAdminCities([$city->id]);
 
         $this->assertTrue($user->isCityAdmin($city->id));
         $this->assertTrue($user->adminCities->contains($city));
+        $this->assertTrue($user->inScope('city', $city->id, config('permission.role_names.city_admin')));
     }
 
     /** @test */
