@@ -24,6 +24,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'auth:sanctum',
     'verified',
     'can:accessAdminPanel',
+    'setClientAuthToken',
     'ensureLoginFromAdminLoginRoute',
     'verifyModule:Space',
 ])->group(function () {

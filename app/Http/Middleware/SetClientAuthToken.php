@@ -23,8 +23,8 @@ class SetClientAuthToken
         if (auth()->check() && $request->routeIs('admin.*')) {
             $user = auth()->user();
             
-            // Check if user has permission to access admin
-            if ($user->can('system.dashboard') || $user->isSuperAdministrator) {
+            // Issue tokens for any admin-portal user (dashboard, city admin, SE admin).
+            if ($user->canAccessAdminPanel()) {
                 
                 // Check if client auth token already exists and is valid
                 $existingToken = $request->cookie('buskincity_auth_client');

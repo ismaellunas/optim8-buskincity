@@ -23,6 +23,24 @@ class CityAdministratorTest extends TestCase
     }
 
     /** @test */
+    public function city_administrator_receives_client_auth_token_on_spaces_index(): void
+    {
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\VerifyModule::class,
+        ]);
+
+        $user = User::factory()->create(['email_verified_at' => now()]);
+        $user->assignRole('city_administrator');
+
+        $response = $this->actingAs($user)->get(route('admin.spaces.index'));
+
+        $response->assertSuccessful();
+        $response->assertCookie('buskincity_auth_client');
+        $response->assertCookie('buskincity_auth_client_expiry');
+    }
+
+    /** @test */
     public function city_administrator_can_log_in_via_admin_login_without_dashboard_permission(): void
     {
         $user = User::factory()->create([

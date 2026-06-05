@@ -29,6 +29,7 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware(array_filter(
     'auth:sanctum',
     'verified',
     'can:accessAdminPanel',
+    'setClientAuthToken',
     env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
     'verifyModule:Booking',
 ]))->group(function () {
