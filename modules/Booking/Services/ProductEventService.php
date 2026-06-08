@@ -3,6 +3,7 @@
 namespace Modules\Booking\Services;
 
 use App\Services\CountryService;
+use App\Services\UserScopeService;
 use App\Helpers\GoogleMap;
 use App\Models\User;
 use Carbon\Carbon;
@@ -657,6 +658,38 @@ class ProductEventService
             ->values();
     }
 
+    /**
+     * Country filter options for the admin pitches index (FR-PITCH-4).
+     * Scoped admins see only countries for their assigned cities; global admins
+     * see countries derived from existing pitch locations.
+     */
+    public function getAdminFilterCountryOptions(?User $user = null): array
+    {
+        $user = $user ?? auth()->user();
+        $scope = app(UserScopeService::class);
+
+        if ($scope->isGloballyScoped($user)) {
+            return $this->getCountryOptions();
+        }
+
+        return $this->mapCountryOptionsFromScopedCities($scope->scopedCityOptions($user));
+    }
+
+    /**
+     * City filter options for the admin pitches index (FR-PITCH-4).
+     */
+    public function getAdminFilterCityOptions(?User $user = null): array
+    {
+        $user = $user ?? auth()->user();
+        $scope = app(UserScopeService::class);
+
+        if ($scope->isGloballyScoped($user)) {
+            return $this->getCityOptions();
+        }
+
+        return $this->mapCityOptionsFromScopedCities($scope->scopedCityOptions($user));
+    }
+
     public function getCountryOptions(): array
     {
         if (! $this->cacheProducts) {
@@ -719,9 +752,23 @@ class ProductEventService
 
     private function mapCountryOptions(Collection $products): array
     {
-        $countryCodes = $products
+        return $this->mapCountryOptionsFromScopedCities(
+            $products->map(fn (array $row) => (object) [
+                'country_code' => $row['country_code'] ?? null,
+            ])
+        );
+    }
+
+    /**
+     * @param  Collection<int, object{country_code?: string|null}>  $cities
+     */
+    private function mapCountryOptionsFromScopedCities(Collection $cities): array
+    {
+        $countryCodes = $cities
             ->pluck('country_code')
+            ->filter()
             ->unique()
+            ->sort()
             ->values();
 
         return $countryCodes->transform(function ($code) {
@@ -732,6 +779,21 @@ class ProductEventService
                     'name' => $countryName,
                 ];
             })
+            ->all();
+    }
+
+    /**
+     * @param  Collection<int, object{name: string, country_code?: string|null}>  $cities
+     */
+    private function mapCityOptionsFromScopedCities(Collection $cities): array
+    {
+        return $cities
+            ->map(fn ($city) => [
+                'value' => $city->name,
+                'name' => $city->name,
+                'country_code' => $city->country_code ?? null,
+            ])
+            ->values()
             ->all();
     }
 

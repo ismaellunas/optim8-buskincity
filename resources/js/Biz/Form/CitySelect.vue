@@ -159,12 +159,38 @@ export default {
                         name: c.name,
                         country_code: c.country_code
                     }));
+                    this.syncSelectedCityFromModelValue();
                 }
             },
             immediate: true
-        }
+        },
+
+        modelValue: {
+            handler() {
+                this.syncSelectedCityFromModelValue();
+            },
+            immediate: true,
+        },
     },
     methods: {
+        syncSelectedCityFromModelValue() {
+            if (! this.modelValue || this.selectedCity?.id === this.modelValue) {
+                return;
+            }
+
+            const match = this.restrictedCities.find(
+                (city) => city.id === this.modelValue
+            );
+
+            if (match) {
+                this.selectedCity = {
+                    id: match.id,
+                    name: match.name,
+                    country_code: match.country_code,
+                };
+            }
+        },
+
         onSearch: debounce(function(query) {
             this.currentSearchTerm = query || '';
             

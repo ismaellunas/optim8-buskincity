@@ -20,10 +20,12 @@
                 :initial-city="initialCity"
                 :restricted-cities="restrictedCities"
                 :allow-custom-entry="allowCustomCity"
+                :placeholder="scopedCityPlaceholder"
                 @select="onCitySelect"
             />
 
             <biz-form-select
+                v-if="showCountrySelect"
                 v-model="modelCountryCode"
                 :label="i18n.country ?? 'Country'"
                 :message="error(mergedErrorKey.countryCode, errorBagName, errorBag)"
@@ -37,6 +39,13 @@
                     {{ countryOption.value }}
                 </option>
             </biz-form-select>
+
+            <p
+                v-else-if="modelCity"
+                class="help"
+            >
+                {{ scopedCountryHint }}
+            </p>
         </div>
 
         <div
@@ -105,6 +114,8 @@
             maxlengthCity: { type: [Number], default: 64 },
             restrictedCities: { type: Array, default: () => [] },
             allowCustomCity: { type: Boolean, default: true }, // Allow custom city entry by default
+            /** When false, country is derived from the selected city (scoped city admins). */
+            showCountrySelect: { type: Boolean, default: true },
         },
 
         emits: [
@@ -141,10 +152,36 @@
                     ...this.errorKey,
                 };
             },
+
+            isScopedCityPicker() {
+                return this.restrictedCities.length > 0;
+            },
+
+            scopedCityPlaceholder() {
+                return this.isScopedCityPicker
+                    ? 'Select your city...'
+                    : 'Search for a city...';
+            },
+
+            scopedCountryHint() {
+                if (! this.modelCountryCode) {
+                    return '';
+                }
+
+                const match = this.restrictedCities.find(
+                    (city) => city.id === this.modelCityId || city.name === this.modelCity
+                );
+
+                const code = match?.country_code ?? this.modelCountryCode;
+
+                return `Country: ${code} (set from your selected city)`;
+            },
         },
 
         beforeMount() {
-            this.loadCountryOptions();
+            if (this.showCountrySelect) {
+                this.loadCountryOptions();
+            }
         },
 
         methods: {

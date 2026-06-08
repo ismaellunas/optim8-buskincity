@@ -78,8 +78,8 @@ class ProductController extends CrudController
                 $scopes,
             ),
             'statusOptions' => ProductStatus::options(),
-            'countryOptions' => $this->productEventService->getCountryOptions(),
-            'cityOptions' => $this->productEventService->getCityOptions(),
+            'countryOptions' => $this->productEventService->getAdminFilterCountryOptions($user),
+            'cityOptions' => $this->productEventService->getAdminFilterCityOptions($user),
             'can' => [
                 'add' => $user->can('create', Product::class),
             ],
@@ -91,6 +91,7 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
         $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow();
+        $scopedCities = $this->scopedCitiesForPitchForm();
 
         return Inertia::render('Booking::ProductCreate', $this->getData([
             'breadcrumbs' => [
@@ -128,7 +129,8 @@ class ProductController extends CrudController
             'eventDurationOptions' => $this->productEventService->durationOptions(),
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->defaultWeeklyHours(),
-            'defaultCountryCode' => app(IPService::class)->getCountryCode('US'),
+            'defaultCountryCode' => $scopedCities[0]['country_code']
+                ?? app(IPService::class)->getCountryCode('US'),
             'defaultTimezone' => app(IPService::class)->getTimezone(),
             'isSpecialEventPitch' => $isSpecialEventPitch,
             'maxPitchDateSpanDays' => $isSpecialEventPitch ? 14 : null,
@@ -142,7 +144,7 @@ class ProductController extends CrudController
                 'gallery' => config('constants.dimensions.gallery'),
             ],
             'spaceOptions' => $this->productSpaceService->getSpaceOptions(),
-            'scopedCities' => $this->scopedCitiesForPitchForm(),
+            'scopedCities' => $scopedCities,
         ]));
     }
 

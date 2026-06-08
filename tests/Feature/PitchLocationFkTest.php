@@ -10,6 +10,7 @@ use App\Services\UserScopeService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use Modules\Booking\Services\ProductEventService;
 use Tests\TestCase;
 
 class PitchLocationFkTest extends TestCase
@@ -74,6 +75,31 @@ class PitchLocationFkTest extends TestCase
         $this->assertTrue(Schema::hasColumn($table, 'city_id'));
         $this->assertTrue(Schema::hasColumn($table, 'location_id'));
         $this->assertTrue(Schema::hasColumn($table, 'is_special_event'));
+    }
+
+    /** @test */
+    public function pitch_index_filter_options_are_scoped_for_city_admin(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole(config('permission.role_names.city_admin'));
+
+        $assigned = City::factory()->create(['name' => 'Wageningen', 'country_code' => 'NLD']);
+        City::factory()->create(['name' => 'Oslo', 'country_code' => 'NOR']);
+        City::factory()->create(['name' => 'Amsterdam', 'country_code' => 'NLD']);
+
+        $user->syncAdminCities([$assigned->id]);
+
+        $service = app(ProductEventService::class);
+
+        $cityOptions = $service->getAdminFilterCityOptions($user);
+        $countryOptions = $service->getAdminFilterCountryOptions($user);
+
+        $this->assertCount(1, $cityOptions);
+        $this->assertSame('Wageningen', $cityOptions[0]['value']);
+        $this->assertSame('NLD', $cityOptions[0]['country_code']);
+
+        $this->assertCount(1, $countryOptions);
+        $this->assertSame('NLD', $countryOptions[0]['value']);
     }
 
     /** @test */

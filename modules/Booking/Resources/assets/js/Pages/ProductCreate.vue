@@ -163,6 +163,22 @@
                 longitude: 'location.longitude',
             };
 
+            const initialLocation = {
+                address: null,
+                city: null,
+                city_id: null,
+                country_code: props.defaultCountryCode,
+                latitude: null,
+                longitude: null,
+            };
+
+            if (props.scopedCities.length === 1) {
+                const scoped = props.scopedCities[0];
+                initialLocation.city = scoped.name;
+                initialLocation.city_id = scoped.id;
+                initialLocation.country_code = scoped.country_code;
+            }
+
             const form = {
                 name: null,
                 status: 'draft',
@@ -172,14 +188,7 @@
                 is_check_in_required: false,
                 gallery: [],
                 space_id: null,
-                location: {
-                    address: null,
-                    city: null,
-                    city_id: null,
-                    country_code: props.defaultCountryCode,
-                    latitude: null,
-                    longitude: null,
-                },
+                location: initialLocation,
                 duration: '60',
                 bookable_date_range: props.isSpecialEventPitch ? 14 : 60,
                 pitch_started_at: null,

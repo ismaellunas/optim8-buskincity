@@ -80,6 +80,7 @@
             :error-key="locationFieldsetErrorKeys"
             :restricted-cities="restrictedCities"
             :allow-custom-city="restrictedCities.length === 0"
+            :show-country-select="restrictedCities.length === 0"
         />
 
         <!-- Booking Settings Section -->
