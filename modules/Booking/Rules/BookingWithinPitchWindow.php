@@ -2,17 +2,17 @@
 
 namespace Modules\Booking\Rules;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\InvokableRule;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
 
-class BookingWithinPitchWindow implements ValidationRule
+class BookingWithinPitchWindow implements InvokableRule
 {
     public function __construct(private Product $product)
     {
     }
 
-    public function validate(string $attribute, mixed $value, \Closure $fail): void
+    public function __invoke($attribute, $value, $fail): void
     {
         if (blank($value)) {
             return;
