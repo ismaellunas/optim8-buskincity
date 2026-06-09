@@ -25,13 +25,6 @@
                 @select="onCitySelect"
             />
 
-            <p
-                v-else-if="modelCity"
-                class="help mb-3"
-            >
-                {{ scopedCountryHint }}
-            </p>
-
             <biz-form-select
                 v-if="showCountrySelect"
                 v-model="modelCountryCode"
@@ -49,8 +42,8 @@
             </biz-form-select>
 
             <p
-                v-else-if="modelCity"
-                class="help"
+                v-if="scopedCountryHint"
+                class="help mb-3"
             >
                 {{ scopedCountryHint }}
             </p>
