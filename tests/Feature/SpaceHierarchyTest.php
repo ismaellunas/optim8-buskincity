@@ -106,7 +106,7 @@ class SpaceHierarchyTest extends TestCase
 
         $this->assertFalse($locationOption['is_disabled']);
         $this->assertTrue($cityOption['is_disabled']);
-        $this->assertSame('Dam Square', $locationOption['location']['city']);
+        $this->assertSame('Amsterdam', $locationOption['location']['city']);
     }
 
     /** @test */

@@ -5,6 +5,7 @@ namespace Modules\Booking\Http\Controllers;
 use App\Helpers\HumanReadable;
 use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
+use App\Models\City;
 use App\Services\CityService;
 use App\Services\IPService;
 use App\Services\LocationService;
@@ -164,7 +165,7 @@ class ProductController extends CrudController
                 'product_type_id' => $productType->id,
                 'status' => $inputs['status'],
                 'productable_type' => ! empty($inputs['space_id'] ?? null) ? Space::class : null,
-                'productable_id' => $inputs['space_id'] ?? null,
+                'productable_id' => ! empty($inputs['space_id'] ?? null) ? (int) $inputs['space_id'] : null,
                 'is_special_event' => $user->isSpecialEventsAdmin(),
                 'attribute_data' => [
                     'name' => new TranslatedText(collect([
@@ -318,6 +319,10 @@ class ProductController extends CrudController
 
         $location['latitude'] = ! is_null($latitude) ? (float) $latitude : null;
         $location['longitude'] = ! is_null($longitude) ? (float) $longitude : null;
+        $location['city'] = $this->normalizeLocationCityName(
+            $location['city'] ?? null,
+            $inputs['city_id'] ?? null
+        );
 
         if ($location['latitude'] && $location['longitude']) {
             $response = $this->getReversedGeocoding($location['latitude'], $location['longitude']);
@@ -328,6 +333,55 @@ class ProductController extends CrudController
         }
 
         return $location;
+    }
+
+    /**
+     * @param  array<string, mixed>  $inputs
+     * @param  array<string, mixed>  $location
+     */
+    private function resolvePitchCity(array $inputs, array $location): ?City
+    {
+        if (! empty($inputs['city_id'])) {
+            return City::query()->find((int) $inputs['city_id']);
+        }
+
+        $cityName = $this->normalizeLocationCityName(
+            $location['city'] ?? null,
+            null
+        );
+        $countryCode = $location['country_code'] ?? null;
+
+        if ($cityName === null || empty($countryCode)) {
+            return null;
+        }
+
+        return $this->cityService->findOrCreate(
+            $cityName,
+            (string) $countryCode,
+            $location['latitude'],
+            $location['longitude']
+        );
+    }
+
+    private function normalizeLocationCityName(mixed $city, ?int $cityId): ?string
+    {
+        if (is_string($city) && $city !== '') {
+            return $city;
+        }
+
+        if (is_array($city) && ! empty($city['name'])) {
+            return (string) $city['name'];
+        }
+
+        if ($city instanceof City) {
+            return $city->name;
+        }
+
+        if ($cityId) {
+            return City::query()->whereKey($cityId)->value('name');
+        }
+
+        return null;
     }
 
     /**
@@ -354,7 +408,7 @@ class ProductController extends CrudController
 
         if (! empty($inputs['space_id'] ?? null)) {
             $product->productable_type = Space::class;
-            $product->productable_id = $inputs['space_id'];
+            $product->productable_id = (int) $inputs['space_id'];
         }
 
         $product->setMeta([
@@ -365,14 +419,9 @@ class ProductController extends CrudController
             'pitch_timezone' => $inputs['timezone'],
         ]);
 
-        if (! empty($location['city']) && ! empty($location['country_code'])) {
-            $city = $this->cityService->findOrCreate(
-                $location['city'],
-                $location['country_code'],
-                $location['latitude'],
-                $location['longitude']
-            );
+        $city = $this->resolvePitchCity($inputs, $location);
 
+        if ($city) {
             $this->userScopeService->assertCityInScope($city->id);
 
             $locationModel = $this->locationService->findOrCreateFromPitchData(
@@ -389,6 +438,7 @@ class ProductController extends CrudController
 
             $product->city_id = $city->id;
             $product->location_id = $locationModel->id;
+            $location['city'] = $city->name;
         }
 
         $product->locations = [$location];

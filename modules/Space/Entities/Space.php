@@ -72,6 +72,26 @@ class Space extends BaseModel implements TranslatableContract
         return $this->belongsTo(\App\Models\City::class);
     }
 
+    /**
+     * City name string from the `city` column or linked City record.
+     *
+     * Do not use `$space->city` — that resolves the city() relationship instead.
+     */
+    public function cityName(): ?string
+    {
+        $name = $this->attributes['city'] ?? null;
+
+        if (is_string($name) && $name !== '') {
+            return $name;
+        }
+
+        if ($this->city_id) {
+            return $this->city()->value('name');
+        }
+
+        return null;
+    }
+
     public function page()
     {
         return $this->belongsTo(Page::class);
@@ -276,7 +296,7 @@ class Space extends BaseModel implements TranslatableContract
     {
         return collect([
             $this->address,
-            $this->city,
+            $this->cityName(),
             (
                 $this->country_code
                 ? app(CountryService::class)->getCountryName($this->country_code)

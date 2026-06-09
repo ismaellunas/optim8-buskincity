@@ -11,6 +11,8 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\ProductSpaceService;
+use Modules\Space\Entities\Space;
 use Tests\TestCase;
 
 class PitchLocationFkTest extends TestCase
@@ -115,6 +117,45 @@ class PitchLocationFkTest extends TestCase
 
         $this->assertTrue($scope->requiresSavedLocationForPitch($cityAdmin));
         $this->assertFalse($scope->requiresSavedLocationForPitch($admin));
+    }
+
+    /** @test */
+    public function location_payload_from_space_returns_city_name_string(): void
+    {
+        $city = City::factory()->create(['name' => 'Amsterdam', 'country_code' => 'NLD']);
+
+        $space = Space::create([
+            'name' => 'Dam Square',
+            'city_id' => $city->id,
+            'city' => 'Amsterdam',
+            'country_code' => 'NL',
+            'address' => 'Dam 1',
+            'latitude' => 52.3731,
+            'longitude' => 4.8922,
+        ]);
+
+        $payload = app(ProductSpaceService::class)->locationPayloadFromSpace($space->id);
+
+        $this->assertNotNull($payload);
+        $this->assertIsString($payload['city']);
+        $this->assertSame('Amsterdam', $payload['city']);
+        $this->assertSame($city->id, $payload['city_id']);
+    }
+
+    /** @test */
+    public function space_city_name_uses_column_not_relationship(): void
+    {
+        $city = City::factory()->create(['name' => 'Amsterdam', 'country_code' => 'NLD']);
+
+        $space = Space::create([
+            'name' => 'Dam Square',
+            'city_id' => $city->id,
+            'city' => 'Amsterdam',
+            'country_code' => 'NL',
+        ]);
+
+        $this->assertSame('Amsterdam', $space->cityName());
+        $this->assertInstanceOf(City::class, $space->city);
     }
 
     /** @test */

@@ -310,7 +310,7 @@ class SpaceController extends CrudController
             'bookable_date_range' => 60,
             'is_check_in_required' => (bool) $request->input('product_is_check_in_required', false),
             'locations' => [[
-                'city' => $space->city,
+                'city' => $space->cityName(),
                 'country_code' => $space->country_code,
                 'latitude' => $space->latitude,
                 'longitude' => $space->longitude,
@@ -321,10 +321,10 @@ class SpaceController extends CrudController
         $product->setMeta($meta);
         $product->save();
 
-        if (! empty($space->city) && ! empty($space->country_code)) {
+        if (! empty($space->cityName()) && ! empty($space->country_code)) {
             try {
                 $city = app(CityService::class)->findOrCreate(
-                    $space->city,
+                    $space->cityName(),
                     $space->country_code,
                     $space->latitude,
                     $space->longitude

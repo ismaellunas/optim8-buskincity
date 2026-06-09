@@ -87,7 +87,7 @@ class ProductSpaceService
                     'note' => $note,
                     'location' => [
                         'address' => $space->address,
-                        'city' => $space->city,
+                        'city' => $space->cityName(),
                         'city_id' => $space->city_id,
                         'country_code' => $space->country_code,
                         'latitude' => $space->latitude,
@@ -114,7 +114,7 @@ class ProductSpaceService
 
         return [
             'address' => $space->address,
-            'city' => $space->city,
+            'city' => $space->cityName(),
             'country_code' => $space->country_code,
             'latitude' => $space->latitude,
             'longitude' => $space->longitude,

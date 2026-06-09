@@ -25,6 +25,17 @@ class Product extends LunarProduct
 
     protected $metaKeyName = 'product_id';
 
+    protected $fillable = [
+        'attribute_data',
+        'product_type_id',
+        'status',
+        'productable_type',
+        'productable_id',
+        'city_id',
+        'location_id',
+        'is_special_event',
+    ];
+
     protected $casts = [
         'is_special_event' => 'boolean',
     ];
