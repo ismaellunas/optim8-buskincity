@@ -10,6 +10,7 @@ use App\Services\CountryService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Kodeine\Metable\Metable;
+use Lunar\Base\Casts\AsAttributeData;
 use Lunar\FieldTypes\TranslatedText;
 use Lunar\Models\Product as LunarProduct;
 use Modules\Booking\Entities\Schedule;
@@ -37,6 +38,7 @@ class Product extends LunarProduct
     ];
 
     protected $casts = [
+        'attribute_data' => AsAttributeData::class,
         'is_special_event' => 'boolean',
     ];
 

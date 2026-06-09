@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Booking\Services\ProductSpaceService;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 use Tests\TestCase;
 
@@ -143,19 +144,39 @@ class PitchLocationFkTest extends TestCase
     }
 
     /** @test */
-    public function space_city_name_uses_column_not_relationship(): void
+    public function space_city_name_returns_string_when_city_column_is_empty(): void
     {
         $city = City::factory()->create(['name' => 'Amsterdam', 'country_code' => 'NLD']);
 
         $space = Space::create([
             'name' => 'Dam Square',
             'city_id' => $city->id,
-            'city' => 'Amsterdam',
+            'city' => null,
             'country_code' => 'NL',
         ]);
 
-        $this->assertSame('Amsterdam', $space->cityName());
-        $this->assertInstanceOf(City::class, $space->city);
+        $this->assertSame('Amsterdam', $space->fresh()->cityName());
+    }
+
+    /** @test */
+    public function pitch_product_create_casts_attribute_data_to_json(): void
+    {
+        $this->seed(\Modules\Ecommerce\Database\Seeders\DefaultSeeder::class);
+
+        $productType = \Lunar\Models\ProductType::where('name', 'Event')->first();
+
+        $product = Product::create([
+            'product_type_id' => $productType->id,
+            'status' => 'draft',
+            'attribute_data' => [
+                'name' => new \Lunar\FieldTypes\TranslatedText(collect([
+                    'en' => new \Lunar\FieldTypes\Text('Dam Square Pitch'),
+                ])),
+            ],
+        ]);
+
+        $this->assertNotNull($product->id);
+        $this->assertSame('Dam Square Pitch', $product->translateAttribute('name'));
     }
 
     /** @test */
