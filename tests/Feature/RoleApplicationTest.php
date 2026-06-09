@@ -59,6 +59,27 @@ class RoleApplicationTest extends TestCase
     }
 
     /** @test */
+    public function guest_can_search_swedish_cities_by_name_country_or_ascii_variant(): void
+    {
+        $this->seed(\Database\Seeders\CountrySeeder::class);
+
+        City::factory()->create(['name' => 'Göteborg', 'country_code' => 'SE']);
+        City::factory()->create(['name' => 'Stockholm', 'country_code' => 'SE']);
+
+        $this->getJson(route('cities.search', ['search' => 'Stockholm']))
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Stockholm', 'country_code' => 'SE']);
+
+        $this->getJson(route('cities.search', ['search' => 'Goteborg']))
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Göteborg', 'country_code' => 'SE']);
+
+        $this->getJson(route('cities.search', ['search' => 'Sweden']))
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Stockholm', 'country_code' => 'SE']);
+    }
+
+    /** @test */
     public function guest_can_submit_a_city_admin_application(): void
     {
         $city = City::factory()->create();

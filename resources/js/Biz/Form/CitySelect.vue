@@ -118,6 +118,7 @@ export default {
         restrictedCities: { type: Array, default: () => [] },
         allowCustomEntry: { type: Boolean, default: true }, // Enable hybrid mode by default
         searchRoute: { type: String, default: 'admin.api.cities.index' },
+        debounceMs: { type: Number, default: 400 },
     },
     emits: ['update:modelValue', 'select'],
     data() {
@@ -129,7 +130,18 @@ export default {
             currentSearchTerm: '',
             useCustomEntry: false,
             customCityName: '',
+            searchRequestId: 0,
+            searchAbortController: null,
         };
+    },
+    created() {
+        this.debouncedSearch = debounce((query) => {
+            this.performSearch(query);
+        }, this.debounceMs);
+    },
+    beforeUnmount() {
+        this.debouncedSearch?.cancel();
+        this.searchAbortController?.abort();
     },
     computed: {
         isRestricted() {
@@ -196,9 +208,12 @@ export default {
             }
         },
 
-        onSearch: debounce(function(query) {
+        onSearch(query) {
             this.currentSearchTerm = query || '';
-            
+            this.debouncedSearch(query);
+        },
+
+        performSearch(query) {
             // If using restricted cities, filter locally
             if (this.isRestricted) {
                 if (!query || query.length === 0) {
@@ -210,12 +225,13 @@ export default {
                         longitude: c.longitude ?? null,
                     }));
                     this.hasSearched = false;
+                    this.isLoading = false;
                     return;
                 }
-                
+
                 const searchTerm = query.toLowerCase();
                 this.cities = this.restrictedCities
-                    .filter(c => 
+                    .filter(c =>
                         c.name.toLowerCase().includes(searchTerm) ||
                         c.country_code.toLowerCase().includes(searchTerm)
                     )
@@ -227,31 +243,50 @@ export default {
                         longitude: c.longitude ?? null,
                     }));
                 this.hasSearched = true;
+                this.isLoading = false;
                 return;
             }
-            
-            // Normal API-based search
-            if (!query || query.length === 0) {
+
+            if (!query || query.length < 2) {
+                this.searchAbortController?.abort();
                 this.cities = [];
                 this.hasSearched = false;
                 this.isLoading = false;
                 return;
             }
-            
+
+            this.searchAbortController?.abort();
+            this.searchAbortController = new AbortController();
+            const requestId = ++this.searchRequestId;
+            const searchTerm = query;
+
             this.isLoading = true;
             this.hasSearched = true;
-            
+
             axios.get(route(this.searchRoute), {
                 params: {
-                    search: query,
-                    country_code: this.countryCode
+                    search: searchTerm,
+                    country_code: this.countryCode,
+                },
+                signal: this.searchAbortController.signal,
+            }).then((response) => {
+                if (requestId !== this.searchRequestId || searchTerm !== this.currentSearchTerm) {
+                    return;
                 }
-            }).then(response => {
+
                 this.cities = response.data;
+            }).catch((error) => {
+                if (error?.code === 'ERR_CANCELED') {
+                    return;
+                }
+
+                throw error;
             }).finally(() => {
-                this.isLoading = false;
+                if (requestId === this.searchRequestId) {
+                    this.isLoading = false;
+                }
             });
-        }, 200),
+        },
         selectCity(city) {
             this.selectedCity = city;
             this.$emit('update:modelValue', city.id);
