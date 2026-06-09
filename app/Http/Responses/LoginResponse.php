@@ -18,12 +18,16 @@ class LoginResponse extends FortifyLoginResponse
             if (LoginService::isAdminLoginAttemptRoute($request->route())) {
                 $user = $request->user();
                 
-                // Redirect City Administrators to Spaces
-                if ($user->hasRole(config('permission.role_names.city_admin')) && !$user->can('system.dashboard')) {
-                    return redirect()->intended(route('admin.spaces.index'));
+                if (! $user->can('system.dashboard')) {
+                    if ($user->isCityAdministrator()) {
+                        return redirect()->intended(route('admin.spaces.index'));
+                    }
+
+                    if ($user->isSpecialEventsAdmin()) {
+                        return redirect()->intended(route('admin.booking.products.index'));
+                    }
                 }
-                
-                // Redirect other admin users to Dashboard
+
                 if ($user->can('system.dashboard')) {
                     $home = 'admin_dashboard';
                 }

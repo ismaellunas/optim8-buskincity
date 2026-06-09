@@ -83,6 +83,9 @@ class ProductService
 
         $records = Product::orderBy('id', 'DESC')
             ->select(['id', 'status', 'attribute_data'])
+            ->when($user->isSpecialEventsAdmin(), function ($query) {
+                $query->where('is_special_event', true);
+            })
             ->when($term, function ($query) use ($term) {
                 $query->searchWithoutScout($term);
             })

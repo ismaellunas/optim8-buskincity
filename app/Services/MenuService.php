@@ -312,11 +312,15 @@ class MenuService
         ];
 
         if ($request->routeIs('admin.*')) {
-            // Check if user is City Administrator
-            $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin')) && !$user->can('system.dashboard');
-            
-            // Set logo based on role
-            if ($isCityAdmin) {
+            $isScopedAdmin = ! $user->can('system.dashboard')
+                && ($user->isCityAdministrator() || $user->isSpecialEventsAdmin());
+
+            if ($user->isSpecialEventsAdmin() && ! $user->can('system.dashboard')) {
+                $menuLogo = [
+                    'title' => __('Pitches'),
+                    'link' => route('admin.booking.products.index'),
+                ];
+            } elseif ($user->isCityAdministrator() && ! $user->can('system.dashboard')) {
                 $menuLogo = [
                     'title' => __('Spaces'),
                     'link' => route('admin.spaces.index'),
@@ -328,8 +332,7 @@ class MenuService
                 ];
             }
 
-            // City Administrators only see module menus (Space), not core menus
-            if ($isCityAdmin) {
+            if ($isScopedAdmin) {
                 $menus = [];
             } else {
                 $menus = [
@@ -517,7 +520,9 @@ class MenuService
 
             $menuProfile = [
                 'title' => __('Profile'),
-                'link' => route('admin.profile.show'),
+                'link' => $isScopedAdmin
+                    ? route('user.profile.show')
+                    : route('admin.profile.show'),
             ];
 
         } else {

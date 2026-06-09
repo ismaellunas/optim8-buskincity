@@ -129,4 +129,36 @@ class SpecialEventsAdminPermissionTest extends TestCase
             'Special Events Admin should be selectable in the user role dropdown.'
         );
     }
+
+    /** @test */
+    public function special_events_admin_can_open_booking_products_index(): void
+    {
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\VerifyModule::class,
+        ]);
+
+        $city = City::factory()->create();
+        $user = User::factory()->create(['email_verified_at' => now()]);
+        $user->assignRole($this->role);
+        $user->syncScopeCities($this->role, [$city->id]);
+
+        $this->actingAs($user)
+            ->get(route('admin.booking.products.index'))
+            ->assertOk();
+    }
+
+    /** @test */
+    public function special_events_admin_login_redirects_to_booking_products(): void
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('secret-password'),
+        ]);
+        $user->assignRole($this->role);
+
+        $this->post(route('admin.login.attempt'), [
+            'email' => $user->email,
+            'password' => 'secret-password',
+        ])->assertRedirect(route('admin.booking.products.index'));
+    }
 }

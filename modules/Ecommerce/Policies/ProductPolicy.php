@@ -5,10 +5,12 @@ namespace Modules\Ecommerce\Policies;
 use App\Models\User;
 use App\Policies\BasePermissionPolicy;
 use App\Services\LoginService;
+use App\Services\UserScopeService;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\ProductStatus;
+use Modules\Space\Entities\Space;
 use Illuminate\Support\Traits\Macroable;
 
 class ProductPolicy extends BasePermissionPolicy
@@ -23,7 +25,8 @@ class ProductPolicy extends BasePermissionPolicy
             return (
                 $user->can('product.browse')
                 || $user->isProductManager()
-                || $user->hasRole('city_administrator')
+                || $user->isCityAdministrator()
+                || $user->isSpecialEventsAdmin()
             );
         }
 
@@ -34,7 +37,8 @@ class ProductPolicy extends BasePermissionPolicy
     {
         return (
             parent::create($user)
-            || $user->hasRole('city_administrator')
+            || $user->isCityAdministrator()
+            || $user->isSpecialEventsAdmin()
         );
     }
 
@@ -57,28 +61,54 @@ class ProductPolicy extends BasePermissionPolicy
     }
 
     /**
-     * Check if a city administrator can manage a product through its linked space
+     * Scoped admins may manage pitches they own or that belong to their cities.
+     * Special Events Admins are limited to special-event pitches (OQ1).
      */
     private function canManageProductSpace(User $user, Model $product): bool
     {
-        if (!$user->hasRole('city_administrator')) {
+        if ($user->isSpecialEventsAdmin()) {
+            if (! $product->is_special_event) {
+                return false;
+            }
+
+            return $this->productIsInScopedCities($user, $product);
+        }
+
+        if (! $user->isCityAdministrator()) {
             return false;
         }
 
-        // Check if product is linked to a Space
-        if ($product->productable_type !== 'Modules\Space\Entities\Space' || !$product->productable_id) {
+        return $this->productIsInScopedCities($user, $product);
+    }
+
+    private function productIsInScopedCities(User $user, Model $product): bool
+    {
+        if ($user->products->contains($product)) {
+            return true;
+        }
+
+        $scopeService = app(UserScopeService::class);
+
+        if ($product->city_id && $scopeService->cityIdIsInScope((int) $product->city_id, $user)) {
+            return true;
+        }
+
+        if ($product->productable_type !== Space::class || ! $product->productable_id) {
             return false;
         }
 
         $space = $product->productable;
-        
-        if (!$space) {
+
+        if (! $space) {
             return false;
         }
 
-        // Check if user manages the space or the space is in their cities
-        return $user->spaces->contains('id', $space->id) 
-            || $user->adminCities->contains('id', $space->city_id);
+        if ($user->spaces->contains('id', $space->id)) {
+            return true;
+        }
+
+        return $space->city_id
+            && $scopeService->cityIdIsInScope((int) $space->city_id, $user);
     }
 
     public function manageManager(User $user)

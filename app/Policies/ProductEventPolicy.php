@@ -20,7 +20,8 @@ class ProductEventPolicy
     {
         return $user->can('product.browse')
             || $user->can('product.edit')
-            || $user->hasRole('city_administrator');
+            || $user->isCityAdministrator()
+            || $user->isSpecialEventsAdmin();
     }
 
     /**
@@ -52,7 +53,8 @@ class ProductEventPolicy
     public function create(User $user)
     {
         return $user->can('product.add')
-            || $user->hasRole('city_administrator');
+            || $user->isCityAdministrator()
+            || $user->isSpecialEventsAdmin();
     }
 
     /**
