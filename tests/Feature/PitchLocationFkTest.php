@@ -103,6 +103,21 @@ class PitchLocationFkTest extends TestCase
     }
 
     /** @test */
+    public function scoped_city_admin_requires_saved_location_for_pitch(): void
+    {
+        $cityAdmin = User::factory()->create();
+        $cityAdmin->assignRole(config('permission.role_names.city_admin'));
+
+        $admin = User::factory()->create();
+        $admin->assignRole(config('permission.role_names.admin'));
+
+        $scope = app(UserScopeService::class);
+
+        $this->assertTrue($scope->requiresSavedLocationForPitch($cityAdmin));
+        $this->assertFalse($scope->requiresSavedLocationForPitch($admin));
+    }
+
+    /** @test */
     public function empty_space_id_scope_returns_no_spaces(): void
     {
         $service = app(\Modules\Space\Services\SpaceService::class);

@@ -6,6 +6,7 @@ use App\Http\Requests\BaseFormRequest;
 use App\Rules\CountryCode;
 use App\Rules\InScopedCityId;
 use App\Rules\Timezone;
+use App\Services\UserScopeService;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\MaxInclusiveDaySpan;
 use Modules\Booking\Rules\NoOverlappingTime;
@@ -32,6 +33,21 @@ class ProductPitchRequest extends BaseFormRequest
         if ($span !== null) {
             $this->merge(['bookable_date_range' => $span]);
         }
+
+        $spaceId = $this->input('space_id');
+
+        if ($spaceId) {
+            $location = app(ProductSpaceService::class)->locationPayloadFromSpace((int) $spaceId);
+
+            if ($location) {
+                $this->merge([
+                    'location' => collect($this->input('location', []))
+                        ->merge(collect($location)->except('city_id'))
+                        ->all(),
+                    'city_id' => $location['city_id'],
+                ]);
+            }
+        }
     }
 
     public function rules(): array
@@ -47,6 +63,8 @@ class ProductPitchRequest extends BaseFormRequest
         if ($requiresFourteenDayCap) {
             $pitchEndedAtRules[] = new MaxInclusiveDaySpan('pitch_started_at', 14);
         }
+
+        $requiresSavedLocation = app(UserScopeService::class)->requiresSavedLocationForPitch();
 
         $rules = [
             // Product
@@ -98,12 +116,12 @@ class ProductPitchRequest extends BaseFormRequest
             ],
             'date_overrides.*.times.*' => [new NoOverlappingTime()],
 
-            // Location
+            // Location — free-text only for globally scoped admins; scoped admins use space_id
             'location.address' => ['nullable', 'max:500'],
             'location.latitude' => ['nullable', 'numeric'],
             'location.longitude' => ['nullable', 'numeric'],
-            'location.city' => ['required', 'max:64'],
-            'location.country_code' => ['required', new CountryCode()],
+            'location.city' => [$requiresSavedLocation ? 'nullable' : 'required', 'max:64'],
+            'location.country_code' => [$requiresSavedLocation ? 'nullable' : 'required', new CountryCode()],
             'location_id' => ['nullable', 'integer', 'exists:locations,id'],
             'city_id' => ['nullable', 'integer', 'exists:cities,id', new InScopedCityId()],
         ];
@@ -116,7 +134,12 @@ class ProductPitchRequest extends BaseFormRequest
                 ->filter(fn ($space) => ! $space['is_disabled'])
                 ->pluck('id');
 
-            $rules['space_id'] = ['nullable', Rule::in($spaceIds)];
+            $rules['space_id'] = [
+                $requiresSavedLocation ? 'required' : 'nullable',
+                Rule::in($spaceIds),
+            ];
+        } elseif ($requiresSavedLocation) {
+            $rules['space_id'] = ['required'];
         }
 
         return $rules;
@@ -142,6 +165,7 @@ class ProductPitchRequest extends BaseFormRequest
             'location.longitude' => 'Longitude',
             'location.city' => 'City',
             'location.country_code' => 'Country',
+            'space_id' => 'Location',
         ];
     }
 }

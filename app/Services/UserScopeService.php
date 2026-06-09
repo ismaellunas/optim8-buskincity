@@ -136,4 +136,18 @@ class UserScopeService
             ->orderBy('name')
             ->get(['id', 'name', 'country_code', 'latitude', 'longitude']);
     }
+
+    /**
+     * Scoped city/SE admins must link pitches to a saved Location (Space), not free-text geo.
+     */
+    public function requiresSavedLocationForPitch(?User $user = null): bool
+    {
+        $user = $user ?? auth()->user();
+
+        if (! $user || $this->isGloballyScoped($user)) {
+            return false;
+        }
+
+        return $user->isCityAdministrator() || $user->isSpecialEventsAdmin();
+    }
 }

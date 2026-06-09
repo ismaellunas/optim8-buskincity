@@ -26,6 +26,7 @@
                             :instructions="instructions"
                             :max-pitch-date-span-days="maxPitchDateSpanDays"
                             :restricted-cities="scopedCities"
+                            :requires-saved-location="requiresSavedLocation"
                             :role-options="roleOptions"
                             :rules="rules"
                             :status-options="statusOptions"
@@ -326,6 +327,7 @@
             isSpecialEventPitch: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
             scopedCities: { type: Array, default: () => [] },
+            requiresSavedLocation: { type: Boolean, default: false },
         },
 
         setup(props) {
@@ -351,6 +353,8 @@
                     ...event.value.location,
                     city_id: event.value.location?.city_id ?? null,
                 },
+
+                space_id: space.value.id,
                 
                 // Booking settings (from Event tab)
                 duration: event.value.duration,

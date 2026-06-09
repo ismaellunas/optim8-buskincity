@@ -69,8 +69,52 @@
             {{ i18n.location }}
         </h5>
 
+        <template v-if="requiresSavedLocation">
+            <product-space-form
+                v-model="form.space_id"
+                :space-options="assignableSpaceOptions"
+                required
+                :message="error('space_id')"
+            />
+
+            <div
+                v-if="selectedSpaceOption"
+                class="box is-light mt-3"
+            >
+                <p class="help mb-2">
+                    {{ i18n.tips?.pitch_location_from_space }}
+                </p>
+
+                <p class="has-text-weight-semibold">
+                    {{ selectedSpaceOption.value }}
+                </p>
+
+                <p v-if="form.location?.address">
+                    {{ form.location.address }}
+                </p>
+
+                <p v-if="form.location?.city">
+                    {{ form.location.city }}, {{ form.location.country_code }}
+                </p>
+
+                <p
+                    v-if="selectedLocationCoordinates"
+                    class="help mt-1"
+                >
+                    {{ selectedLocationCoordinates }}
+                </p>
+            </div>
+
+            <div
+                v-else-if="assignableSpaceOptions.length === 0"
+                class="notification is-warning is-light mt-3"
+            >
+                {{ i18n.tips?.no_saved_locations }}
+            </div>
+        </template>
+
         <biz-form-fieldset-location
-            v-if="form.location"
+            v-else-if="form.location"
             v-model:address="form.location.address"
             v-model:city="form.location.city"
             v-model:city-id="form.location.city_id"
@@ -313,10 +357,51 @@
             showGallery: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
             restrictedCities: { type: Array, default: () => [] },
+            requiresSavedLocation: { type: Boolean, default: false },
         },
 
         setup(props, { emit }) {
             const form = useModelWrapper(props, emit);
+
+            const assignableSpaceOptions = computed(() => (
+                props.spaceOptions.filter((option) => ! option.is_disabled)
+            ));
+
+            const selectedSpaceOption = computed(() => (
+                props.spaceOptions.find(
+                    (option) => Number(option.id) === Number(form.value.space_id)
+                ) ?? null
+            ));
+
+            const selectedLocationCoordinates = computed(() => {
+                const lat = form.value.location?.latitude;
+                const lng = form.value.location?.longitude;
+
+                if (lat == null || lng == null || lat === '' || lng === '') {
+                    return null;
+                }
+
+                return `${Number.parseFloat(lat).toFixed(6)}, ${Number.parseFloat(lng).toFixed(6)}`;
+            });
+
+            const syncLocationFromSpace = (spaceId) => {
+                if (! props.requiresSavedLocation || ! spaceId) {
+                    return;
+                }
+
+                const match = props.spaceOptions.find(
+                    (option) => Number(option.id) === Number(spaceId)
+                );
+
+                if (! match?.location) {
+                    return;
+                }
+
+                form.value.location = {
+                    ...form.value.location,
+                    ...match.location,
+                };
+            };
 
             const pitchDateRange = computed({
                 get() {
@@ -365,11 +450,22 @@
                 { immediate: true },
             );
 
+            watch(
+                () => form.value.space_id,
+                (spaceId) => {
+                    syncLocationFromSpace(spaceId);
+                },
+                { immediate: true },
+            );
+
             return {
+                assignableSpaceOptions,
                 form,
                 isBookableDateRangeDerived,
                 pitchDateRange,
                 maxBookableDateRange,
+                selectedLocationCoordinates,
+                selectedSpaceOption,
             };
         },
     };

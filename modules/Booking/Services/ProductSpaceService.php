@@ -2,32 +2,31 @@
 
 namespace Modules\Booking\Services;
 
+use App\Services\UserScopeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
+use Modules\Space\Services\SpaceService;
 
 class ProductSpaceService
 {
     public function getSpaceOptions(int $exceptId = null): Collection
     {
         $user = auth()->user();
+        $scopeService = app(UserScopeService::class);
         $spaces = null;
+        $excludeTypeIds = $this->nonAssignableTypeIds();
 
-        // For City Administrators, limit to their managed spaces and city spaces
-        if ($user->hasRole('city_administrator')) {
-            $managedSpaces = $user->spaces;
-            $managedSpaceIds = $managedSpaces->pluck('id')->all();
-            
-            // Get all space IDs from their cities
-            $cityIds = $user->adminCities->pluck('id')->toArray();
-            $citySpaceIds = Space::whereIn('city_id', $cityIds)
-                ->pluck('id')
-                ->all();
-            
-            // Combine both sets of IDs
+        if ($scopeService->requiresSavedLocationForPitch($user)) {
+            $cityIds = $user->isSpecialEventsAdmin()
+                ? $user->scopeIdsFor(config('permission.role_names.special_events_admin'), 'city')
+                : $user->adminCities->pluck('id')->all();
+
+            $managedSpaceIds = $user->spaces->pluck('id')->all();
+            $citySpaceIds = Space::whereIn('city_id', $cityIds)->pluck('id')->all();
             $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
-            
+
             $spaces = Space::whereIn('id', $spaceIds)
                 ->get()
                 ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));
@@ -37,12 +36,17 @@ class ProductSpaceService
                 ->map(fn ($space) => $space->only('id', '_lft', '_rgt'));
         }
 
-        $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
+        $columnNames = [
+            'id', 'name', 'parent_id', 'type_id', '_lft', '_rgt',
+            'address', 'city', 'city_id', 'country_code', 'latitude', 'longitude',
+        ];
 
         $isExceptIdEnabled = (
             $spaces
             && $exceptId
         );
+
+        $requiresSavedLocation = $scopeService->requiresSavedLocationForPitch($user);
 
         return Space::select($columnNames)
             ->with('product')
@@ -60,7 +64,7 @@ class ProductSpaceService
             ->withDepth()
             ->defaultOrder()
             ->get()
-            ->map(function ($space) use ($exceptId) {
+            ->map(function ($space) use ($exceptId, $excludeTypeIds, $requiresSavedLocation) {
                 $note = null;
                 $hasSpaceProduct = (
                     !! $space->product
@@ -73,14 +77,49 @@ class ProductSpaceService
                     ]);
                 }
 
+                $isStructuralNode = in_array((int) $space->type_id, $excludeTypeIds, true);
+
                 return [
                     'id' => $space->id,
                     'value' => $space->name,
                     'depth' => $space->depth,
-                    'is_disabled' => $hasSpaceProduct,
+                    'is_disabled' => $hasSpaceProduct || ($requiresSavedLocation && $isStructuralNode),
                     'note' => $note,
+                    'location' => [
+                        'address' => $space->address,
+                        'city' => $space->city,
+                        'city_id' => $space->city_id,
+                        'country_code' => $space->country_code,
+                        'latitude' => $space->latitude,
+                        'longitude' => $space->longitude,
+                    ],
                 ];
             });
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function locationPayloadFromSpace(?int $spaceId): ?array
+    {
+        if (! $spaceId) {
+            return null;
+        }
+
+        $space = Space::query()->find($spaceId);
+
+        if (! $space) {
+            return null;
+        }
+
+        return [
+            'address' => $space->address,
+            'city' => $space->city,
+            'country_code' => $space->country_code,
+            'latitude' => $space->latitude,
+            'longitude' => $space->longitude,
+            'city_id' => $space->city_id,
+        ];
     }
 
     public function formResource(Product $product): array
@@ -102,5 +141,17 @@ class ProductSpaceService
 
             $product->save();
         }
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function nonAssignableTypeIds(): array
+    {
+        return app(SpaceService::class)->types()
+            ->filter(fn ($type) => in_array($type->name, ['Country', 'City'], true))
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
     }
 }

@@ -147,6 +147,7 @@ class ProductController extends CrudController
             ],
             'spaceOptions' => $this->productSpaceService->getSpaceOptions(),
             'scopedCities' => $scopedCities,
+            'requiresSavedLocation' => $this->userScopeService->requiresSavedLocationForPitch($user),
         ]));
     }
 
@@ -282,6 +283,7 @@ class ProductController extends CrudController
             ],
             'space' => $formSpace,
             'spaceOptions' => $this->productSpaceService->getSpaceOptions($formSpace['id']),
+            'requiresSavedLocation' => $this->userScopeService->requiresSavedLocationForPitch($user),
         ]));
     }
 
@@ -350,6 +352,11 @@ class ProductController extends CrudController
         $product->duration = $inputs['duration'];
         $product->bookable_date_range = $inputs['bookable_date_range'];
 
+        if (! empty($inputs['space_id'] ?? null)) {
+            $product->productable_type = Space::class;
+            $product->productable_id = $inputs['space_id'];
+        }
+
         $product->setMeta([
             'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
             'is_check_in_required' => (bool) $inputs['is_check_in_required'],
@@ -371,9 +378,13 @@ class ProductController extends CrudController
             $locationModel = $this->locationService->findOrCreateFromPitchData(
                 $city,
                 $location,
-                $product->productable_type === Space::class
-                    ? $product->productable_id
-                    : null
+                ! empty($inputs['space_id'] ?? null)
+                    ? (int) $inputs['space_id']
+                    : (
+                        $product->productable_type === Space::class
+                            ? $product->productable_id
+                            : null
+                    )
             );
 
             $product->city_id = $city->id;
@@ -541,6 +552,8 @@ class ProductController extends CrudController
                 'tips' => [
                     'pitch_date_range' => __('The overall date range (start and end dates only) when this pitch is available. No bookings can be made outside these dates. The specific booking times are set in the Schedule section below.'),
                     'bookable_date_range_derived' => __('Set automatically from the pitch date range above.'),
+                    'pitch_location_from_space' => __('Location details are taken from your selected saved location.'),
+                    'no_saved_locations' => __('Create a location under Locations first, then link it here when creating a pitch.'),
                     'special_event_date_range' => __('Special event pitches may have a bookable window of up to 14 days. The pitch remains visible year-round, but bookings are only accepted within this window.'),
                     'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly days and hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),

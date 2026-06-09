@@ -16,6 +16,7 @@
                         :location-fieldset-error-keys="locationFieldsetErrorKeys"
                         :max-pitch-date-span-days="maxPitchDateSpanDays"
                         :restricted-cities="scopedCities"
+                        :requires-saved-location="requiresSavedLocation"
                         :role-options="roleOptions"
                         :rules="rules"
                         :status-options="statusOptions"
@@ -148,6 +149,7 @@
             isSpecialEventPitch: { type: Boolean, default: false },
             maxPitchDateSpanDays: { type: Number, default: null },
             scopedCities: { type: Array, default: () => [] },
+            requiresSavedLocation: { type: Boolean, default: false },
             i18n: { type: Object, default: () => ({
                 cancel: 'Cancel',
                 create: 'Create',
@@ -172,7 +174,7 @@
                 longitude: null,
             };
 
-            if (props.scopedCities.length === 1) {
+            if (props.scopedCities.length === 1 && ! props.requiresSavedLocation) {
                 const scoped = props.scopedCities[0];
                 initialLocation.city = scoped.name;
                 initialLocation.city_id = scoped.id;

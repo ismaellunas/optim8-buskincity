@@ -83,6 +83,33 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function space_options_for_city_admin_mark_city_nodes_as_disabled(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = $this->cityAdminFor($citySpace);
+
+        $this->actingAs($admin)->post(route('admin.spaces.store'), [
+            'name' => 'Dam Square',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+        ]);
+
+        $location = Space::where('name', 'Dam Square')->first();
+
+        $this->assertNotNull($location);
+
+        $options = app(\Modules\Booking\Services\ProductSpaceService::class)->getSpaceOptions();
+
+        $locationOption = $options->firstWhere('id', $location->id);
+        $cityOption = $options->firstWhere('id', $citySpace->id);
+
+        $this->assertFalse($locationOption['is_disabled']);
+        $this->assertTrue($cityOption['is_disabled']);
+        $this->assertSame('Dam Square', $locationOption['location']['city']);
+    }
+
+    /** @test */
     public function city_admin_cannot_create_a_location_under_a_country(): void
     {
         [$country] = $this->countryAndCitySpaces();
