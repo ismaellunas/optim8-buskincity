@@ -57,7 +57,7 @@ class ProductSpaceService
 
         return Space::select($columnNames)
             ->with('product')
-            ->when($spaces instanceof Collection && $spaces->isNotEmpty(), function (Builder $query, $spaces) {
+            ->when($spaces instanceof Collection && $spaces->isNotEmpty(), function (Builder $query) use ($spaces) {
                 foreach ($spaces as $key => $space) {
                     $boolean = $key == 0 ? 'and' : 'or';
                     $query->whereDescendantOrSelf($space, $boolean);
