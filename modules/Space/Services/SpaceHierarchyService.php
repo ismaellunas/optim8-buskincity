@@ -28,7 +28,7 @@ class SpaceHierarchyService
      */
     public function resolveInputs(array $inputs, User $user, ?Space $existing = null): array
     {
-        $parentId = $inputs['parent_id'] ?? null;
+        $parentId = $inputs['parent_id'] ?? $existing?->parent_id;
         $parent = $parentId ? Space::with('type')->find($parentId) : null;
 
         $typeId = $existing

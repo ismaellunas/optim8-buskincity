@@ -110,6 +110,49 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_can_update_a_location_without_resubmitting_parent(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = $this->cityAdminFor($citySpace);
+
+        $this->actingAs($admin)->post(route('admin.spaces.store'), [
+            'name' => 'Dam Square',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+            'address' => 'Dam 1',
+            'latitude' => 52.3731,
+            'longitude' => 4.8922,
+        ])->assertRedirect();
+
+        $location = Space::where('name', 'Dam Square')->first();
+
+        $this->assertNotNull($location);
+
+        $this->assertTrue(
+            $admin->fresh()->spaces->contains('id', $location->id),
+            'City admin should be linked to the location they created'
+        );
+
+        $response = $this->actingAs($admin->fresh())->put(route('admin.spaces.update', $location->id), [
+            'name' => 'Dam Square Updated',
+            'address' => 'Dam 2',
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+            'latitude' => 52.3732,
+            'longitude' => 4.8923,
+        ]);
+
+        $response->assertRedirect()->assertSessionHasNoErrors();
+
+        $location->refresh();
+
+        $this->assertSame('Dam Square Updated', $location->name);
+        $this->assertSame('Dam 2', $location->address);
+        $this->assertSame((int) $citySpace->id, (int) $location->parent_id);
+    }
+
+    /** @test */
     public function city_admin_cannot_create_a_location_under_a_country(): void
     {
         [$country] = $this->countryAndCitySpaces();
