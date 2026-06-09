@@ -55,6 +55,9 @@
             <biz-form-fieldset-geo-location
                 v-model:latitude="modelLatitude"
                 v-model:longitude="modelLongitude"
+                :google-api-key="googleApiKey"
+                :init-location="mapInitLocation"
+                :prefer-map-picker="preferMapPicker"
                 :error-key="errorKey"
                 :required="isMapRequired"
                 :error-bag-name="errorBagName"
@@ -109,7 +112,9 @@
             isCountryRequired: { type: Boolean, default: true },
             isMapRequired: { type: Boolean, default: false },
             googleApiKey: { type: String, default: null },
-            initLocation: { type: String, default: null },
+            initLocation: { type: Object, default: null },
+            /** When true, coordinates must be set via the map picker (city selection only centers the map). */
+            preferMapPicker: { type: Boolean, default: true },
             maxlengthAddress: { type: [Number], default: 500 },
             maxlengthCity: { type: [Number], default: 64 },
             restrictedCities: { type: Array, default: () => [] },
@@ -130,6 +135,7 @@
         setup(props, { emit }) {
             return {
                 countryOptions: ref([]),
+                mapCenterLocation: ref(null),
                 modelAddress: useModelWrapper(props, emit, 'address'),
                 modelCity: useModelWrapper(props, emit, 'city'),
                 modelCityId: useModelWrapper(props, emit, 'cityId'),
@@ -176,15 +182,53 @@
 
                 return `Country: ${code} (set from your selected city)`;
             },
+
+            mapInitLocation() {
+                if (this.modelLatitude != null && this.modelLongitude != null) {
+                    return {
+                        latitude: Number.parseFloat(this.modelLatitude),
+                        longitude: Number.parseFloat(this.modelLongitude),
+                    };
+                }
+
+                if (this.mapCenterLocation) {
+                    return this.mapCenterLocation;
+                }
+
+                return this.initLocation;
+            },
         },
 
         beforeMount() {
             if (this.showCountrySelect) {
                 this.loadCountryOptions();
             }
+
+            this.syncMapCenterFromCityId(this.modelCityId);
+        },
+
+        watch: {
+            modelCityId(cityId) {
+                this.syncMapCenterFromCityId(cityId);
+            },
         },
 
         methods: {
+            syncMapCenterFromCityId(cityId) {
+                if (! cityId) {
+                    return;
+                }
+
+                const city = this.restrictedCities.find((entry) => entry.id === cityId);
+
+                if (city?.latitude != null && city?.longitude != null) {
+                    this.mapCenterLocation = {
+                        latitude: Number.parseFloat(city.latitude),
+                        longitude: Number.parseFloat(city.longitude),
+                    };
+                }
+            },
+
             loadCountryOptions() {
                 axios
                     .get(route('admin.api.options.countries'))
@@ -199,21 +243,39 @@
             },
 
             onCitySelect(city) {
-                // Handle both database cities and custom text entries
+                this.mapCenterLocation = (
+                    city.latitude != null && city.longitude != null
+                ) ? {
+                    latitude: Number.parseFloat(city.latitude),
+                    longitude: Number.parseFloat(city.longitude),
+                } : null;
+
                 if (city.isCustom) {
-                    // Custom city entered by user
                     this.modelCity = city.name;
-                    this.modelCityId = null; // No ID for custom cities
+                    this.modelCityId = null;
                     if (city.country_code) this.modelCountryCode = city.country_code;
-                    // Keep existing coordinates if available
-                } else {
-                    // City selected from database
-                    this.modelCity = city.name;
-                    this.modelCityId = city.id;
-                    this.modelCountryCode = city.country_code;
-                    if (city.latitude) this.modelLatitude = city.latitude;
-                    if (city.longitude) this.modelLongitude = city.longitude;
+
+                    if (this.preferMapPicker) {
+                        this.modelLatitude = null;
+                        this.modelLongitude = null;
+                    }
+
+                    return;
                 }
+
+                this.modelCity = city.name;
+                this.modelCityId = city.id;
+                this.modelCountryCode = city.country_code;
+
+                if (this.preferMapPicker) {
+                    this.modelLatitude = null;
+                    this.modelLongitude = null;
+
+                    return;
+                }
+
+                if (city.latitude) this.modelLatitude = city.latitude;
+                if (city.longitude) this.modelLongitude = city.longitude;
             }
         },
     };

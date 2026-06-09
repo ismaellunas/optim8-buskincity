@@ -144,6 +144,8 @@ class SpaceController extends CrudController
                 'id' => $city->id,
                 'name' => $city->name,
                 'country_code' => $city->country_code,
+                'latitude' => $city->latitude,
+                'longitude' => $city->longitude,
             ]);
         } else {
             // Existing logic for other users

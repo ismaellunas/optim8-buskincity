@@ -123,7 +123,7 @@ class UserScopeService
     public function scopedCityOptions(?User $user = null): Collection
     {
         if ($this->isGloballyScoped($user)) {
-            return City::orderBy('name')->get(['id', 'name', 'country_code']);
+            return City::orderBy('name')->get(['id', 'name', 'country_code', 'latitude', 'longitude']);
         }
 
         $cityIds = $this->scopedCityIds($user);
@@ -134,6 +134,6 @@ class UserScopeService
 
         return City::whereIn('id', $cityIds)
             ->orderBy('name')
-            ->get(['id', 'name', 'country_code']);
+            ->get(['id', 'name', 'country_code', 'latitude', 'longitude']);
     }
 }

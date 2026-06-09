@@ -132,6 +132,8 @@ class ProductController extends CrudController
             'defaultCountryCode' => $scopedCities[0]['country_code']
                 ?? app(IPService::class)->getCountryCode('US'),
             'defaultTimezone' => app(IPService::class)->getTimezone(),
+            'geoLocation' => app(IPService::class)->getGeoLocation(),
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'isSpecialEventPitch' => $isSpecialEventPitch,
             'maxPitchDateSpanDays' => $isSpecialEventPitch ? 14 : null,
             'imageMimes' => config('constants.extensions.image'),
@@ -407,7 +409,7 @@ class ProductController extends CrudController
      * Scoped city list for pitch location pickers (FR-PITCH-4).
      * Empty array = unrestricted API search (global admins and unscoped roles).
      *
-     * @return array<int, array{id: int, name: string, country_code: string}>
+     * @return array<int, array{id: int, name: string, country_code: string, latitude: float|null, longitude: float|null}>
      */
     private function scopedCitiesForPitchForm(): array
     {
@@ -426,6 +428,8 @@ class ProductController extends CrudController
                 'id' => $city->id,
                 'name' => $city->name,
                 'country_code' => $city->country_code,
+                'latitude' => $city->latitude,
+                'longitude' => $city->longitude,
             ])
             ->values()
             ->all();

@@ -157,7 +157,9 @@ export default {
                     this.cities = cities.map(c => ({
                         id: c.id,
                         name: c.name,
-                        country_code: c.country_code
+                        country_code: c.country_code,
+                        latitude: c.latitude ?? null,
+                        longitude: c.longitude ?? null,
                     }));
                     this.syncSelectedCityFromModelValue();
                 }
@@ -187,6 +189,8 @@ export default {
                     id: match.id,
                     name: match.name,
                     country_code: match.country_code,
+                    latitude: match.latitude ?? null,
+                    longitude: match.longitude ?? null,
                 };
             }
         },
@@ -200,7 +204,9 @@ export default {
                     this.cities = this.restrictedCities.map(c => ({
                         id: c.id,
                         name: c.name,
-                        country_code: c.country_code
+                        country_code: c.country_code,
+                        latitude: c.latitude ?? null,
+                        longitude: c.longitude ?? null,
                     }));
                     this.hasSearched = false;
                     return;
@@ -215,7 +221,9 @@ export default {
                     .map(c => ({
                         id: c.id,
                         name: c.name,
-                        country_code: c.country_code
+                        country_code: c.country_code,
+                        latitude: c.latitude ?? null,
+                        longitude: c.longitude ?? null,
                     }));
                 this.hasSearched = true;
                 return;
