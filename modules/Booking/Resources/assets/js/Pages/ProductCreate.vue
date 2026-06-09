@@ -2,6 +2,16 @@
     <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
+        <div
+            v-if="!canCreatePitch"
+            class="notification is-warning mb-4"
+        >
+            <p class="has-text-weight-semibold mb-2">
+                {{ i18n.create_blocked_title ?? 'A saved location is required' }}
+            </p>
+            <p>{{ blockedMessage }}</p>
+        </div>
+
         <div class="mb-6">
             <form
                 method="post"
@@ -79,7 +89,10 @@
                             </biz-button-link>
                         </div>
                         <div class="control">
-                            <biz-button class="is-link">
+                            <biz-button
+                                class="is-link"
+                                :disabled="!canCreatePitch"
+                            >
                                 {{ i18n.create }}
                             </biz-button>
                         </div>
@@ -209,8 +222,38 @@
             };
         },
 
+        computed: {
+            assignableSpaceOptions() {
+                return this.spaceOptions.filter((option) => ! option.is_disabled);
+            },
+
+            canCreatePitch() {
+                if (! this.requiresSavedLocation) {
+                    return true;
+                }
+
+                return this.assignableSpaceOptions.length > 0;
+            },
+
+            blockedMessage() {
+                if (this.canCreatePitch) {
+                    return null;
+                }
+
+                if (this.isSpecialEventsAdmin) {
+                    return this.i18n.tips?.no_saved_locations_contact_city_admin;
+                }
+
+                return this.i18n.tips?.no_saved_locations;
+            },
+        },
+
         methods: {
             submit() {
+                if (! this.canCreatePitch) {
+                    return;
+                }
+
                 const self = this;
                 const url = route(this.baseRouteName + '.store');
 

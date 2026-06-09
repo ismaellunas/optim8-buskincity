@@ -71,6 +71,7 @@
 
         <template v-if="requiresSavedLocation">
             <product-space-form
+                v-if="assignableSpaceOptions.length > 0"
                 v-model="form.space_id"
                 :space-options="assignableSpaceOptions"
                 required
@@ -109,7 +110,10 @@
                 v-else-if="assignableSpaceOptions.length === 0"
                 class="notification is-warning is-light mt-3"
             >
-                {{ noSavedLocationsMessage }}
+                <p class="has-text-weight-semibold mb-2">
+                    {{ i18n.create_blocked_title }}
+                </p>
+                <p>{{ noSavedLocationsMessage }}</p>
             </div>
         </template>
 
@@ -278,7 +282,7 @@
     import ProductSpaceForm from './ProductSpaceForm.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import moment from 'moment';
-    import { computed, watch } from 'vue';
+    import { computed, inject, watch } from 'vue';
 
     function inclusivePitchDaySpan(start, end) {
         if (! start || ! end) {
@@ -363,6 +367,7 @@
 
         setup(props, { emit }) {
             const form = useModelWrapper(props, emit);
+            const i18n = inject('i18n', {});
 
             const assignableSpaceOptions = computed(() => (
                 props.spaceOptions.filter((option) => ! option.is_disabled)
@@ -370,8 +375,8 @@
 
             const noSavedLocationsMessage = computed(() => (
                 props.isSpecialEventsAdmin
-                    ? props.i18n.tips?.no_saved_locations_contact_city_admin
-                    : props.i18n.tips?.no_saved_locations
+                    ? i18n.tips?.no_saved_locations_contact_city_admin
+                    : i18n.tips?.no_saved_locations
             ));
 
             const selectedSpaceOption = computed(() => (
