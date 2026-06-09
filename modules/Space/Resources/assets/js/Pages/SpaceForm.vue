@@ -44,6 +44,7 @@
             v-model:country-code="space.country_code"
             v-model:latitude="space.latitude"
             v-model:longitude="space.longitude"
+            :init-location="selectedParentMapCenter"
             :is-city-required="false"
             :show-city-select="!isCityAdmin"
             :show-country-select="!isCityAdmin"
@@ -338,6 +339,39 @@
                 return this.i18n.parent_city_hint_single
                     ?? 'City and country are set from your assigned city.';
             },
+
+            selectedParentMapCenter() {
+                if (! this.isCityAdmin || ! this.space.parent_id) {
+                    return null;
+                }
+
+                const parent = this.parentOptionsList.find(
+                    (option) => Number(option.id) === Number(this.space.parent_id)
+                );
+
+                if (
+                    parent?.latitude != null
+                    && parent?.longitude != null
+                ) {
+                    return {
+                        latitude: Number.parseFloat(parent.latitude),
+                        longitude: Number.parseFloat(parent.longitude),
+                    };
+                }
+
+                const city = this.userCities.find(
+                    (entry) => Number(entry.id) === Number(parent?.city_id)
+                );
+
+                if (city?.latitude != null && city?.longitude != null) {
+                    return {
+                        latitude: Number.parseFloat(city.latitude),
+                        longitude: Number.parseFloat(city.longitude),
+                    };
+                }
+
+                return null;
+            },
         },
 
         watch: {
@@ -380,6 +414,10 @@
                 this.space.city_id = parent.city_id ?? null;
                 this.space.city = parent.city_name ?? parent.value ?? null;
                 this.space.country_code = parent.country_code ?? this.space.country_code;
+
+                // Re-center the map picker on the selected city; pin must be chosen within that city.
+                this.space.latitude = null;
+                this.space.longitude = null;
             },
 
             openContactModal() {

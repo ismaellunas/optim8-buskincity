@@ -221,6 +221,19 @@
             modelCityId(cityId) {
                 this.syncMapCenterFromCityId(cityId);
             },
+
+            initLocation: {
+                handler(location) {
+                    if (location?.latitude != null && location?.longitude != null) {
+                        this.mapCenterLocation = {
+                            latitude: Number.parseFloat(location.latitude),
+                            longitude: Number.parseFloat(location.longitude),
+                        };
+                    }
+                },
+                immediate: true,
+                deep: true,
+            },
         },
 
         methods: {
@@ -229,7 +242,9 @@
                     return;
                 }
 
-                const city = this.restrictedCities.find((entry) => entry.id === cityId);
+                const city = this.restrictedCities.find(
+                    (entry) => Number(entry.id) === Number(cityId)
+                );
 
                 if (city?.latitude != null && city?.longitude != null) {
                     this.mapCenterLocation = {

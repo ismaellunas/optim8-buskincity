@@ -237,18 +237,31 @@ class SpaceService
             return collect();
         }
 
-        return Space::select(['id', 'name as value', 'city_id', 'country_code'])
+        return Space::select(['id', 'name as value', 'city_id', 'country_code', 'latitude', 'longitude'])
             ->where('type_id', $cityType->id)
             ->whereIn('city_id', $adminCityIds)
             ->orderBy('name')
             ->get()
-            ->map(fn ($space) => [
-                'id' => $space->id,
-                'value' => $space->value,
-                'city_id' => $space->city_id,
-                'country_code' => $space->country_code,
-                'city_name' => $space->value,
-            ]);
+            ->map(function ($space) {
+                $latitude = $space->latitude;
+                $longitude = $space->longitude;
+
+                if (($latitude === null || $longitude === null) && $space->city_id) {
+                    $city = \App\Models\City::find($space->city_id);
+                    $latitude ??= $city?->latitude;
+                    $longitude ??= $city?->longitude;
+                }
+
+                return [
+                    'id' => $space->id,
+                    'value' => $space->value,
+                    'city_id' => $space->city_id,
+                    'country_code' => $space->country_code,
+                    'city_name' => $space->value,
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                ];
+            });
     }
 
     /**

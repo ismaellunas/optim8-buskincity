@@ -390,6 +390,8 @@ class SpaceController extends CrudController
                 'city_id' => $space->parent->city_id,
                 'country_code' => $space->parent->country_code,
                 'city_name' => $space->parent->name,
+                'latitude' => $space->parent->latitude,
+                'longitude' => $space->parent->longitude,
             ]
             : [
                 'id' => null,
