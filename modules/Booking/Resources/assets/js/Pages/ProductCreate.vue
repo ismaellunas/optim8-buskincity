@@ -103,7 +103,7 @@
     import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes.vue';
     import icon from '@/Libs/icon-class';
     import { cloneDeep } from 'lodash';
-    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
@@ -219,7 +219,6 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
-                    onError: () => { oopsAlert(); },
                     onFinish: self.onEndLoadingOverlay,
                 });
             },

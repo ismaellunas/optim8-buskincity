@@ -94,6 +94,9 @@ class ProductController extends CrudController
         $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow();
         $scopedCities = $this->scopedCitiesForPitchForm();
 
+        // Avoid showing validation errors from a previous failed save on a fresh create form.
+        session()->forget('errors');
+
         return Inertia::render('Booking::ProductCreate', $this->getData([
             'breadcrumbs' => [
                 [
