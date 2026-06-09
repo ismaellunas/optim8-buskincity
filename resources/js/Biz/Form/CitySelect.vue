@@ -117,6 +117,7 @@ export default {
         initialCity: { type: Object, default: null },
         restrictedCities: { type: Array, default: () => [] },
         allowCustomEntry: { type: Boolean, default: true }, // Enable hybrid mode by default
+        searchRoute: { type: String, default: 'admin.api.cities.index' },
     },
     emits: ['update:modelValue', 'select'],
     data() {
@@ -240,7 +241,7 @@ export default {
             this.isLoading = true;
             this.hasSearched = true;
             
-            axios.get(route('admin.api.cities.index'), {
+            axios.get(route(this.searchRoute), {
                 params: {
                     search: query,
                     country_code: this.countryCode

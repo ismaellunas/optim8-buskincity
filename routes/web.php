@@ -2,6 +2,7 @@
 
 use App\Facades\Localization;
 use App\Http\Controllers\{
+    Api\CityController,
     ApiPageBuilderComponentUserListController,
     ChangeLanguageController,
     CustomOAuthController,
@@ -176,6 +177,10 @@ Route::name('forms.')->prefix('forms')->group(function () {
     Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });
+
+Route::get('/api/cities/search', [CityController::class, 'search'])
+    ->middleware('throttle:api')
+    ->name('cities.search');
 
 Route::prefix('apply')
     ->name('role-applications.')

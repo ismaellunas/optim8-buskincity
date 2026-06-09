@@ -32,7 +32,6 @@ class RoleApplicationController extends Controller
         return Inertia::render('RoleApplication/Apply', [
             'requestedRole' => $role,
             'roleLabel' => $this->roleLabel($role),
-            'cityOptions' => $this->roleApplicationService->cityOptions(),
             'recaptchaSiteKey' => $recaptchaKeys['recaptcha_site_key'] ?? null,
             'defaults' => [
                 'email' => $user?->email,

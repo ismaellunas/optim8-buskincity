@@ -10,20 +10,36 @@ class CityController extends Controller
 {
     public function index(Request $request)
     {
+        return response()->json($this->searchQuery($request)->limit(50)->get());
+    }
+
+    public function search(Request $request)
+    {
+        $search = trim((string) $request->input('search', ''));
+
+        if (strlen($search) < 2) {
+            return response()->json([]);
+        }
+
+        return response()->json($this->searchQuery($request)->limit(50)->get());
+    }
+
+    private function searchQuery(Request $request)
+    {
         $query = City::query();
 
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('country_code', 'ilike', "%{$search}%");
+                    ->orWhere('country_code', 'ilike', "%{$search}%");
             });
         }
 
-        if ($request->has('country_code')) {
+        if ($request->filled('country_code')) {
             $query->where('country_code', $request->input('country_code'));
         }
 
-        return response()->json($query->limit(50)->get());
+        return $query->orderBy('name');
     }
 }

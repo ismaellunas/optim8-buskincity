@@ -31,6 +31,34 @@ class RoleApplicationTest extends TestCase
     }
 
     /** @test */
+    public function guest_can_view_the_apply_page(): void
+    {
+        $this->get(route('role-applications.create'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('RoleApplication/Apply')
+                ->missing('cityOptions')
+                ->where('requestedRole', config('permission.role_names.city_admin'))
+            );
+    }
+
+    /** @test */
+    public function guest_can_search_cities_for_application(): void
+    {
+        City::factory()->create(['name' => 'Wageningen', 'country_code' => 'NLD']);
+        City::factory()->create(['name' => 'Amsterdam', 'country_code' => 'NLD']);
+
+        $this->getJson(route('cities.search', ['search' => 'Wage']))
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['name' => 'Wageningen']);
+
+        $this->getJson(route('cities.search', ['search' => 'A']))
+            ->assertOk()
+            ->assertJsonCount(0);
+    }
+
+    /** @test */
     public function guest_can_submit_a_city_admin_application(): void
     {
         $city = City::factory()->create();

@@ -26,22 +26,15 @@
                     required
                     :message="form.errors.last_name"
                 />
-                <biz-form-select
+                <biz-form-city-select
                     v-model="form.city_id"
-                    class="is-fullwidth"
                     label="City"
                     required
+                    :allow-custom-entry="false"
+                    search-route="cities.search"
+                    placeholder="Search for a city..."
                     :message="form.errors.city_id"
-                >
-                    <option :value="null" disabled>Select city</option>
-                    <option
-                        v-for="city in cityOptions"
-                        :key="city.id"
-                        :value="city.id"
-                    >
-                        {{ city.value }}
-                    </option>
-                </biz-form-select>
+                />
                 <biz-form-textarea
                     v-model="form.excerpt"
                     label="Short description"
@@ -92,8 +85,8 @@
 <script>
     import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormCitySelect from '@/Biz/Form/CitySelect.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
-    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import { useForm } from '@inertiajs/vue3';
@@ -102,8 +95,8 @@
         components: {
             BizButton,
             BizErrorNotifications,
+            BizFormCitySelect,
             BizFormInput,
-            BizFormSelect,
             BizFormTextarea,
             BizRecaptcha,
         },
@@ -111,7 +104,6 @@
         props: {
             requestedRole: { type: String, required: true },
             roleLabel: { type: String, required: true },
-            cityOptions: { type: Array, default: () => [] },
             recaptchaSiteKey: { type: String, default: null },
             defaults: { type: Object, default: () => ({}) },
             title: { type: String, required: true },

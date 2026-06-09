@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
 use App\Enums\RoleApplicationStatus;
-use App\Models\City;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\Media;
@@ -399,18 +398,4 @@ class RoleApplicationService
         ];
     }
 
-    /**
-     * @return array<int, array{id: int, value: string}>
-     */
-    public function cityOptions(): array
-    {
-        return City::orderBy('name')
-            ->get(['id', 'name', 'country_code'])
-            ->map(fn (City $city) => [
-                'id' => $city->id,
-                'value' => $city->name,
-                'country_code' => $city->country_code,
-            ])
-            ->all();
-    }
 }
