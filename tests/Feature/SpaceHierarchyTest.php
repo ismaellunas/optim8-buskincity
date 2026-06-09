@@ -60,6 +60,29 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_location_city_is_forced_from_parent(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $otherCity = City::factory()->create(['country_code' => 'SE']);
+        $admin = $this->cityAdminFor($citySpace);
+
+        $response = $this->actingAs($admin)->post(route('admin.spaces.store'), [
+            'name' => 'Scoped Location',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'SE',
+            'city_id' => $otherCity->id,
+            'city' => 'Stockholm',
+        ]);
+
+        $response->assertRedirect();
+
+        $location = Space::where('name', 'Scoped Location')->first();
+
+        $this->assertNotNull($location);
+        $this->assertSame((int) $citySpace->city_id, (int) $location->city_id);
+    }
+
+    /** @test */
     public function city_admin_cannot_create_a_location_under_a_country(): void
     {
         [$country] = $this->countryAndCitySpaces();

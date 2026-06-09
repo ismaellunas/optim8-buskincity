@@ -34,6 +34,8 @@
                                 :logo-media="logoMedia"
                                 :parent-options="parentOptions"
                                 :can-change-parent="can.changeParent"
+                                :is-city-admin="isCityAdmin"
+                                :user-cities="userCities"
                             >
                                 <biz-form-select
                                     v-if="can.page.edit"
@@ -221,6 +223,8 @@
             logoMedia: { type: Object, default: () => {} },
             page: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
+            isCityAdmin: { type: Boolean, default: false },
+            userCities: { type: Array, default: () => [] },
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
@@ -348,6 +352,7 @@
                     'id',
                     'address',
                     'city',
+                    'city_id',
                     'contacts',
                     'country_code',
                     'is_page_enabled',

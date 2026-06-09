@@ -237,11 +237,18 @@ class SpaceService
             return collect();
         }
 
-        return Space::select(['id', 'name as value'])
+        return Space::select(['id', 'name as value', 'city_id', 'country_code'])
             ->where('type_id', $cityType->id)
             ->whereIn('city_id', $adminCityIds)
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(fn ($space) => [
+                'id' => $space->id,
+                'value' => $space->value,
+                'city_id' => $space->city_id,
+                'country_code' => $space->country_code,
+                'city_name' => $space->value,
+            ]);
     }
 
     /**

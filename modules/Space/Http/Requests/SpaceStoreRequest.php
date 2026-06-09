@@ -12,6 +12,36 @@ use Modules\Space\Services\SpaceService;
 
 class SpaceStoreRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $user = auth()->user();
+
+        if (
+            ! $user->hasRole(config('permission.role_names.city_admin'))
+            && ! $user->isSpecialEventsAdmin()
+        ) {
+            return;
+        }
+
+        $parentId = $this->input('parent_id');
+
+        if (! $parentId) {
+            return;
+        }
+
+        $parent = Space::query()->find($parentId);
+
+        if (! $parent?->city_id) {
+            return;
+        }
+
+        $this->merge([
+            'city_id' => $parent->city_id,
+            'country_code' => $parent->country_code,
+            'city' => $parent->name,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

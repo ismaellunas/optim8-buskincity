@@ -378,12 +378,18 @@ class SpaceController extends CrudController
     public function edit(Space $space)
     {
         $user = auth()->user();
+        $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin'));
+        $isScopedLocationAdmin = $isCityAdmin || $user->isSpecialEventsAdmin();
+        $userCities = collect();
 
         $parent = (
             $space->parent_id
             ? [
                 'id' => $space->parent_id,
                 'value' => $space->parent->name,
+                'city_id' => $space->parent->city_id,
+                'country_code' => $space->parent->country_code,
+                'city_name' => $space->parent->name,
             ]
             : [
                 'id' => null,
@@ -397,17 +403,28 @@ class SpaceController extends CrudController
             $managedSpaces = $user->spaces;
         }
 
-        $parentOptions = $this->spaceService->parentOptionsFor(
-            $space,
-            $managedSpaces,
-            $user->can('space.add') ? __("None") : null
-        );
+        $canChangeParent = $user->can('changeParent', $space);
+
+        if ($isScopedLocationAdmin && $canChangeParent) {
+            $parentOptions = $this->spaceService->cityAdminParentOptions($user)->values();
+            $userCities = $user->assignedScopeCities()->map(fn ($city) => [
+                'id' => $city->id,
+                'name' => $city->name,
+                'country_code' => $city->country_code,
+                'latitude' => $city->latitude,
+                'longitude' => $city->longitude,
+            ]);
+        } else {
+            $parentOptions = $this->spaceService->parentOptionsFor(
+                $space,
+                $managedSpaces,
+                $user->can('space.add') ? __("None") : null
+            );
+        }
 
         $page = $space->page_id
             ? $this->spaceService->pageFormRecord($space)
             : $this->makePage();
-
-        $canChangeParent = $user->can('changeParent', $space);
 
         $coverMedia = $space->cover;
         if ($coverMedia) {
@@ -430,6 +447,8 @@ class SpaceController extends CrudController
             'title' => $this->getEditTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $canChangeParent ? $parentOptions : [$parent],
+            'isCityAdmin' => $isScopedLocationAdmin,
+            'userCities' => $userCities,
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
             'coverMedia' => $coverMedia,

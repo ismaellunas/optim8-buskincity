@@ -14,18 +14,25 @@
                 <biz-form-select
                     v-model="space.parent_id"
                     class="is-fullwidth"
-                    :label="i18n.parent"
+                    :label="parentFieldLabel"
                     :disabled="!canChangeParent"
                     :message="error('parent_id')"
                 >
                     <option
-                        v-for="option in parentOptions"
+                        v-for="option in parentOptionsList"
                         :key="option.id"
                         :value="option.id"
                     >
                         {{ option.value }}
                     </option>
                 </biz-form-select>
+
+                <p
+                    v-if="isCityAdmin"
+                    class="help"
+                >
+                    {{ parentFieldHint }}
+                </p>
             </div>
         </div>
 
@@ -38,6 +45,9 @@
             v-model:latitude="space.latitude"
             v-model:longitude="space.longitude"
             :is-city-required="false"
+            :show-city-select="!isCityAdmin"
+            :show-country-select="!isCityAdmin"
+            :allow-custom-city="!isCityAdmin"
             :restricted-cities="userCities"
         />
 
@@ -304,6 +314,41 @@
             };
         },
 
+        computed: {
+            parentOptionsList() {
+                if (Array.isArray(this.parentOptions)) {
+                    return this.parentOptions;
+                }
+
+                return Object.values(this.parentOptions ?? {});
+            },
+
+            parentFieldLabel() {
+                return this.isCityAdmin
+                    ? (this.i18n.city ?? 'City')
+                    : (this.i18n.parent ?? 'Parent');
+            },
+
+            parentFieldHint() {
+                if (this.parentOptionsList.length > 1) {
+                    return this.i18n.parent_city_hint
+                        ?? 'Select which of your assigned cities this location belongs to.';
+                }
+
+                return this.i18n.parent_city_hint_single
+                    ?? 'City and country are set from your assigned city.';
+            },
+        },
+
+        watch: {
+            'space.parent_id': {
+                handler(parentId) {
+                    this.syncLocationFromParent(parentId);
+                },
+                immediate: true,
+            },
+        },
+
         data() {
             return {
                 formContact: this.initForm(),
@@ -319,6 +364,24 @@
         },
 
         methods: {
+            syncLocationFromParent(parentId) {
+                if (! this.isCityAdmin || ! parentId) {
+                    return;
+                }
+
+                const parent = this.parentOptionsList.find(
+                    (option) => Number(option.id) === Number(parentId)
+                );
+
+                if (! parent) {
+                    return;
+                }
+
+                this.space.city_id = parent.city_id ?? null;
+                this.space.city = parent.city_name ?? parent.value ?? null;
+                this.space.country_code = parent.country_code ?? this.space.country_code;
+            },
+
             openContactModal() {
                 this.formContact = this.initForm();
                 this.isContactModalOpen = true;

@@ -12,6 +12,7 @@
             />
 
             <biz-form-city-select
+                v-if="showCitySelect"
                 v-model="modelCityId"
                 :label="i18n.city ?? 'City'"
                 :message="error(mergedErrorKey.city, errorBagName, errorBag)"
@@ -23,6 +24,13 @@
                 :placeholder="scopedCityPlaceholder"
                 @select="onCitySelect"
             />
+
+            <p
+                v-else-if="modelCity"
+                class="help mb-3"
+            >
+                {{ scopedCountryHint }}
+            </p>
 
             <biz-form-select
                 v-if="showCountrySelect"
@@ -121,6 +129,8 @@
             allowCustomCity: { type: Boolean, default: true }, // Allow custom city entry by default
             /** When false, country is derived from the selected city (scoped city admins). */
             showCountrySelect: { type: Boolean, default: true },
+            /** When false, city is set elsewhere (e.g. Location parent picker for scoped admins). */
+            showCitySelect: { type: Boolean, default: true },
         },
 
         emits: [
