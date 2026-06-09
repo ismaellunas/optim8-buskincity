@@ -180,6 +180,24 @@ class PitchLocationFkTest extends TestCase
     }
 
     /** @test */
+    public function scoped_special_events_admin_with_no_locations_gets_empty_space_options(): void
+    {
+        $city = City::factory()->create();
+        $seAdmin = User::factory()->create();
+        $seAdmin->assignRole(config('permission.role_names.special_events_admin'));
+        $seAdmin->syncScopeCities(
+            config('permission.role_names.special_events_admin'),
+            [$city->id]
+        );
+
+        $this->actingAs($seAdmin);
+
+        $options = app(ProductSpaceService::class)->getSpaceOptions();
+
+        $this->assertCount(0, $options);
+    }
+
+    /** @test */
     public function empty_space_id_scope_returns_no_spaces(): void
     {
         $service = app(\Modules\Space\Services\SpaceService::class);

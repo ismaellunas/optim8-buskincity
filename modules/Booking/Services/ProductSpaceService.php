@@ -24,8 +24,14 @@ class ProductSpaceService
                 : $user->adminCities->pluck('id')->all();
 
             $managedSpaceIds = $user->spaces->pluck('id')->all();
-            $citySpaceIds = Space::whereIn('city_id', $cityIds)->pluck('id')->all();
-            $spaceIds = array_unique(array_merge($managedSpaceIds, $citySpaceIds));
+            $citySpaceIds = $cityIds === []
+                ? []
+                : Space::whereIn('city_id', $cityIds)->pluck('id')->all();
+            $spaceIds = array_values(array_unique(array_merge($managedSpaceIds, $citySpaceIds)));
+
+            if ($spaceIds === []) {
+                return collect();
+            }
 
             $spaces = Space::whereIn('id', $spaceIds)
                 ->get()
@@ -42,7 +48,8 @@ class ProductSpaceService
         ];
 
         $isExceptIdEnabled = (
-            $spaces
+            $spaces instanceof Collection
+            && $spaces->isNotEmpty()
             && $exceptId
         );
 
@@ -50,7 +57,7 @@ class ProductSpaceService
 
         return Space::select($columnNames)
             ->with('product')
-            ->when($spaces, function (Builder $query, $spaces) {
+            ->when($spaces instanceof Collection && $spaces->isNotEmpty(), function (Builder $query, $spaces) {
                 foreach ($spaces as $key => $space) {
                     $boolean = $key == 0 ? 'and' : 'or';
                     $query->whereDescendantOrSelf($space, $boolean);
