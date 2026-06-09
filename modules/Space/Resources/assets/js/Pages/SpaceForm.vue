@@ -3,7 +3,7 @@
         <biz-form-input
             v-model="space.name"
             :label="i18n.name"
-            :placeholder="isCityAdmin ? 'e.g Pitch name' : 'e.g My Location'"
+            placeholder="e.g My Location"
             required
             maxlength="128"
             :message="error('name')"
