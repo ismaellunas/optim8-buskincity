@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Space\Entities\Space;
 use Tests\TestCase;
 
 /**
@@ -128,6 +129,16 @@ class SpecialEventsAdminPermissionTest extends TestCase
             $options->contains(fn ($option) => $option['value'] === 'Special Events Admin'),
             'Special Events Admin should be selectable in the user role dropdown.'
         );
+    }
+
+    /** @test */
+    public function special_events_admin_can_browse_locations(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole($this->role);
+
+        $this->assertTrue($user->can('viewAny', Space::class));
+        $this->assertTrue($user->can('create', Space::class));
     }
 
     /** @test */

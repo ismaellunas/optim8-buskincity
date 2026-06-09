@@ -110,6 +110,38 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function special_events_admin_sees_city_admin_locations_in_pitch_picker(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $cityAdmin = $this->cityAdminFor($citySpace);
+
+        $this->actingAs($cityAdmin)->post(route('admin.spaces.store'), [
+            'name' => 'City Hall Square',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+        ]);
+
+        $location = Space::where('name', 'City Hall Square')->first();
+        $this->assertNotNull($location);
+
+        $seAdmin = User::factory()->create();
+        $seAdmin->assignRole(config('permission.role_names.special_events_admin'));
+        $seAdmin->syncScopeCities(
+            config('permission.role_names.special_events_admin'),
+            [(int) $citySpace->city_id]
+        );
+
+        $this->actingAs($seAdmin);
+
+        $options = app(\Modules\Booking\Services\ProductSpaceService::class)->getSpaceOptions();
+        $locationOption = $options->firstWhere('id', $location->id);
+
+        $this->assertNotNull($locationOption);
+        $this->assertFalse($locationOption['is_disabled']);
+    }
+
+    /** @test */
     public function city_admin_can_update_a_location_without_resubmitting_parent(): void
     {
         [$country, $citySpace] = $this->countryAndCitySpaces();

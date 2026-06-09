@@ -17,6 +17,7 @@
                         :max-pitch-date-span-days="maxPitchDateSpanDays"
                         :restricted-cities="scopedCities"
                         :requires-saved-location="requiresSavedLocation"
+                        :is-special-events-admin="isSpecialEventsAdmin"
                         :role-options="roleOptions"
                         :rules="rules"
                         :status-options="statusOptions"
@@ -150,6 +151,7 @@
             maxPitchDateSpanDays: { type: Number, default: null },
             scopedCities: { type: Array, default: () => [] },
             requiresSavedLocation: { type: Boolean, default: false },
+            isSpecialEventsAdmin: { type: Boolean, default: false },
             i18n: { type: Object, default: () => ({
                 cancel: 'Cancel',
                 create: 'Create',

@@ -25,6 +25,7 @@ class SpacePolicy
             $user->can('space.browse')
             || $user->spaces->isNotEmpty()
             || $user->hasRole('city_administrator')
+            || $user->isSpecialEventsAdmin()
         );
     }
 

@@ -149,6 +149,7 @@ class ProductController extends CrudController
             'spaceOptions' => $this->productSpaceService->getSpaceOptions(),
             'scopedCities' => $scopedCities,
             'requiresSavedLocation' => $this->userScopeService->requiresSavedLocationForPitch($user),
+            'isSpecialEventsAdmin' => $user->isSpecialEventsAdmin(),
         ]));
     }
 
@@ -285,6 +286,7 @@ class ProductController extends CrudController
             'space' => $formSpace,
             'spaceOptions' => $this->productSpaceService->getSpaceOptions($formSpace['id']),
             'requiresSavedLocation' => $this->userScopeService->requiresSavedLocationForPitch($user),
+            'isSpecialEventsAdmin' => $user->isSpecialEventsAdmin(),
         ]));
     }
 
@@ -604,6 +606,7 @@ class ProductController extends CrudController
                     'bookable_date_range_derived' => __('Set automatically from the pitch date range above.'),
                     'pitch_location_from_space' => __('Location details are taken from your selected saved location.'),
                     'no_saved_locations' => __('Create a location under Locations first, then link it here when creating a pitch.'),
+                    'no_saved_locations_contact_city_admin' => __('No locations are available in your city. Contact your City Administrator to add a location.'),
                     'special_event_date_range' => __('Special event pitches may have a bookable window of up to 14 days. The pitch remains visible year-round, but bookings are only accepted within this window.'),
                     'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly days and hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),

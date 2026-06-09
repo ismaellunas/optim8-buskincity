@@ -109,7 +109,7 @@
                 v-else-if="assignableSpaceOptions.length === 0"
                 class="notification is-warning is-light mt-3"
             >
-                {{ i18n.tips?.no_saved_locations }}
+                {{ noSavedLocationsMessage }}
             </div>
         </template>
 
@@ -358,6 +358,7 @@
             maxPitchDateSpanDays: { type: Number, default: null },
             restrictedCities: { type: Array, default: () => [] },
             requiresSavedLocation: { type: Boolean, default: false },
+            isSpecialEventsAdmin: { type: Boolean, default: false },
         },
 
         setup(props, { emit }) {
@@ -365,6 +366,12 @@
 
             const assignableSpaceOptions = computed(() => (
                 props.spaceOptions.filter((option) => ! option.is_disabled)
+            ));
+
+            const noSavedLocationsMessage = computed(() => (
+                props.isSpecialEventsAdmin
+                    ? props.i18n.tips?.no_saved_locations_contact_city_admin
+                    : props.i18n.tips?.no_saved_locations
             ));
 
             const selectedSpaceOption = computed(() => (
@@ -462,6 +469,7 @@
                 assignableSpaceOptions,
                 form,
                 isBookableDateRangeDerived,
+                noSavedLocationsMessage,
                 pitchDateRange,
                 maxBookableDateRange,
                 selectedLocationCoordinates,
