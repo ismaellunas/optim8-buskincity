@@ -117,6 +117,7 @@
                     :max="maxBookableDateRange"
                     min="0"
                     required
+                    :disabled="isBookableDateRangeDerived"
                     :message="error('bookable_date_range')"
                 >
                     <template #afterInput>
@@ -124,6 +125,15 @@
                             <a class="button is-static">
                                 day(s)
                             </a>
+                        </p>
+                    </template>
+
+                    <template
+                        v-if="isBookableDateRangeDerived"
+                        #note
+                    >
+                        <p class="help">
+                            {{ i18n.tips?.bookable_date_range_derived }}
                         </p>
                     </template>
                 </biz-form-number-addons>
@@ -223,7 +233,16 @@
     import BizTooltip from '@/Biz/Tooltip.vue';
     import ProductSpaceForm from './ProductSpaceForm.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { computed } from 'vue';
+    import moment from 'moment';
+    import { computed, watch } from 'vue';
+
+    function inclusivePitchDaySpan(start, end) {
+        if (! start || ! end) {
+            return null;
+        }
+
+        return moment(end).startOf('day').diff(moment(start).startOf('day'), 'days') + 1;
+    }
 
     export default {
         components: {
@@ -323,8 +342,32 @@
                 props.maxPitchDateSpanDays ?? 365
             ));
 
+            const isBookableDateRangeDerived = computed(() => (
+                Boolean(form.value.pitch_started_at && form.value.pitch_ended_at)
+            ));
+
+            watch(
+                () => [form.value.pitch_started_at, form.value.pitch_ended_at],
+                () => {
+                    if (! isBookableDateRangeDerived.value) {
+                        return;
+                    }
+
+                    const span = inclusivePitchDaySpan(
+                        form.value.pitch_started_at,
+                        form.value.pitch_ended_at
+                    );
+
+                    if (span !== null) {
+                        form.value.bookable_date_range = span;
+                    }
+                },
+                { immediate: true },
+            );
+
             return {
                 form,
+                isBookableDateRangeDerived,
                 pitchDateRange,
                 maxBookableDateRange,
             };

@@ -543,6 +543,18 @@ class ProductEventService
         }
     }
 
+    public function inclusivePitchDaySpan(?string $start, ?string $end): ?int
+    {
+        if (blank($start) || blank($end)) {
+            return null;
+        }
+
+        $startDate = Carbon::parse($start)->startOfDay();
+        $endDate = Carbon::parse($end)->startOfDay();
+
+        return (int) ($startDate->diffInDays($endDate) + 1);
+    }
+
     public function minBookableDate(?Product $product = null): ?Carbon
     {
         $minDate = today();

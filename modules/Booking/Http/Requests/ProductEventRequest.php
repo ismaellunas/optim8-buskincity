@@ -21,6 +21,15 @@ class ProductEventRequest extends BaseFormRequest
         if ($this->has('timezone')) {
             $this->merge(['pitch_timezone' => $this->input('timezone')]);
         }
+
+        $span = app(ProductEventService::class)->inclusivePitchDaySpan(
+            $this->input('pitch_started_at'),
+            $this->input('pitch_ended_at')
+        );
+
+        if ($span !== null) {
+            $this->merge(['bookable_date_range' => $span]);
+        }
     }
 
     public function rules()

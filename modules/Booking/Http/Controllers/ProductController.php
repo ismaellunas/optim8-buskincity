@@ -540,6 +540,7 @@ class ProductController extends CrudController
                 'select_space_note' => __('The :resource can only have one location.', ['resource' => __('booking_module::terms.product')]),
                 'tips' => [
                     'pitch_date_range' => __('The overall date range (start and end dates only) when this pitch is available. No bookings can be made outside these dates. The specific booking times are set in the Schedule section below.'),
+                    'bookable_date_range_derived' => __('Set automatically from the pitch date range above.'),
                     'special_event_date_range' => __('Special event pitches may have a bookable window of up to 14 days. The pitch remains visible year-round, but bookings are only accepted within this window.'),
                     'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly days and hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),
