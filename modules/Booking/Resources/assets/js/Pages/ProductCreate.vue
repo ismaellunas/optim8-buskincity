@@ -91,7 +91,7 @@
                         <div class="control">
                             <biz-button
                                 class="is-link"
-                                :disabled="!canCreatePitch"
+                                :disabled="!canSubmitPitch"
                             >
                                 {{ i18n.create }}
                             </biz-button>
@@ -117,6 +117,7 @@
     import icon from '@/Libs/icon-class';
     import { cloneDeep } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
+    import { pitchDateSpanExceedsMax } from '@/Libs/pitchDateSpan';
     import { useForm } from '@inertiajs/vue3';
 
     export default {
@@ -235,6 +236,22 @@
                 return this.assignableSpaceOptions.length > 0;
             },
 
+            isPitchDateRangeValid() {
+                if (! this.maxPitchDateSpanDays) {
+                    return true;
+                }
+
+                return ! pitchDateSpanExceedsMax(
+                    this.form.pitch_started_at,
+                    this.form.pitch_ended_at,
+                    this.maxPitchDateSpanDays,
+                );
+            },
+
+            canSubmitPitch() {
+                return this.canCreatePitch && this.isPitchDateRangeValid;
+            },
+
             blockedMessage() {
                 if (this.canCreatePitch) {
                     return null;
@@ -250,7 +267,7 @@
 
         methods: {
             submit() {
-                if (! this.canCreatePitch) {
+                if (! this.canSubmitPitch) {
                     return;
                 }
 

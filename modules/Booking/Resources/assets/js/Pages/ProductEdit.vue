@@ -170,7 +170,10 @@
                                 </biz-button-link>
                             </div>
                             <div class="control">
-                                <biz-button class="is-link">
+                                <biz-button
+                                    class="is-link"
+                                    :disabled="!isPitchDateRangeValid"
+                                >
                                     {{ i18n.update }}
                                 </biz-button>
                             </div>
@@ -242,6 +245,7 @@
     import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
+    import { pitchDateSpanExceedsMax } from '@/Libs/pitchDateSpan';
     import { ref, computed } from 'vue';
     import { useForm } from '@inertiajs/vue3';
 
@@ -417,6 +421,18 @@
         },
 
         computed: {
+            isPitchDateRangeValid() {
+                if (! this.maxPitchDateSpanDays) {
+                    return true;
+                }
+
+                return ! pitchDateSpanExceedsMax(
+                    this.form.pitch_started_at,
+                    this.form.pitch_ended_at,
+                    this.maxPitchDateSpanDays,
+                );
+            },
+
             dateOverrideBatches() {
                 const self = this;
 
@@ -518,6 +534,10 @@
 
         methods: {
             submit() {
+                if (! this.isPitchDateRangeValid) {
+                    return;
+                }
+
                 const self = this;
 
                 self.form.date_overrides = self.eventForm.date_overrides.filter((dateOverride) => {

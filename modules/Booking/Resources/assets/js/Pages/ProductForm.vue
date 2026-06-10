@@ -152,10 +152,17 @@
                     range
                     :utc="'preserve'"
                     required
-                    :message="error(['pitch_started_at', 'pitch_ended_at'])"
+                    :message="pitchDateSpanInvalid ? [pitchDateRangeExceededMessage] : error(['pitch_started_at', 'pitch_ended_at'])"
                     :enable-time-picker="false"
                     :tooltip-message="i18n.tips?.pitch_date_range"
                 />
+
+                <p
+                    v-if="maxPitchDateSpanDays && pitchDateSpanInvalid"
+                    class="help is-danger mt-1"
+                >
+                    {{ pitchDateRangeExceededMessage }}
+                </p>
             </div>
             <div class="column is-6">
                 <biz-form-number-addons
@@ -281,15 +288,20 @@
     import BizTooltip from '@/Biz/Tooltip.vue';
     import ProductSpaceForm from './ProductSpaceForm.vue';
     import { useModelWrapper } from '@/Libs/utils';
+    import {
+        inclusivePitchDaySpan,
+        maxPitchEndDate,
+        pitchDateSpanExceedsMax,
+    } from '@/Libs/pitchDateSpan';
     import moment from 'moment';
     import { computed, inject, watch } from 'vue';
 
-    function inclusivePitchDaySpan(start, end) {
-        if (! start || ! end) {
+    function normalizePitchDate(value) {
+        if (! value) {
             return null;
         }
 
-        return moment(end).startOf('day').diff(moment(start).startOf('day'), 'days') + 1;
+        return moment(value).format('YYYY-MM-DD');
     }
 
     export default {
@@ -429,10 +441,45 @@
                     if (newValue == null) {
                         form.value.pitch_started_at = form.value.pitch_ended_at = null;
                     } else {
-                        form.value.pitch_started_at = newValue[0] ?? null;
-                        form.value.pitch_ended_at = newValue[1] ?? null;
+                        let start = normalizePitchDate(newValue[0]);
+                        let end = normalizePitchDate(newValue[1]);
+
+                        if (
+                            props.maxPitchDateSpanDays
+                            && start
+                            && end
+                            && pitchDateSpanExceedsMax(start, end, props.maxPitchDateSpanDays)
+                        ) {
+                            end = maxPitchEndDate(start, props.maxPitchDateSpanDays);
+                        }
+
+                        form.value.pitch_started_at = start;
+                        form.value.pitch_ended_at = end;
                     }
                 }
+            });
+
+            const pitchDateSpanInvalid = computed(() => (
+                props.maxPitchDateSpanDays
+                && pitchDateSpanExceedsMax(
+                    form.value.pitch_started_at,
+                    form.value.pitch_ended_at,
+                    props.maxPitchDateSpanDays,
+                )
+            ));
+
+            const pitchDateRangeExceededMessage = computed(() => {
+                const span = inclusivePitchDaySpan(
+                    form.value.pitch_started_at,
+                    form.value.pitch_ended_at,
+                );
+
+                const template = i18n.tips?.pitch_date_range_exceeds_max
+                    ?? 'Special event pitches may span at most :days days (currently :span days).';
+
+                return template
+                    .replace(':days', String(props.maxPitchDateSpanDays))
+                    .replace(':span', String(span ?? '?'));
             });
 
             const maxBookableDateRange = computed(() => (
@@ -456,7 +503,9 @@
                     );
 
                     if (span !== null) {
-                        form.value.bookable_date_range = span;
+                        form.value.bookable_date_range = props.maxPitchDateSpanDays
+                            ? Math.min(span, props.maxPitchDateSpanDays)
+                            : span;
                     }
                 },
                 { immediate: true },
@@ -476,6 +525,8 @@
                 isBookableDateRangeDerived,
                 noSavedLocationsMessage,
                 pitchDateRange,
+                pitchDateRangeExceededMessage,
+                pitchDateSpanInvalid,
                 maxBookableDateRange,
                 selectedLocationCoordinates,
                 selectedSpaceOption,
