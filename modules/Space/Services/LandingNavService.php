@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Services;
 
+use App\Services\LegacyLandingNavFilter;
 use Modules\Space\Entities\Space;
 
 /**
@@ -45,6 +46,10 @@ class LandingNavService
         $menus = [];
 
         foreach ($countries as $country) {
+            if (! LegacyLandingNavFilter::isNavigableCountrySpace($country)) {
+                continue;
+            }
+
             if (! $country->hasEnabledPage()) {
                 continue;
             }

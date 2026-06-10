@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Country;
 use App\Models\GlobalOption;
 use Database\Seeders\GlobalOptionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Services\MenuService;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\LandingNavService;
-use ReflectionMethod;
 use Tests\TestCase;
 
 class LandingNavTest extends TestCase
@@ -19,6 +18,18 @@ class LandingNavTest extends TestCase
     {
         parent::setUp();
         $this->seed(GlobalOptionSeeder::class);
+
+        Country::create([
+            'alpha2' => 'NL',
+            'alpha3' => 'NLD',
+            'display_name' => 'Netherlands',
+        ]);
+
+        Country::create([
+            'alpha2' => 'SE',
+            'alpha3' => 'SWE',
+            'display_name' => 'Sweden',
+        ]);
     }
 
     /** @test */
@@ -80,9 +91,15 @@ class LandingNavTest extends TestCase
     }
 
     /** @test */
-    public function landing_nav_merge_strips_legacy_cms_country_items(): void
+    public function landing_nav_skips_country_spaces_without_a_countries_table_match(): void
     {
         $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+
+        Space::create([
+            'name' => 'City & Pitches',
+            'type_id' => $countryTypeId,
+            'country_code' => null,
+        ]);
 
         Space::create([
             'name' => 'Netherlands',
@@ -90,47 +107,8 @@ class LandingNavTest extends TestCase
             'country_code' => 'NLD',
         ]);
 
-        $landingMenus = app(LandingNavService::class)->getCountryCityHeaderMenus(defaultLocale());
+        $menus = app(LandingNavService::class)->getCountryCityHeaderMenus(defaultLocale());
 
-        $cmsMenus = [
-            [
-                'title' => 'All Countries',
-                'link' => '/en/dead-page',
-                'target' => null,
-                'isInternalLink' => true,
-                'children' => [],
-            ],
-            [
-                'title' => 'City & Pitches',
-                'link' => '/en/dead-city-pitches',
-                'target' => null,
-                'isInternalLink' => true,
-                'children' => [],
-            ],
-            [
-                'title' => 'Home',
-                'link' => '/en',
-                'target' => null,
-                'isInternalLink' => true,
-                'children' => [],
-            ],
-        ];
-
-        $method = new ReflectionMethod(MenuService::class, 'mergeLandingNavMenus');
-        $method->setAccessible(true);
-
-        $merged = $method->invoke(
-            app(MenuService::class),
-            $cmsMenus,
-            $landingMenus,
-            defaultLocale(),
-        );
-
-        $titles = collect($merged)->pluck('title')->all();
-
-        $this->assertContains('Netherlands', $titles);
-        $this->assertContains('Home', $titles);
-        $this->assertNotContains('All Countries', $titles);
-        $this->assertNotContains('City & Pitches', $titles);
+        $this->assertSame(['Netherlands'], collect($menus)->pluck('title')->all());
     }
 }
