@@ -199,6 +199,7 @@ class SpecialEventsAdminPermissionTest extends TestCase
 
         $this->assertTrue($titles->contains(__('Pitches')));
         $this->assertTrue($titles->contains(__('Locations')));
+        $this->assertCount(2, $titles);
     }
 
     /** @test */

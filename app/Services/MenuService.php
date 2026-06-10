@@ -517,9 +517,9 @@ class MenuService
                         ],
                     ],
                 ];
-            }
 
-            $moduleMenus = $this->moduleMenus($request);
+                $moduleMenus = $this->moduleMenus($request);
+            }
 
             $menuProfile = [
                 'title' => __('Profile'),
