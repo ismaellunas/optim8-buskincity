@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Services\UserService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 use Tests\TestCase;
 
@@ -139,6 +141,64 @@ class SpecialEventsAdminPermissionTest extends TestCase
 
         $this->assertTrue($user->can('viewAny', Space::class));
         $this->assertTrue($user->can('create', Space::class));
+    }
+
+    /** @test */
+    public function special_events_admin_can_update_special_event_pitch_in_scope(): void
+    {
+        $this->seed(\Modules\Ecommerce\Database\Seeders\DefaultSeeder::class);
+
+        $city = City::factory()->create();
+        $user = User::factory()->create();
+        $user->assignRole($this->role);
+        $user->syncScopeCities($this->role, [$city->id]);
+
+        $productType = \Lunar\Models\ProductType::where('name', 'Event')->first();
+
+        $product = Product::create([
+            'product_type_id' => $productType->id,
+            'status' => 'draft',
+            'is_special_event' => true,
+            'city_id' => $city->id,
+            'attribute_data' => [
+                'name' => new \Lunar\FieldTypes\TranslatedText(collect([
+                    'en' => new \Lunar\FieldTypes\Text('Special Event Pitch'),
+                ])),
+            ],
+        ]);
+
+        $this->assertTrue($user->can('update', $product));
+
+        $listed = Product::select([
+            'id',
+            'status',
+            'attribute_data',
+            'city_id',
+            'is_special_event',
+            'productable_type',
+            'productable_id',
+        ])->find($product->id);
+
+        $this->assertTrue($user->can('update', $listed));
+    }
+
+    /** @test */
+    public function scoped_special_events_admin_nav_includes_locations(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole($this->role);
+
+        $uri = route('admin.booking.products.index', [], false);
+        $request = Request::create($uri, 'GET');
+        $request->setRouteResolver(fn () => app('router')->getRoutes()->match($request));
+        $request->setUserResolver(fn () => $user);
+
+        $menus = app(\App\Services\MenuService::class)->getBackendNavMenus($request);
+
+        $titles = collect($menus['nav'])->pluck('title');
+
+        $this->assertTrue($titles->contains(__('Pitches')));
+        $this->assertTrue($titles->contains(__('Locations')));
     }
 
     /** @test */

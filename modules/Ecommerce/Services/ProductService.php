@@ -82,7 +82,15 @@ class ProductService
         }
 
         $records = Product::orderBy('id', 'DESC')
-            ->select(['id', 'status', 'attribute_data'])
+            ->select([
+                'id',
+                'status',
+                'attribute_data',
+                'city_id',
+                'is_special_event',
+                'productable_type',
+                'productable_id',
+            ])
             ->when($user->isSpecialEventsAdmin(), function ($query) {
                 $query->where('is_special_event', true);
             })

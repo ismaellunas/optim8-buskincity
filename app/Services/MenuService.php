@@ -29,6 +29,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Space\Entities\Space;
 
 class MenuService
 {
@@ -333,7 +335,8 @@ class MenuService
             }
 
             if ($isScopedAdmin) {
-                $menus = [];
+                $menus = $this->scopedAdminNavItems($request, $user);
+                $moduleMenus = [];
             } else {
                 $menus = [
                     [
@@ -826,5 +829,35 @@ class MenuService
         }
 
         return $menus;
+    }
+
+    /**
+     * Flat admin nav for scoped City / Special Events admins (OQ14).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function scopedAdminNavItems(Request $request, User $user): array
+    {
+        $items = [];
+
+        if ($user->can('viewAny', Product::class)) {
+            $items[] = [
+                'title' => __('Pitches'),
+                'link' => route('admin.booking.products.index'),
+                'isActive' => $request->routeIs('admin.booking.products.*'),
+                'isEnabled' => true,
+            ];
+        }
+
+        if ($user->can('viewAny', Space::class)) {
+            $items[] = [
+                'title' => __('Locations'),
+                'link' => route('admin.spaces.index'),
+                'isActive' => $request->routeIs('admin.spaces.*'),
+                'isEnabled' => true,
+            ];
+        }
+
+        return $items;
     }
 }

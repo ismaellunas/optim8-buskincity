@@ -201,7 +201,10 @@ class ProductController extends CrudController
             return $product;
         });
 
-        if ($user->hasRole('city_administrator') && ! $user->can('product.edit')) {
+        if (
+            ($user->isCityAdministrator() || $user->isSpecialEventsAdmin())
+            && ! $user->can('product.edit')
+        ) {
             $user->products()->syncWithoutDetaching([$product->id]);
         }
 
