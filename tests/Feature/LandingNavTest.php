@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Models\GlobalOption;
 use Database\Seeders\GlobalOptionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Services\MenuService;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\LandingNavService;
+use ReflectionMethod;
 use Tests\TestCase;
 
 class LandingNavTest extends TestCase
@@ -75,5 +77,52 @@ class LandingNavTest extends TestCase
         $this->assertCount(1, $menus);
         $this->assertSame('Sweden', $menus[0]['title']);
         $this->assertSame([], $menus[0]['children']);
+    }
+
+    /** @test */
+    public function landing_nav_merge_strips_legacy_all_countries_cms_item(): void
+    {
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+
+        Space::create([
+            'name' => 'Netherlands',
+            'type_id' => $countryTypeId,
+            'country_code' => 'NLD',
+        ]);
+
+        $landingMenus = app(LandingNavService::class)->getCountryCityHeaderMenus(defaultLocale());
+
+        $cmsMenus = [
+            [
+                'title' => 'All Countries',
+                'link' => '/en/dead-page',
+                'target' => null,
+                'isInternalLink' => true,
+                'children' => [],
+            ],
+            [
+                'title' => 'Home',
+                'link' => '/en',
+                'target' => null,
+                'isInternalLink' => true,
+                'children' => [],
+            ],
+        ];
+
+        $method = new ReflectionMethod(MenuService::class, 'mergeLandingNavMenus');
+        $method->setAccessible(true);
+
+        $merged = $method->invoke(
+            app(MenuService::class),
+            $cmsMenus,
+            $landingMenus,
+            defaultLocale(),
+        );
+
+        $titles = collect($merged)->pluck('title')->all();
+
+        $this->assertContains('Netherlands', $titles);
+        $this->assertContains('Home', $titles);
+        $this->assertNotContains('All Countries', $titles);
     }
 }

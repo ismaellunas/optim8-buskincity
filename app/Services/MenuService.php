@@ -152,25 +152,39 @@ class MenuService
         array $landingMenus,
         string $locale
     ): array {
-        if ($landingMenus === []) {
-            return $cmsMenus;
-        }
-
-        $spacesIndexUrl = route('frontend.spaces.index');
-        $localizedIndexUrl = LaravelLocalization::localizeURL($spacesIndexUrl, $locale);
-
         $filtered = collect($cmsMenus)
-            ->reject(function (array $menu) use ($spacesIndexUrl, $localizedIndexUrl) {
-                if ($menu['link'] === $spacesIndexUrl || $menu['link'] === $localizedIndexUrl) {
-                    return true;
-                }
-
-                return in_array(strtolower($menu['title']), ['country', 'countries'], true);
-            })
+            ->reject(fn (array $menu) => $this->isLegacyLandingNavMenuItem($menu, $locale))
             ->values()
             ->all();
 
+        if ($landingMenus === []) {
+            return $filtered;
+        }
+
         return array_merge($landingMenus, $filtered);
+    }
+
+    /**
+     * CMS header items superseded by data-driven country→city menus (FR-NAV-1).
+     *
+     * @param  array<string, mixed>  $menu
+     */
+    private function isLegacyLandingNavMenuItem(array $menu, string $locale): bool
+    {
+        $spacesIndexUrl = route('frontend.spaces.index');
+        $localizedIndexUrl = LaravelLocalization::localizeURL($spacesIndexUrl, $locale);
+
+        if ($menu['link'] === $spacesIndexUrl || $menu['link'] === $localizedIndexUrl) {
+            return true;
+        }
+
+        $legacyTitles = [
+            'country',
+            'countries',
+            'all countries',
+        ];
+
+        return in_array(strtolower(trim($menu['title'] ?? '')), $legacyTitles, true);
     }
 
     private function menuArrayFormatter(Collection $typedMenus)
