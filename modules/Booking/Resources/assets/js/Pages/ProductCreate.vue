@@ -240,13 +240,6 @@
                     return null;
                 }
 
-                const hasAnyLocation = this.spaceOptions.length > 0;
-                const hasAssignable = this.assignableSpaceOptions.length > 0;
-
-                if (hasAnyLocation && ! hasAssignable) {
-                    return this.i18n.tips?.all_saved_locations_in_use;
-                }
-
                 if (this.isSpecialEventsAdmin) {
                     return this.i18n.tips?.no_saved_locations_contact_city_admin;
                 }

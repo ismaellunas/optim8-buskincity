@@ -15,6 +15,7 @@ use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
 use Modules\Booking\Entities\ScheduleRuleTime;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Space\Entities\Space;
 
 class ProductEventService
 {
@@ -175,6 +176,50 @@ class ProductEventService
         }
 
         return (bool) ($product?->is_special_event ?? false);
+    }
+
+    /**
+     * Whether two inclusive pitch date ranges overlap (OQ5).
+     */
+    public function pitchDateRangesOverlap(string $startA, string $endA, string $startB, string $endB): bool
+    {
+        $aStart = Carbon::parse($startA)->startOfDay();
+        $aEnd = Carbon::parse($endA)->startOfDay();
+        $bStart = Carbon::parse($startB)->startOfDay();
+        $bEnd = Carbon::parse($endB)->startOfDay();
+
+        return $aStart->lte($bEnd) && $bStart->lte($aEnd);
+    }
+
+    /**
+     * First pitch at the given space whose bookable window overlaps the proposed range.
+     */
+    public function overlappingPitchAtSpace(
+        int $spaceId,
+        string $start,
+        string $end,
+        ?int $exceptProductId = null
+    ): ?Product {
+        $candidates = Product::query()
+            ->where('productable_type', Space::class)
+            ->where('productable_id', $spaceId)
+            ->when($exceptProductId, fn ($query) => $query->where('id', '!=', $exceptProductId))
+            ->get();
+
+        foreach ($candidates as $product) {
+            $otherStart = $product->getMeta('pitch_started_at');
+            $otherEnd = $product->getMeta('pitch_ended_at');
+
+            if (blank($otherStart) || blank($otherEnd)) {
+                continue;
+            }
+
+            if ($this->pitchDateRangesOverlap($start, $end, (string) $otherStart, (string) $otherEnd)) {
+                return $product;
+            }
+        }
+
+        return null;
     }
 
     public function isDateWithinPitchWindow(Product $product, string $date): bool

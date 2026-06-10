@@ -9,6 +9,7 @@ use App\Rules\Timezone;
 use App\Services\UserScopeService;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\MaxInclusiveDaySpan;
+use Modules\Booking\Rules\NoOverlappingPitchAtLocation;
 use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
@@ -137,6 +138,7 @@ class ProductPitchRequest extends BaseFormRequest
             $rules['space_id'] = [
                 $requiresSavedLocation ? 'required' : 'nullable',
                 Rule::in($spaceIds),
+                new NoOverlappingPitchAtLocation($product),
             ];
         } elseif ($requiresSavedLocation) {
             $rules['space_id'] = ['required'];

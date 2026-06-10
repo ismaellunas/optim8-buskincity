@@ -56,7 +56,6 @@ class ProductSpaceService
         $requiresSavedLocation = $scopeService->requiresSavedLocationForPitch($user);
 
         return Space::select($columnNames)
-            ->with('product')
             ->when($spaces instanceof Collection && $spaces->isNotEmpty(), function (Builder $query) use ($spaces) {
                 foreach ($spaces as $key => $space) {
                     $boolean = $key == 0 ? 'and' : 'or';
@@ -64,34 +63,20 @@ class ProductSpaceService
                 }
             })
             ->when($isExceptIdEnabled, function (Builder $query) use ($exceptId) {
-                $query->orWhereHas('product', function ($query) use ($exceptId) {
-                    $query->where('productable_id', $exceptId);
-                });
+                $query->orWhere('id', $exceptId);
             })
             ->withDepth()
             ->defaultOrder()
             ->get()
-            ->map(function ($space) use ($exceptId, $excludeTypeIds, $requiresSavedLocation) {
-                $note = null;
-                $hasSpaceProduct = (
-                    !! $space->product
-                    && $space->product->productable_id != $exceptId
-                );
-
-                if ($hasSpaceProduct) {
-                    $note = __('Already in use in :product', [
-                        'product' => $space->product->displayName,
-                    ]);
-                }
-
+            ->map(function ($space) use ($excludeTypeIds, $requiresSavedLocation) {
                 $isStructuralNode = in_array((int) $space->type_id, $excludeTypeIds, true);
 
                 return [
                     'id' => $space->id,
                     'value' => $space->name,
                     'depth' => $space->depth,
-                    'is_disabled' => $hasSpaceProduct || ($requiresSavedLocation && $isStructuralNode),
-                    'note' => $note,
+                    'is_disabled' => $requiresSavedLocation && $isStructuralNode,
+                    'note' => null,
                     'location' => [
                         'address' => $space->address,
                         'city' => $space->cityName(),

@@ -373,18 +373,11 @@
                 props.spaceOptions.filter((option) => ! option.is_disabled)
             ));
 
-            const noSavedLocationsMessage = computed(() => {
-                const hasAnyLocation = props.spaceOptions.length > 0;
-                const hasAssignable = assignableSpaceOptions.value.length > 0;
-
-                if (hasAnyLocation && ! hasAssignable) {
-                    return i18n.tips?.all_saved_locations_in_use;
-                }
-
-                return props.isSpecialEventsAdmin
+            const noSavedLocationsMessage = computed(() => (
+                props.isSpecialEventsAdmin
                     ? i18n.tips?.no_saved_locations_contact_city_admin
-                    : i18n.tips?.no_saved_locations;
-            });
+                    : i18n.tips?.no_saved_locations
+            ));
 
             const selectedSpaceOption = computed(() => (
                 props.spaceOptions.find(
