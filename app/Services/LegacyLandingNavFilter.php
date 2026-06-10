@@ -38,19 +38,28 @@ class LegacyLandingNavFilter
 
     /**
      * Legacy CMS header items were hand-built in Theme → Header using these shapes:
+     * - type=url, url=#     → placeholder parent ("City & Pitches", menu_items.id 67 on staging)
      * - type=url            → /spaces index ("All Countries", "Country")
-     * - type=space          → linked Country Space ("Netherlands", …)
-     * - type=segment (+url) → parent grouping only space/url children ("City & Pitches")
+     * - type=space          → linked geo Space (Country/City/Pitch)
+     * - type=segment (+url) → parent grouping with geo children
      */
     public static function isLegacyCmsHeaderMenu(MenuInterface $menu, string $locale): bool
     {
         $item = $menu->getModel();
 
+        if ($item->type === 'url' && self::isPlaceholderUrl($item->url)) {
+            return true;
+        }
+
         if ($item->type === 'url' && self::urlPointsToSpacesIndex($item->url, $locale)) {
             return true;
         }
 
-        if ($item->type === 'space' && self::menuItemLinksToCountrySpace($item)) {
+        if ($item->type === 'space' && self::menuItemLinksToGeoSpace($item)) {
+            return true;
+        }
+
+        if (self::menuUrlIsSpaceLanding($menu, $locale)) {
             return true;
         }
 
@@ -62,18 +71,22 @@ class LegacyLandingNavFilter
     }
 
     /**
-     * Landing nav countries must map to a real row in `countries` via `spaces.country_code`.
+     * Country spaces need a resolvable ISO code, or a name matching `countries.display_name`
+     * (legacy rows often lack `country_code`, e.g. Norway on staging).
      */
     public static function isNavigableCountrySpace(Space $country): bool
     {
-        if (blank($country->country_code)) {
-            return false;
+        if (filled($country->country_code)) {
+            $alpha2 = app(CountryService::class)->toAlpha2($country->country_code);
+
+            if ($alpha2 !== null && Country::where('alpha2', $alpha2)->exists()) {
+                return true;
+            }
         }
 
-        $alpha2 = app(CountryService::class)->toAlpha2($country->country_code);
-
-        return $alpha2 !== null
-            && Country::where('alpha2', $alpha2)->exists();
+        return Country::query()
+            ->whereRaw('LOWER(display_name) = ?', [strtolower(trim($country->name))])
+            ->exists();
     }
 
     public static function urlPointsToSpacesIndex(?string $url, string $locale): bool
@@ -95,7 +108,12 @@ class LegacyLandingNavFilter
             && str_ends_with(rtrim($path, '/'), '/spaces');
     }
 
-    private static function menuItemLinksToCountrySpace(MenuItem $item): bool
+    private static function isPlaceholderUrl(?string $url): bool
+    {
+        return in_array(trim($url ?? ''), ['', '#'], true);
+    }
+
+    private static function menuItemLinksToGeoSpace(MenuItem $item): bool
     {
         if ($item->menu_itemable_type !== Space::class) {
             return false;
@@ -109,11 +127,32 @@ class LegacyLandingNavFilter
 
         $space->loadMissing('type');
 
-        return ($space->type->name ?? null) === 'Country';
+        return in_array($space->type->name ?? null, ['Country', 'City', 'Pitch'], true);
+    }
+
+    private static function menuUrlIsSpaceLanding(MenuInterface $menu, string $locale): bool
+    {
+        try {
+            $url = $menu->getUrl();
+        } catch (\Throwable) {
+            return false;
+        }
+
+        if (blank($url) || $url === '#') {
+            return false;
+        }
+
+        if (self::urlPointsToSpacesIndex($url, $locale)) {
+            return true;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+
+        return is_string($path) && preg_match('#/spaces/.+#', $path) === 1;
     }
 
     /**
-     * "City & Pitches" lived as a segment/url parent whose children were Space or /spaces links.
+     * Legacy drill-down groups ("City & Pitches") mixed page/space/url children.
      */
     private static function isLegacyGeoDrillDownGroup(MenuInterface $menu, string $locale): bool
     {
@@ -125,7 +164,11 @@ class LegacyLandingNavFilter
             return false;
         }
 
-        return $menu->children->every(function (MenuInterface $child) use ($locale) {
+        if (self::menuUrlIsSpaceLanding($menu, $locale)) {
+            return true;
+        }
+
+        return $menu->children->contains(function (MenuInterface $child) use ($locale) {
             $childItem = $child->getModel();
 
             if ($childItem->type === 'space') {
@@ -133,12 +176,11 @@ class LegacyLandingNavFilter
             }
 
             if ($childItem->type === 'url') {
-                return self::urlPointsToSpacesIndex($childItem->url, $locale)
-                    || blank($childItem->url)
-                    || $childItem->url === '#';
+                return self::isPlaceholderUrl($childItem->url)
+                    || self::urlPointsToSpacesIndex($childItem->url, $locale);
             }
 
-            return false;
+            return self::menuUrlIsSpaceLanding($child, $locale);
         });
     }
 }

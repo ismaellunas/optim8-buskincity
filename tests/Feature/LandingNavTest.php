@@ -30,6 +30,12 @@ class LandingNavTest extends TestCase
             'alpha3' => 'SWE',
             'display_name' => 'Sweden',
         ]);
+
+        Country::create([
+            'alpha2' => 'NO',
+            'alpha3' => 'NOR',
+            'display_name' => 'Norway',
+        ]);
     }
 
     /** @test */

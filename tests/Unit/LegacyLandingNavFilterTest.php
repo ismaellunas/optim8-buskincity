@@ -32,6 +32,12 @@ class LegacyLandingNavFilterTest extends TestCase
             'alpha3' => 'NLD',
             'display_name' => 'Netherlands',
         ]);
+
+        Country::create([
+            'alpha2' => 'NO',
+            'alpha3' => 'NOR',
+            'display_name' => 'Norway',
+        ]);
     }
 
     /** @test */
@@ -69,6 +75,73 @@ class LegacyLandingNavFilterTest extends TestCase
 
         $this->assertTrue(LegacyLandingNavFilter::isNavigableCountrySpace($valid));
         $this->assertFalse(LegacyLandingNavFilter::isNavigableCountrySpace($invalid));
+    }
+
+    /** @test */
+    public function it_keeps_country_spaces_matched_by_name_when_country_code_is_missing(): void
+    {
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+
+        $norway = Space::create([
+            'name' => 'Norway',
+            'type_id' => $countryTypeId,
+            'country_code' => null,
+        ]);
+
+        $this->assertTrue(LegacyLandingNavFilter::isNavigableCountrySpace($norway));
+    }
+
+    /** @test */
+    public function it_filters_cms_menu_items_linked_to_city_spaces(): void
+    {
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+        $citySpace = Space::create([
+            'name' => 'Oslo',
+            'type_id' => $cityTypeId,
+            'country_code' => 'NOR',
+        ]);
+
+        $menuItem = MenuItem::create([
+            'title' => 'City & Pitches',
+            'type' => 'space',
+            'order' => 1,
+            'menu_id' => Menu::factory()->create([
+                'type' => Menu::TYPE_HEADER,
+                'locale' => defaultLocale(),
+            ])->id,
+            'menu_itemable_id' => $citySpace->id,
+            'menu_itemable_type' => Space::class,
+        ]);
+
+        $menu = new MenuUrl($menuItem->fresh('menuItemable'), defaultLocale());
+
+        $this->assertTrue(LegacyLandingNavFilter::isLegacyCmsHeaderMenu($menu, defaultLocale()));
+    }
+
+    /** @test */
+    public function it_filters_placeholder_url_header_items_like_city_and_pitches(): void
+    {
+        $menuItem = MenuItem::create([
+            'title' => 'City & Pitches',
+            'type' => (new UrlOption())->getKey(),
+            'url' => '#',
+            'order' => 1,
+            'menu_id' => Menu::factory()->create([
+                'type' => Menu::TYPE_HEADER,
+                'locale' => defaultLocale(),
+            ])->id,
+        ]);
+
+        $menu = new UrlMenu($menuItem, defaultLocale());
+
+        $this->assertTrue(LegacyLandingNavFilter::isLegacyCmsHeaderMenu($menu, defaultLocale()));
+
+        $filtered = LegacyLandingNavFilter::filterStructuredHeaderMenus(
+            collect([$menu]),
+            defaultLocale()
+        );
+
+        $this->assertCount(0, $filtered);
     }
 
     /** @test */
