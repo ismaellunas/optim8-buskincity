@@ -19,9 +19,9 @@ class ProductSpaceService
         $excludeTypeIds = $this->nonAssignableTypeIds();
 
         if ($scopeService->requiresSavedLocationForPitch($user)) {
-            $cityIds = $user->isSpecialEventsAdmin()
-                ? $user->scopeIdsFor(config('permission.role_names.special_events_admin'), 'city')
-                : $user->adminCities->pluck('id')->all();
+            $user->loadMissing(['spaces', 'adminCities']);
+
+            $cityIds = $scopeService->scopedCityIds($user);
 
             $managedSpaceIds = $user->spaces->pluck('id')->all();
             $citySpaceIds = $cityIds === []

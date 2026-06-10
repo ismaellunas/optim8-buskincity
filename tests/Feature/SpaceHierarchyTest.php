@@ -110,6 +110,35 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_with_user_scope_only_sees_created_locations_in_pitch_picker(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+
+        $admin = User::factory()->create();
+        $admin->assignRole(config('permission.role_names.city_admin'));
+        $admin->syncScopeCities(
+            config('permission.role_names.city_admin'),
+            [(int) $citySpace->city_id]
+        );
+
+        $this->actingAs($admin)->post(route('admin.spaces.store'), [
+            'name' => 'Museumplein',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+        ]);
+
+        $location = Space::where('name', 'Museumplein')->first();
+        $this->assertNotNull($location);
+
+        $options = app(\Modules\Booking\Services\ProductSpaceService::class)->getSpaceOptions();
+        $locationOption = $options->firstWhere('id', $location->id);
+
+        $this->assertNotNull($locationOption);
+        $this->assertFalse($locationOption['is_disabled']);
+    }
+
+    /** @test */
     public function special_events_admin_sees_city_admin_locations_in_pitch_picker(): void
     {
         [$country, $citySpace] = $this->countryAndCitySpaces();

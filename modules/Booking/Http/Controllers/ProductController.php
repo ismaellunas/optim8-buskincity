@@ -614,6 +614,7 @@ class ProductController extends CrudController
                     'pitch_location_from_space' => __('Location details are taken from your selected saved location.'),
                     'no_saved_locations' => __('Before you can create a pitch, add a location under Locations, then return here to select it.'),
                     'no_saved_locations_contact_city_admin' => __('Before you can create a special event pitch, a location must exist in your city. Contact your City Administrator to add one, then return here to create your pitch.'),
+                    'all_saved_locations_in_use' => __('Every saved location in your city is already linked to another pitch. Add a new location under Locations first.'),
                     'special_event_date_range' => __('Special event pitches may have a bookable window of up to 14 days. The pitch remains visible year-round, but bookings are only accepted within this window.'),
                     'schedule' => __('Set the specific days and times when bookings can be made within the Pitch Date Range above. Configure weekly days and hours for regular availability and date overrides for special dates or closures.'),
                     'timezone' => __('Select your timezone to ensure that all scheduled events and time-related information are accurate.'),

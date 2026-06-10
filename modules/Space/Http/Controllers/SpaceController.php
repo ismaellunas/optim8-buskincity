@@ -234,9 +234,9 @@ class SpaceController extends CrudController
 
         $this->spaceService->persistCityId($space, $inputs);
 
-        // Attach City Administrator to the space they created
+        // Attach scoped admins to spaces they create so pitch/location pickers resolve them.
         $user = auth()->user();
-        if ($user->hasRole('city_administrator') && !$user->can('space.edit')) {
+        if ($user->isCityAdministrator() || $user->isSpecialEventsAdmin()) {
             $user->spaces()->syncWithoutDetaching([$space->id]);
         }
 
