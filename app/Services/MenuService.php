@@ -182,6 +182,8 @@ class MenuService
             'country',
             'countries',
             'all countries',
+            'city & pitches',
+            'city and pitches',
         ];
 
         return in_array(strtolower(trim($menu['title'] ?? '')), $legacyTitles, true);

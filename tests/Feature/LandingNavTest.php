@@ -80,7 +80,7 @@ class LandingNavTest extends TestCase
     }
 
     /** @test */
-    public function landing_nav_merge_strips_legacy_all_countries_cms_item(): void
+    public function landing_nav_merge_strips_legacy_cms_country_items(): void
     {
         $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
 
@@ -96,6 +96,13 @@ class LandingNavTest extends TestCase
             [
                 'title' => 'All Countries',
                 'link' => '/en/dead-page',
+                'target' => null,
+                'isInternalLink' => true,
+                'children' => [],
+            ],
+            [
+                'title' => 'City & Pitches',
+                'link' => '/en/dead-city-pitches',
                 'target' => null,
                 'isInternalLink' => true,
                 'children' => [],
@@ -124,5 +131,6 @@ class LandingNavTest extends TestCase
         $this->assertContains('Netherlands', $titles);
         $this->assertContains('Home', $titles);
         $this->assertNotContains('All Countries', $titles);
+        $this->assertNotContains('City & Pitches', $titles);
     }
 }
