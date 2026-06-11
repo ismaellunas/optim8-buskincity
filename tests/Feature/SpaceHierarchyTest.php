@@ -369,6 +369,45 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_can_edit_legacy_city_space_without_city_id(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $cityId = (int) $citySpace->city_id;
+        $admin = $this->cityAdminFor($citySpace);
+
+        $citySpace->city_id = null;
+        $citySpace->save();
+
+        $this->assertTrue($admin->can('managePage', $citySpace));
+        $this->assertTrue($admin->can('update', $citySpace));
+
+        $records = app(\Modules\Space\Services\SpaceService::class)
+            ->getRecords($admin, app(\Modules\Space\Services\SpaceService::class)->scopedCitySpaceIds([$cityId]))
+            ->getCollection();
+
+        $row = $records->firstWhere('id', $citySpace->id);
+
+        $this->assertNotNull($row);
+        $this->assertTrue($row->can['edit']);
+        $this->assertSame($cityId, (int) $citySpace->fresh()->city_id);
+    }
+
+    /** @test */
+    public function city_admin_index_hides_top_level_create_but_keeps_row_add_child(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = $this->cityAdminFor($citySpace);
+
+        $this->actingAs($admin)
+            ->get(route('admin.spaces.index'))
+            ->assertOk()
+            ->assertInertia(fn ($response) => $response
+                ->where('can.add', false)
+                ->where('can.addChild', true)
+            );
+    }
+
+    /** @test */
     public function city_admin_cannot_create_a_new_city_space(): void
     {
         [$country] = $this->countryAndCitySpaces();

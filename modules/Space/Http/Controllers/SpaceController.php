@@ -60,13 +60,15 @@ class SpaceController extends CrudController
         $scopes = array_filter($scopes);
 
         if ($user->isCityAdministrator() || $user->isSpecialEventsAdmin()) {
+            if ($user->isCityAdministrator()) {
+                $this->spaceService->ensureCitySpacesExist($user);
+            }
+
             $managedSpaces = $user->spaces;
             $managedSpaceIds = $managedSpaces->pluck('id')->all();
 
             $cityIds = $this->userScopeService->scopedCityIds($user);
-            $citySpaceIds = $cityIds === []
-                ? []
-                : Space::whereIn('city_id', $cityIds)->pluck('id')->all();
+            $citySpaceIds = $this->spaceService->scopedCitySpaceIds($cityIds);
 
             $spaceIds = array_values(array_unique(array_merge($managedSpaceIds, $citySpaceIds)));
         } elseif (! $user->can('space.viewAny')) {
@@ -93,10 +95,15 @@ class SpaceController extends CrudController
 
         $spaceOptions = $this->spaceService->parentOptions($managedSpaces, __('Select Parent'));
 
+        $canCreateChild = $user->can('create', Space::class);
+        $isScopedLocationAdmin = $user->isCityAdministrator() || $user->isSpecialEventsAdmin();
+
         return Inertia::render('Space::SpaceIndex', $this->getData([
             'can' => [
-                'add' => $user->can('create', Space::class),
-                'delete' => $user->can('space.delete')
+                // Scoped admins add locations/pitches via the row "+" under their city.
+                'add' => $canCreateChild && ! $isScopedLocationAdmin,
+                'addChild' => $canCreateChild,
+                'delete' => $user->can('space.delete'),
             ],
             'parent' => $request->parent,
             'parentOptions' => $spaceOptions,

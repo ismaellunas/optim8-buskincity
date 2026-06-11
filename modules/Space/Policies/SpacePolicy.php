@@ -122,11 +122,20 @@ class SpacePolicy
 
         $space->loadMissing('type');
 
-        if ($space->type?->name !== 'City' || ! $space->city_id) {
+        if ($space->type?->name !== 'City') {
             return false;
         }
 
-        return app(UserScopeService::class)->cityIdIsInScope((int) $space->city_id, $user);
+        $scopeService = app(UserScopeService::class);
+
+        if ($space->city_id && $scopeService->cityIdIsInScope((int) $space->city_id, $user)) {
+            return true;
+        }
+
+        // Legacy City nodes may lack city_id (seeded before FK backfill).
+        return $scopeService->scopedCityOptions($user)->contains(
+            fn ($city) => mb_strtolower($city->name) === mb_strtolower($space->name)
+        );
     }
 
     public function manageManager(User $user)

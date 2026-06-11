@@ -80,8 +80,8 @@ class SpaceService
 
             $space->typeName = $space->type->name ?? null;
             $space->can = [
-                'edit' => $user->can('update', $space),
-                'delete' => $user->can('delete', $space)
+                'edit' => $user->can('update', $space) || $user->can('managePage', $space),
+                'delete' => $user->can('delete', $space),
             ];
 
             return $space;
@@ -313,21 +313,92 @@ class SpaceService
         }
 
         foreach ($cities as $city) {
-            $exists = Space::where('type_id', $cityType->id)
-                ->where('city_id', $city->id)
-                ->exists();
+            $existing = Space::where('type_id', $cityType->id)
+                ->where(function ($query) use ($city) {
+                    $query->where('city_id', $city->id)
+                        ->orWhere(function ($query) use ($city) {
+                            $query->whereNull('city_id')
+                                ->whereRaw('LOWER(name) = ?', [mb_strtolower($city->name)]);
+                        });
+                })
+                ->first();
 
-            if (! $exists) {
-                Space::create([
-                    'name' => $city->name,
-                    'type_id' => $cityType->id,
-                    'city_id' => $city->id,
-                    'country_code' => $city->country_code,
-                    'latitude' => $city->latitude,
-                    'longitude' => $city->longitude,
-                    'is_page_enabled' => false,
-                ]);
+            if ($existing) {
+                $this->linkCitySpaceToCity($existing, $city);
+
+                continue;
             }
+
+            Space::create([
+                'name' => $city->name,
+                'type_id' => $cityType->id,
+                'city_id' => $city->id,
+                'country_code' => $city->country_code,
+                'latitude' => $city->latitude,
+                'longitude' => $city->longitude,
+                'is_page_enabled' => false,
+            ]);
+        }
+    }
+
+    /**
+     * Link legacy City-type space nodes to scoped cities and return their IDs.
+     *
+     * @param  array<int, int>  $scopedCityIds
+     * @return array<int, int>
+     */
+    public function scopedCitySpaceIds(array $scopedCityIds): array
+    {
+        if ($scopedCityIds === []) {
+            return [];
+        }
+
+        $cityType = $this->types()->firstWhere('name', 'City');
+
+        if (! $cityType) {
+            return [];
+        }
+
+        $cities = \App\Models\City::whereIn('id', $scopedCityIds)->get(['id', 'name', 'country_code']);
+
+        $spaceIds = [];
+
+        foreach ($cities as $city) {
+            $space = Space::where('type_id', $cityType->id)
+                ->where(function ($query) use ($city) {
+                    $query->where('city_id', $city->id)
+                        ->orWhere(function ($query) use ($city) {
+                            $query->whereNull('city_id')
+                                ->whereRaw('LOWER(name) = ?', [mb_strtolower($city->name)]);
+                        });
+                })
+                ->first();
+
+            if ($space) {
+                $this->linkCitySpaceToCity($space, $city);
+                $spaceIds[] = (int) $space->id;
+            }
+        }
+
+        return array_values(array_unique($spaceIds));
+    }
+
+    private function linkCitySpaceToCity(Space $space, \App\Models\City $city): void
+    {
+        $dirty = false;
+
+        if ((int) $space->city_id !== (int) $city->id) {
+            $space->city_id = (int) $city->id;
+            $dirty = true;
+        }
+
+        if (! $space->country_code && $city->country_code) {
+            $space->country_code = $city->country_code;
+            $dirty = true;
+        }
+
+        if ($dirty) {
+            $space->save();
         }
     }
 

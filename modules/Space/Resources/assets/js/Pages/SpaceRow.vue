@@ -6,7 +6,7 @@
         <td>
             <div class="level-right">
                 <biz-button-link
-                    v-if="can.add && space.depth < 2"
+                    v-if="can.addChild && space.depth < 2"
                     class="is-ghost has-text-black"
                     :href="route(routeCreate, {parent: space.id})"
                 >
