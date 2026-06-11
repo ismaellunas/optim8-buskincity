@@ -10,7 +10,7 @@ use Database\Seeders\GlobalOptionSeeder;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Database\Seeders\DefaultSeeder as EcommerceDefaultSeeder;
 use Modules\Ecommerce\Entities\Product;
@@ -43,7 +43,7 @@ class PitchLocationOverlapTest extends TestCase
     /** @test */
     public function pitch_date_ranges_overlap_when_days_are_shared(): void
     {
-        $service = app(ProductEventService::class);
+        $service = app(PitchBookingService::class);
 
         $this->assertTrue($service->pitchDateRangesOverlap('2026-06-01', '2026-06-10', '2026-06-05', '2026-06-15'));
         $this->assertFalse($service->pitchDateRangesOverlap('2026-06-01', '2026-06-10', '2026-06-11', '2026-06-20'));
@@ -91,7 +91,7 @@ class PitchLocationOverlapTest extends TestCase
             'duration' => '60',
             'bookable_date_range' => 11,
             'timezone' => 'Europe/Amsterdam',
-            'weekly_hours' => app(ProductEventService::class)->defaultWeeklyHours(),
+            'weekly_hours' => app(PitchBookingService::class)->defaultWeeklyHours(),
         ]);
 
         $response->assertSessionHasErrors('space_id');
@@ -121,7 +121,7 @@ class PitchLocationOverlapTest extends TestCase
             'duration' => '60',
             'bookable_date_range' => 14,
             'timezone' => 'Europe/Amsterdam',
-            'weekly_hours' => app(ProductEventService::class)->defaultWeeklyHours(),
+            'weekly_hours' => app(PitchBookingService::class)->defaultWeeklyHours(),
         ]);
 
         $response->assertRedirect();
@@ -146,7 +146,7 @@ class PitchLocationOverlapTest extends TestCase
             'duration' => '60',
             'bookable_date_range' => 14,
             'timezone' => 'Europe/Amsterdam',
-            'weekly_hours' => app(ProductEventService::class)->defaultWeeklyHours(),
+            'weekly_hours' => app(PitchBookingService::class)->defaultWeeklyHours(),
         ], $overrides);
 
         $this->actingAs($admin)->post(route('admin.booking.products.store'), $payload)->assertRedirect();

@@ -4,7 +4,7 @@ namespace Modules\Booking\Rules;
 
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Product;
 
 /**
@@ -44,7 +44,7 @@ class NoOverlappingPitchAtLocation implements DataAwareRule, Rule
             return true;
         }
 
-        return app(ProductEventService::class)->overlappingPitchAtSpace(
+        return app(PitchBookingService::class)->overlappingPitchAtSpace(
             (int) $value,
             (string) $start,
             (string) $end,

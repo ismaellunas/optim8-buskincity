@@ -10,7 +10,7 @@ use App\Services\UserScopeService;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
@@ -92,7 +92,7 @@ class PitchLocationFkTest extends TestCase
 
         $user->syncAdminCities([$assigned->id]);
 
-        $service = app(ProductEventService::class);
+        $service = app(PitchBookingService::class);
 
         $cityOptions = $service->getAdminFilterCityOptions($user);
         $countryOptions = $service->getAdminFilterCountryOptions($user);

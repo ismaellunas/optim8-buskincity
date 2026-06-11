@@ -217,7 +217,7 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - References: FRS doc §2.6, §3.6 FR-PITCH-3/5/6/9/10, §6.3 AC1; **Blocked by OQ11.**
   - Verify: single timezone persists; label/order snapshots; create form shows all fields.
 - [x] **T6.2 — 14-day cap + visible-vs-bookable for special events.** — **🟢 CODE COMPLETE 2026-06-04**
-  - Files: `ProductEventRequest`/`ProductEventCrudRequest` (≤14-day validation), `modules/Booking/Services/ProductEventService.php::maxBookableDate()`, date pickers; visibility decoupled from bookability.
+  - Files: `ProductEventRequest`/`ProductEventCrudRequest` (≤14-day validation), `modules/Booking/Services/PitchBookingService.php::maxBookableDate()`, date pickers; visibility decoupled from bookability.
   - References: FRS doc §3.3 FR-SE-2/3, §6.3 AC6/AC7; SEC doc Phase 6; **Blocked by OQ5** (overlap).
   - Verify: >14d rejected, ≤14d accepted; special-events pitch visible year-round but only bookable in window.
 
@@ -253,8 +253,8 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Verify: `PitchAvailabilityListingTest` green.
 - [x] **T8.4 — Public booked-event calendar on pitch page.** — **✅ DONE**
   - Verify: `PitchPublicEventCalendarTest` green; leaf pitch space page shows booked events.
-- [x] **T8.5 — Cleanup (calendar view, docs, rename services).** — **🟢 CODE COMPLETE**
-  - Verify: `fix-event-calendars-view.sql` aligned; optional `ProductEventService` → `PitchBookingService` rename still open.
+- [x] **T8.5 — Cleanup (calendar view, docs, rename services).** — **✅ DONE**
+  - Verify: `fix-event-calendars-view.sql` aligned; `ProductEventService` → `PitchBookingService` rename complete.
 
 ### Cross-cutting (carry through all phases)
 - [x] **T-PERF-CANCEL — Performer cancellation semantics.** OQ4: performer may cancel; canceled events leave the calendar and free the slot. Files: `OrderService::cancelBooking()`, `Event::scopeBlockingAvailability()`, `EventService::bookedTimes()`, frontend `OrderController::cancel`, `OrderCancelRequest` authorization.

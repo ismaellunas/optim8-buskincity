@@ -20,7 +20,7 @@ use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventCanceled;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineType;
@@ -274,7 +274,7 @@ class OrderService
                     );
                 }
 
-                $location['direction_url'] = app(ProductEventService::class)
+                $location['direction_url'] = app(PitchBookingService::class)
                     ->getGoogleMapDirectionUrl($product);
 
                 return $location->only('address',

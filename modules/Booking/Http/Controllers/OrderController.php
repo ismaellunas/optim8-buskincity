@@ -13,7 +13,7 @@ use Modules\Booking\Http\Requests\OrderCancelRequest;
 use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Booking\Services\EventService;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
@@ -21,7 +21,7 @@ use Modules\Ecommerce\Services\ProductService;
 class OrderController extends CrudController
 {
     private $orderService;
-    private $productEventService;
+    private $pitchBookingService;
     private $eventService;
 
     protected $title = "booking_module::terms.booking";
@@ -30,13 +30,13 @@ class OrderController extends CrudController
     public function __construct(
         EventService $eventService,
         OrderService $orderService,
-        ProductEventService $productEventService
+        PitchBookingService $pitchBookingService
     ) {
         $this->authorizeResource(Order::class, 'order');
 
         $this->eventService = $eventService;
         $this->orderService = $orderService;
-        $this->productEventService = $productEventService;
+        $this->pitchBookingService = $pitchBookingService;
     }
 
     public function cancel(OrderCancelRequest $request, Order $order)
@@ -144,8 +144,8 @@ class OrderController extends CrudController
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
 
-        $minDate = $this->productEventService->minBookableDate($product);
-        $maxDate = $this->productEventService->maxBookableDate($product);
+        $minDate = $this->pitchBookingService->minBookableDate($product);
+        $maxDate = $this->pitchBookingService->maxBookableDate($product);
 
         $product = app(ProductService::class)->formResource($product);
 
@@ -172,7 +172,7 @@ class OrderController extends CrudController
             'maxDate' => $maxDate->toDateString(),
             'timezone' => $eventLine->latestEvent->schedule->timezone,
             'allowedDatesRouteName' => 'admin.booking.products.allowed-dates',
-            'availableTimesRouteName' => $this->productEventService->availableTimesOrderRouteName(),
+            'availableTimesRouteName' => $this->pitchBookingService->availableTimesOrderRouteName(),
             'i18n' => [
                 'reschedule_event' => __('Reschedule event'),
                 'message' => __('Message'),

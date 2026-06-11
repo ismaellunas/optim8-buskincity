@@ -28,7 +28,7 @@
 | **T8.2** Booking core | ✅ DONE | Direct pitch book/batch/reschedule; no `product_event_id` |
 | **T8.3** Performer pitch listing | ✅ DONE | `PitchListingService`; index + show without ProductEvent picker |
 | **T8.4** Public booked calendar | ✅ DONE | `bookedEvents` on performer show + leaf pitch space-events API |
-| **T8.5** Cleanup | 🟢 CODE COMPLETE | `fix-event-calendars-view.sql` updated; `ProductEventService` rename deferred |
+| **T8.5** Cleanup | ✅ DONE | `fix-event-calendars-view.sql` updated; `ProductEventService` → `PitchBookingService` rename complete |
 
 **Run:** `./vendor/bin/sail artisan test --group=events-overhaul` (8 pass)
 

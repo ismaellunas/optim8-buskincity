@@ -13,7 +13,7 @@ use Modules\Ecommerce\Enums\ProductStatus;
 class PitchListingService
 {
     public function __construct(
-        private ProductEventService $productEventService,
+        private PitchBookingService $pitchBookingService,
         private EventService $eventService,
     ) {}
 
@@ -117,8 +117,8 @@ class PitchListingService
             return false;
         }
 
-        $minDate = $this->productEventService->minBookableDate($product);
-        $maxDate = $this->productEventService->maxBookableDate($product);
+        $minDate = $this->pitchBookingService->minBookableDate($product);
+        $maxDate = $this->pitchBookingService->maxBookableDate($product);
 
         if (! $minDate || ! $maxDate || $minDate->gt($maxDate)) {
             return false;
@@ -131,7 +131,7 @@ class PitchListingService
         }
 
         for ($date = $minDate->copy(); $date->lte($scanUntil); $date->addDay()) {
-            if (! $this->productEventService->isDateWithinPitchWindow($product, $date->toDateString())) {
+            if (! $this->pitchBookingService->isDateWithinPitchWindow($product, $date->toDateString())) {
                 continue;
             }
 

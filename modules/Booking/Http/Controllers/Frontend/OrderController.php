@@ -14,7 +14,7 @@ use Modules\Booking\Http\Requests\EventBookRequest;
 use Modules\Booking\Http\Requests\OrderCancelRequest;
 use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\OrderService;
@@ -23,19 +23,19 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends CrudController
 {
     private $orderService;
-    private $productEventService;
+    private $pitchBookingService;
 
     protected $title = "booking_module::terms.booking";
     protected $baseRouteName = "booking.orders";
 
     public function __construct(
         OrderService $orderService,
-        ProductEventService $productEventService
+        PitchBookingService $pitchBookingService
     ) {
         $this->authorizeResource(Order::class, 'order');
 
         $this->orderService = $orderService;
-        $this->productEventService = $productEventService;
+        $this->pitchBookingService = $pitchBookingService;
     }
 
     public function index(OrderIndexRequest $request)
@@ -128,8 +128,8 @@ class OrderController extends CrudController
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
 
-        $minDate = $this->productEventService->minBookableDate($product);
-        $maxDate = $this->productEventService->maxBookableDate($product);
+        $minDate = $this->pitchBookingService->minBookableDate($product);
+        $maxDate = $this->pitchBookingService->maxBookableDate($product);
 
         return Inertia::render('Booking::FrontendOrderReschedule', $this->getData([
             'title' => 'Reschedule Event',
@@ -137,8 +137,8 @@ class OrderController extends CrudController
             'minDate' => $minDate->toDateString(),
             'maxDate' => $maxDate->toDateString(),
             'timezone' => $eventLine->latestEvent->schedule->timezone,
-            'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
-            'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),
+            'allowedDatesRouteName' => $this->pitchBookingService->allowedDatesRouteName(),
+            'availableTimesRouteName' => $this->pitchBookingService->availableTimesRouteName(),
         ]));
     }
 

@@ -3,7 +3,7 @@
 namespace Modules\Booking\Rules;
 
 use Illuminate\Contracts\Validation\InvokableRule;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Product;
 
 class BookingWithinPitchWindow implements InvokableRule
@@ -18,7 +18,7 @@ class BookingWithinPitchWindow implements InvokableRule
             return;
         }
 
-        if (! app(ProductEventService::class)->isDateWithinPitchWindow($this->product, (string) $value)) {
+        if (! app(PitchBookingService::class)->isDateWithinPitchWindow($this->product, (string) $value)) {
             $fail(__('The selected date must be within the pitch bookable window.'));
         }
     }

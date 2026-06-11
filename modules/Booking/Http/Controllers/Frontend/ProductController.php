@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Booking\Services\PitchListingService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
@@ -21,7 +21,7 @@ class ProductController extends CrudController
 
     public function __construct(
         private EventService $eventService,
-        private ProductEventService $productEventService,
+        private PitchBookingService $pitchBookingService,
         private ProductService $productService,
         private PitchListingService $pitchListingService,
     ) {}
@@ -74,16 +74,16 @@ class ProductController extends CrudController
         }
 
         $canBook = $this->pitchListingService->hasAvailableTimeslot($product);
-        $minDate = $this->productEventService->minBookableDate($product);
-        $maxDate = $this->productEventService->maxBookableDate($product);
+        $minDate = $this->pitchBookingService->minBookableDate($product);
+        $maxDate = $this->pitchBookingService->maxBookableDate($product);
 
         $location = $product->locations[0] ?? [];
 
         return Inertia::render('Booking::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),
-            'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
-            'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),
-            'event' => $this->productEventService->detailResource($product),
+            'allowedDatesRouteName' => $this->pitchBookingService->allowedDatesRouteName(),
+            'availableTimesRouteName' => $this->pitchBookingService->availableTimesRouteName(),
+            'event' => $this->pitchBookingService->detailResource($product),
             'maxDate' => $maxDate?->toDateString(),
             'minDate' => $minDate?->toDateString(),
             'product' => $this->productService->productDetailResource($product),
@@ -116,7 +116,7 @@ class ProductController extends CrudController
 
         $date = Carbon::parse($dateTime);
 
-        if (! $this->productEventService->isDateWithinPitchWindow($product, $date->toDateString())) {
+        if (! $this->pitchBookingService->isDateWithinPitchWindow($product, $date->toDateString())) {
             return collect();
         }
 
@@ -152,7 +152,7 @@ class ProductController extends CrudController
         $pitchEnd = $product->getMeta('pitch_ended_at');
 
         return $allowedDates->filter(function ($date) use ($pitchStart, $pitchEnd, $product) {
-            if (! $this->productEventService->isDateWithinPitchWindow($product, $date)) {
+            if (! $this->pitchBookingService->isDateWithinPitchWindow($product, $date)) {
                 return false;
             }
 

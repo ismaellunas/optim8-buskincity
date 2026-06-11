@@ -17,7 +17,7 @@ use Modules\Booking\Entities\ScheduleRuleTime;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 
-class ProductEventService
+class PitchBookingService
 {
     private $cacheProducts = null;
     private $cacheFrontendProducts = null;

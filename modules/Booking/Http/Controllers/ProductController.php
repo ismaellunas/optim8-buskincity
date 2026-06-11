@@ -24,7 +24,7 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Http\Requests\ProductPitchRequest;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
@@ -41,7 +41,7 @@ class ProductController extends CrudController
 
     public function __construct(
         private ProductService $productService,
-        private ProductEventService $productEventService,
+        private PitchBookingService $pitchBookingService,
         private ProductSpaceService $productSpaceService,
         private CityService $cityService,
         private LocationService $locationService,
@@ -79,8 +79,8 @@ class ProductController extends CrudController
                 $scopes,
             ),
             'statusOptions' => ProductStatus::options(),
-            'countryOptions' => $this->productEventService->getAdminFilterCountryOptions($user),
-            'cityOptions' => $this->productEventService->getAdminFilterCityOptions($user),
+            'countryOptions' => $this->pitchBookingService->getAdminFilterCountryOptions($user),
+            'cityOptions' => $this->pitchBookingService->getAdminFilterCityOptions($user),
             'can' => [
                 'add' => $user->can('create', Product::class),
             ],
@@ -91,7 +91,7 @@ class ProductController extends CrudController
     public function create()
     {
         $user = auth()->user();
-        $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow();
+        $isSpecialEventPitch = $this->pitchBookingService->requiresFourteenDayBookableWindow();
         $scopedCities = $this->scopedCitiesForPitchForm();
 
         // Avoid showing validation errors from a previous failed save on a fresh create form.
@@ -130,9 +130,9 @@ class ProductController extends CrudController
                 ],
             ],
             'roleOptions' => $this->productService->roleOptions(),
-            'eventDurationOptions' => $this->productEventService->durationOptions(),
-            'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
-            'weeklyHours' => $this->productEventService->defaultWeeklyHours(),
+            'eventDurationOptions' => $this->pitchBookingService->durationOptions(),
+            'weekdays' => $this->pitchBookingService->weekdays()->pluck('value', 'id'),
+            'weeklyHours' => $this->pitchBookingService->defaultWeeklyHours(),
             'defaultCountryCode' => $scopedCities[0]['country_code']
                 ?? app(IPService::class)->getCountryCode('US'),
             'defaultTimezone' => app(IPService::class)->getTimezone(),
@@ -229,7 +229,7 @@ class ProductController extends CrudController
         $hasLocation = !empty($product->locations[0]['city'] ?? null)
                        && !empty($product->locations[0]['country_code'] ?? null);
 
-        $isSpecialEventPitch = $this->productEventService->requiresFourteenDayBookableWindow($product);
+        $isSpecialEventPitch = $this->pitchBookingService->requiresFourteenDayBookableWindow($product);
 
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'breadcrumbs' => [
@@ -246,13 +246,13 @@ class ProductController extends CrudController
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
-            'eventDurationOptions' => $this->productEventService->durationOptions(),
+            'eventDurationOptions' => $this->pitchBookingService->durationOptions(),
             'eventStatusOptions' => PublishingStatus::options(),
-            'event' => $this->productEventService->formResource($product),
-            'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
-            'weeklyHours' => $this->productEventService->weeklyHours($product),
-            'dateOverrides' => $this->productEventService->dateOverrides($product),
-            'pitchScheduleInfo' => $this->productEventService->pitchScheduleInfo($product),
+            'event' => $this->pitchBookingService->formResource($product),
+            'weekdays' => $this->pitchBookingService->weekdays()->pluck('value', 'id'),
+            'weeklyHours' => $this->pitchBookingService->weeklyHours($product),
+            'dateOverrides' => $this->pitchBookingService->dateOverrides($product),
+            'pitchScheduleInfo' => $this->pitchBookingService->pitchScheduleInfo($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
             'defaultCountryCode' => app(IPService::class)->getCountryCode("US"),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
@@ -467,8 +467,8 @@ class ProductController extends CrudController
         $schedule->timezone = $inputs['timezone'];
         $schedule->save();
 
-        $this->productEventService->saveWeeklyHours($inputs['weekly_hours'] ?? [], $schedule);
-        $this->productEventService->saveDateOverrides(
+        $this->pitchBookingService->saveWeeklyHours($inputs['weekly_hours'] ?? [], $schedule);
+        $this->pitchBookingService->saveDateOverrides(
             collect($inputs['date_overrides'] ?? []),
             $schedule
         );

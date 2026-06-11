@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\MaxInclusiveDaySpan;
 use Modules\Booking\Rules\NoOverlappingPitchAtLocation;
 use Modules\Booking\Rules\NoOverlappingTime;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Booking\Services\ProductSpaceService;
 use Modules\Ecommerce\Enums\ProductStatus;
@@ -26,7 +26,7 @@ class ProductPitchRequest extends BaseFormRequest
             $this->merge(['pitch_timezone' => $this->input('timezone')]);
         }
 
-        $span = app(ProductEventService::class)->inclusivePitchDaySpan(
+        $span = app(PitchBookingService::class)->inclusivePitchDaySpan(
             $this->input('pitch_started_at'),
             $this->input('pitch_ended_at')
         );
@@ -53,8 +53,8 @@ class ProductPitchRequest extends BaseFormRequest
 
     public function rules(): array
     {
-        /** @var ProductEventService $eventService */
-        $eventService = app(ProductEventService::class);
+        /** @var PitchBookingService $eventService */
+        $eventService = app(PitchBookingService::class);
 
         /** @var Product|null $product */
         $product = $this->route('product');
@@ -89,7 +89,7 @@ class ProductPitchRequest extends BaseFormRequest
                 'max:'.($requiresFourteenDayCap ? 14 : 365),
             ],
             'duration' => ['required', Rule::in(
-                app(ProductEventService::class)->durationOptions()->pluck('id')
+                app(PitchBookingService::class)->durationOptions()->pluck('id')
             )],
 
             // Schedule

@@ -12,7 +12,7 @@ use Modules\Booking\Policies\ProductPolicyMixin;
 use Modules\Booking\Policies\SpacePolicyMixin;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\PitchListingService;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Booking\Services\SettingService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
@@ -35,7 +35,7 @@ class BookingServiceProvider extends ServiceProvider
     public $singletons = [
         EventService::class => EventService::class,
         PitchListingService::class => PitchListingService::class,
-        ProductEventService::class => ProductEventService::class,
+        PitchBookingService::class => PitchBookingService::class,
         SettingService::class => SettingService::class,
     ];
 

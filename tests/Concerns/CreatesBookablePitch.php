@@ -18,7 +18,7 @@ use Lunar\Models\ProductType;
 use Lunar\Models\ProductVariant;
 use Lunar\Models\TaxClass;
 use Modules\Booking\Entities\Schedule;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Booking\Services\PitchBookingService;
 use Modules\Ecommerce\Database\Seeders\DefaultSeeder as EcommerceDefaultSeeder;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\ProductStatus;
@@ -130,7 +130,7 @@ trait CreatesBookablePitch
             'timezone' => 'UTC',
         ]);
 
-        app(ProductEventService::class)->saveWeeklyHours(
+        app(PitchBookingService::class)->saveWeeklyHours(
             $this->weekdayWeeklyHours(),
             $schedule
         );
