@@ -4,18 +4,26 @@ namespace Modules\Space\Services;
 
 use App\Enums\PublishingStatus;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 
 class EventService
 {
+    public function __construct(
+        private SpaceEventService $spaceEventService,
+    ) {}
+
     public function getRecords(
         Space $space,
         ?string $term = null,
         int $perPage = 10
     ): AbstractPaginator {
-        return SpaceEvent::orderBy('started_at', 'ASC')
+        $dateFormat = config('constants.format.date_time_minute');
+
+        $cmsRows = SpaceEvent::query()
             ->select([
                 'id',
                 'title',
@@ -29,27 +37,62 @@ class EventService
             })
             ->orderBy('started_at')
             ->orderBy('id')
-            ->paginate($perPage);
+            ->get()
+            ->map(fn (SpaceEvent $event) => [
+                'id' => $event->id,
+                'record_type' => 'cms',
+                'title' => $event->title,
+                'pitch_name' => null,
+                'started_at' => $event->started_at->format($dateFormat),
+                'ended_at' => $event->ended_at->format($dateFormat),
+                'status' => $event->status,
+                'display_status' => $event->displayStatus,
+                'sort_at' => $event->started_at,
+                'can_reschedule' => false,
+                'reschedule_url' => null,
+                'order_id' => null,
+            ]);
+
+        $bookedRows = $this->spaceEventService->getAdminBookedPitchEventRows($space, $term);
+
+        $merged = $cmsRows
+            ->concat($bookedRows)
+            ->sortBy('sort_at')
+            ->values();
+
+        return $this->paginateCollection($merged, $perPage);
     }
 
-    public function transformRecords(AbstractPaginator $records)
+    /**
+     * @param  Collection<int, array<string, mixed>>  $items
+     */
+    private function paginateCollection(Collection $items, int $perPage): LengthAwarePaginator
     {
-        $dateFormat = config('constants.format.date_time_minute');
+        $page = max(1, (int) request()->input('page', 1));
+        $total = $items->count();
+        $slice = $items->slice(($page - 1) * $perPage, $perPage)->values();
 
-        $records->transform(function ($event) use ($dateFormat) {
-            return [
-                ...$event->only([
-                    'id',
-                    'title',
-                    'status',
-                ]),
-                ...[
-                    'started_at' => $event->started_at->format($dateFormat),
-                    'ended_at' => $event->ended_at->format($dateFormat),
-                    'display_status' => $event->displayStatus,
-                ]
-            ];
-        });
+        return new LengthAwarePaginator(
+            $slice,
+            $total,
+            $perPage,
+            $page,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
+    }
+
+    public function transformRecords(AbstractPaginator $records): void
+    {
+        $records->setCollection(
+            $records->getCollection()->map(function (array $row) {
+                unset($row['sort_at']);
+
+                return $row;
+            })
+        );
     }
 
     public function getEditableRecord(SpaceEvent $event)

@@ -1,5 +1,9 @@
 <template>
     <div>
+        <p class="help mb-4">
+            {{ i18n.events_tab_help }}
+        </p>
+
         <div class="columns">
             <div class="column has-text-right">
                 <biz-button
@@ -23,7 +27,9 @@
         >
             <template #thead>
                 <tr>
+                    <th>{{ i18n.type }}</th>
                     <th>{{ i18n.title }}</th>
+                    <th>{{ i18n.pitch }}</th>
                     <th>{{ i18n.started_at }}</th>
                     <th>{{ i18n.ended_at }}</th>
                     <th>{{ i18n.status }}</th>
@@ -37,22 +43,42 @@
 
             <tr
                 v-for="record in events.data"
-                :key="record.id"
+                :key="`${record.record_type}-${record.id}`"
             >
+                <td>
+                    <biz-tag
+                        class="is-small is-rounded"
+                        :class="record.record_type === 'booked' ? 'is-info' : 'is-light'"
+                    >
+                        {{ record.record_type === 'booked' ? i18n.booked_performance : i18n.cms_event }}
+                    </biz-tag>
+                </td>
                 <td>{{ record.title }}</td>
+                <td>{{ record.pitch_name || '—' }}</td>
                 <td>{{ record.started_at }}</td>
                 <td>{{ record.ended_at }}</td>
                 <td>
                     <biz-tag
                         class="is-small is-rounded"
-                        :class="{ 'is-success': record.status == 'published' }"
+                        :class="statusTagClass(record)"
                     >
                         {{ record.display_status }}
                     </biz-tag>
                 </td>
                 <td>
                     <div class="level-right">
+                        <biz-button-link
+                            v-if="record.record_type === 'booked' && record.can_reschedule"
+                            class="is-ghost has-text-black"
+                            :href="record.reschedule_url"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.edit" />
+                            </span>
+                        </biz-button-link>
+
                         <biz-button
+                            v-else-if="record.record_type === 'cms'"
                             type="button"
                             class="is-ghost has-text-black"
                             @click="openModalEdit(record)"
@@ -63,6 +89,7 @@
                         </biz-button>
 
                         <biz-button
+                            v-if="record.record_type === 'cms'"
                             type="button"
                             class="is-ghost has-text-black ml-1"
                             @click="onDelete(record)"
@@ -91,6 +118,7 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import BizTag from '@/Biz/Tag.vue';
     import SpaceEventFormModal from './SpaceEventFormModal.vue';
@@ -102,6 +130,7 @@
 
         components: {
             BizButton,
+            BizButtonLink,
             BizTableIndex,
             BizTag,
             SpaceEventFormModal,
@@ -117,13 +146,19 @@
             i18n: { default: () => ({
                 add_new: 'Add new',
                 title: 'Title',
+                pitch: 'Pitch',
+                type: 'Type',
                 started_at: 'Started at',
                 ended_at: 'Ended at',
+                status: 'Status',
                 actions: 'Actions',
                 add_new_event: 'Add new event',
                 started_and_ended_at: 'Started at and ended at',
                 description: 'Description',
                 are_you_sure: 'Are you sure?',
+                booked_performance: 'Booked performance',
+                cms_event: 'CMS event',
+                events_tab_help: 'Booked performances are performer reservations. Use Reschedule to override the date and time without deleting the booking. CMS events are manually published calendar entries for this space.',
             }) }
         },
 
@@ -200,6 +235,14 @@
             afterSubmit() {
                 this.getRecords();
                 this.closeModal();
+            },
+
+            statusTagClass(record) {
+                if (record.record_type === 'booked') {
+                    return { 'is-success': record.status === 'upcoming' || record.status === 'ongoing' };
+                }
+
+                return { 'is-success': record.status === 'published' };
             },
         },
     };

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
 use Modules\Booking\Entities\Event as BookingEvent;
@@ -221,13 +222,94 @@ class SpaceEventService
         };
     }
 
-    private function hasPitchProductsUnderSpace(Space $space): bool
+    public function hasPitchProductsUnderSpace(Space $space): bool
     {
         return Product::query()
             ->where('status', ProductStatus::PUBLISHED->value)
             ->whereHas('eventSchedule')
             ->where($this->pitchProductsUnderSpaceConstraint($space))
             ->exists();
+    }
+
+    /**
+     * Booked performer performances for the admin space Events tab (FR-BOOK-4).
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function getAdminBookedPitchEventRows(Space $space, ?string $term = null): Collection
+    {
+        $space->loadMissing(['product.eventSchedule']);
+
+        $query = $this->adminBookedPitchEventsQuery($space);
+
+        if (! $query) {
+            return collect();
+        }
+
+        if ($term) {
+            $query->where(function (Builder $builder) use ($term) {
+                $builder->whereHas('orderLine.order.user', function (Builder $userQuery) use ($term) {
+                    $userQuery->search($term);
+                })->orWhereHas('schedule', function (Builder $scheduleQuery) use ($term) {
+                    $scheduleQuery->whereHasMorph(
+                        'schedulable',
+                        [Product::class],
+                        fn (Builder $productQuery) => $productQuery->searchWithoutScout($term)
+                    );
+                });
+            });
+        }
+
+        return $query
+            ->with([
+                'orderLine.order.user',
+                'schedule.schedulable',
+            ])
+            ->orderBy('booked_at')
+            ->get()
+            ->map(fn (BookingEvent $event) => $this->transformAdminBookedPitchEvent($event, $space));
+    }
+
+    private function adminBookedPitchEventsQuery(Space $space): ?Builder
+    {
+        if ($space->isLeaf() && $space->product?->eventSchedule) {
+            return $space->product->eventSchedule->events()
+                ->blockingAvailability()
+                ->where('booked_at', '>=', now()->startOfDay());
+        }
+
+        if ($this->hasPitchProductsUnderSpace($space)) {
+            return $this->bookedPitchEventsQuery($space);
+        }
+
+        return null;
+    }
+
+    private function transformAdminBookedPitchEvent(BookingEvent $event, Space $contextSpace): array
+    {
+        $product = $event->schedule?->schedulable;
+        $pitchSpace = $product ? $this->resolvePitchSpaceForProduct($product) : null;
+        $performer = $event->orderLine?->order?->user;
+        $order = $event->orderLine?->order;
+        $dateFormat = config('constants.format.date_time_minute');
+
+        return [
+            'id' => $event->id,
+            'record_type' => 'booked',
+            'title' => $performer?->full_name ?: ($product?->displayName ?? __('Booked performance')),
+            'pitch_name' => $pitchSpace?->name ?? $product?->displayName,
+            'started_at' => $event->timezonedBookedAt->format($dateFormat),
+            'ended_at' => $event->endedTime->format($dateFormat),
+            'status' => $event->status,
+            'display_status' => Str::title((string) $event->status),
+            'sort_at' => $event->booked_at,
+            'order_id' => $order?->id,
+            'can_reschedule' => $order ? Gate::check('rescheduleBooking', $order) : false,
+            'reschedule_url' => $order
+                ? route('admin.booking.orders.reschedule', $order->id)
+                : null,
+            'space_name' => $pitchSpace?->name ?? $contextSpace->name,
+        ];
     }
 
     private function descendantPitchSpaceIds(Space $space): Collection
