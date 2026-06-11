@@ -90,7 +90,8 @@ class OrderService
             })
             ->when($isUserProductManager, function ($query) use ($user) {
                 $query->productManager($user->id);
-            });
+            })
+            ->whereHas('firstEventLine.latestEvent');
     }
 
     private function columnsBuilder(Builder $query): Builder
@@ -99,7 +100,16 @@ class OrderService
             'firstEventLine' => function ($query) {
                 $query->with([
                     'latestEvent' => function ($query) {
-                        $query->select(['id', 'order_line_id', 'schedule_id', 'booked_at', 'duration', 'duration_unit', 'status']);
+                        $query->select([
+                            'id',
+                            'order_line_id',
+                            'schedule_id',
+                            'booked_at',
+                            'duration',
+                            'duration_unit',
+                            'status',
+                            'created_at',
+                        ]);
                         $query->with('schedule:id,timezone');
                     },
                     'purchasable' => function ($query) {
@@ -173,54 +183,67 @@ class OrderService
             ->limit($limit)
             ->get();
 
-        $this->transformWidgetRecords($records, $user);
-
-        return $records;
+        return $this->transformWidgetRecords($records, $user);
     }
 
     public function transformRecords($records, $user)
     {
-        $records->getCollection()->transform(function ($record) use ($user) {
-            $event = $record->firstEventLine->latestEvent;
+        $records->setCollection(
+            $records->getCollection()
+                ->map(function ($record) use ($user) {
+                    $eventLine = $record->firstEventLine;
+                    $event = $eventLine?->latestEvent;
 
-            $product = $record->firstEventLine->purchasable->product;
+                    if (! $event || ! $eventLine) {
+                        return null;
+                    }
 
-            return (object) [
-                'id' => $record->id,
-                'product_name' => $product->displayName,
-                'customer_name' => $record->user->fullName ?? null,
-                'reference' => $record->reference,
-                'status' => Str::title($record->booking_status),
-                'start_end_time' => $event->displayStartEndTime,
-                'date' => $event->timezonedBookedAt->format('d M Y'),
-                'timezone' => $event->timezonedBookedAt->format('P'),
-                'event' => [
-                    'date' => $event->timezonedBookedAt->format('d F Y'),
-                    'duration' => $event->displayDuration,
-                    'start_end_time' => $event->displayStartEndTime,
-                    'timezone' => $event->schedule->timezone,
-                ],
-                'check_in_time' => $record->hasCheckIn()
-                    ? $record->checkIn
-                        ->checked_in_at
-                        ->setTimezone($event->schedule->timezone)
-                        ->format('H:i')
-                    : null,
-                'location' => $product->location,
-                'can' => [
-                    'cancel' => $user->can('cancelBooking', $record),
-                    'reschedule' => $user->can('rescheduleBooking', $record),
-                ],
-            ];
-        });
+                    $product = $eventLine->purchasable->product;
+
+                    return (object) [
+                        'id' => $record->id,
+                        'product_name' => $product->displayName,
+                        'customer_name' => $record->user->fullName ?? null,
+                        'reference' => $record->reference,
+                        'status' => Str::title($record->booking_status),
+                        'start_end_time' => $event->displayStartEndTime,
+                        'date' => $event->timezonedBookedAt->format('d M Y'),
+                        'timezone' => $event->timezonedBookedAt->format('P'),
+                        'event' => [
+                            'date' => $event->timezonedBookedAt->format('d F Y'),
+                            'duration' => $event->displayDuration,
+                            'start_end_time' => $event->displayStartEndTime,
+                            'timezone' => $event->schedule->timezone,
+                        ],
+                        'check_in_time' => $record->hasCheckIn()
+                            ? $record->checkIn
+                                ->checked_in_at
+                                ->setTimezone($event->schedule->timezone)
+                                ->format('H:i')
+                            : null,
+                        'location' => $product->location,
+                        'can' => [
+                            'cancel' => $user->can('cancelBooking', $record),
+                            'reschedule' => $user->can('rescheduleBooking', $record),
+                        ],
+                    ];
+                })
+                ->filter()
+                ->values()
+        );
     }
 
-    public function transformWidgetRecords($records, $user)
+    public function transformWidgetRecords($records, $user): Collection
     {
-        $records->transform(function ($record) use ($user) {
-            $event = $record->firstEventLine->latestEvent;
+        return $records->map(function ($record) use ($user) {
+            $eventLine = $record->firstEventLine;
+            $event = $eventLine?->latestEvent;
 
-            $product = $record->firstEventLine->purchasable->product;
+            if (! $event || ! $eventLine) {
+                return null;
+            }
+
+            $product = $eventLine->purchasable->product;
 
             return (object) [
                 'id' => $record->id,
@@ -234,7 +257,7 @@ class OrderService
                     'read' => $user->can('view', $record)
                 ],
             ];
-        });
+        })->filter()->values();
     }
 
     public function getRecord(Order $order): array
@@ -248,7 +271,11 @@ class OrderService
 
     public function getFrontendRecord(Order $order): array
     {
-        $event = $order->firstEventLine->latestEvent;
+        $event = $order->firstEventLine?->latestEvent;
+
+        if (! $event) {
+            throw new \RuntimeException('Booking event is missing for order '.$order->id);
+        }
 
         $product = $order->firstProduct;
 
@@ -359,75 +386,77 @@ class OrderService
         User $user,
     ): Order
     {
-        $currency = Currency::getDefault();
-        $channel = Channel::getDefault();
-        $generator = app(OrderReferenceGeneratorInterface::class);
+        return DB::transaction(function () use ($product, $dateTime, $user) {
+            $currency = Currency::getDefault();
+            $channel = Channel::getDefault();
+            $generator = app(OrderReferenceGeneratorInterface::class);
 
-        $schedule = $product->eventSchedule;
+            $schedule = $product->eventSchedule;
 
-        if (! $schedule) {
-            throw new \RuntimeException('Pitch schedule is not configured.');
-        }
+            if (! $schedule) {
+                throw new \RuntimeException('Pitch schedule is not configured.');
+            }
 
-        $lines = collect();
+            $lines = collect();
 
-        $variant = $product->variants->first();
+            $variant = $product->variants->first();
 
-        $lines->push([
-            'purchasable_type' => get_class($variant),
-            'purchasable_id' => $variant->id,
-            'type' => OrderLineType::EVENT,
-            'description' => "",
-            'option' => null,
-            'identifier' => $variant->sku,
-            'unit_price' => 0,
-            'unit_quantity' => 0,
-            'quantity' => 1,
-            'sub_total' => 0,
-            'discount_total' => 0,
-            'tax_breakdown' => [],
-            'tax_total' => 0,
-            'total' =>	0,
-        ]);
+            $lines->push([
+                'purchasable_type' => get_class($variant),
+                'purchasable_id' => $variant->id,
+                'type' => OrderLineType::EVENT,
+                'description' => "",
+                'option' => null,
+                'identifier' => $variant->sku,
+                'unit_price' => 0,
+                'unit_quantity' => 0,
+                'quantity' => 1,
+                'sub_total' => 0,
+                'discount_total' => 0,
+                'tax_breakdown' => [],
+                'tax_total' => 0,
+                'total' =>	0,
+            ]);
 
-        $order = [
-            'user_id' => $user->id,
-            'channel_id' => $channel->id,
-            'status' => OrderStatus::COMPLETED,
-            'sub_total' => 0,
-            'tax_breakdown' => [],
-            'tax_total' => 0,
-            'total' => 0,
-            'currency_code' => $currency->code,
-            'compare_currency_code' => $currency->code,
-            'placed_at' => Carbon::now(),
-            'meta' => [
-                'product_id' => $product->id,
-                'sku' => $variant->sku,
+            $order = [
+                'user_id' => $user->id,
+                'channel_id' => $channel->id,
+                'status' => OrderStatus::COMPLETED,
+                'sub_total' => 0,
+                'tax_breakdown' => [],
+                'tax_total' => 0,
+                'total' => 0,
+                'currency_code' => $currency->code,
+                'compare_currency_code' => $currency->code,
+                'placed_at' => Carbon::now(),
+                'meta' => [
+                    'product_id' => $product->id,
+                    'sku' => $variant->sku,
+                    'booked_at' => $dateTime,
+                    'duration' => $product->duration,
+                    'duration_unit' => 'minute',
+                ],
+            ];
+
+            $orderModel = Order::factory()->create($order);
+            $orderModel->reference = $generator->generate($orderModel);
+            $orderModel->save();
+
+            $orderModel->lines()->createMany($lines->toArray());
+
+            $orderLine = $orderModel->lines->first();
+
+            Event::factory()->state([
+                'schedule_id' => $schedule->id,
+                'order_line_id' => $orderLine->id,
                 'booked_at' => $dateTime,
                 'duration' => $product->duration,
-                'duration_unit' => 'minute',
-            ],
-        ];
+                'duration_unit' => $product->duration_unit ?? 'minute',
+                'status' => BookingStatus::UPCOMING,
+            ])->create();
 
-        $orderModel = Order::factory()->create($order);
-        $orderModel->reference = $generator->generate($orderModel);
-        $orderModel->save();
-
-        $orderModel->lines()->createMany($lines->toArray());
-
-        $orderLine = $orderModel->lines->first();
-
-        Event::factory()->state([
-            'schedule_id' => $schedule->id,
-            'order_line_id' => $orderLine->id,
-            'booked_at' => $dateTime,
-            'duration' => $product->duration,
-            'duration_unit' => $product->duration_unit ?? 'minute',
-            'status' => BookingStatus::UPCOMING,
-        ])->create();
-
-        return $orderModel;
+            return $orderModel;
+        });
     }
 
     public function emailReceipients(Order $order): Collection
