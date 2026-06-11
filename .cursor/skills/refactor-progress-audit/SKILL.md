@@ -89,6 +89,7 @@ Unanswered blockers gating work: OQ<list>.
 | 5 — Approval workflow | T5.1–T5.2 | … | … | … | … |
 | 6 — Pitch UX + 14-day | T6.1–T6.2 | … | … | … | … |
 | 7 — Nav/type/pins/search | T7.1–T7.4 | … | … | … | … |
+| 8 — Events overhaul (FR-BOOK) | T8.1–T8.5, T-TOOL-* | … | … | … | … |
 | Cross-cutting | T-PERF-CANCEL, T-TESTS | … | … | … | … |
 
 ## Task detail

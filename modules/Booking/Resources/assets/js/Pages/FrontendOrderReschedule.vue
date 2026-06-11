@@ -56,7 +56,6 @@
                                 :max-date="maxDate"
                                 :min-date="minDate"
                                 :product-id="order.product.id"
-                                :product-event-id="order.event.product_event_id"
                                 :timezone="order.event.display_timezone"
                                 @on-time-confirmed="openModal"
                             />
@@ -150,7 +149,6 @@
             availableTimesParams() {
                 return {
                     product: this.order.product.id,
-                    product_event_id: this.order.event.product_event_id,
                 };
             },
         },

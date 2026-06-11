@@ -607,3 +607,43 @@ Complete lookup from requirement → phase → test coverage.
 | **V7** | Unregistered `SpaceEventPolicy` | 1 | CityAdministratorTest | Tinker policy check |
 | **V8** | Hardcoded roles / orphaned seeder | 0 | RolePermission suite | DB/seed check — §2.2 |
 | **V9** | Administrator without scope | 1 | CityAdministratorTest | Manual Administrator login |
+
+---
+
+## 10. Phase 8 — Events overhaul (FR-BOOK) — pitch timeslots → performer events
+
+**Plan:** [`plan-events-overhaul-pitch-timeslots.md`](./plan-events-overhaul-pitch-timeslots.md)  
+**Status:** T-TOOL-1/2/3 complete (RED target tests); T8.1–T8.5 TODO
+
+### 10.1 Run target tests (expect FAIL until T8 lands)
+
+```bash
+./vendor/bin/sail artisan test --group=events-overhaul
+```
+
+| Test file | FR-BOOK | Unblocks when |
+|---|---|---|
+| `ProductEventRemovalTest.php` | FR-BOOK-5 | T8.1 |
+| `PitchDirectBookingTest.php` | FR-BOOK-1/2/6 | T8.2 |
+| `PitchAvailabilityListingTest.php` | FR-BOOK-3 | T8.3 |
+| `PitchPublicEventCalendarTest.php` | FR-BOOK-4 | T8.4 |
+
+### 10.2 Manual QA (post T8.5)
+
+| Check | Steps | Expected |
+|---|---|---|
+| No admin Events tab | Edit pitch as City Admin | No ProductEvent list/modal |
+| Performer list | Publish pitch with schedule only | Appears on `/booking/products` |
+| Direct book | Book timeslot | Order + `events` row; no `product_events` row |
+| Fully booked | Exhaust slots | Pitch still listed; book disabled |
+| Public calendar | Guest opens pitch page | Upcoming booked events only |
+| Batch book | Book 2 slots in one submit | Two orders/events |
+| Cancel / reschedule | Existing flows | Still work (FR-BOOK-7) |
+
+### 10.3 Blast-radius tooling
+
+```bash
+rg -l 'ProductEvent|product_events|product_event_id' --glob '!vendor/**' | sort > migration-preparation/artifacts/product-event-blast-radius.txt
+```
+
+Disposition checklist: `migration-preparation/artifacts/product-event-blast-radius-disposition.md`

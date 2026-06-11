@@ -60,7 +60,7 @@
                             </tr>
                             <tr>
                                 <th>Timezone</th>
-                                <td>{{ currentTimezone }}</td>
+                                <td>{{ timezone }}</td>
                             </tr>
                         </tbody>
                     </biz-table>
@@ -127,25 +127,6 @@
                 </div>
 
                 <div
-                    v-else-if="productEvents.length"
-                    class="column is-12-desktop is-12-tablet is-12-mobile"
-                >
-                    <biz-form-select
-                        v-model="selectedProductEventId"
-                        class="is-fullwidth"
-                        :label="i18n.select_event ?? 'Select event'"
-                    >
-                        <option
-                            v-for="productEvent in productEvents"
-                            :key="productEvent.id"
-                            :value="productEvent.id"
-                        >
-                            {{ productEvent.title }}
-                        </option>
-                    </biz-form-select>
-                </div>
-
-                <div
                     v-if="canBook && mapPosition.latitude && mapPosition.longitude"
                     class="column is-4-desktop is-12-tablet is-12-mobile"
                 >
@@ -173,11 +154,10 @@
                                     :allowed-dates-route="allowedDatesRouteName"
                                     :available-times-param="availableTimesParams"
                                     :available-times-route="availableTimesRouteName"
-                                    :max-date="maxBookableDate"
-                                    :min-date="minBookableDate"
+                                    :max-date="maxDate"
+                                    :min-date="minDate"
                                     :product-id="product.id"
-                                    :product-event-id="selectedProductEventId"
-                                    :timezone="currentTimezone"
+                                    :timezone="timezone"
                                     @on-time-confirmed="openModal"
                                 />
                             </div>
@@ -214,7 +194,7 @@
                 </tr>
                 <tr>
                     <th><biz-icon :icon="icon.timezone" /></th>
-                    <td>{{ currentTimezone }}</td>
+                    <td>{{ timezone }}</td>
                 </tr>
                 <tr>
                     <th><biz-icon :icon="icon.calendar" /></th>
@@ -253,7 +233,6 @@
     import BizImage from '@/Biz/Image.vue';
     import BizLink from '@/Biz/Link.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
-    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizMessage from '@/Biz/Message.vue';
     import BizTable from '@/Biz/Table.vue';
     import BizTag from '@/Biz/Tag.vue';
@@ -265,7 +244,7 @@
     import moment from 'moment';
     import { calendar, duration, timezone } from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { ref, computed } from 'vue';
+    import { ref } from 'vue';
     import { startCase } from 'lodash';
     import { useForm } from '@inertiajs/vue3';
 
@@ -276,7 +255,6 @@
             BizImage,
             BizLink,
             BizModalCard,
-            BizFormSelect,
             BizTable,
             BizTag,
             BookingTime,
@@ -300,8 +278,11 @@
             maxDate: { type: String, default: null },
             minDate: { type: String, default: null },
             product: { type: Object, required: true },
-            productEvents: { type: Array, default: () => [] },
             timezone: { type: String, required: true },
+            mapPosition: {
+                type: Object,
+                default: () => ({ latitude: null, longitude: null }),
+            },
             googleApiKey: { type: String, default: null },
             canBook: { type: Boolean, default: true },
             noEventsMessage: { type: String, default: 'No events available for booking at this time.' },
@@ -317,8 +298,7 @@
             const form = {
                 date: null,
                 time: null,
-                timezone: computed(() => props.timezone).value,
-                product_event_id: props.productEvents[0]?.id ?? null,
+                timezone: props.timezone,
             };
 
             return {
@@ -326,7 +306,6 @@
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),
-                selectedProductEventId: ref(props.productEvents[0]?.id ?? null),
             };
         },
 
@@ -334,33 +313,7 @@
             availableTimesParams() {
                 return {
                     product: this.product.id,
-                    product_event_id: this.selectedProductEventId,
                 };
-            },
-
-            currentTimezone() {
-                return this.selectedProductEvent?.schedule_timezone ?? this.event.display_timezone;
-            },
-
-            mapPosition() {
-                const location = this.selectedProductEvent?.location ?? this.event.location;
-
-                return {
-                    latitude: location?.latitude,
-                    longitude: location?.longitude,
-                };
-            },
-
-            selectedProductEvent() {
-                return this.productEvents.find((productEvent) => productEvent.id == this.selectedProductEventId) ?? null;
-            },
-
-            minBookableDate() {
-                return this.selectedProductEvent?.started_at ?? this.minDate;
-            },
-
-            maxBookableDate() {
-                return this.selectedProductEvent?.ended_at ?? this.maxDate;
             },
 
             selectedImageUrl() {
@@ -394,15 +347,6 @@
             },
         },
 
-        watch: {
-            selectedProductEventId(newValue) {
-                this.form.product_event_id = newValue;
-                this.form.timezone = this.currentTimezone;
-                this.form.date = null;
-                this.form.time = null;
-            },
-        },
-
         methods: {
             toggleDescription() {
                 this.isShortDescription = !this.isShortDescription;
@@ -414,7 +358,6 @@
                 self.form
                     .transform((data) => {
                         data.date = moment(data.date).format('YYYY-MM-DD');
-                        data.product_event_id = self.selectedProductEventId;
 
                         return data;
                     })

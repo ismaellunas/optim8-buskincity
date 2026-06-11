@@ -139,7 +139,6 @@
             minDate: { type: String, required: true },
             modelValue: { type: Object, required: true },
             productId: { type: [Number, String, null], default: null },
-            productEventId: { type: [Number, String, null], default: null },
             eventId: { type: [Number, String, null], default: null },
             timezone: { type: String, default: 'GMT' },
             multiSelect: { type: Boolean, default: false },
@@ -293,7 +292,7 @@
                 const url = route(this.allowedDatesRoute, {
                     ...(this.eventId
                         ? { event: this.eventId }
-                        : { product: this.productId, product_event_id: this.productEventId }),
+                        : { product: this.productId }),
                     month: month,
                     year: year,
                 });

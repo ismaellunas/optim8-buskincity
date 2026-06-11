@@ -7,6 +7,19 @@
 
 ---
 
+## 2026-06-05 — Phase 8 tooling (FR-BOOK target tests)
+
+| Task | Status | Notes |
+|---|---|---|
+| **T-TOOL-1** Spec + FR-BOOK | 🟢 CODE COMPLETE | FRS §3.5b, plan doc, daniel doc |
+| **T-TOOL-2** Blast-radius inventory | 🟢 CODE COMPLETE | 54 files; disposition md |
+| **T-TOOL-3** RED target tests | 🟢 CODE COMPLETE | `@group events-overhaul` — 4 test files + `CreatesBookablePitch` trait |
+| **T8.1–T8.5** Events overhaul implementation | ⬜ TODO | Next: T8.1 remove ProductEvent |
+
+**Run:** `php artisan test --group=events-overhaul` (expect failures until T8.1+)
+
+---
+
 ## Status board
 
 | Task | Status | Notes |

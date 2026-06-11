@@ -7,7 +7,6 @@ use App\Policies\BasePermissionPolicy;
 use App\Services\LoginService;
 use App\Services\UserScopeService;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\PublishingStatus;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Space\Entities\Space;
@@ -122,9 +121,7 @@ class ProductPolicy extends BasePermissionPolicy
             LoginService::isUserHomeUrl()
             && $product->status == ProductStatus::PUBLISHED->value
             && $user->hasRole($product->roles)
-            && $product->productEvents()
-                ->where('status', PublishingStatus::PUBLISHED->value)
-                ->exists()
+            && $product->eventSchedule
         );
     }
 }

@@ -4,6 +4,7 @@
 > Status: **Planning / documentation only. No application code was modified.**
 > Scope: Maps the new BuskinCity client requirements (landing navigation, account/approval, Special Events Admin, City Admin, performer booking, pitch creation, admin) onto the actual code, then specifies the target behavior.
 > Companion document (sections 7–9): [`new-requirements-security-scalability-and-phasing.md`](./new-requirements-security-scalability-and-phasing.md) — Vulnerabilities & Security, Scalability, and the Phased Implementation Plan.
+> **Daniel email source (performer + pitch creation):** [`daniel-email-performer-and-pitch-requirements.md`](./daniel-email-performer-and-pitch-requirements.md)
 > Grounded in: [`user-approval-roles-rbac-map.md`](./user-approval-roles-rbac-map.md) (risk IDs R1–R11), [`user-approval-roles-refactor-plan.md`](./user-approval-roles-refactor-plan.md), and the booking/space/form-builder/auth/user-management execution-flow docs in this folder. Code claims below were re-verified against the current source.
 
 ---
@@ -203,8 +204,21 @@ Numbered, grouped by area. "Current" vs "Target" noted; affected components cite
 
 ### 3.5 Performer (FR-PERF)
 
-- **FR-PERF-1 — Book a timeslot → event.** A Performer SHALL book an **available timeslot** from a pitch; the booked timeslot SHALL become an **event** (`events` row + order). *Matches current behavior; preserve.*
-- **FR-PERF-2 — Cancellation (TBD).** Behavior of performer cancellation (does the event disappear or return to an available timeslot?) is **undefined** — see Open Question 4.
+- **FR-PERF-1 — Book a timeslot → event.** A Performer SHALL book an **available timeslot** from a pitch; the booked timeslot SHALL become an **event** (`events` row + order).
+  - *Target (FR-BOOK):* timeslots come from the **pitch schedule** only — no admin `ProductEvent` window required. See [`plan-events-overhaul-pitch-timeslots.md`](./plan-events-overhaul-pitch-timeslots.md).
+- **FR-PERF-2 — Cancellation.** Performer may cancel; cancelled booking frees the slot (OQ4 answered YES). Implemented: `OrderService::cancelBooking()`.
+
+### 3.5b Direct pitch booking (FR-BOOK) — *supersedes ProductEvent dependency*
+
+> Execution plan: [`plan-events-overhaul-pitch-timeslots.md`](./plan-events-overhaul-pitch-timeslots.md) · Target tests: `@group events-overhaul`
+
+- **FR-BOOK-1 — Pitch-only timeslots.** Bookable timeslots SHALL be computed **only** from the pitch `Schedule` within `pitch_started_at`–`pitch_ended_at`. Admin `ProductEvent` entities SHALL be **removed**.
+- **FR-BOOK-2 — Performer creates events on book.** Booking SHALL create an `events` row + order without `product_event_id`.
+- **FR-BOOK-3 — Performer pitch list.** List SHALL show **published, role-scoped pitches** in date range; fully booked pitches remain visible with booking disabled when no slots remain (D6).
+- **FR-BOOK-4 — Public booked calendar.** Public pitch pages SHALL show **upcoming booked events** only (guests; no availability preview — D5).
+- **FR-BOOK-5 — No admin Events tab.** Pitch admin UI SHALL NOT expose ProductEvent CRUD.
+- **FR-BOOK-6 — Batch book retained.** `bookEventBatch` SHALL remain available for performers (D7).
+- **FR-BOOK-7 — Reschedule + cancel retained.** Existing reschedule and cancel flows SHALL remain (D9).
 
 ### 3.6 Pitch Creation (FR-PITCH)
 

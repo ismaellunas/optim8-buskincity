@@ -160,15 +160,11 @@ class OrderController extends CrudController
     public function bookEvent(EventBookRequest $request, Product $product)
     {
         $inputs = $request->validated();
-        $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
-            ->where('status', \App\Enums\PublishingStatus::PUBLISHED->value)
-            ->findOrFail($inputs['product_event_id']);
 
         $order = $this->orderService->bookEvent(
             $product,
             Carbon::parse($inputs['date']. ' '.$inputs['time']),
             auth()->user(),
-            $productEvent,
         );
 
         EventBooked::dispatch($order);
@@ -181,22 +177,16 @@ class OrderController extends CrudController
     public function bookEventBatch(EventBookBatchRequest $request, Product $product)
     {
         $inputs = $request->validated();
-        $productEvent = \Modules\Booking\Entities\ProductEvent::where('product_id', $product->id)
-            ->where('status', \App\Enums\PublishingStatus::PUBLISHED->value)
-            ->findOrFail($inputs['product_event_id']);
 
-        $orders = DB::transaction(function () use ($inputs, $product, $productEvent) {
-            return collect($inputs['slots'])->map(function ($slot) use ($product, $productEvent) {
+        DB::transaction(function () use ($inputs, $product) {
+            collect($inputs['slots'])->each(function ($slot) use ($product) {
                 $order = $this->orderService->bookEvent(
                     $product,
                     Carbon::parse($slot['date'].' '.$slot['time']),
                     auth()->user(),
-                    $productEvent,
                 );
 
                 EventBooked::dispatch($order);
-
-                return $order;
             });
         });
 

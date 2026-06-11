@@ -4,15 +4,13 @@ namespace Modules\Booking\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
 use App\Services\SettingService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Renderable;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\ProductEventService;
-use Modules\Booking\Services\ProductEventCrudService;
-use Modules\Booking\Entities\ProductEvent;
-use App\Enums\PublishingStatus;
+use Modules\Booking\Services\PitchListingService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
 
@@ -25,13 +23,9 @@ class ProductController extends CrudController
         private EventService $eventService,
         private ProductEventService $productEventService,
         private ProductService $productService,
-        private ProductEventCrudService $productEventCrudService
+        private PitchListingService $pitchListingService,
     ) {}
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function index(ProductIndexRequest $request)
     {
         $scopes = [
@@ -43,6 +37,8 @@ class ProductController extends CrudController
             'country' => $request->country ?? null,
         ];
 
+        $user = auth()->user();
+
         return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter($request->only(
@@ -52,58 +48,36 @@ class ProductController extends CrudController
                 'city',
                 'country',
             )),
-            'baseRouteName' => 'booking.events',
+            'baseRouteName' => 'booking.products',
             'events' => tap(
-                $this->productEventCrudService->getFrontendRecords(
+                $this->pitchListingService->getFrontendRecords(
+                    $user,
                     $request->term,
                     $scopes,
                 ),
-                fn ($records) => $this->productEventCrudService->transformFrontendRecords($records),
+                fn ($records) => $this->pitchListingService->transformFrontendRecords($records),
             ),
-            'countryOptions' => $this->productEventCrudService->getFrontendCountryOptions(),
-            'cityOptions' => $this->productEventCrudService->getFrontendCityOptions(),
+            'countryOptions' => $this->pitchListingService->getFrontendCountryOptions($user),
+            'cityOptions' => $this->pitchListingService->getFrontendCityOptions($user),
             'i18n' => [
                 'book_now' => __('Book now'),
             ],
         ]));
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show(Product $product)
     {
         $schedule = $product->eventSchedule;
-        $productEvents = $product->productEvents()
-            ->published()
-            ->with('schedule')
-            ->orderBy('started_at')
-            ->get()
-            ->map(function ($event) {
-                return [
-                    'id' => $event->id,
-                    'title' => $event->title,
-                    'started_at' => $event->started_at->toIso8601String(),
-                    'ended_at' => $event->ended_at->toIso8601String(),
-                    'timezone' => $event->timezone,
-                    'schedule_timezone' => $event->schedule?->timezone,
-                    'location' => [
-                        'address' => $event->address,
-                        'city' => $event->city,
-                        'country_code' => $event->country_code,
-                        'latitude' => $event->latitude,
-                        'longitude' => $event->longitude,
-                    ],
-                ];
-            })
-            ->all();
 
-        $hasProductEvents = ! empty($productEvents);
-        $canBook = $hasProductEvents;
-        $minDate = $hasProductEvents ? $this->productEventService->minBookableDate($product) : null;
-        $maxDate = $hasProductEvents ? $this->productEventService->maxBookableDate($product) : null;
+        if (! $schedule) {
+            abort(404, 'Pitch schedule not configured');
+        }
+
+        $canBook = $this->pitchListingService->hasAvailableTimeslot($product);
+        $minDate = $this->productEventService->minBookableDate($product);
+        $maxDate = $this->productEventService->maxBookableDate($product);
+
+        $location = $product->locations[0] ?? [];
 
         return Inertia::render('Booking::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),
@@ -113,10 +87,16 @@ class ProductController extends CrudController
             'maxDate' => $maxDate?->toDateString(),
             'minDate' => $minDate?->toDateString(),
             'product' => $this->productService->productDetailResource($product),
-            'productEvents' => $productEvents,
             'timezone' => $schedule->timezone,
             'canBook' => $canBook,
-            'noEventsMessage' => __('No events available for booking at this time.'),
+            'noEventsMessage' => $canBook
+                ? null
+                : __('No timeslots available for booking at this time.'),
+            'bookedEvents' => $this->pitchListingService->getBookedEventsForPitch($product),
+            'mapPosition' => [
+                'latitude' => $location['latitude'] ?? null,
+                'longitude' => $location['longitude'] ?? null,
+            ],
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'i18n' => [
                 'products' => __('booking_module::terms.products'),
@@ -128,55 +108,63 @@ class ProductController extends CrudController
 
     public function availableTimes(Request $request, Product $product, string $dateTime)
     {
-        $productEventId = $request->get('product_event_id');
+        $schedule = $product->eventSchedule;
 
-        if (empty($productEventId)) {
+        if (! $schedule) {
             return collect();
         }
 
-        $productEvent = ProductEvent::where('product_id', $product->id)
-            ->where('status', PublishingStatus::PUBLISHED->value)
-            ->find($productEventId);
+        $date = Carbon::parse($dateTime);
 
-        if (!$productEvent || !$productEvent->schedule) {
+        if (! $this->productEventService->isDateWithinPitchWindow($product, $date->toDateString())) {
             return collect();
         }
 
-        $date = \Carbon\Carbon::parse($dateTime);
-        if ($date->lt($productEvent->started_at) || $date->gt($productEvent->ended_at)) {
+        $pitchEnd = $product->getMeta('pitch_ended_at');
+        $pitchStart = $product->getMeta('pitch_started_at');
+
+        if ($pitchStart && $date->lt(Carbon::parse($pitchStart)->startOfDay())) {
             return collect();
         }
 
-        return $this->eventService->availableTimes($productEvent->schedule, $dateTime);
+        if ($pitchEnd && $date->gt(Carbon::parse($pitchEnd)->endOfDay())) {
+            return collect();
+        }
+
+        return $this->eventService->availableTimes($schedule, $dateTime);
     }
 
     public function allowedDates(Request $request, Product $product, string $month, string $year)
     {
-        $productEventId = $request->get('product_event_id');
+        $schedule = $product->eventSchedule;
 
-        if (empty($productEventId)) {
-            return collect();
-        }
-
-        $productEvent = ProductEvent::where('product_id', $product->id)
-            ->where('status', PublishingStatus::PUBLISHED->value)
-            ->find($productEventId);
-
-        if (!$productEvent || !$productEvent->schedule) {
+        if (! $schedule) {
             return collect();
         }
 
         $allowedDates = $this->eventService->allowedDates(
-            $productEvent->schedule,
+            $schedule,
             $month,
             $year
         );
 
-        $startDate = $productEvent->started_at->toDateString();
-        $endDate = $productEvent->ended_at->toDateString();
+        $pitchStart = $product->getMeta('pitch_started_at');
+        $pitchEnd = $product->getMeta('pitch_ended_at');
 
-        return $allowedDates->filter(function ($date) use ($startDate, $endDate) {
-            return $date >= $startDate && $date <= $endDate;
+        return $allowedDates->filter(function ($date) use ($pitchStart, $pitchEnd, $product) {
+            if (! $this->productEventService->isDateWithinPitchWindow($product, $date)) {
+                return false;
+            }
+
+            if ($pitchStart && $date < Carbon::parse($pitchStart)->toDateString()) {
+                return false;
+            }
+
+            if ($pitchEnd && $date > Carbon::parse($pitchEnd)->toDateString()) {
+                return false;
+            }
+
+            return true;
         })->values();
     }
 }

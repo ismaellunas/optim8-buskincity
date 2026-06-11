@@ -182,23 +182,6 @@
                 </form>
             </biz-provide-inject-tab>
 
-            <!-- Event tab REMOVED - all booking settings moved to Pitch tab above -->
-
-            <biz-provide-inject-tab
-                id="product-events-tab"
-                title="Events"
-                class="mb-6"
-            >
-                <div class="box">
-                    <product-event-list 
-                        :product="product" 
-                        :timezone="event.timezone"
-                        :weekdays="weekdays"
-                        :pitch-schedule="pitchScheduleInfo"
-                    />
-                </div>
-            </biz-provide-inject-tab>
-
             <!-- Manager tab REMOVED per user request -->
 
             <!-- Location tab REMOVED - Space assignment removed, using City/Country metadata only -->
@@ -236,7 +219,6 @@
     import BizTag from '@/Biz/Tag.vue';
     import BizTooltip from '@/Biz/Tooltip.vue';
     import ProductSpaceForm from './ProductSpaceForm.vue';
-    import ProductEventList from './ProductEventList.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
@@ -267,7 +249,6 @@
             BizTag,
             BizTooltip,
             ProductEditModalDateOverride,
-            ProductEventList,
             ProductForm,
             ScheduleRuleTimes,
             ProductSpaceForm,

@@ -9,8 +9,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Mews\Purifier\Facades\Purifier;
 use Modules\Booking\Entities\Event;
-use Modules\Booking\Entities\ProductEvent;
 use Modules\Booking\Entities\Schedule;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Booking\Entities\ScheduleRule;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Helpers\EventTimeHelper;
@@ -219,9 +219,9 @@ class EventService
         $duration = $schedulable->duration ?? null;
         $durationUnit = $schedulable->duration_unit ?? null;
 
-        if ($schedulable instanceof ProductEvent) {
-            $duration = $schedulable->product->duration;
-            $durationUnit = $schedulable->product->duration_unit;
+        if ($schedulable instanceof Product) {
+            $duration = $schedulable->duration;
+            $durationUnit = $schedulable->duration_unit;
         }
 
         $method = EventTimeHelper::calculateDurationMethodName($durationUnit);

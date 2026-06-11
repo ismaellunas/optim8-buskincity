@@ -54,6 +54,8 @@ All paths are under `migration-preparation/` unless noted.
 | Doc | Read it when you need… |
 |---|---|
 | **`00-START-HERE-implementation-guide.md`** (this file) | The plan, order, guardrails, blockers, task list. **Always first.** |
+| `daniel-email-performer-and-pitch-requirements.md` | **Daniel's email (source)** for performer booking + pitch-creation rules: verbatim bullets, terminology (ProductEvent vs booked `Event`), FRS crosswalk, implementation status. Read when clarifying *what Daniel asked for* vs the full FRS. |
+| `plan-events-overhaul-pitch-timeslots.md` | **Events overhaul plan (T8):** remove admin `ProductEvent`; performers book pitch timeslots → `events`; tooling-first checklist, phases, FR-BOOK IDs, blast-radius inventory. **Read before starting T8.** |
 | `new-requirements-frs-and-refactor-plan.md` | The **FRS** (FR-NAV/ACCT/SE/CA/PERF/PITCH/ADMIN), **current-state mapping** (req → real files), **role matrix**, **ERM**, **user stories w/ acceptance criteria**, **open questions**. Primary spec for *what* to build. |
 | `new-requirements-security-scalability-and-phasing.md` | **Vulnerabilities V1–V9** (with file:line evidence + mitigations), **scalability** analysis, and the **per-phase plan** (goal/changes/risk/revertibility/tests). Primary spec for *how/safely*. |
 | `user-approval-roles-rbac-map.md` | The current RBAC reality: roles, permissions, where they're defined/checked/enforced, DB tables, **risks R1–R11**. Foundation context for Phase 0–2. |
@@ -237,6 +239,23 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
   - Files: `database/migrations/2026_06_04_100000_update_event_calendars_view_for_search_and_pins.php`, `EventsCalendarService`, `EventCalendar`, `CountryService`, `EventsCalendar.vue`, `EventsCalendarRequest`.
   - Verify: search returns normal **and** special events for valid criteria; distinct pins; both types visible when browsing a city. `sail test tests/Feature/EventsCalendarSearchTest.php` — 4 pass.
 
+### PHASE 8 — Events overhaul: pitch timeslots → performer events (FR-BOOK-*) — **NEXT**
+*Plan: [`plan-events-overhaul-pitch-timeslots.md`](./plan-events-overhaul-pitch-timeslots.md). Decisions D1–D9 locked. Greenfield data OK.*
+
+- [ ] **T-TOOL-1 — Spec + FR-BOOK IDs.** — **🟢 CODE COMPLETE** (FRS §3.5b, plan doc, daniel doc updated)
+- [ ] **T-TOOL-2 — Blast-radius inventory + disposition.** — **🟢 CODE COMPLETE** (`artifacts/product-event-blast-radius*.txt|md`)
+- [ ] **T-TOOL-3 — Target tests (RED).** — **🟢 CODE COMPLETE** (`@group events-overhaul` — 4 test files)
+- [ ] **T8.1 — Remove ProductEvent (schema + admin UI + routes).** — **⚪ TODO**
+  - Verify: `ProductEventRemovalTest` green; disposition inventory DELETE items gone.
+- [ ] **T8.2 — Booking core without ProductEvent.** — **⚪ TODO**
+  - Verify: `PitchDirectBookingTest` green.
+- [ ] **T8.3 — Performer pitch listing.** — **⚪ TODO**
+  - Verify: `PitchAvailabilityListingTest` green.
+- [ ] **T8.4 — Public booked-event calendar on pitch page.** — **⚪ TODO**
+  - Verify: `PitchPublicEventCalendarTest` green.
+- [ ] **T8.5 — Cleanup (calendar view, docs, rename services).** — **⚪ TODO**
+  - Verify: blast-radius inventory → 0 unresolved ProductEvent references.
+
 ### Cross-cutting (carry through all phases)
 - [x] **T-PERF-CANCEL — Performer cancellation semantics.** OQ4: performer may cancel; canceled events leave the calendar and free the slot. Files: `OrderService::cancelBooking()`, `Event::scopeBlockingAvailability()`, `EventService::bookedTimes()`, frontend `OrderController::cancel`, `OrderCancelRequest` authorization.
 - [ ] **T-TESTS — Test suite expansion** (per SEC doc §9 "Suggested tests"): role/scope IDOR attempts, atomic save rollback, 14-day cap, visible-not-bookable, approval (verify/scope/one-per-city/concurrency/upload/protected-email), nav empty-level, search country-code normalization, seeder idempotency.
@@ -250,6 +269,7 @@ Phase 0 (role registry+seeder+assignment)  → 1 (scope+City Admin)  → 2 (SE A
    → 3 (pitch FKs+server scope)  → 4 (atomic pitch save)
    → 5 (application→approval, flag-gated)
    → 6 (pitch UX + 14-day)  → 7 (nav + type removal + pins + search)
+   → 8 (remove ProductEvent; direct pitch booking — FR-BOOK)
 ```
 **Answer before Phase 3:** OQ6, OQ8, OQ9, OQ10. **Do not start a task whose blocker OQ is unanswered.**
 

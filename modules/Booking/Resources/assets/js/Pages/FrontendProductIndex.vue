@@ -84,6 +84,7 @@
                 <td>
                     <div class="level-right">
                         <biz-button-link
+                            v-if="event.can_book"
                             class="is-primary"
                             :href="route(baseRouteName+'.show', event.id)"
                         >
@@ -93,6 +94,15 @@
                             />
                             <span>
                                 {{ i18n.book_now }}
+                            </span>
+                        </biz-button-link>
+                        <biz-button-link
+                            v-else
+                            class="is-light"
+                            :href="route(baseRouteName+'.show', event.id)"
+                        >
+                            <span>
+                                {{ i18n.view_pitch ?? 'View pitch' }}
                             </span>
                         </biz-button-link>
                     </div>
