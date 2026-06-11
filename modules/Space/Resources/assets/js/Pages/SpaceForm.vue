@@ -12,6 +12,7 @@
         <div class="columns">
             <div class="column">
                 <biz-form-select
+                    v-if="!isEditingAssignedCityPage"
                     v-model="space.parent_id"
                     class="is-fullwidth"
                     :label="parentFieldLabel"
@@ -303,6 +304,7 @@
             parentOptions: { type: Object, required: true },
             canChangeParent: { type: Boolean, default: true },
             isCityAdmin: { type: Boolean, default: false },
+            isEditingAssignedCityPage: { type: Boolean, default: false },
             userCities: { type: Array, default: () => [] },
             canCreateProduct: { type: Boolean, default: false },
             productRoleOptions: { type: Array, default: () => [] },

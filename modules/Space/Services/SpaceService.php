@@ -227,7 +227,9 @@ class SpaceService
                 $user->scopeIdsFor(config('permission.role_names.special_events_admin'), 'city')
             );
         } else {
-            $adminCityIds = $user->adminCities->pluck('id');
+            $adminCityIds = collect(
+                app(\App\Services\UserScopeService::class)->scopedCityIds($user)
+            );
         }
         
         // Get the "City" type ID

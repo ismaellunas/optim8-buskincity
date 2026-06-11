@@ -53,6 +53,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'city.manage_events',
                 'city.view_reports',
                 'product.add',
+                // Logo/cover on the assigned city's public page (Space edit).
+                'media.add',
+                'media.browse',
+                'media.read',
+                'media.edit',
             ],
             // Phase 2 (OQ1/OQ14): Special Events Admin — city-scoped, many-per-city.
             // May create/manage ONLY special-events pitches (enforced at policy level),

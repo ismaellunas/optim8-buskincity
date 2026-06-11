@@ -35,6 +35,7 @@
                                 :parent-options="parentOptions"
                                 :can-change-parent="can.changeParent"
                                 :is-city-admin="isCityAdmin"
+                                :is-editing-assigned-city-page="isEditingAssignedCityPage"
                                 :user-cities="userCities"
                             >
                                 <biz-form-select
@@ -224,6 +225,7 @@
             page: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             isCityAdmin: { type: Boolean, default: false },
+            isEditingAssignedCityPage: { type: Boolean, default: false },
             userCities: { type: Array, default: () => [] },
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
@@ -269,7 +271,7 @@
             },
 
             isPageRendered() {
-                return this.spaceRecord.is_page_enabled && this.can.page.edit;
+                return this.can.page.edit;
             },
 
             isManagerRendered() {

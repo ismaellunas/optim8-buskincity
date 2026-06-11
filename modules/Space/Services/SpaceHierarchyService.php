@@ -35,7 +35,7 @@ class SpaceHierarchyService
             ? (int) $existing->type_id
             : $this->inferTypeIdForCreate($parent, $user);
 
-        $this->assertValidHierarchy($parent, $typeId, $user);
+        $this->assertValidHierarchy($parent, $typeId, $user, $existing);
 
         $inputs['type_id'] = $typeId;
 
@@ -65,9 +65,19 @@ class SpaceHierarchyService
         };
     }
 
-    public function assertValidHierarchy(?Space $parent, int $typeId, User $user): void
+    public function assertValidHierarchy(?Space $parent, int $typeId, User $user, ?Space $existing = null): void
     {
         $typeName = $this->typeName($typeId);
+
+        if (
+            ! $existing
+            && ($user->isCityAdministrator() || $user->isSpecialEventsAdmin())
+            && in_array($typeName, [self::TYPE_CITY, self::TYPE_COUNTRY], true)
+        ) {
+            throw ValidationException::withMessages([
+                'parent_id' => [__('You cannot create a new city.')],
+            ]);
+        }
 
         if ($user->hasRole(config('permission.role_names.city_admin')) || $user->isSpecialEventsAdmin()) {
             // Scoped admins edit their assigned City node directly (parent is Country).

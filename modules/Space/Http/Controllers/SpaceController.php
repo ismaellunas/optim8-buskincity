@@ -377,11 +377,13 @@ class SpaceController extends CrudController
 
     public function edit(Space $space)
     {
-        $space->load('city');
+        $space->load(['city', 'type']);
 
         $user = auth()->user();
         $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin'));
         $isScopedLocationAdmin = $isCityAdmin || $user->isSpecialEventsAdmin();
+        $canManageCityPage = $user->can('managePage', $space);
+        $isEditingAssignedCityPage = $canManageCityPage && $space->type?->name === 'City';
         $userCities = collect();
 
         $parent = (
@@ -409,7 +411,7 @@ class SpaceController extends CrudController
 
         $canChangeParent = $user->can('changeParent', $space);
 
-        if ($isScopedLocationAdmin && $canChangeParent) {
+        if ($isScopedLocationAdmin && $canChangeParent && ! $isEditingAssignedCityPage) {
             $parentOptions = $this->spaceService->cityAdminParentOptions($user)->values();
             $userCities = $user->assignedScopeCities()->map(fn ($city) => [
                 'id' => $city->id,
@@ -451,7 +453,8 @@ class SpaceController extends CrudController
             'title' => $this->getEditTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $canChangeParent ? $parentOptions : [$parent],
-            'isCityAdmin' => $isScopedLocationAdmin,
+            'isCityAdmin' => $isScopedLocationAdmin && ! $isEditingAssignedCityPage,
+            'isEditingAssignedCityPage' => $isEditingAssignedCityPage,
             'userCities' => $userCities,
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
@@ -466,12 +469,12 @@ class SpaceController extends CrudController
                     'edit' => $user->can('manageManager', Space::class),
                 ],
                 'update' => $user->can('update', $space),
-                'changeParent' => $canChangeParent,
+                'changeParent' => $canChangeParent && ! $isEditingAssignedCityPage,
                 'media' => [
-                    'add' => $user->can('media.add'),
-                    'browse' => $user->can('media.browse'),
-                    'edit' => $user->can('media.edit'),
-                    'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add') || $canManageCityPage,
+                    'browse' => $user->can('media.browse') || $canManageCityPage,
+                    'edit' => $user->can('media.edit') || $canManageCityPage,
+                    'read' => $user->can('media.read') || $canManageCityPage,
                 ],
             ],
             'page' => $page,

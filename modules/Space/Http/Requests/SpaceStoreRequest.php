@@ -127,7 +127,9 @@ class SpaceStoreRequest extends FormRequest
             ],
         ];
 
-        if ($user->can('managePage', Space::class)) {
+        $space = $this->route('space');
+
+        if ($user->can('managePage', $space ?? Space::class)) {
             $rules['is_page_enabled'] = [ 'boolean' ];
         }
 

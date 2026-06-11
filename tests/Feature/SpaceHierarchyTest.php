@@ -279,6 +279,8 @@ class SpaceHierarchyTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($response) => $response
                 ->where('can.page.edit', true)
+                ->where('isEditingAssignedCityPage', true)
+                ->where('can.media.add', true)
             );
 
         $this->actingAs($admin)->put(route('admin.spaces.update', $citySpace->id), [
@@ -364,6 +366,23 @@ class SpaceHierarchyTest extends TestCase
 
         $this->assertNotNull($pitchSpace);
         $this->assertFalse($admin->can('managePage', $pitchSpace));
+    }
+
+    /** @test */
+    public function city_admin_cannot_create_a_new_city_space(): void
+    {
+        [$country] = $this->countryAndCitySpaces();
+        $admin = User::factory()->create();
+        $admin->assignRole(config('permission.role_names.city_admin'));
+        $admin->syncAdminCities([City::factory()->create()->id]);
+
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
+
+        app(SpaceHierarchyService::class)->assertValidHierarchy(
+            $country,
+            (int) GlobalOption::where('name', 'City')->value('id'),
+            $admin
+        );
     }
 
     /** @test */
