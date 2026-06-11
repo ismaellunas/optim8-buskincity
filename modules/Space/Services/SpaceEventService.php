@@ -48,7 +48,9 @@ class SpaceEventService
             return $this->getBookedPitchEventRecords($space, $space->product, $scopes, $perPage);
         }
 
-        if (! $space->isLeaf() && $this->hasPitchProductsUnderSpace($space)) {
+        // City pages are often leaf nodes when the pitch space is a sibling (linked only
+        // via product.city_id). Match products by city_id / descendants, not tree depth.
+        if ($this->hasPitchProductsUnderSpace($space)) {
             return $this->getAggregatedBookedPitchEventRecords($space, $scopes, $perPage);
         }
 
