@@ -846,6 +846,13 @@ class MenuService
             ];
         }
 
+        $items[] = [
+            'title' => __('Booking'),
+            'link' => route('admin.bookings.index'),
+            'isActive' => $request->routeIs('admin.bookings.*'),
+            'isEnabled' => true,
+        ];
+
         return $items;
     }
 }

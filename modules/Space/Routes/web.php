@@ -4,6 +4,7 @@ use App\Facades\Localization;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Modules\Space\Http\Controllers\BookingController;
 use Modules\Space\Http\Controllers\ContactController;
 use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
 use Modules\Space\Http\Controllers\Frontend\SpaceEventController;
@@ -30,6 +31,11 @@ Route::name('admin.')->prefix('admin/')->middleware([
 ])->group(function () {
     Route::resource('spaces', SpaceController::class)
         ->except(['show']);
+
+    Route::prefix('bookings')->name('bookings.')->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/records', [BookingController::class, 'records'])->name('records');
+    });
 
     Route::prefix('spaces')->name('spaces.')->group(function() {
         Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');

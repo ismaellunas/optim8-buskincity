@@ -2,7 +2,9 @@
 
 namespace Modules\Space\Services;
 
+use App\Models\User;
 use App\Helpers\GoogleMap;
+use App\Services\UserScopeService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -268,6 +270,85 @@ class SpaceEventService
             ->orderBy('booked_at')
             ->get()
             ->map(fn (BookingEvent $event) => $this->transformAdminBookedPitchEvent($event, $space));
+    }
+
+    /**
+     * Read-only booking list for scoped City / Special Events admins (nav "Booking").
+     */
+    public function getScopedAdminBookingRecords(
+        User $user,
+        ?string $term = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $cityIds = app(UserScopeService::class)->scopedCityIds($user);
+
+        if ($cityIds === []) {
+            return new LengthAwarePaginator([], 0, $perPage);
+        }
+
+        $query = BookingEvent::query()
+            ->blockingAvailability()
+            ->where('booked_at', '>=', now()->startOfDay())
+            ->whereHas('schedule', function (Builder $scheduleQuery) use ($cityIds, $term) {
+                $scheduleQuery->whereHasMorph(
+                    'schedulable',
+                    [Product::class],
+                    function (Builder $productQuery) use ($cityIds, $term) {
+                        $productQuery
+                            ->where('status', ProductStatus::PUBLISHED->value)
+                            ->whereIn('city_id', $cityIds);
+
+                        if ($term) {
+                            $productQuery->searchWithoutScout($term);
+                        }
+                    }
+                );
+            });
+
+        if ($term) {
+            $query->where(function (Builder $builder) use ($term) {
+                $builder->whereHas('orderLine.order.user', function (Builder $userQuery) use ($term) {
+                    $userQuery->search($term);
+                });
+            });
+        }
+
+        $records = $query
+            ->with([
+                'orderLine.order.user',
+                'schedule.schedulable',
+            ])
+            ->orderBy('booked_at')
+            ->paginate($perPage);
+
+        $records->getCollection()->transform(
+            fn (BookingEvent $event) => $this->transformScopedAdminBookingRow($event)
+        );
+
+        return $records;
+    }
+
+    private function transformScopedAdminBookingRow(BookingEvent $event): array
+    {
+        $product = $event->schedule?->schedulable;
+        $pitchSpace = $product instanceof Product
+            ? $this->resolvePitchSpaceForProduct($product)
+            : null;
+        $performer = $event->orderLine?->order?->user;
+        $dateFormat = config('constants.format.date_time_minute');
+        $status = Str::title((string) $event->status);
+
+        return [
+            'id' => $event->id,
+            'performer' => $performer?->full_name ?: '—',
+            'pitch' => $pitchSpace?->name ?? $product?->displayName ?? '—',
+            'started_at' => $event->timezonedBookedAt->format($dateFormat),
+            'ended_at' => $event->endedTime->format($dateFormat),
+            'status' => $status,
+            'status_class' => in_array($event->status, ['upcoming', 'ongoing'], true)
+                ? 'success'
+                : null,
+        ];
     }
 
     private function adminBookedPitchEventsQuery(Space $space): ?Builder

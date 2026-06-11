@@ -481,6 +481,9 @@ class SpaceController extends CrudController
                     'edit' => $user->can('media.edit') || $canManageCityPage,
                     'read' => $user->can('media.read') || $canManageCityPage,
                 ],
+                'events' => [
+                    'view' => ! $isScopedLocationAdmin,
+                ],
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),

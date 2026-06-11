@@ -279,7 +279,7 @@
             },
 
             isEventRendered() {
-                return this.can.update;
+                return this.can.events?.view ?? false;
             },
 
             currentTranslatedPage() {
