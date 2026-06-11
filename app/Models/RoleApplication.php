@@ -11,6 +11,7 @@ class RoleApplication extends Model
     protected $fillable = [
         'user_id',
         'email',
+        'password',
         'first_name',
         'last_name',
         'requested_role',
@@ -25,6 +26,10 @@ class RoleApplication extends Model
         'reviewed_at',
         'reject_reason',
         'replaced_user_id',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     protected $casts = [

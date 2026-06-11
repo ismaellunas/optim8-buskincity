@@ -459,8 +459,8 @@ class SpaceController extends CrudController
             'logoMedia' => $logoMedia,
             'can' => [
                 'page' => [
-                    'read' => $user->can('managePage', Space::class),
-                    'edit' => $user->can('managePage', Space::class),
+                    'read' => $user->can('managePage', $space),
+                    'edit' => $user->can('managePage', $space),
                 ],
                 'manager' => [
                     'edit' => $user->can('manageManager', Space::class),

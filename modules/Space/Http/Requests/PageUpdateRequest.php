@@ -13,7 +13,7 @@ class PageUpdateRequest extends AppPageRequest
         $page = $this->route('page');
 
         if (
-            $user->can('managePage', Space::class)
+            $user->can('managePage', $space)
             && $space
             && $page
         ) {

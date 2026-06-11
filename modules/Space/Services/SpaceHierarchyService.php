@@ -70,7 +70,9 @@ class SpaceHierarchyService
         $typeName = $this->typeName($typeId);
 
         if ($user->hasRole(config('permission.role_names.city_admin')) || $user->isSpecialEventsAdmin()) {
-            if (! $parent || $this->spaceTypeName($parent) !== self::TYPE_CITY) {
+            // Scoped admins edit their assigned City node directly (parent is Country).
+            if ($typeName !== self::TYPE_CITY
+                && (! $parent || $this->spaceTypeName($parent) !== self::TYPE_CITY)) {
                 throw ValidationException::withMessages([
                     'parent_id' => [__('Locations must be created under a city.')],
                 ]);

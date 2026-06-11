@@ -3,9 +3,10 @@
 namespace Modules\Space\Policies;
 
 use App\Models\User;
+use App\Services\UserScopeService;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Modules\Space\Entities\Space;
 use Illuminate\Support\Traits\Macroable;
+use Modules\Space\Entities\Space;
 
 class SpacePolicy
 {
@@ -84,12 +85,48 @@ class SpacePolicy
         return (
             $user->spaces->contains('id', $space->id)
             || $this->manageAncestorOfSpace($user, $space)
+            || $this->managesCityPublicPage($user, $space)
         );
     }
 
-    public function managePage(User $user)
+    /**
+     * Whether the user may manage page-builder content for a space.
+     *
+     * Global admins are handled by {@see before()}. City admins may manage the
+     * public page of their assigned city (City-type space only).
+     *
+     * @param  Space|string|null  $space  When omitted, returns true if the city
+     *                                     admin has any scoped city (UI flags).
+     */
+    public function managePage(User $user, $space = null): bool
     {
-        return $user->isAdministrator || $user->isSuperAdministrator;
+        if ($space instanceof Space) {
+            return $this->managesCityPublicPage($user, $space);
+        }
+
+        if ($user->isCityAdministrator()) {
+            return ! empty(app(UserScopeService::class)->scopedCityIds($user));
+        }
+
+        return false;
+    }
+
+    /**
+     * City admins may edit the City-type space node for cities in their scope.
+     */
+    private function managesCityPublicPage(User $user, Space $space): bool
+    {
+        if (! $user->isCityAdministrator()) {
+            return false;
+        }
+
+        $space->loadMissing('type');
+
+        if ($space->type?->name !== 'City' || ! $space->city_id) {
+            return false;
+        }
+
+        return app(UserScopeService::class)->cityIdIsInScope((int) $space->city_id, $user);
     }
 
     public function manageManager(User $user)

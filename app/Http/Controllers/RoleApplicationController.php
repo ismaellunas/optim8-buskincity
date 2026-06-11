@@ -32,6 +32,7 @@ class RoleApplicationController extends Controller
         return Inertia::render('RoleApplication/Apply', [
             'requestedRole' => $role,
             'roleLabel' => $this->roleLabel($role),
+            'requiresPassword' => $this->roleApplicationService->requiresPasswordOnSubmit($role),
             'recaptchaSiteKey' => $recaptchaKeys['recaptcha_site_key'] ?? null,
             'defaults' => [
                 'email' => $user?->email,

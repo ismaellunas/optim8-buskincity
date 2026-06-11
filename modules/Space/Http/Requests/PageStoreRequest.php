@@ -13,7 +13,7 @@ class PageStoreRequest extends AppPageRequest
         $space = $this->route('space');
 
         if (
-            $user->can('managePage', Space::class)
+            $user->can('managePage', $space)
             && $space
         ) {
             return (

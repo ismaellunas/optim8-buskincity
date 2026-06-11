@@ -263,6 +263,110 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_can_edit_and_update_public_page_for_assigned_city(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = $this->cityAdminFor($citySpace);
+        $locale = defaultLocale();
+        $page = $citySpace->fresh()->page;
+        $translation = $page->translate($locale);
+
+        $this->assertTrue($admin->can('managePage', $citySpace));
+        $this->assertTrue($admin->can('update', $citySpace));
+
+        $this->actingAs($admin)
+            ->get(route('admin.spaces.edit', $citySpace->id))
+            ->assertOk()
+            ->assertInertia(fn ($response) => $response
+                ->where('can.page.edit', true)
+            );
+
+        $this->actingAs($admin)->put(route('admin.spaces.update', $citySpace->id), [
+            'name' => 'Amsterdam',
+            'parent_id' => $citySpace->parent_id,
+            'address' => 'Dam Square',
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+            'latitude' => 52.3731,
+            'longitude' => 4.8922,
+            'is_page_enabled' => true,
+            'translations' => [
+                $locale => [
+                    'description' => 'Welcome to Amsterdam street performances.',
+                    'excerpt' => 'Amsterdam busking',
+                ],
+            ],
+        ])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)->put(
+            route('admin.spaces.pages.update', [$citySpace->id, $page->id]),
+            [
+                $locale => [
+                    'id' => $translation->id,
+                    'locale' => $locale,
+                    'title' => 'Amsterdam City Page',
+                    'slug' => $translation->slug,
+                    'status' => \App\Contracts\PublishableInterface::STATUS_PUBLISHED,
+                    'meta_title' => 'Amsterdam',
+                    'meta_description' => 'Street performances in Amsterdam',
+                    'data' => ['entities' => []],
+                    'settings' => [],
+                ],
+            ]
+        )->assertRedirect()->assertSessionHasNoErrors();
+
+        $translation->refresh();
+
+        $this->assertSame('Amsterdam City Page', $translation->title);
+        $this->assertSame('Welcome to Amsterdam street performances.', $citySpace->fresh()->translate($locale)->description);
+    }
+
+    /** @test */
+    public function city_admin_cannot_manage_public_page_for_other_city(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $otherCity = City::factory()->create(['name' => 'Rotterdam', 'country_code' => 'NLD']);
+        $otherCitySpace = Space::create([
+            'name' => 'Rotterdam',
+            'type_id' => GlobalOption::where('name', 'City')->value('id'),
+            'parent_id' => $country->id,
+            'city_id' => $otherCity->id,
+            'country_code' => 'NL',
+        ]);
+
+        $admin = $this->cityAdminFor($citySpace);
+
+        $this->assertFalse($admin->can('managePage', $otherCitySpace));
+        $this->assertFalse($admin->can('update', $otherCitySpace));
+
+        $this->actingAs($admin)
+            ->get(route('admin.spaces.edit', $otherCitySpace->id))
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function city_admin_cannot_manage_page_on_pitch_space_even_in_their_city(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = $this->cityAdminFor($citySpace);
+
+        $this->actingAs($admin)->post(route('admin.spaces.store'), [
+            'name' => 'Dam Square Pitch',
+            'parent_id' => $citySpace->id,
+            'country_code' => 'NL',
+            'city_id' => $citySpace->city_id,
+            'address' => 'Dam 1',
+            'latitude' => 52.3731,
+            'longitude' => 4.8922,
+        ]);
+
+        $pitchSpace = Space::where('name', 'Dam Square Pitch')->first();
+
+        $this->assertNotNull($pitchSpace);
+        $this->assertFalse($admin->can('managePage', $pitchSpace));
+    }
+
+    /** @test */
     public function creating_a_second_space_with_the_same_name_gets_a_unique_page_slug(): void
     {
         $admin = User::factory()->create();

@@ -3,14 +3,18 @@
 namespace Tests\Feature;
 
 use App\Enums\RoleApplicationStatus;
+use App\Mail\RoleApplicationApproved;
 use App\Models\City;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\UserScope;
+use App\Services\UserService;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -88,6 +92,8 @@ class RoleApplicationTest extends TestCase
             'email' => 'applicant@example.com',
             'first_name' => 'Ada',
             'last_name' => 'Lovelace',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
             'requested_role' => config('permission.role_names.city_admin'),
             'city_id' => $city->id,
             'description' => 'City branding text',
@@ -96,11 +102,47 @@ class RoleApplicationTest extends TestCase
 
         $response->assertRedirect(route('role-applications.submitted'));
 
+        $application = RoleApplication::where('email', 'applicant@example.com')->first();
+
+        $this->assertNotNull($application);
+        $this->assertNotNull($application->password);
+        $this->assertTrue(Hash::check('SecretPass1', $application->password));
+
         $this->assertDatabaseHas('role_applications', [
             'email' => 'applicant@example.com',
             'city_id' => $city->id,
             'status' => RoleApplicationStatus::PENDING->value,
         ]);
+    }
+
+    /** @test */
+    public function city_admin_application_requires_password(): void
+    {
+        $city = City::factory()->create();
+
+        $this->post(route('role-applications.store'), [
+            'email' => 'applicant@example.com',
+            'first_name' => 'Ada',
+            'last_name' => 'Lovelace',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+        ])->assertSessionHasErrors('password');
+    }
+
+    /** @test */
+    public function special_events_application_does_not_require_password(): void
+    {
+        $city = City::factory()->create();
+
+        $this->post(route('role-applications.store'), [
+            'email' => 'se@example.com',
+            'first_name' => 'Special',
+            'last_name' => 'Events',
+            'requested_role' => config('permission.role_names.special_events_admin'),
+            'city_id' => $city->id,
+        ])->assertRedirect(route('role-applications.submitted'));
+
+        $this->assertNull(RoleApplication::where('email', 'se@example.com')->value('password'));
     }
 
     /** @test */
@@ -113,6 +155,8 @@ class RoleApplicationTest extends TestCase
             'email' => 'newadmin@example.com',
             'first_name' => 'New',
             'last_name' => 'Admin',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
             'requested_role' => config('permission.role_names.city_admin'),
             'city_id' => $city->id,
         ])->assertRedirect(route('role-applications.submitted'));
@@ -134,6 +178,8 @@ class RoleApplicationTest extends TestCase
             'email' => 'same@example.com',
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
             'requested_role' => config('permission.role_names.city_admin'),
             'city_id' => $city->id,
         ])->assertRedirect(route('role-applications.submitted'));
@@ -147,6 +193,8 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function administrator_can_approve_and_provision_city_admin(): void
     {
+        Mail::fake();
+
         $city = City::factory()->create();
         $admin = User::factory()->create();
         $admin->assignRole(config('permission.role_names.admin'));
@@ -155,6 +203,7 @@ class RoleApplicationTest extends TestCase
             'email' => 'newadmin@example.com',
             'first_name' => 'New',
             'last_name' => 'Admin',
+            'password' => UserService::hashPassword('SecretPass1'),
             'requested_role' => config('permission.role_names.city_admin'),
             'city_id' => $city->id,
             'status' => RoleApplicationStatus::PENDING,
@@ -169,12 +218,18 @@ class RoleApplicationTest extends TestCase
 
         $application->refresh();
         $this->assertSame(RoleApplicationStatus::APPROVED, $application->status);
+        $this->assertNull($application->password);
 
         $user = User::where('email', 'newadmin@example.com')->first();
         $this->assertNotNull($user);
         $this->assertTrue($user->isCityAdministrator());
         $this->assertNotNull($user->email_verified_at);
         $this->assertTrue($user->isCityAdmin($city->id));
+        $this->assertTrue(Hash::check('SecretPass1', $user->password));
+
+        Mail::assertSent(RoleApplicationApproved::class, function (RoleApplicationApproved $mail) use ($user) {
+            return $mail->hasTo($user->email);
+        });
     }
 
     /** @test */

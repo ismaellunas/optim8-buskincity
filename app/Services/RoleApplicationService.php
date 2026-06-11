@@ -4,14 +4,17 @@ namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
 use App\Enums\RoleApplicationStatus;
+use App\Mail\RoleApplicationApproved;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\UserScope;
+use App\Rules\Password;
 use App\Rules\ProtectedAdminEmail;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -72,7 +75,7 @@ class RoleApplicationService
         $logoMediaId = $logo ? $this->uploadBrandingImage($logo)->id : null;
         $coverMediaId = $cover ? $this->uploadBrandingImage($cover)->id : null;
 
-        return RoleApplication::create([
+        $attributes = [
             'user_id' => $linkedUserId,
             'email' => $data['email'],
             'first_name' => $data['first_name'],
@@ -84,7 +87,13 @@ class RoleApplicationService
             'cover_media_id' => $coverMediaId,
             'description' => $data['description'] ?? null,
             'excerpt' => $data['excerpt'] ?? null,
-        ]);
+        ];
+
+        if ($this->requiresPasswordOnSubmit($data['requested_role'])) {
+            $attributes['password'] = UserService::hashPassword($data['password']);
+        }
+
+        return RoleApplication::create($attributes);
     }
 
     /**
@@ -158,6 +167,8 @@ class RoleApplicationService
                 $this->brandingPayload($application)
             );
 
+            $shouldNotifyApprovedLogin = filled($application->password);
+
             $application->update([
                 'user_id' => $user->id,
                 'status' => RoleApplicationStatus::APPROVED,
@@ -165,7 +176,12 @@ class RoleApplicationService
                 'reviewed_at' => now(),
                 'reject_reason' => null,
                 'replaced_user_id' => $replacedUser?->id,
+                'password' => null,
             ]);
+
+            if ($shouldNotifyApprovedLogin) {
+                $this->sendApprovedNotification($user, $application->requested_role);
+            }
 
             return $application->fresh(['city', 'reviewer', 'replacedUser']);
         });
@@ -263,12 +279,18 @@ class RoleApplicationService
                 'email' => $application->email,
                 'first_name' => $application->first_name,
                 'last_name' => $application->last_name,
-                'password' => UserService::hashPassword(str()->random(32)),
+                'password' => $application->password
+                    ?? UserService::hashPassword(str()->random(32)),
                 'language_id' => app(LanguageService::class)->getDefaultId(),
             ]);
         } else {
             $user->first_name = $application->first_name;
             $user->last_name = $application->last_name;
+
+            if ($application->password) {
+                $user->password = $application->password;
+            }
+
             $user->save();
         }
 
@@ -381,11 +403,12 @@ class RoleApplicationService
     /**
      * @return array<string, mixed>
      */
-    public function submissionRules(): array
+    public function submissionRules(?string $requestedRole = null): array
     {
         $maxKb = SettingService::maxFileSize();
+        $role = $requestedRole ?? request()->input('requested_role');
 
-        return [
+        $rules = [
             'email' => ['required', 'email', 'max:255', new ProtectedAdminEmail()],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
@@ -394,6 +417,34 @@ class RoleApplicationService
             'description' => ['nullable', 'string', 'max:5000'],
             'excerpt' => ['nullable', 'string', 'max:500'],
         ];
+
+        if ($this->requiresPasswordOnSubmit($role)) {
+            $rules['password'] = ['required', 'string', new Password(), 'confirmed'];
+        }
+
+        return $rules;
+    }
+
+    public function requiresPasswordOnSubmit(?string $role): bool
+    {
+        return $role === config('permission.role_names.city_admin');
+    }
+
+    private function sendApprovedNotification(User $user, string $requestedRole): void
+    {
+        Mail::to($user)->send(new RoleApplicationApproved(
+            $user,
+            $this->roleLabel($requestedRole),
+            route('admin.login'),
+        ));
+    }
+
+    private function roleLabel(string $role): string
+    {
+        return match ($role) {
+            config('permission.role_names.special_events_admin') => __('Special Events Administrator'),
+            default => __('City Administrator'),
+        };
     }
 
 }

@@ -58,7 +58,7 @@ class SpaceController extends Controller
             try {
                 if (
                     $request->exists('preview')
-                    && $request->user()->can('managePage', Space::class)
+                    && $request->user()?->can('managePage', $this->page->space)
                 ) {
                     return $this->showPreview($pageTranslation);
                 }

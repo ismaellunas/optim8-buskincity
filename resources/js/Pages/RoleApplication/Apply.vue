@@ -26,6 +26,26 @@
                     required
                     :message="form.errors.last_name"
                 />
+
+                <template v-if="requiresPassword">
+                    <biz-form-input
+                        v-model="form.password"
+                        label="Password"
+                        type="password"
+                        required
+                        autocomplete="new-password"
+                        :message="form.errors.password"
+                    />
+                    <biz-form-input
+                        v-model="form.password_confirmation"
+                        label="Confirm password"
+                        type="password"
+                        required
+                        autocomplete="new-password"
+                        :message="form.errors.password_confirmation"
+                    />
+                </template>
+
                 <biz-form-city-select
                     v-model="form.city_id"
                     label="City"
@@ -104,6 +124,7 @@
         props: {
             requestedRole: { type: String, required: true },
             roleLabel: { type: String, required: true },
+            requiresPassword: { type: Boolean, default: false },
             recaptchaSiteKey: { type: String, default: null },
             defaults: { type: Object, default: () => ({}) },
             title: { type: String, required: true },
@@ -115,6 +136,8 @@
                     email: props.defaults.email ?? '',
                     first_name: props.defaults.first_name ?? '',
                     last_name: props.defaults.last_name ?? '',
+                    password: '',
+                    password_confirmation: '',
                     requested_role: props.requestedRole,
                     city_id: null,
                     description: '',
