@@ -42,3 +42,45 @@ nav.pagination
     padding: 20px
     right: 0
     position: absolute
+
+// Nested navbar dropdowns (City & Pitches → Country → City).
+// Required on Inertia pages (logged-in frontend); Blade header ships the same
+// rules inline in header.blade.php.
+@media screen and (min-width: 1024px)
+  .navbar-dropdown .navbar-item.has-dropdown
+    position: relative
+    display: block
+    padding: 0
+
+  .navbar-dropdown .navbar-item.has-dropdown > .navbar-dropdown
+    position: absolute
+    top: 0
+    left: 100%
+    margin-top: 0
+    min-width: 100%
+    white-space: nowrap
+
+  // Bulma reveals every nested panel when the top item is hovered; hide by default.
+  .navbar-dropdown .navbar-dropdown
+    display: none !important
+
+  .navbar-dropdown .navbar-item.has-dropdown:hover > .navbar-dropdown,
+  .navbar-dropdown .navbar-item.has-dropdown:focus-within > .navbar-dropdown,
+  .navbar-dropdown .navbar-item.has-dropdown.is-active > .navbar-dropdown
+    display: block !important
+
+  .navbar-dropdown .navbar-item.has-dropdown > .navbar-link
+    background-color: transparent
+    color: inherit
+    padding-right: 0.75rem
+
+  .navbar-dropdown .navbar-item.has-dropdown:hover > .navbar-link
+    background-color: #f5f5f5
+    color: inherit
+
+@media screen and (max-width: 1023px)
+  .navbar-dropdown .navbar-item.has-dropdown > .navbar-dropdown
+    display: block
+    position: static
+    box-shadow: none
+    padding-left: 1.25rem
