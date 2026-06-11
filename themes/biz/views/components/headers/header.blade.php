@@ -5,6 +5,37 @@
     :languageOptions="$languageOptions"
 />
 
+@push('styles')
+<style>
+    /* Nested navbar dropdowns (e.g. City & Pitches -> Country -> City).
+       Desktop: flyout to the right of the parent dropdown.
+       Mobile: render inline (flat list) inside the parent dropdown. */
+    @media screen and (min-width: 1024px) {
+        .navbar-dropdown .navbar-item.has-dropdown {
+            position: relative;
+        }
+
+        .navbar-dropdown .navbar-item.has-dropdown > .navbar-dropdown {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-top: 0;
+            min-width: 100%;
+            white-space: nowrap;
+        }
+    }
+
+    @media screen and (max-width: 1023px) {
+        .navbar-dropdown .navbar-item.has-dropdown > .navbar-dropdown {
+            display: block;
+            position: static;
+            box-shadow: none;
+            padding-left: 1.25rem;
+        }
+    }
+</style>
+@endpush
+
 @push('bottom_scripts')
 <script>
     const burgerMenu = document.querySelector('.navbar-burger');

@@ -119,7 +119,7 @@ class MenuService
     private function getThemeHeaderMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
-            'header_menu_v5',
+            'header_menu_v6',
             function () use ($locale) {
                 $menus = $this->getStructuredHeaderMenu($locale);
 
@@ -134,7 +134,7 @@ class MenuService
                 return $this->mergeLandingNavMenus(
                     $cmsMenus,
                     app(\Modules\Space\Services\LandingNavService::class)
-                        ->getCountryCityHeaderMenus($locale),
+                        ->getLandingHeaderMenus($locale),
                     $locale
                 );
             },
@@ -143,10 +143,10 @@ class MenuService
     }
 
     /**
-     * Replace the manual "Country" CMS stub with data-driven country→city menus.
+     * Prepend the single data-driven "City & Pitches" wrapper to CMS menus.
      *
      * @param  array<int, array<string, mixed>>  $cmsMenus
-     * @param  array<int, array<string, mixed>>  $landingMenus
+     * @param  array<int, array<string, mixed>>  $landingMenus  Always 0 or 1 entries (the wrapper).
      * @return array<int, array<string, mixed>>
      */
     private function mergeLandingNavMenus(

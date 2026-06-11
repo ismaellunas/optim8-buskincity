@@ -39,6 +39,56 @@ class LandingNavTest extends TestCase
     }
 
     /** @test */
+    public function landing_nav_wraps_countries_under_city_and_pitches(): void
+    {
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+
+        $country = Space::create([
+            'name' => 'Netherlands',
+            'type_id' => $countryTypeId,
+            'country_code' => 'NLD',
+        ]);
+
+        Space::create([
+            'name' => 'Amsterdam',
+            'type_id' => $cityTypeId,
+            'parent_id' => $country->id,
+            'city_id' => null,
+            'country_code' => 'NLD',
+        ]);
+
+        $menus = app(LandingNavService::class)->getLandingHeaderMenus(defaultLocale());
+
+        $this->assertCount(1, $menus);
+        $this->assertSame('City & Pitches', $menus[0]['title']);
+        $this->assertSame('#', $menus[0]['link']);
+
+        $countries = $menus[0]['children'];
+        $this->assertCount(1, $countries);
+        $this->assertSame('Netherlands', $countries[0]['title']);
+        $this->assertCount(1, $countries[0]['children']);
+        $this->assertSame('Amsterdam', $countries[0]['children'][0]['title']);
+        $this->assertNotEmpty($countries[0]['children'][0]['link']);
+    }
+
+    /** @test */
+    public function landing_nav_omits_wrapper_when_no_navigable_countries_exist(): void
+    {
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+
+        Space::create([
+            'name' => 'City & Pitches',
+            'type_id' => $countryTypeId,
+            'country_code' => null,
+        ]);
+
+        $menus = app(LandingNavService::class)->getLandingHeaderMenus(defaultLocale());
+
+        $this->assertSame([], $menus);
+    }
+
+    /** @test */
     public function landing_nav_builds_country_menus_with_city_children(): void
     {
         $countryTypeId = GlobalOption::where('name', 'Country')->value('id');

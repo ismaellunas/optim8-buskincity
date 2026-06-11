@@ -54,7 +54,7 @@
 | **T5.2** Transactional approval + replace | ✅ DONE | Admin review at `/admin/role-applications`; replace modal; partial unique index; `RoleApplicationTest` (5 cases) green. |
 | **T6.1** Unified pitch form + labels | 🟢 CODE COMPLETE | All fields on create; timeslot duration ↔ pitch date range swap; single timezone; gallery hidden. Pending: manual verify + tests. |
 | **T6.2** 14-day SE cap + bookability | 🟢 CODE COMPLETE | `MaxInclusiveDaySpan`; advance booking within pitch window; `BookingWithinPitchWindow` on book API; scoped city picker on pitch form. |
-| **T7.2** Data-driven country→city nav | ✅ DONE | `LandingNavService`; `MenuService::mergeLandingNavMenus()`; `getLeaves()` pitch filter; `LandingNavTest` (2 cases) green. |
+| **T7.2** Data-driven country→city nav | ✅ DONE | `LandingNavService::getLandingHeaderMenus()` wraps countries under a single **City & Pitches** parent; recursive `navbar-dropdown-item` Blade partial + `NavbarDropdownItem.vue` render the nested Country → City flyout in all three layouts; header menu cache bumped to `header_menu_v6`; `LandingNavTest` (4 cases) green. |
 | **T7.3** Remove type dropdown + hierarchy rules | ✅ DONE | `SpaceHierarchyService`; type inferred from parent/role; `SpaceForm.vue` dropdown removed; `SpaceHierarchyTest` (4 cases) green. |
 | **T7.4** Map pins + event search | ✅ DONE | View adds `is_special_event` + alpha2 country; `space_event` included; 30-day default window; color-coded pins; `EventsCalendarSearchTest` (4 cases) green. |
 | **T-PERF-CANCEL** Performer cancellation | ✅ DONE | `cancelBooking()` transactional flow; `blockingAvailability` scope frees slots; frontend cancel route; `PerformerCancellationTest` green. |
@@ -66,7 +66,7 @@
 
 ---
 
-**Verify:** browse header — each country dropdown lists its cities; city page lists pitch leaves; empty city shows no pitch cards (not 404).
+**Verify:** browse header — one **City & Pitches** parent contains a country flyout, each country lists its cities; city page lists pitch leaves; empty city shows no pitch cards (not 404).
 
 ---
 

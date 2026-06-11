@@ -6,13 +6,34 @@ use App\Services\LegacyLandingNavFilter;
 use Modules\Space\Entities\Space;
 
 /**
- * Builds the public landing drill-down nav (Country → City) from the Space tree.
+ * Builds the public landing drill-down nav from the Space tree.
  *
- * Pitch listings remain on city/country Space pages via PageSpaceService::getLeaves();
- * pitch pages list events via the existing space-events component.
+ * Header shape (3 levels): "City & Pitches" → Country → City.
+ * Page-level drill-down (2 more levels): city page lists pitches via
+ * PageSpaceService::getLeaves(); pitch page lists events via the
+ * <space-events> component.
  */
 class LandingNavService
 {
+    /**
+     * Top-level "City & Pitches" wrapper containing country → city children.
+     * Returns [] when there are no navigable countries (no orphan parent).
+     *
+     * @return array<int, array{title: string, link: string, target: null, isInternalLink: bool, children: array}>
+     */
+    public function getLandingHeaderMenus(string $locale): array
+    {
+        $countryMenus = $this->getCountryCityHeaderMenus($locale);
+
+        if ($countryMenus === []) {
+            return [];
+        }
+
+        return [
+            $this->menuItem(__('City & Pitches'), '#', $countryMenus),
+        ];
+    }
+
     /**
      * @return array<int, array{title: string, link: string, target: null, isInternalLink: bool, children: array}>
      */

@@ -45,39 +45,12 @@
                     <div class="level-item">
                         @if (isset($menus['splited'][0]))
                             @foreach ($menus['splited'][0] as $menu)
-                                @if ($menu['children'])
-                                    <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2">
-                                        <a class="navbar-link">
-                                            {{ $menu['title'] }}
-                                        </a>
-                                        <div class="navbar-dropdown">
-                                            @foreach ($menu['children'] as $childMenu)
-                                                <a
-                                                    @class([
-                                                        'navbar-item',
-                                                        'has-text-primary' => $isActive($childMenu['link']),
-                                                    ])
-                                                    href="{{ $childMenu['link'] }}"
-                                                    target="{{ $childMenu['target'] }}"
-                                                >
-                                                    {{ $childMenu['title'] }}
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @else
-                                    <a
-                                        @class([
-                                            'navbar-item',
-                                            'has-text-primary' => $isActive($menu['link']),
-                                            'p-5',
-                                        ])
-                                        href="{{ $menu['link'] }}"
-                                        target="{{ $menu['target'] }}"
-                                    >
-                                        {{ $menu['title'] }}
-                                    </a>
-                                @endif
+                                @include('components.headers.navbar-dropdown-item', [
+                                    'menu' => $menu,
+                                    'isActive' => $isActive,
+                                    'topDropdownClass' => 'p-2',
+                                    'topLinkClass' => 'p-5',
+                                ])
                             @endforeach
                         @endif
                     </div>
@@ -101,39 +74,12 @@
                     <div class="level-item">
                         @if (isset($menus['splited'][1]))
                             @foreach ($menus['splited'][1] as $menu)
-                                @if ($menu['children'])
-                                    <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2">
-                                        <a class="navbar-link">
-                                            {{ $menu['title'] }}
-                                        </a>
-                                        <div class="navbar-dropdown">
-                                            @foreach ($menu['children'] as $childMenu)
-                                                <a
-                                                    @class([
-                                                        'navbar-item',
-                                                        'has-text-primary' => $isActive($childMenu['link']),
-                                                    ])
-                                                    href="{{ $childMenu['link'] }}"
-                                                    target="{{ $childMenu['target'] }}"
-                                                >
-                                                    {{ $childMenu['title'] }}
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @else
-                                    <a
-                                        @class([
-                                            'navbar-item',
-                                            'has-text-primary' => $isActive($menu['link']),
-                                            'p-5',
-                                        ])
-                                        href="{{ $menu['link'] }}"
-                                        target="{{ $menu['target'] }}"
-                                    >
-                                        {{ $menu['title'] }}
-                                    </a>
-                                @endif
+                                @include('components.headers.navbar-dropdown-item', [
+                                    'menu' => $menu,
+                                    'isActive' => $isActive,
+                                    'topDropdownClass' => 'p-2',
+                                    'topLinkClass' => 'p-5',
+                                ])
                             @endforeach
                         @endif
                     </div>
@@ -193,38 +139,10 @@
 
             <div class="navbar-start is-hidden-desktop">
                 @foreach ($menus['nav'] as $menu)
-                    @if ($menu['children'])
-                        <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
-                            <a class="navbar-link">
-                                {{ $menu['title'] }}
-                            </a>
-                            <div class="navbar-dropdown">
-                                @foreach ($menu['children'] as $childMenu)
-                                    <a
-                                        @class([
-                                            'navbar-item',
-                                            'has-text-primary' => $isActive($childMenu['link']),
-                                        ])
-                                        href="{{ $childMenu['link'] }}"
-                                        target="{{ $childMenu['target'] }}"
-                                    >
-                                        {{ $childMenu['title'] }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a
-                            @class([
-                                'navbar-item',
-                                'has-text-primary' => $isActive($menu['link']),
-                            ])
-                            href="{{ $menu['link'] }}"
-                            target="{{ $menu['target'] }}"
-                        >
-                            {{ $menu['title'] }}
-                        </a>
-                    @endif
+                    @include('components.headers.navbar-dropdown-item', [
+                        'menu' => $menu,
+                        'isActive' => $isActive,
+                    ])
                 @endforeach
             </div>
 

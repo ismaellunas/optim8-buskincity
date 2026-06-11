@@ -24,38 +24,10 @@
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
                 @foreach ($menus['nav'] as $menu)
-                    @if ($menu['children'])
-                        <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
-                            <a class="navbar-link">
-                                {{ $menu['title'] }}
-                            </a>
-                            <div class="navbar-dropdown">
-                                @foreach ($menu['children'] as $childMenu)
-                                    <a
-                                        @class([
-                                            'navbar-item',
-                                            'has-text-primary' => $isActive($childMenu['link']),
-                                        ])
-                                        href="{{ $childMenu['link'] }}"
-                                        target="{{ $childMenu['target'] }}"
-                                    >
-                                        {{ $childMenu['title'] }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a
-                            @class([
-                                'navbar-item',
-                                'has-text-primary' => $isActive($menu['link']),
-                            ])
-                            href="{{ $menu['link'] }}"
-                            target="{{ $menu['target'] }}"
-                        >
-                            {{ $menu['title'] }}
-                        </a>
-                    @endif
+                    @include('components.headers.navbar-dropdown-item', [
+                        'menu' => $menu,
+                        'isActive' => $isActive,
+                    ])
                 @endforeach
             </div>
 

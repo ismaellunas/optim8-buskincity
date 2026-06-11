@@ -36,48 +36,13 @@
                 <div class="navbar-center is-hidden-touch">
                     <div class="level mb-0">
                         <div class="level-item">
-                            <template
+                            <navbar-dropdown-item
                                 v-for="(menu, index) in splitedNavMenus[0]"
                                 :key="index"
-                            >
-                                <template v-if="menu.children.length > 0">
-                                    <div
-                                        class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2"
-                                    >
-                                        <a
-                                            class="navbar-link"
-                                            :class="{'is-active': menu.isActive}"
-                                        >
-                                            {{ menu.title }}
-                                        </a>
-                                        <div class="navbar-dropdown">
-                                            <template
-                                                v-for="(childMenu, childIndex) in menu.children"
-                                                :key="childIndex"
-                                            >
-                                                <a
-                                                    class="navbar-item"
-                                                    :href="childMenu.link"
-                                                    :class="{'is-active': menu.isActive}"
-                                                    :target="childMenu.target"
-                                                >
-                                                    {{ childMenu.title }}
-                                                </a>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <a
-                                        class="navbar-item p-5"
-                                        :active="menu.isActive"
-                                        :href="menu.link"
-                                        :target="menu.target"
-                                    >
-                                        {{ menu.title }}
-                                    </a>
-                                </template>
-                            </template>
+                                :menu="menu"
+                                top-dropdown-class="p-2"
+                                top-link-class="p-5"
+                            />
                         </div>
 
                         <div class="level-item">
@@ -90,95 +55,23 @@
                         </div>
 
                         <div class="level-item">
-                            <template
+                            <navbar-dropdown-item
                                 v-for="(menu, index) in splitedNavMenus[1]"
                                 :key="index"
-                            >
-                                <template v-if="menu.children.length > 0">
-                                    <div
-                                        class="navbar-item has-dropdown is-hoverable navbar-item-dropdown p-2"
-                                    >
-                                        <a
-                                            class="navbar-link"
-                                            :class="{'is-active': menu.isActive}"
-                                        >
-                                            {{ menu.title }}
-                                        </a>
-                                        <div class="navbar-dropdown">
-                                            <template
-                                                v-for="(childMenu, childIndex) in menu.children"
-                                                :key="childIndex"
-                                            >
-                                                <a
-                                                    class="navbar-item"
-                                                    :href="childMenu.link"
-                                                    :class="{'is-active': menu.isActive}"
-                                                    :target="childMenu.target"
-                                                >
-                                                    {{ childMenu.title }}
-                                                </a>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <a
-                                        class="navbar-item p-5"
-                                        :active="menu.isActive"
-                                        :href="menu.link"
-                                        :target="menu.target"
-                                    >
-                                        {{ menu.title }}
-                                    </a>
-                                </template>
-                            </template>
+                                :menu="menu"
+                                top-dropdown-class="p-2"
+                                top-link-class="p-5"
+                            />
                         </div>
                     </div>
                 </div>
 
                 <div class="navbar-start is-hidden-desktop">
-                    <template
+                    <navbar-dropdown-item
                         v-for="(menu, index) in navMenus"
                         :key="index"
-                    >
-                        <template v-if="menu.children.length > 0">
-                            <div
-                                class="navbar-item has-dropdown is-hoverable navbar-item-dropdown"
-                            >
-                                <a
-                                    class="navbar-link"
-                                    :class="{'is-active': menu.isActive}"
-                                >
-                                    {{ menu.title }}
-                                </a>
-                                <div class="navbar-dropdown">
-                                    <template
-                                        v-for="(childMenu, childIndex) in menu.children"
-                                        :key="childIndex"
-                                    >
-                                        <a
-                                            class="navbar-item"
-                                            :href="childMenu.link"
-                                            :class="{'is-active': menu.isActive}"
-                                            :target="childMenu.target"
-                                        >
-                                            {{ childMenu.title }}
-                                        </a>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <a
-                                class="navbar-item"
-                                :active="menu.isActive"
-                                :href="menu.link"
-                                :target="menu.target"
-                            >
-                                {{ menu.title }}
-                            </a>
-                        </template>
-                    </template>
+                        :menu="menu"
+                    />
                 </div>
 
                 <div class="navbar-end navbar-end-layout-2">
@@ -247,6 +140,7 @@
     import MixinNavbarMenu from '@/Mixins/NavbarMenu';
     import BizLink from '@/Biz/Link.vue';
     import BizNavbarItem from '@/Biz/NavbarItem.vue';
+    import NavbarDropdownItem from './NavbarDropdownItem.vue';
     import { chunk } from 'lodash';
 
     export default {
@@ -255,6 +149,7 @@
         components: {
             BizLink,
             BizNavbarItem,
+            NavbarDropdownItem,
         },
 
         mixins: [
