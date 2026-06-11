@@ -28,18 +28,16 @@
                 />
 
                 <template v-if="requiresPassword">
-                    <biz-form-input
+                    <biz-form-password
                         v-model="form.password"
                         label="Password"
-                        type="password"
                         required
                         autocomplete="new-password"
                         :message="form.errors.password"
                     />
-                    <biz-form-input
+                    <biz-form-password
                         v-model="form.password_confirmation"
                         label="Confirm password"
-                        type="password"
                         required
                         autocomplete="new-password"
                         :message="form.errors.password_confirmation"
@@ -107,6 +105,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormCitySelect from '@/Biz/Form/CitySelect.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import { useForm } from '@inertiajs/vue3';
@@ -117,6 +116,7 @@
             BizErrorNotifications,
             BizFormCitySelect,
             BizFormInput,
+            BizFormPassword,
             BizFormTextarea,
             BizRecaptcha,
         },

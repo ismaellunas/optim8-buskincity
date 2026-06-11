@@ -130,6 +130,22 @@ class RoleApplicationTest extends TestCase
     }
 
     /** @test */
+    public function city_admin_application_rejects_mismatched_password_confirmation(): void
+    {
+        $city = City::factory()->create();
+
+        $this->post(route('role-applications.store'), [
+            'email' => 'applicant@example.com',
+            'first_name' => 'Ada',
+            'last_name' => 'Lovelace',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'DifferentPass1',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+        ])->assertSessionHasErrors('password_confirmation');
+    }
+
+    /** @test */
     public function special_events_application_does_not_require_password(): void
     {
         $city = City::factory()->create();

@@ -64,9 +64,6 @@ class RoleApplicationService
      */
     public function submit(array $data, ?UploadedFile $logo = null, ?UploadedFile $cover = null): RoleApplication
     {
-        $validator = Validator::make($data, $this->submissionRules());
-        $validator->validate();
-
         $user = auth()->user();
         $linkedUserId = ($user && strcasecmp($user->email, $data['email']) === 0)
             ? $user->id
@@ -419,7 +416,8 @@ class RoleApplicationService
         ];
 
         if ($this->requiresPasswordOnSubmit($role)) {
-            $rules['password'] = ['required', 'string', new Password(), 'confirmed'];
+            $rules['password'] = ['required', 'string', new Password()];
+            $rules['password_confirmation'] = ['required', 'same:password'];
         }
 
         return $rules;
