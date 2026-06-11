@@ -214,7 +214,10 @@ class MediaService
         );
 
         $media->save();
-        $media->saveUserId(auth()->user()->id);
+
+        if ($userId = auth()->id()) {
+            $media->saveUserId($userId);
+        }
 
         return $media;
     }

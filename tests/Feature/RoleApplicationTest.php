@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Enums\RoleApplicationStatus;
 use App\Mail\RoleApplicationApproved;
 use App\Models\City;
+use App\Models\Media;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\UserScope;
+use App\Services\MediaService;
 use App\Services\UserService;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -113,6 +115,37 @@ class RoleApplicationTest extends TestCase
             'city_id' => $city->id,
             'status' => RoleApplicationStatus::PENDING->value,
         ]);
+    }
+
+    /** @test */
+    public function guest_can_submit_application_with_logo_and_cover(): void
+    {
+        $city = City::factory()->create();
+        $logo = Media::factory()->create(['user_id' => null]);
+        $cover = Media::factory()->create(['user_id' => null]);
+
+        $this->mock(MediaService::class, function ($mock) use ($logo, $cover) {
+            $mock->shouldReceive('sanitizeFileName')->andReturn('branding.jpg');
+            $mock->shouldReceive('upload')->twice()->andReturn($logo, $cover);
+        });
+
+        $this->post(route('role-applications.store'), [
+            'email' => 'branded@example.com',
+            'first_name' => 'Branded',
+            'last_name' => 'Admin',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+            'logo' => UploadedFile::fake()->image('logo.jpg'),
+            'cover' => UploadedFile::fake()->image('cover.jpg'),
+        ])->assertRedirect(route('role-applications.submitted'));
+
+        $application = RoleApplication::where('email', 'branded@example.com')->first();
+
+        $this->assertNotNull($application);
+        $this->assertSame($logo->id, $application->logo_media_id);
+        $this->assertSame($cover->id, $application->cover_media_id);
     }
 
     /** @test */
