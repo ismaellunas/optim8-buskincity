@@ -40,9 +40,15 @@ class Page extends ModelPage
         $page = new Page();
         $baseSlug = Str::slug($title);
 
-        $canContinueLoop = function ($slug) {
-            return ModelPageTranslation::where('slug', $slug)
-                ->where('locale', defaultLocale())
+        $locale = defaultLocale();
+
+        // Slugs are globally unique per locale (all page types). The base
+        // PageTranslation model scopes queries to CMS pages (type IS NULL), so
+        // withoutGlobalScopes() we also see existing space page slugs.
+        $canContinueLoop = function ($slug) use ($locale) {
+            return ModelPageTranslation::withoutGlobalScopes()
+                ->where('slug', $slug)
+                ->where('locale', $locale)
                 ->exists();
         };
 

@@ -14,6 +14,12 @@ class SpacePolicy
 
     public function before(User $user, $ability)
     {
+        // bookAProduct must still verify the space has a published product
+        // (city/country pages have no product — admin bypass caused null errors).
+        if ($ability === 'bookAProduct') {
+            return null;
+        }
+
         if ($user->isAdministrator) {
             return true;
         }

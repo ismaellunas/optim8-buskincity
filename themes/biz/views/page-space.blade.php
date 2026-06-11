@@ -53,6 +53,7 @@
                             </div>
                         </div>
 
+                        @if ($space->product)
                         @can ('bookAProduct', $space)
                             <div class="column is-4-desktop is-hidden-touch has-text-right">
                                 <a
@@ -79,6 +80,7 @@
                                 </div>
                             </div>
                         @endcan
+                        @endif
                     </div>
 
                     @if ($space->contacts)

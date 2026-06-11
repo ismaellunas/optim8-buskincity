@@ -248,6 +248,53 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
+    public function admin_can_view_a_city_page_that_has_no_bookable_product(): void
+    {
+        [$country, $citySpace] = $this->countryAndCitySpaces();
+        $admin = User::factory()->create();
+        $admin->assignRole(config('permission.role_names.admin'));
+
+        $citySpace->load('page.translations');
+        $slugs = $citySpace->page->translate(defaultLocale())->getSlugs();
+
+        $this->actingAs($admin)
+            ->get(route('frontend.spaces.show', ['slugs' => $slugs]))
+            ->assertOk();
+    }
+
+    /** @test */
+    public function creating_a_second_space_with_the_same_name_gets_a_unique_page_slug(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(config('permission.role_names.admin'));
+        $this->actingAs($admin);
+
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+
+        Space::create([
+            'name' => 'Borås',
+            'type_id' => $cityTypeId,
+            'country_code' => 'SE',
+        ]);
+
+        Space::create([
+            'name' => 'Borås',
+            'type_id' => $cityTypeId,
+            'country_code' => 'SE',
+        ]);
+
+        $slugs = Space::where('name', 'Borås')
+            ->with('page.translations')
+            ->get()
+            ->map(fn (Space $space) => $space->page->translate(defaultLocale())->slug)
+            ->all();
+
+        $this->assertCount(2, $slugs);
+        $this->assertCount(2, array_unique($slugs));
+        $this->assertTrue(collect($slugs)->contains('boras'));
+    }
+
+    /** @test */
     public function hierarchy_service_rejects_city_under_city(): void
     {
         [, $citySpace] = $this->countryAndCitySpaces();
