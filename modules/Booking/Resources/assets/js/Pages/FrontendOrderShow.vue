@@ -36,7 +36,7 @@
                         >
                             <div class="card">
                                 <biz-gmap-marker
-                                    v-model="mapPosition"
+                                    :model-value="mapPosition"
                                     :api-key="googleApiKey"
                                     :init-position="mapPosition"
                                     :map-style="['width: 100%', 'height: 378px']"
