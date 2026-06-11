@@ -393,7 +393,7 @@ class SpaceHierarchyTest extends TestCase
     }
 
     /** @test */
-    public function city_admin_index_hides_top_level_create_but_keeps_row_add_child(): void
+    public function city_admin_index_shows_create_new_for_locations(): void
     {
         [$country, $citySpace] = $this->countryAndCitySpaces();
         $admin = $this->cityAdminFor($citySpace);
@@ -402,7 +402,7 @@ class SpaceHierarchyTest extends TestCase
             ->get(route('admin.spaces.index'))
             ->assertOk()
             ->assertInertia(fn ($response) => $response
-                ->where('can.add', false)
+                ->where('can.add', true)
                 ->where('can.addChild', true)
             );
     }

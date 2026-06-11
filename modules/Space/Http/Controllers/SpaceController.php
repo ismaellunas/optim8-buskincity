@@ -95,14 +95,12 @@ class SpaceController extends CrudController
 
         $spaceOptions = $this->spaceService->parentOptions($managedSpaces, __('Select Parent'));
 
-        $canCreateChild = $user->can('create', Space::class);
-        $isScopedLocationAdmin = $user->isCityAdministrator() || $user->isSpecialEventsAdmin();
+        $canCreate = $user->can('create', Space::class);
 
         return Inertia::render('Space::SpaceIndex', $this->getData([
             'can' => [
-                // Scoped admins add locations/pitches via the row "+" under their city.
-                'add' => $canCreateChild && ! $isScopedLocationAdmin,
-                'addChild' => $canCreateChild,
+                'add' => $canCreate,
+                'addChild' => $canCreate,
                 'delete' => $user->can('space.delete'),
             ],
             'parent' => $request->parent,
