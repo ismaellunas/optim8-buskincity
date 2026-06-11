@@ -26,6 +26,13 @@ class Event extends BaseModel
         return \Modules\Booking\Database\factories\EventFactory::new();
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $event) {
+            $event->duration_unit ??= 'minute';
+        });
+    }
+
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);

@@ -423,7 +423,7 @@ class OrderService
             'order_line_id' => $orderLine->id,
             'booked_at' => $dateTime,
             'duration' => $product->duration,
-            'duration_unit' => $product->duration_unit,
+            'duration_unit' => $product->duration_unit ?? 'minute',
             'status' => BookingStatus::UPCOMING,
         ])->create();
 

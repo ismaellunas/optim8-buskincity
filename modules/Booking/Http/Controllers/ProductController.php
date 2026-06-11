@@ -412,6 +412,7 @@ class ProductController extends CrudController
 
         $product->status = $inputs['status'];
         $product->duration = $inputs['duration'];
+        $product->duration_unit = 'minute';
         $product->bookable_date_range = $inputs['bookable_date_range'];
 
         if (! empty($inputs['space_id'] ?? null)) {
