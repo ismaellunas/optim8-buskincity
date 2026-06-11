@@ -33,6 +33,8 @@ class RoleApplicationController extends Controller
             'requestedRole' => $role,
             'roleLabel' => $this->roleLabel($role),
             'requiresPassword' => $this->roleApplicationService->requiresPasswordOnSubmit($role),
+            'requiresCountrySpace' => $this->roleApplicationService->requiresCountrySpaceOnSubmit($role),
+            'countrySpaceOptions' => $this->roleApplicationService->countrySpaceOptionsForApplication(),
             'recaptchaSiteKey' => $recaptchaKeys['recaptcha_site_key'] ?? null,
             'defaults' => [
                 'email' => $user?->email,

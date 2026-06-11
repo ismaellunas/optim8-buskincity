@@ -16,6 +16,7 @@ class RoleApplication extends Model
         'last_name',
         'requested_role',
         'city_id',
+        'country_space_id',
         'status',
         'logo_media_id',
         'cover_media_id',
@@ -46,6 +47,11 @@ class RoleApplication extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function countrySpace(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Space\Entities\Space::class, 'country_space_id');
     }
 
     public function logoMedia(): BelongsTo

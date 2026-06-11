@@ -52,6 +52,7 @@ class RoleApplicationController extends Controller
     {
         $roleApplication->load([
             'city:id,name,country_code',
+            'countrySpace:id,name,country_code',
             'logoMedia',
             'coverMedia',
             'reviewer:id,first_name,last_name,email',

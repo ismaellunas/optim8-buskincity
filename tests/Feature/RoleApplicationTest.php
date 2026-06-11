@@ -9,6 +9,7 @@ use App\Models\Media;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\UserScope;
+use App\Models\GlobalOption;
 use App\Services\MediaService;
 use App\Services\UserService;
 use Database\Seeders\PermissionSeeder;
@@ -18,6 +19,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Modules\Space\Entities\Space;
 use Tests\TestCase;
 
 class RoleApplicationTest extends TestCase
@@ -34,6 +36,40 @@ class RoleApplicationTest extends TestCase
         $this->seed(\Database\Seeders\GlobalOptionSeeder::class);
         Storage::fake('public');
         $this->withoutMiddleware(\App\Http\Middleware\Recaptcha::class);
+    }
+
+    private function seedNavigableCountries(): void
+    {
+        $this->seed(\Database\Seeders\CountrySeeder::class);
+    }
+
+    private function createCountrySpace(string $name = 'Netherlands', string $countryCode = 'NLD'): Space
+    {
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+
+        return Space::create([
+            'name' => $name,
+            'type_id' => $countryTypeId,
+            'country_code' => $countryCode,
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $overrides
+     * @return array<string, mixed>
+     */
+    private function cityAdminApplicationPayload(City $city, Space $countrySpace, array $overrides = []): array
+    {
+        return array_merge([
+            'email' => 'applicant@example.com',
+            'first_name' => 'Ada',
+            'last_name' => 'Lovelace',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'country_space_id' => $countrySpace->id,
+            'city_id' => $city->id,
+        ], $overrides);
     }
 
     /** @test */
@@ -88,19 +124,17 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function guest_can_submit_a_city_admin_application(): void
     {
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
 
-        $response = $this->post(route('role-applications.store'), [
-            'email' => 'applicant@example.com',
-            'first_name' => 'Ada',
-            'last_name' => 'Lovelace',
-            'password' => 'SecretPass1',
-            'password_confirmation' => 'SecretPass1',
-            'requested_role' => config('permission.role_names.city_admin'),
-            'city_id' => $city->id,
-            'description' => 'City branding text',
-            'excerpt' => 'Short intro',
-        ]);
+        $response = $this->post(
+            route('role-applications.store'),
+            $this->cityAdminApplicationPayload($city, $countrySpace, [
+                'description' => 'City branding text',
+                'excerpt' => 'Short intro',
+            ])
+        );
 
         $response->assertRedirect(route('role-applications.submitted'));
 
@@ -113,14 +147,46 @@ class RoleApplicationTest extends TestCase
         $this->assertDatabaseHas('role_applications', [
             'email' => 'applicant@example.com',
             'city_id' => $city->id,
+            'country_space_id' => $countrySpace->id,
             'status' => RoleApplicationStatus::PENDING->value,
         ]);
     }
 
     /** @test */
-    public function guest_can_submit_application_with_logo_and_cover(): void
+    public function city_admin_application_requires_country_space(): void
     {
         $city = City::factory()->create();
+
+        $this->post(route('role-applications.store'), [
+            'email' => 'applicant@example.com',
+            'first_name' => 'Ada',
+            'last_name' => 'Lovelace',
+            'password' => 'SecretPass1',
+            'password_confirmation' => 'SecretPass1',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+        ])->assertSessionHasErrors('country_space_id');
+    }
+
+    /** @test */
+    public function city_admin_application_rejects_city_outside_selected_country(): void
+    {
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace('Sweden', 'SWE');
+        $city = City::factory()->create(['country_code' => 'NL']);
+
+        $this->post(
+            route('role-applications.store'),
+            $this->cityAdminApplicationPayload($city, $countrySpace)
+        )->assertSessionHasErrors('city_id');
+    }
+
+    /** @test */
+    public function guest_can_submit_application_with_logo_and_cover(): void
+    {
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
         $logo = Media::factory()->create(['user_id' => null]);
         $cover = Media::factory()->create(['user_id' => null]);
 
@@ -129,17 +195,17 @@ class RoleApplicationTest extends TestCase
             $mock->shouldReceive('upload')->twice()->andReturn($logo, $cover);
         });
 
-        $this->post(route('role-applications.store'), [
-            'email' => 'branded@example.com',
-            'first_name' => 'Branded',
-            'last_name' => 'Admin',
-            'password' => 'SecretPass1',
-            'password_confirmation' => 'SecretPass1',
-            'requested_role' => config('permission.role_names.city_admin'),
-            'city_id' => $city->id,
-            'logo' => UploadedFile::fake()->image('logo.jpg'),
-            'cover' => UploadedFile::fake()->image('cover.jpg'),
-        ])->assertRedirect(route('role-applications.submitted'));
+        $this->post(route('role-applications.store'), array_merge(
+            $this->cityAdminApplicationPayload($city, $countrySpace, [
+                'email' => 'branded@example.com',
+                'first_name' => 'Branded',
+                'last_name' => 'Admin',
+            ]),
+            [
+                'logo' => UploadedFile::fake()->image('logo.jpg'),
+                'cover' => UploadedFile::fake()->image('cover.jpg'),
+            ]
+        ))->assertRedirect(route('role-applications.submitted'));
 
         $application = RoleApplication::where('email', 'branded@example.com')->first();
 
@@ -151,13 +217,16 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function city_admin_application_requires_password(): void
     {
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
 
         $this->post(route('role-applications.store'), [
             'email' => 'applicant@example.com',
             'first_name' => 'Ada',
             'last_name' => 'Lovelace',
             'requested_role' => config('permission.role_names.city_admin'),
+            'country_space_id' => $countrySpace->id,
             'city_id' => $city->id,
         ])->assertSessionHasErrors('password');
     }
@@ -165,7 +234,9 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function city_admin_application_rejects_mismatched_password_confirmation(): void
     {
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
 
         $this->post(route('role-applications.store'), [
             'email' => 'applicant@example.com',
@@ -174,6 +245,7 @@ class RoleApplicationTest extends TestCase
             'password' => 'SecretPass1',
             'password_confirmation' => 'DifferentPass1',
             'requested_role' => config('permission.role_names.city_admin'),
+            'country_space_id' => $countrySpace->id,
             'city_id' => $city->id,
         ])->assertSessionHasErrors('password_confirmation');
     }
@@ -197,18 +269,19 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function logged_in_user_can_submit_application_with_a_different_email(): void
     {
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
         $user = User::factory()->create(['email' => 'existing@example.com']);
 
-        $this->actingAs($user)->post(route('role-applications.store'), [
-            'email' => 'newadmin@example.com',
-            'first_name' => 'New',
-            'last_name' => 'Admin',
-            'password' => 'SecretPass1',
-            'password_confirmation' => 'SecretPass1',
-            'requested_role' => config('permission.role_names.city_admin'),
-            'city_id' => $city->id,
-        ])->assertRedirect(route('role-applications.submitted'));
+        $this->actingAs($user)->post(
+            route('role-applications.store'),
+            $this->cityAdminApplicationPayload($city, $countrySpace, [
+                'email' => 'newadmin@example.com',
+                'first_name' => 'New',
+                'last_name' => 'Admin',
+            ])
+        )->assertRedirect(route('role-applications.submitted'));
 
         $this->assertDatabaseHas('role_applications', [
             'email' => 'newadmin@example.com',
@@ -220,18 +293,19 @@ class RoleApplicationTest extends TestCase
     /** @test */
     public function logged_in_user_submission_links_user_when_email_matches(): void
     {
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
         $user = User::factory()->create(['email' => 'same@example.com']);
 
-        $this->actingAs($user)->post(route('role-applications.store'), [
-            'email' => 'same@example.com',
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'password' => 'SecretPass1',
-            'password_confirmation' => 'SecretPass1',
-            'requested_role' => config('permission.role_names.city_admin'),
-            'city_id' => $city->id,
-        ])->assertRedirect(route('role-applications.submitted'));
+        $this->actingAs($user)->post(
+            route('role-applications.store'),
+            $this->cityAdminApplicationPayload($city, $countrySpace, [
+                'email' => 'same@example.com',
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+            ])
+        )->assertRedirect(route('role-applications.submitted'));
 
         $this->assertDatabaseHas('role_applications', [
             'email' => 'same@example.com',
@@ -244,7 +318,9 @@ class RoleApplicationTest extends TestCase
     {
         Mail::fake();
 
-        $city = City::factory()->create();
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
         $admin = User::factory()->create();
         $admin->assignRole(config('permission.role_names.admin'));
 
@@ -255,6 +331,7 @@ class RoleApplicationTest extends TestCase
             'password' => UserService::hashPassword('SecretPass1'),
             'requested_role' => config('permission.role_names.city_admin'),
             'city_id' => $city->id,
+            'country_space_id' => $countrySpace->id,
             'status' => RoleApplicationStatus::PENDING,
         ]);
 
@@ -279,6 +356,14 @@ class RoleApplicationTest extends TestCase
         Mail::assertSent(RoleApplicationApproved::class, function (RoleApplicationApproved $mail) use ($user) {
             return $mail->hasTo($user->email);
         });
+
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+        $citySpace = Space::where('type_id', $cityTypeId)
+            ->where('city_id', $city->id)
+            ->first();
+
+        $this->assertNotNull($citySpace);
+        $this->assertSame($countrySpace->id, $citySpace->parent_id);
     }
 
     /** @test */

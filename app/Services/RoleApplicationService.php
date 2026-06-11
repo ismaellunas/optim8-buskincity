@@ -5,12 +5,14 @@ namespace App\Services;
 use App\Entities\CloudinaryStorage;
 use App\Enums\RoleApplicationStatus;
 use App\Mail\RoleApplicationApproved;
+use App\Models\City;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\UserScope;
 use App\Rules\Password;
 use App\Rules\ProtectedAdminEmail;
+use App\Services\CountryService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +48,11 @@ class RoleApplicationService
         int $perPage = 15
     ): LengthAwarePaginator {
         return RoleApplication::query()
-            ->with(['city:id,name,country_code', 'reviewer:id,first_name,last_name,email'])
+            ->with([
+                'city:id,name,country_code',
+                'countrySpace:id,name,country_code',
+                'reviewer:id,first_name,last_name,email',
+            ])
             ->when($term, function ($query, $term) {
                 $query->where(function ($q) use ($term) {
                     $q->where('email', 'ILIKE', "%{$term}%")
@@ -79,6 +85,9 @@ class RoleApplicationService
             'last_name' => $data['last_name'],
             'requested_role' => $data['requested_role'],
             'city_id' => (int) $data['city_id'],
+            'country_space_id' => $this->requiresCountrySpaceOnSubmit($data['requested_role'])
+                ? (int) $data['country_space_id']
+                : null,
             'status' => RoleApplicationStatus::PENDING,
             'logo_media_id' => $logoMediaId,
             'cover_media_id' => $coverMediaId,
@@ -115,6 +124,7 @@ class RoleApplicationService
                 'email' => $existingCityAdmin->email,
             ] : null,
             'city' => $application->city?->only(['id', 'name', 'country_code']),
+            'country' => $application->countrySpace?->only(['id', 'name', 'country_code']),
             'applicant' => [
                 'name' => $application->applicant_full_name,
                 'email' => $application->email,
@@ -161,7 +171,8 @@ class RoleApplicationService
             $this->spaceService->provisionCitySpaceForApplication(
                 $user,
                 (int) $application->city_id,
-                $this->brandingPayload($application)
+                $this->brandingPayload($application),
+                $application->country_space_id
             );
 
             $shouldNotifyApprovedLogin = filled($application->password);
@@ -402,7 +413,6 @@ class RoleApplicationService
      */
     public function submissionRules(?string $requestedRole = null): array
     {
-        $maxKb = SettingService::maxFileSize();
         $role = $requestedRole ?? request()->input('requested_role');
 
         $rules = [
@@ -410,9 +420,52 @@ class RoleApplicationService
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'requested_role' => ['required', Rule::in($this->allowedRoles())],
-            'city_id' => ['required', 'integer', 'exists:cities,id'],
             'description' => ['nullable', 'string', 'max:5000'],
             'excerpt' => ['nullable', 'string', 'max:500'],
+        ];
+
+        if ($this->requiresCountrySpaceOnSubmit($role)) {
+            $rules['country_space_id'] = [
+                'required',
+                'integer',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! $this->spaceService->findCountrySpace((int) $value)) {
+                        $fail(__('The selected country is invalid.'));
+                    }
+                },
+            ];
+        }
+
+        $rules['city_id'] = [
+            'required',
+            'integer',
+            'exists:cities,id',
+            function (string $attribute, mixed $value, \Closure $fail) use ($role): void {
+                if (! $this->requiresCountrySpaceOnSubmit($role)) {
+                    return;
+                }
+
+                $countrySpaceId = request()->integer('country_space_id');
+
+                if (! $countrySpaceId) {
+                    return;
+                }
+
+                $countrySpace = $this->spaceService->findCountrySpace($countrySpaceId);
+                $city = City::find($value);
+
+                if (! $countrySpace || ! $city) {
+                    return;
+                }
+
+                $countryService = app(CountryService::class);
+                $cityAlpha2 = $countryService->toAlpha2($city->country_code);
+                $spaceAlpha2 = $countryService->toAlpha2($countrySpace->country_code);
+
+                if ($cityAlpha2 !== $spaceAlpha2) {
+                    $fail(__('The selected city does not belong to the selected country.'));
+                }
+            },
         ];
 
         if ($this->requiresPasswordOnSubmit($role)) {
@@ -421,6 +474,19 @@ class RoleApplicationService
         }
 
         return $rules;
+    }
+
+    public function requiresCountrySpaceOnSubmit(?string $role): bool
+    {
+        return $role === config('permission.role_names.city_admin');
+    }
+
+    /**
+     * @return array<int, array{id: int, name: string, country_code: string|null}>
+     */
+    public function countrySpaceOptionsForApplication(): array
+    {
+        return $this->spaceService->getApplicationCountrySpaceOptions();
     }
 
     public function requiresPasswordOnSubmit(?string $role): bool

@@ -44,15 +44,36 @@
                     />
                 </template>
 
+                <biz-form-select
+                    v-if="requiresCountrySpace"
+                    v-model="form.country_space_id"
+                    label="Country"
+                    required
+                    :message="form.errors.country_space_id"
+                >
+                    <option :value="null" disabled>
+                        Select a country...
+                    </option>
+                    <option
+                        v-for="country in countrySpaceOptions"
+                        :key="country.id"
+                        :value="country.id"
+                    >
+                        {{ country.name }}
+                    </option>
+                </biz-form-select>
+
                 <biz-form-city-select
                     v-model="form.city_id"
                     label="City"
                     required
                     :allow-custom-entry="false"
                     search-route="cities.search"
-                    placeholder="Search for a city..."
+                    :placeholder="cityPlaceholder"
+                    :country-code="selectedCountryCode"
                     :message="form.errors.city_id"
                 />
+
                 <biz-form-textarea
                     v-model="form.excerpt"
                     label="Short description"
@@ -106,6 +127,7 @@
     import BizFormCitySelect from '@/Biz/Form/CitySelect.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizRecaptcha from '@/Biz/Recaptcha.vue';
     import { useForm } from '@inertiajs/vue3';
@@ -117,6 +139,7 @@
             BizFormCitySelect,
             BizFormInput,
             BizFormPassword,
+            BizFormSelect,
             BizFormTextarea,
             BizRecaptcha,
         },
@@ -125,6 +148,8 @@
             requestedRole: { type: String, required: true },
             roleLabel: { type: String, required: true },
             requiresPassword: { type: Boolean, default: false },
+            requiresCountrySpace: { type: Boolean, default: false },
+            countrySpaceOptions: { type: Array, default: () => [] },
             recaptchaSiteKey: { type: String, default: null },
             defaults: { type: Object, default: () => ({}) },
             title: { type: String, required: true },
@@ -139,6 +164,7 @@
                     password: '',
                     password_confirmation: '',
                     requested_role: props.requestedRole,
+                    country_space_id: null,
                     city_id: null,
                     description: '',
                     excerpt: '',
@@ -146,6 +172,36 @@
                     cover: null,
                 }),
             };
+        },
+
+        computed: {
+            selectedCountryCode() {
+                if (! this.requiresCountrySpace || ! this.form.country_space_id) {
+                    return null;
+                }
+
+                const match = this.countrySpaceOptions.find(
+                    (country) => Number(country.id) === Number(this.form.country_space_id)
+                );
+
+                return match?.country_code ?? null;
+            },
+
+            cityPlaceholder() {
+                if (this.requiresCountrySpace && ! this.form.country_space_id) {
+                    return 'Select a country first...';
+                }
+
+                return 'Search for a city...';
+            },
+        },
+
+        watch: {
+            'form.country_space_id'(next, previous) {
+                if (previous != null && next !== previous) {
+                    this.form.city_id = null;
+                }
+            },
         },
 
         methods: {

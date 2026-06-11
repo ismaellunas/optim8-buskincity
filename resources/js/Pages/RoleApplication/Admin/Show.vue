@@ -8,6 +8,9 @@
                     <p><strong>Applicant:</strong> {{ application.first_name }} {{ application.last_name }}</p>
                     <p><strong>Email:</strong> {{ application.email }}</p>
                     <p><strong>Role:</strong> {{ application.requested_role }}</p>
+                    <p v-if="application.country_space">
+                        <strong>Country:</strong> {{ application.country_space.name }}
+                    </p>
                     <p><strong>City:</strong> {{ application.city?.name }}</p>
                     <p><strong>Status:</strong> {{ application.status }}</p>
                 </div>
