@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
+use Modules\Booking\Entities\Event as BookingEvent;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 
@@ -44,6 +46,10 @@ class SpaceEventService
 
         if ($space->isLeaf() && $space->product?->eventSchedule) {
             return $this->getBookedPitchEventRecords($space, $space->product, $scopes, $perPage);
+        }
+
+        if (! $space->isLeaf() && $this->hasPitchProductsUnderSpace($space)) {
+            return $this->getAggregatedBookedPitchEventRecords($space, $scopes, $perPage);
         }
 
         $spaceEvents = SpaceEvent::published()
@@ -122,32 +128,161 @@ class SpaceEventService
             ->orderBy('booked_at')
             ->paginate($perPage);
 
-        $records->getCollection()->transform(function ($event) use ($space) {
-            $user = $event->orderLine?->order?->user;
-
-            $data = [
-                'id' => 'booked-'.$event->id,
-                'started_at' => $event->timezonedBookedAt->format('d M Y H:i'),
-                'ended_at' => $event->endedTime->format('d M Y H:i'),
-                'title' => $user?->full_name ?: __('Booked performance'),
-                'short_description' => '',
-                'description' => '',
-                'space_name' => $space->name,
-                'space_url' => $space->pageLocalizeURL(currentLocale()),
-                'address' => $space->address ?? '',
-            ];
-
-            if ($space->latitude && $space->longitude) {
-                $data['direction_url'] = GoogleMap::directionUrl(
-                    $space->latitude,
-                    $space->longitude
-                );
-            }
-
-            return $data;
-        });
+        $records->getCollection()->transform(
+            fn ($event) => $this->transformBookedPitchEvent($event, $space)
+        );
 
         return $records;
+    }
+
+    private function getAggregatedBookedPitchEventRecords(
+        Space $space,
+        ?array $scopes,
+        int $perPage
+    ): LengthAwarePaginator {
+        $query = $this->bookedPitchEventsQuery($space, $scopes)
+            ->with([
+                'orderLine.order.user',
+                'schedule.schedulable' => function ($query) {
+                    $query->with(['metas' => function ($metaQuery) {
+                        $metaQuery->where('key', 'locations');
+                    }]);
+                },
+            ]);
+
+        $records = $query
+            ->orderBy('booked_at')
+            ->paginate($perPage);
+
+        $records->getCollection()->transform(
+            fn ($event) => $this->transformBookedPitchEvent($event, $space)
+        );
+
+        return $records;
+    }
+
+    private function bookedPitchEventsQuery(Space $space, ?array $scopes = null): Builder
+    {
+        $query = BookingEvent::query()
+            ->blockingAvailability()
+            ->where('booked_at', '>=', now()->startOfDay())
+            ->whereHas('schedule', function (Builder $scheduleQuery) use ($space, $scopes) {
+                $scheduleQuery->whereHasMorph(
+                    'schedulable',
+                    [Product::class],
+                    function (Builder $productQuery) use ($space, $scopes) {
+                        $productQuery
+                            ->where('status', ProductStatus::PUBLISHED->value)
+                            ->where($this->pitchProductsUnderSpaceConstraint($space));
+
+                        if (! empty($scopes['hasSpace'])) {
+                            $productQuery->where('productable_type', Space::class)
+                                ->where('productable_id', (int) $scopes['hasSpace']);
+                        }
+                    }
+                );
+            });
+
+        if (! empty($scopes['dateRange'] ?? null)) {
+            $query->dateRange($scopes['dateRange']);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Match pitch products linked to descendant pitch spaces or the city FK.
+     */
+    private function pitchProductsUnderSpaceConstraint(Space $space): \Closure
+    {
+        return function (Builder $query) use ($space) {
+            $pitchSpaceIds = $this->descendantPitchSpaceIds($space);
+
+            $query->where(function (Builder $productQuery) use ($space, $pitchSpaceIds) {
+                if ($pitchSpaceIds->isNotEmpty()) {
+                    $productQuery->where(function (Builder $linkedQuery) use ($pitchSpaceIds) {
+                        $linkedQuery
+                            ->where('productable_type', Space::class)
+                            ->whereIn('productable_id', $pitchSpaceIds);
+                    });
+                }
+
+                if ($space->city_id) {
+                    $method = $pitchSpaceIds->isNotEmpty() ? 'orWhere' : 'where';
+                    $productQuery->$method('city_id', $space->city_id);
+                }
+
+                if ($pitchSpaceIds->isEmpty() && ! $space->city_id) {
+                    $productQuery->whereRaw('1 = 0');
+                }
+            });
+        };
+    }
+
+    private function hasPitchProductsUnderSpace(Space $space): bool
+    {
+        return Product::query()
+            ->where('status', ProductStatus::PUBLISHED->value)
+            ->whereHas('eventSchedule')
+            ->where($this->pitchProductsUnderSpaceConstraint($space))
+            ->exists();
+    }
+
+    private function descendantPitchSpaceIds(Space $space): Collection
+    {
+        $pitchTypeIds = app(SpaceService::class)->types()
+            ->whereIn('name', ['Pitch', 'Special Events / Festivals'])
+            ->pluck('id');
+
+        if ($pitchTypeIds->isEmpty()) {
+            return collect();
+        }
+
+        return Space::whereDescendantOf($space)
+            ->whereIsLeaf()
+            ->whereIn('type_id', $pitchTypeIds)
+            ->pluck('id');
+    }
+
+    private function transformBookedPitchEvent(BookingEvent $event, Space $contextSpace): array
+    {
+        $product = $event->schedule?->schedulable;
+        $pitchSpace = $product ? $this->resolvePitchSpaceForProduct($product) : null;
+        $displaySpace = $pitchSpace ?? $contextSpace;
+        $user = $event->orderLine?->order?->user;
+        $location = $product?->locations[0] ?? [];
+
+        $latitude = $displaySpace->latitude ?? ($location['latitude'] ?? null);
+        $longitude = $displaySpace->longitude ?? ($location['longitude'] ?? null);
+
+        $data = [
+            'id' => 'booked-'.$event->id,
+            'started_at' => $event->timezonedBookedAt->format('d M Y H:i'),
+            'ended_at' => $event->endedTime->format('d M Y H:i'),
+            'title' => $user?->full_name ?: ($product?->displayName ?? __('Booked performance')),
+            'short_description' => '',
+            'description' => '',
+            'space_name' => $pitchSpace?->name ?? ($product?->displayName ?? $displaySpace->name),
+            'space_url' => $pitchSpace?->hasEnabledPage()
+                ? $pitchSpace->pageLocalizeURL(currentLocale())
+                : '',
+            'address' => $displaySpace->address ?? ($location['address'] ?? ''),
+        ];
+
+        if ($latitude && $longitude) {
+            $data['direction_url'] = GoogleMap::directionUrl($latitude, $longitude);
+        }
+
+        return $data;
+    }
+
+    private function resolvePitchSpaceForProduct(Product $product): ?Space
+    {
+        if ($product->productable_type !== Space::class || ! $product->productable_id) {
+            return null;
+        }
+
+        return Space::find($product->productable_id);
     }
 
     public function getSpaceRecordOptions(
@@ -155,8 +290,22 @@ class SpaceEventService
         string $noneLabel = null
     ): Collection {
         if (is_null($this->cacheSpaceOptions)) {
-            $this->cacheSpaceOptions = SpaceEvent::
-                where(function ($query) use ($space) {
+            $pitchTypeIds = app(SpaceService::class)->types()
+                ->whereIn('name', ['Pitch', 'Special Events / Festivals'])
+                ->pluck('id');
+
+            $pitchSpaces = Space::whereDescendantOf($space)
+                ->whereIsLeaf()
+                ->when(
+                    $pitchTypeIds->isNotEmpty(),
+                    fn ($query) => $query->whereIn('type_id', $pitchTypeIds)
+                )
+                ->withDepth()
+                ->orderBy('name')
+                ->get(['id', 'name']);
+
+            $spaceEventSpaces = SpaceEvent::query()
+                ->where(function ($query) use ($space) {
                     $this->scopeRecords($query, $space);
                 })
                 ->with([
@@ -165,21 +314,24 @@ class SpaceEventService
                         $query->withDepth();
                     },
                 ])
-                ->get(['id', 'space_id']);
+                ->get(['id', 'space_id'])
+                ->pluck('space');
+
+            $this->cacheSpaceOptions = $pitchSpaces
+                ->concat($spaceEventSpaces)
+                ->unique('id')
+                ->sortBy([
+                    ['depth', 'asc'],
+                    ['name', 'asc'],
+                ])
+                ->values();
         }
 
-        $options = $this->cacheSpaceOptions
-            ->pluck('space')
-            ->unique()
-            ->sortBy([
-                ['depth', 'asc'],
-                ['name', 'asc'],
-            ])
-            ->map(fn ($space) => [
-                'id' => $space->id,
-                'value' => $space->name,
-                'depth' => $space->depth,
-            ]);
+        $options = $this->cacheSpaceOptions->map(fn ($space) => [
+            'id' => $space->id,
+            'value' => $space->name,
+            'depth' => $space->depth ?? 0,
+        ]);
 
         if ($noneLabel) {
             $options->prepend([
