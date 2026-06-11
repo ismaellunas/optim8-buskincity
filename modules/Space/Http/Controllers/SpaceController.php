@@ -377,6 +377,8 @@ class SpaceController extends CrudController
 
     public function edit(Space $space)
     {
+        $space->load('city');
+
         $user = auth()->user();
         $isCityAdmin = $user->hasRole(config('permission.role_names.city_admin'));
         $isScopedLocationAdmin = $isCityAdmin || $user->isSpecialEventsAdmin();

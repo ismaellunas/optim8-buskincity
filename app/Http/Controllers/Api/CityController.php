@@ -14,6 +14,12 @@ class CityController extends Controller
 {
     public function index(Request $request)
     {
+        if ($request->filled('id')) {
+            $city = City::query()->find($request->integer('id'));
+
+            return response()->json($city ? [$city] : []);
+        }
+
         return response()->json($this->searchResults($request, 50));
     }
 

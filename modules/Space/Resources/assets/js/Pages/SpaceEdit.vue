@@ -353,6 +353,7 @@
                     'address',
                     'city',
                     'city_id',
+                    'city_relation',
                     'contacts',
                     'country_code',
                     'is_page_enabled',

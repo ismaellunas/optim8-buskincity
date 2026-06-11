@@ -132,6 +132,7 @@ export default {
             customCityName: '',
             searchRequestId: 0,
             searchAbortController: null,
+            resolveRequestId: 0,
         };
     },
     created() {
@@ -189,23 +190,58 @@ export default {
     },
     methods: {
         syncSelectedCityFromModelValue() {
-            if (! this.modelValue || this.selectedCity?.id === this.modelValue) {
+            if (! this.modelValue) {
                 return;
             }
 
-            const match = this.restrictedCities.find(
-                (city) => city.id === this.modelValue
+            if (Number(this.selectedCity?.id) === Number(this.modelValue)) {
+                return;
+            }
+
+            const restrictedMatch = this.restrictedCities.find(
+                (city) => Number(city.id) === Number(this.modelValue)
             );
 
-            if (match) {
+            if (restrictedMatch) {
                 this.selectedCity = {
-                    id: match.id,
-                    name: match.name,
-                    country_code: match.country_code,
-                    latitude: match.latitude ?? null,
-                    longitude: match.longitude ?? null,
+                    id: restrictedMatch.id,
+                    name: restrictedMatch.name,
+                    country_code: restrictedMatch.country_code,
+                    latitude: restrictedMatch.latitude ?? null,
+                    longitude: restrictedMatch.longitude ?? null,
                 };
+
+                return;
             }
+
+            if (
+                this.initialCity
+                && Number(this.initialCity.id) === Number(this.modelValue)
+            ) {
+                this.selectedCity = this.initialCity;
+
+                return;
+            }
+
+            this.fetchCityById(this.modelValue);
+        },
+
+        fetchCityById(cityId) {
+            const requestId = ++this.resolveRequestId;
+
+            axios.get(route(this.searchRoute), {
+                params: { id: cityId },
+            }).then((response) => {
+                if (requestId !== this.resolveRequestId) {
+                    return;
+                }
+
+                const city = response.data?.[0];
+
+                if (city && Number(city.id) === Number(cityId)) {
+                    this.selectedCity = city;
+                }
+            });
         },
 
         onSearch(query) {
