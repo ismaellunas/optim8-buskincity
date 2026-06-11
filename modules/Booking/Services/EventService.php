@@ -217,11 +217,11 @@ class EventService
 
         $schedulable = $schedule->schedulable;
         $duration = $schedulable->duration ?? null;
-        $durationUnit = $schedulable->duration_unit ?? null;
+        $durationUnit = $schedulable->duration_unit ?? 'minute';
 
         if ($schedulable instanceof Product) {
             $duration = $schedulable->duration;
-            $durationUnit = $schedulable->duration_unit;
+            $durationUnit = $schedulable->duration_unit ?? 'minute';
         }
 
         $method = EventTimeHelper::calculateDurationMethodName($durationUnit);
