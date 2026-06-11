@@ -110,6 +110,40 @@
                 </div>
             </div>
 
+            <div
+                v-if="bookedEvents.length"
+                class="columns is-multiline is-mobile mt-5"
+            >
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                    <h2 class="title is-3">
+                        Upcoming booked events
+                    </h2>
+                </div>
+
+                <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                    <biz-table is-fullwidth>
+                        <thead>
+                            <tr>
+                                <th>When</th>
+                                <th>Performer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="bookedEvent in bookedEvents"
+                                :key="bookedEvent.id"
+                            >
+                                <td>
+                                    <biz-tag><b>Start</b></biz-tag> {{ bookedEvent.started_at }}<br>
+                                    <biz-tag><b>End</b></biz-tag> {{ bookedEvent.ended_at }}
+                                </td>
+                                <td>{{ bookedEvent.title }}</td>
+                            </tr>
+                        </tbody>
+                    </biz-table>
+                </div>
+            </div>
+
             <div class="columns is-multiline is-mobile mt-5">
                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                     <h2 class="title is-3">
@@ -285,6 +319,7 @@
             },
             googleApiKey: { type: String, default: null },
             canBook: { type: Boolean, default: true },
+            bookedEvents: { type: Array, default: () => [] },
             noEventsMessage: { type: String, default: 'No events available for booking at this time.' },
             i18n: {
                 type: Object,

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 
@@ -39,6 +40,12 @@ class SpaceEventService
         ?array $scopes = null,
         $perPage = 5
     ): LengthAwarePaginator {
+        $space->loadMissing(['product.eventSchedule']);
+
+        if ($space->isLeaf() && $space->product?->eventSchedule) {
+            return $this->getBookedPitchEventRecords($space, $space->product, $scopes, $perPage);
+        }
+
         $spaceEvents = SpaceEvent::published()
             ->where(function ($query) use ($space, $scopes) {
                 $this->scopeRecords($query, $space, $scopes);
@@ -92,6 +99,55 @@ class SpaceEventService
         });
 
         return $spaceEvents;
+    }
+
+    private function getBookedPitchEventRecords(
+        Space $space,
+        Product $product,
+        ?array $scopes = null,
+        int $perPage = 5
+    ): LengthAwarePaginator {
+        $schedule = $product->eventSchedule;
+
+        $query = $schedule->events()
+            ->blockingAvailability()
+            ->where('booked_at', '>=', now()->startOfDay())
+            ->with(['orderLine.order.user', 'schedule']);
+
+        if (! empty($scopes['dateRange'] ?? null)) {
+            $query->dateRange($scopes['dateRange']);
+        }
+
+        $records = $query
+            ->orderBy('booked_at')
+            ->paginate($perPage);
+
+        $records->getCollection()->transform(function ($event) use ($space) {
+            $user = $event->orderLine?->order?->user;
+
+            $data = [
+                'id' => 'booked-'.$event->id,
+                'started_at' => $event->timezonedBookedAt->format('d M Y H:i'),
+                'ended_at' => $event->endedTime->format('d M Y H:i'),
+                'title' => $user?->full_name ?: __('Booked performance'),
+                'short_description' => '',
+                'description' => '',
+                'space_name' => $space->name,
+                'space_url' => $space->pageLocalizeURL(currentLocale()),
+                'address' => $space->address ?? '',
+            ];
+
+            if ($space->latitude && $space->longitude) {
+                $data['direction_url'] = GoogleMap::directionUrl(
+                    $space->latitude,
+                    $space->longitude
+                );
+            }
+
+            return $data;
+        });
+
+        return $records;
     }
 
     public function getSpaceRecordOptions(

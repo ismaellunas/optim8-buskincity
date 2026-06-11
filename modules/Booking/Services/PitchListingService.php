@@ -156,13 +156,29 @@ class PitchListingService
         return $schedule->events()
             ->blockingAvailability()
             ->where('booked_at', '>=', now()->startOfDay())
+            ->with(['orderLine.order.user', 'schedule'])
             ->orderBy('booked_at')
             ->get()
             ->map(fn ($event) => [
+                'id' => $event->id,
                 'date' => $event->booked_at->toDateString(),
                 'time' => $event->booked_at->format('H:i'),
+                'started_at' => $event->timezonedBookedAt->format('d M Y H:i'),
+                'ended_at' => $event->endedTime->format('d M Y H:i'),
+                'title' => $this->performerDisplayName($event),
             ])
             ->all();
+    }
+
+    private function performerDisplayName($event): string
+    {
+        $user = $event->orderLine?->order?->user;
+
+        if (! $user) {
+            return __('Booked performance');
+        }
+
+        return $user->full_name ?: __('Booked performance');
     }
 
     private function publishedPitchesForUser(User $user): Collection

@@ -14,9 +14,23 @@
 | **T-TOOL-1** Spec + FR-BOOK | 🟢 CODE COMPLETE | FRS §3.5b, plan doc, daniel doc |
 | **T-TOOL-2** Blast-radius inventory | 🟢 CODE COMPLETE | 54 files; disposition md |
 | **T-TOOL-3** RED target tests | 🟢 CODE COMPLETE | `@group events-overhaul` — 4 test files + `CreatesBookablePitch` trait |
-| **T8.1–T8.5** Events overhaul implementation | ⬜ TODO | Next: T8.1 remove ProductEvent |
+| **T8.1–T8.5** Events overhaul implementation | 🟢 CODE COMPLETE | T8.1–T8.4 + T8.5 SQL/docs; `@group events-overhaul` green in Sail |
 
-**Run:** `php artisan test --group=events-overhaul` (expect failures until T8.1+)
+**Run:** `./vendor/bin/sail artisan test --group=events-overhaul`
+
+---
+
+## 2026-06-11 — Phase 8 implementation (T8.1–T8.5)
+
+| Task | Status | Notes |
+|---|---|---|
+| **T8.1** Remove ProductEvent | ✅ DONE | Migration drops tables; admin Events tab + routes removed |
+| **T8.2** Booking core | ✅ DONE | Direct pitch book/batch/reschedule; no `product_event_id` |
+| **T8.3** Performer pitch listing | ✅ DONE | `PitchListingService`; index + show without ProductEvent picker |
+| **T8.4** Public booked calendar | ✅ DONE | `bookedEvents` on performer show + leaf pitch space-events API |
+| **T8.5** Cleanup | 🟢 CODE COMPLETE | `fix-event-calendars-view.sql` updated; `ProductEventService` rename deferred |
+
+**Run:** `./vendor/bin/sail artisan test --group=events-overhaul` (8 pass)
 
 ---
 

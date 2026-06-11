@@ -245,16 +245,16 @@ References use: FRS doc = `new-requirements-frs-and-refactor-plan.md`; SEC doc =
 - [ ] **T-TOOL-1 — Spec + FR-BOOK IDs.** — **🟢 CODE COMPLETE** (FRS §3.5b, plan doc, daniel doc updated)
 - [ ] **T-TOOL-2 — Blast-radius inventory + disposition.** — **🟢 CODE COMPLETE** (`artifacts/product-event-blast-radius*.txt|md`)
 - [ ] **T-TOOL-3 — Target tests (RED).** — **🟢 CODE COMPLETE** (`@group events-overhaul` — 4 test files)
-- [ ] **T8.1 — Remove ProductEvent (schema + admin UI + routes).** — **⚪ TODO**
+- [x] **T8.1 — Remove ProductEvent (schema + admin UI + routes).** — **✅ DONE**
   - Verify: `ProductEventRemovalTest` green; disposition inventory DELETE items gone.
-- [ ] **T8.2 — Booking core without ProductEvent.** — **⚪ TODO**
+- [x] **T8.2 — Booking core without ProductEvent.** — **✅ DONE**
   - Verify: `PitchDirectBookingTest` green.
-- [ ] **T8.3 — Performer pitch listing.** — **⚪ TODO**
+- [x] **T8.3 — Performer pitch listing.** — **✅ DONE**
   - Verify: `PitchAvailabilityListingTest` green.
-- [ ] **T8.4 — Public booked-event calendar on pitch page.** — **⚪ TODO**
-  - Verify: `PitchPublicEventCalendarTest` green.
-- [ ] **T8.5 — Cleanup (calendar view, docs, rename services).** — **⚪ TODO**
-  - Verify: blast-radius inventory → 0 unresolved ProductEvent references.
+- [x] **T8.4 — Public booked-event calendar on pitch page.** — **✅ DONE**
+  - Verify: `PitchPublicEventCalendarTest` green; leaf pitch space page shows booked events.
+- [x] **T8.5 — Cleanup (calendar view, docs, rename services).** — **🟢 CODE COMPLETE**
+  - Verify: `fix-event-calendars-view.sql` aligned; optional `ProductEventService` → `PitchBookingService` rename still open.
 
 ### Cross-cutting (carry through all phases)
 - [x] **T-PERF-CANCEL — Performer cancellation semantics.** OQ4: performer may cancel; canceled events leave the calendar and free the slot. Files: `OrderService::cancelBooking()`, `Event::scopeBlockingAvailability()`, `EventService::bookedTimes()`, frontend `OrderController::cancel`, `OrderCancelRequest` authorization.
