@@ -9,6 +9,7 @@ export default defineConfig((command, mode) => {
         'resources/js/bulma-misc.js',
         'resources/js/fontawesome.js',
         'resources/sass/app.sass',
+        'resources/sass/fontawesome-local.sass',
         'themes/biz/js/donation.js',
         'themes/biz/js/page-space.js',
         'themes/biz/js/page.js',
