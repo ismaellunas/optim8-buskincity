@@ -104,6 +104,47 @@ class RoleApplicationTest extends TestCase
     }
 
     /** @test */
+    public function logged_in_user_can_submit_application_with_a_different_email(): void
+    {
+        $city = City::factory()->create();
+        $user = User::factory()->create(['email' => 'existing@example.com']);
+
+        $this->actingAs($user)->post(route('role-applications.store'), [
+            'email' => 'newadmin@example.com',
+            'first_name' => 'New',
+            'last_name' => 'Admin',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+        ])->assertRedirect(route('role-applications.submitted'));
+
+        $this->assertDatabaseHas('role_applications', [
+            'email' => 'newadmin@example.com',
+            'user_id' => null,
+            'status' => RoleApplicationStatus::PENDING->value,
+        ]);
+    }
+
+    /** @test */
+    public function logged_in_user_submission_links_user_when_email_matches(): void
+    {
+        $city = City::factory()->create();
+        $user = User::factory()->create(['email' => 'same@example.com']);
+
+        $this->actingAs($user)->post(route('role-applications.store'), [
+            'email' => 'same@example.com',
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+        ])->assertRedirect(route('role-applications.submitted'));
+
+        $this->assertDatabaseHas('role_applications', [
+            'email' => 'same@example.com',
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /** @test */
     public function administrator_can_approve_and_provision_city_admin(): void
     {
         $city = City::factory()->create();

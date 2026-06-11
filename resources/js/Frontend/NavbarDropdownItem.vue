@@ -6,7 +6,7 @@
     >
         <a
             class="navbar-link"
-            :class="{ 'is-active': menu.isActive }"
+            :class="[{ 'is-active': menu.isActive }, { 'is-arrowless': depth > 0 }]"
         >
             {{ menu.title }}
         </a>

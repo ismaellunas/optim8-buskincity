@@ -119,7 +119,7 @@ class MenuService
     private function getThemeHeaderMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
-            'header_menu_v6',
+            'header_menu_v7',
             function () use ($locale) {
                 $menus = $this->getStructuredHeaderMenu($locale);
 

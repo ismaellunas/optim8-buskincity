@@ -21,6 +21,7 @@
 #   safe-migrate [artisan args...]     minimal backup, then `sail artisan migrate ...` (everyday)
 #   import-data <dir> [--truncate]   reload data.sql into the current schema
 #   restore-full <dir|full.dump>     exact rollback from full.dump
+#   restore-clean <dir|full.dump>    DROP public schema + restore (handles FK conflicts on managed PG)
 #   clone <target-env-file>          copy THIS db -> the db described by target env file
 #
 # Credentials come from .env (override the source file with ENV_FILE=...).
@@ -274,6 +275,27 @@ cmd_restore_full() {
   log "Restore complete."
 }
 
+# Drops & recreates the `public` schema, then restores into the empty schema.
+# Use when `restore-full` fails with "cannot drop ... because other objects depend on it"
+# (typical on Heroku/RDS managed Postgres where pg_restore --clean can't CASCADE through FKs).
+cmd_restore_clean() {
+  load_env
+  local target="${1:?usage: restore-clean <export-dir-or-full.dump>}"
+  local dump="$target"; [ -d "$target" ] && dump="$target/full.dump"
+  [ -f "$dump" ] || die "no full.dump at $dump"
+  confirm "WIPE 'public' schema and RESTORE into '$DB_DATABASE' @ $DB_HOST." "$DB_DATABASE"
+  log "Dropping and recreating 'public' schema ..."
+  # shellcheck disable=SC2046
+  run_pg "$DB_PASSWORD" "$DB_SSLMODE" "$DB_HOST" psql $(ca "$DB_HOST" "$DB_PORT" "$DB_USERNAME" "$DB_DATABASE") \
+    -v ON_ERROR_STOP=1 -q -c \
+    "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO \"$DB_USERNAME\"; GRANT ALL ON SCHEMA public TO PUBLIC;"
+  log "Restoring into empty schema from $dump ..."
+  # shellcheck disable=SC2046
+  run_pg "$DB_PASSWORD" "$DB_SSLMODE" "$DB_HOST" pg_restore $(ca "$DB_HOST" "$DB_PORT" "$DB_USERNAME" "$DB_DATABASE") \
+    --no-owner --no-privileges < "$dump"
+  log "Clean restore complete."
+}
+
 cmd_clone() {
   load_env                                  # source = current .env
   local tfile="${1:?usage: clone <target-env-file>}"
@@ -311,6 +333,7 @@ EXAMPLES
   ./scripts/db-etl.sh safe-migrate                 # minimal backup + sail artisan migrate
   ./scripts/db-etl.sh import-data storage/db-etl/20260601-120000
   ./scripts/db-etl.sh restore-full storage/db-etl/20260601-120000
+  ./scripts/db-etl.sh restore-clean storage/db-etl/20260601-120000  # wipe public + restore
   ./scripts/db-etl.sh clone .env.sail.example      # copy RDS -> local container db
 EOF
 }
@@ -321,6 +344,7 @@ case "${1:-help}" in
   safe-migrate)   shift; cmd_safe_migrate "$@";;
   import-data)   shift; cmd_import_data "$@";;
   restore-full)  shift; cmd_restore_full "$@";;
+  restore-clean) shift; cmd_restore_clean "$@";;
   clone)         shift; cmd_clone "$@";;
   help|-h|--help) usage;;
   *) err "unknown command: $1"; usage; exit 1;;

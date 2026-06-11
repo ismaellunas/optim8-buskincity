@@ -22,7 +22,9 @@
         'navbar-item has-dropdown is-hoverable navbar-item-dropdown',
         $topDropdownClass => $isTop && $topDropdownClass !== '',
     ])>
-        <a class="navbar-link">{{ $menu['title'] }}</a>
+        {{-- `is-arrowless` for nested headers (Country): submenu opens to the
+             right, so the down chevron is misleading. Top-level keeps it. --}}
+        <a @class(['navbar-link', 'is-arrowless' => ! $isTop])>{{ $menu['title'] }}</a>
 
         <div class="navbar-dropdown">
             @foreach ($children as $childMenu)

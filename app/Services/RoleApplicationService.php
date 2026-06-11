@@ -65,17 +65,15 @@ class RoleApplicationService
         $validator->validate();
 
         $user = auth()->user();
-        if ($user && strcasecmp($user->email, $data['email']) !== 0) {
-            throw ValidationException::withMessages([
-                'email' => [__('The email must match your logged-in account.')],
-            ]);
-        }
+        $linkedUserId = ($user && strcasecmp($user->email, $data['email']) === 0)
+            ? $user->id
+            : null;
 
         $logoMediaId = $logo ? $this->uploadBrandingImage($logo)->id : null;
         $coverMediaId = $cover ? $this->uploadBrandingImage($cover)->id : null;
 
         return RoleApplication::create([
-            'user_id' => $user?->id,
+            'user_id' => $linkedUserId,
             'email' => $data['email'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
