@@ -84,7 +84,7 @@ class PitchCityEventCalendarTest extends TestCase
     }
 
     /** @test */
-    public function city_space_events_api_lists_bookings_when_city_space_is_leaf_and_pitch_is_sibling(): void
+    public function city_space_events_api_drills_down_through_a_sibling_pitch_space(): void
     {
         $pitchStart = now()->addWeek()->startOfWeek(Carbon::MONDAY);
         $product = $this->createPublishedPitchWithoutProductEvent([
@@ -142,13 +142,28 @@ class PitchCityEventCalendarTest extends TestCase
             'status' => BookingStatus::UPCOMING->value,
         ]);
 
-        $response = $this->getJson(route('api.space.space-events', [
+        // Without a pitch filter, the city API hides events so the visitor
+        // is forced to pick a pitch first.
+        $cityRoute = route('api.space.space-events', [
             'encryptedSpaceId' => encrypt($citySpace->id),
-        ]));
+        ]);
 
-        $response->assertOk();
-        $response->assertJsonCount(1, 'records.data');
-        $response->assertJsonFragment([
+        $unfiltered = $this->getJson($cityRoute);
+        $unfiltered->assertOk();
+        $unfiltered->assertJsonCount(0, 'records.data');
+
+        // The sibling pitch is offered as a selectable option even though it
+        // is not a tree descendant of the city space.
+        $unfiltered->assertJsonFragment([
+            'id' => $pitchSpace->id,
+            'value' => $pitchSpace->name,
+        ]);
+
+        // Selecting the pitch returns its booked performance.
+        $filtered = $this->getJson($cityRoute.'?space='.$pitchSpace->id);
+        $filtered->assertOk();
+        $filtered->assertJsonCount(1, 'records.data');
+        $filtered->assertJsonFragment([
             'started_at' => $bookDate->copy()->setTime(10, 30)->format('d M Y H:i'),
         ]);
     }

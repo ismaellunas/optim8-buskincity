@@ -24,7 +24,7 @@
             </div>
 
             <div
-                v-if="!setting.isLeaf && options?.spaces && options.spaces.length > 0"
+                v-if="!requirePitchSelection && !setting.isLeaf && options?.spaces && options.spaces.length > 0"
                 class="column is-3"
             >
                 <biz-select
@@ -163,6 +163,8 @@
 
         props: {
             getRecordUrl: { type: [String, null], required: true },
+            requirePitchSelection: { type: Boolean, default: false },
+            selectedSpaceId: { type: [Number, null], default: null },
         },
 
         setup(props) {
@@ -197,7 +199,34 @@
         },
 
         mounted() {
+            if (this.requirePitchSelection) {
+                if (this.selectedSpaceId !== null && this.selectedSpaceId !== undefined) {
+                    this.queryParams.space = this.selectedSpaceId;
+                    this.getRecords();
+                }
+
+                return;
+            }
+
             this.getRecords();
+        },
+
+        watch: {
+            selectedSpaceId(newValue) {
+                if (! this.requirePitchSelection) {
+                    return;
+                }
+
+                if (newValue === null || newValue === undefined) {
+                    this.records = {};
+                    this.queryParams.space = null;
+
+                    return;
+                }
+
+                this.queryParams.space = newValue;
+                this.getRecords();
+            },
         },
 
         methods: {

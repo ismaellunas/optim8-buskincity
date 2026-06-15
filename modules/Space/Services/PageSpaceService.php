@@ -84,6 +84,32 @@ class PageSpaceService
             ->get();
     }
 
+    /**
+     * Pitch cards to render on a City public page.
+     *
+     * Includes tree-descendant pitches AND sibling pitches linked only via
+     * `city_id`, so cities like Örebro list their pitches even when those
+     * pitches sit elsewhere in the Space tree.
+     */
+    public function getCityPitches(): Collection
+    {
+        if (! isset($this->space)) {
+            return collect();
+        }
+
+        $locales = collect([currentLocale(), defaultLocale()])->unique()->all();
+
+        return app(SpaceService::class)
+            ->pitchSpacesForContextQuery($this->space)
+            ->isPageEnabled(true)
+            ->withStructuredUrl($locales)
+            ->with('translations', function ($query) use ($locales) {
+                $query->inLanguages($locales);
+            })
+            ->orderBy('name')
+            ->get();
+    }
+
     public function eventDateTimeFormat(string $dateTime): string
     {
         $format = config('constants.format.date_time_event');

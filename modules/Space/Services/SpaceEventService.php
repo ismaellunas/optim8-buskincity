@@ -54,6 +54,21 @@ class SpaceEventService
         // City pages are often leaf nodes when the pitch space is a sibling (linked only
         // via product.city_id). Match products by city_id / descendants, not tree depth.
         if ($this->hasPitchProductsUnderSpace($space)) {
+            // City pages drill down: when the city has selectable pitch spaces,
+            // list pitches first and only return events for the chosen pitch.
+            // Skipping the guard when there are no pitch spaces preserves the
+            // legacy "all city bookings" view for city pages with product-only
+            // pitches (no Pitch-type Space row).
+            $isCityPage = ($space->type?->name ?? null) === 'City';
+
+            if (
+                $isCityPage
+                && empty($scopes['hasSpace'])
+                && $this->pitchSpaceIdsForContext($space)->isNotEmpty()
+            ) {
+                return new \Illuminate\Pagination\LengthAwarePaginator([], 0, $perPage);
+            }
+
             return $this->getAggregatedBookedPitchEventRecords($space, $scopes, $perPage);
         }
 
@@ -409,6 +424,16 @@ class SpaceEventService
             ->pluck('id');
     }
 
+    /**
+     * Pitch space IDs visible from a context space (descendants + same-city siblings).
+     */
+    private function pitchSpaceIdsForContext(Space $space): Collection
+    {
+        return app(SpaceService::class)
+            ->pitchSpacesForContextQuery($space)
+            ->pluck('id');
+    }
+
     private function transformBookedPitchEvent(BookingEvent $event, Space $contextSpace): array
     {
         $product = $event->schedule?->schedulable;
@@ -455,16 +480,8 @@ class SpaceEventService
         string $noneLabel = null
     ): Collection {
         if (is_null($this->cacheSpaceOptions)) {
-            $pitchTypeIds = app(SpaceService::class)->types()
-                ->whereIn('name', ['Pitch', 'Special Events / Festivals'])
-                ->pluck('id');
-
-            $pitchSpaces = Space::whereDescendantOf($space)
-                ->whereIsLeaf()
-                ->when(
-                    $pitchTypeIds->isNotEmpty(),
-                    fn ($query) => $query->whereIn('type_id', $pitchTypeIds)
-                )
+            $pitchSpaces = app(SpaceService::class)
+                ->pitchSpacesForContextQuery($space)
                 ->withDepth()
                 ->orderBy('name')
                 ->get(['id', 'name']);

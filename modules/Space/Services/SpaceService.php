@@ -220,6 +220,41 @@ class SpaceService
     }
 
     /**
+     * Pitch / Special-Events leaf spaces visible under a given context space.
+     *
+     * Includes tree descendants (Country page) AND same-city siblings (City page),
+     * since pitches are often modelled as siblings linked only by `city_id`.
+     *
+     * Returns an unexecuted Builder so callers can layer their own selects/eager
+     * loads (page card data, id-only lookups, etc.).
+     */
+    public function pitchSpacesForContextQuery(Space $space): Builder
+    {
+        $pitchTypeIds = $this->types()
+            ->whereIn('name', ['Pitch', 'Special Events / Festivals'])
+            ->pluck('id');
+
+        $query = Space::query()->whereIsLeaf();
+
+        if ($pitchTypeIds->isNotEmpty()) {
+            $query->whereIn('type_id', $pitchTypeIds);
+        }
+
+        $isCityType = ($space->type?->name ?? null) === 'City';
+
+        if ($isCityType && $space->city_id) {
+            $query->where(function (Builder $inner) use ($space) {
+                $inner->whereDescendantOf($space)
+                    ->orWhere('city_id', $space->city_id);
+            });
+        } else {
+            $query->whereDescendantOf($space);
+        }
+
+        return $query;
+    }
+
+    /**
      * Get parent options for City Administrator users.
      * Returns only City-type Spaces that match the user's administered cities.
      */
