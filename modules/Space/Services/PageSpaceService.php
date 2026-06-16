@@ -5,6 +5,8 @@ namespace Modules\Space\Services;
 use App\Helpers\HumanReadable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
@@ -87,9 +89,10 @@ class PageSpaceService
     /**
      * Pitch cards to render on a City public page.
      *
-     * Includes tree-descendant pitches AND sibling pitches linked only via
-     * `city_id`, so cities like Örebro list their pitches even when those
-     * pitches sit elsewhere in the Space tree.
+     * Includes tree-descendant pitches AND Spaces linked only from Products
+     * (via productable_type=Space, productable_id) that belong to this city,
+     * so cities like Borås surface pitches that exist only as Product records
+     * (no Space tree descendant).
      */
     public function getCityPitches(): Collection
     {
@@ -99,13 +102,50 @@ class PageSpaceService
 
         $locales = collect([currentLocale(), defaultLocale()])->unique()->all();
 
-        return app(SpaceService::class)
+        // 1. Pitch Spaces from tree descendants + same city_id (existing logic).
+        $treeSpaces = app(SpaceService::class)
             ->pitchSpacesForContextQuery($this->space)
             ->isPageEnabled(true)
             ->withStructuredUrl($locales)
-            ->with('translations', function ($query) use ($locales) {
-                $query->inLanguages($locales);
-            })
+            ->with('translations', fn ($q) => $q->inLanguages($locales))
+            ->orderBy('name')
+            ->get();
+
+        // 2. Spaces linked from Products by city_id that aren't already included.
+        $treeSpaceIds = $treeSpaces->pluck('id');
+        $productSpaces = $this->pitchSpacesFromProducts($this->space, $treeSpaceIds, $locales);
+
+        return $treeSpaces->concat($productSpaces)->unique('id')->sortBy('name')->values();
+    }
+
+    /**
+     * Find Spaces linked from pitch Products (via productable) that belong to
+     * this city but aren't already in the Space tree descendants.
+     */
+    private function pitchSpacesFromProducts(Space $space, Collection $excludeIds, array $locales): Collection
+    {
+        if (! $space->city_id) {
+            return collect();
+        }
+
+        $productSpaceIds = Product::query()
+            ->where('status', ProductStatus::PUBLISHED->value)
+            ->whereHas('eventSchedule')
+            ->where('city_id', $space->city_id)
+            ->where('productable_type', Space::class)
+            ->whereNotNull('productable_id')
+            ->when($excludeIds->isNotEmpty(), fn ($q) => $q->whereNotIn('productable_id', $excludeIds))
+            ->pluck('productable_id')
+            ->unique();
+
+        if ($productSpaceIds->isEmpty()) {
+            return collect();
+        }
+
+        return Space::whereIn('id', $productSpaceIds)
+            ->isPageEnabled(true)
+            ->withStructuredUrl($locales)
+            ->with('translations', fn ($q) => $q->inLanguages($locales))
             ->orderBy('name')
             ->get();
     }

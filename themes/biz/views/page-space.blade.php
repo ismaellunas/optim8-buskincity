@@ -1,7 +1,8 @@
 @inject('pageSpace', 'Modules\Space\Services\PageSpaceService')
 @inject('translationService', 'App\Services\TranslationService')
 @php
-    $isCityPage = ($space->type?->name ?? null) === 'City';
+    $space->loadMissing('type');
+    $isCityPage = !empty($space->parent_id) && ($space->type?->name ?? null) === 'City';
     $pitches = $isCityPage ? $pageSpace->getCityPitches() : $pageSpace->getLeaves();
     $hasPitches = $pitches && $pitches->isNotEmpty();
 @endphp
@@ -226,49 +227,58 @@
                         </div>
                     @endif
 
-                    @if ($isCityPage && $hasPitches)
-                        <div id="city-pitch-events">
-                            <h1
-                                class="title is-2 mt-5 mb-2"
-                                v-show="selectedPitchId !== null"
-                            >
-                                {{ __('Upcoming Events') }}
-                                <span
-                                    v-if="selectedPitchName"
-                                    class="is-size-5 has-text-weight-normal"
-                                >&mdash; @{{ selectedPitchName }}</span>
-                            </h1>
+                    @if ($isCityPage)
+                        @if ($hasPitches)
+                            <div id="city-pitch-events">
+                                <h1
+                                    class="title is-2 mt-5 mb-2"
+                                    v-show="selectedPitchId !== null"
+                                >
+                                    {{ __('Upcoming Events') }}
+                                    <span
+                                        v-if="selectedPitchName"
+                                        class="is-size-5 has-text-weight-normal"
+                                    >&mdash; @{{ selectedPitchName }}</span>
+                                </h1>
 
-                            <p
-                                v-show="selectedPitchId === null"
-                                class="has-text-centered my-5 has-text-grey"
-                            >
-                                {{ __('Select a pitch above to view its upcoming events.') }}
+                                <p
+                                    v-show="selectedPitchId === null"
+                                    class="has-text-centered my-5 has-text-grey"
+                                >
+                                    {{ __('Select a pitch above to view its upcoming events.') }}
+                                </p>
+
+                                <div
+                                    v-show="selectedPitchId !== null"
+                                    class="columns is-multiline is-mobile mt-3"
+                                >
+                                    <div class="column is-12-desktop is-12-tablet is-12-mobile">
+                                        <space-events
+                                            :require-pitch-selection="true"
+                                            :selected-space-id="selectedPitchId"
+                                            get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
+                                        ></space-events>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <p class="has-text-centered my-5 has-text-grey">
+                                {{ __('No pitches available for this city yet.') }}
                             </p>
+                        @endif
+                    @else
+                        {{-- Non-city pages: show events directly --}}
+                        @if (! $hasPitches)
+                            <h1 class="title is-2 mt-5 mb-2">{{ __('Upcoming Events') }}</h1>
 
-                            <div
-                                v-show="selectedPitchId !== null"
-                                class="columns is-multiline is-mobile mt-3"
-                            >
+                            <div class="columns is-multiline is-mobile mt-3">
                                 <div class="column is-12-desktop is-12-tablet is-12-mobile">
                                     <space-events
-                                        :require-pitch-selection="true"
-                                        :selected-space-id="selectedPitchId"
                                         get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
                                     ></space-events>
                                 </div>
                             </div>
-                        </div>
-                    @elseif (! $hasPitches)
-                        <h1 class="title is-2 mt-5 mb-2">{{ __('Upcoming Events') }}</h1>
-
-                        <div class="columns is-multiline is-mobile mt-3">
-                            <div class="column is-12-desktop is-12-tablet is-12-mobile">
-                                <space-events
-                                    get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
-                                ></space-events>
-                            </div>
-                        </div>
+                        @endif
                     @endif
                     </div>{{-- /#app-page-space --}}
 
