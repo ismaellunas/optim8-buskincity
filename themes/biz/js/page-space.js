@@ -35,7 +35,7 @@ const appPageSpace = createApp({
             card.style.cursor = 'pointer';
 
             card.addEventListener('click', (event) => {
-                if (event.target.closest('a, button')) {
+                if (event.target.closest('a, button:not(.select-pitch-btn)')) {
                     return;
                 }
 

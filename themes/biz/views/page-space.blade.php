@@ -164,6 +164,8 @@
                                             <p>
                                                 {{ $pitch->displayShortDescription ?: ($pitch->displayDescription ?: '-') }}
                                             </p>
+
+                                            <button class="button is-primary mt-4 select-pitch-btn">View Events</button>
                                         </div>
                                     </div>
 
@@ -197,6 +199,8 @@
                                             <p>
                                                 {{ $pitch->displayShortDescription ?: ($pitch->displayDescription ?: '-') }}
                                             </p>
+
+                                            <button class="button is-primary mt-4 select-pitch-btn">View Events</button>
                                         </div>
 
                                         @if ($loop->iteration % 2 != 0 && $pitch->getCoverThumbnailUrl())
