@@ -124,9 +124,24 @@ class PageSpaceService
      */
     private function pitchSpacesFromProducts(Space $space, Collection $excludeIds, array $locales): Collection
     {
+        // --- TEMPORARY DIAGNOSTIC LOG — remove once issue is confirmed fixed ---
+        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] space', [
+            'space_id'   => $space->id,
+            'space_name' => $space->name,
+            'city_id'    => $space->city_id,
+        ]);
+
         if (! $space->city_id) {
+            \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] bailing — space has no city_id');
             return collect();
         }
+
+        // Run a broader diagnostic query first (ignores productable_type so we see ALL products for this city_id)
+        $allForCity = Product::query()
+            ->where('city_id', $space->city_id)
+            ->get(['id', 'status', 'city_id', 'productable_type', 'productable_id']);
+
+        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] all products for city_id='.$space->city_id, $allForCity->toArray());
 
         $productSpaceIds = Product::query()
             ->where('status', ProductStatus::PUBLISHED->value)
@@ -138,16 +153,22 @@ class PageSpaceService
             ->pluck('productable_id')
             ->unique();
 
+        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] productable_ids found', $productSpaceIds->toArray());
+
         if ($productSpaceIds->isEmpty()) {
             return collect();
         }
 
-        return Space::whereIn('id', $productSpaceIds)
+        $spaces = Space::whereIn('id', $productSpaceIds)
             ->isPageEnabled(true)
             ->withStructuredUrl($locales)
             ->with('translations', fn ($q) => $q->inLanguages($locales))
             ->orderBy('name')
             ->get();
+
+        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] spaces returned', $spaces->pluck('id', 'name')->toArray());
+
+        return $spaces;
     }
 
     public function eventDateTimeFormat(string $dateTime): string
