@@ -89,86 +89,22 @@ class PageSpaceService
     /**
      * Pitch cards to render on a City public page.
      *
-     * Includes tree-descendant pitches AND Spaces linked only from Products
-     * (via productable_type=Space, productable_id) that belong to this city,
-     * so cities like Borås surface pitches that exist only as Product records
-     * (no Space tree descendant).
+     * Returns a collection of Product models matching this city.
      */
     public function getCityPitches(): Collection
     {
-        if (! isset($this->space)) {
+        if (! isset($this->space) || ! $this->space->city_id) {
             return collect();
         }
 
-        $locales = collect([currentLocale(), defaultLocale()])->unique()->all();
-
-        // 1. Pitch Spaces from tree descendants + same city_id (existing logic).
-        $treeSpaces = app(SpaceService::class)
-            ->pitchSpacesForContextQuery($this->space)
-            ->isPageEnabled(true)
-            ->withStructuredUrl($locales)
-            ->with('translations', fn ($q) => $q->inLanguages($locales))
-            ->orderBy('name')
-            ->get();
-
-        // 2. Spaces linked from Products by city_id that aren't already included.
-        $treeSpaceIds = $treeSpaces->pluck('id');
-        $productSpaces = $this->pitchSpacesFromProducts($this->space, $treeSpaceIds, $locales);
-
-        return $treeSpaces->concat($productSpaces)->unique('id')->sortBy('name')->values();
-    }
-
-    /**
-     * Find Spaces linked from pitch Products (via productable) that belong to
-     * this city but aren't already in the Space tree descendants.
-     */
-    private function pitchSpacesFromProducts(Space $space, Collection $excludeIds, array $locales): Collection
-    {
-        // --- TEMPORARY DIAGNOSTIC LOG — remove once issue is confirmed fixed ---
-        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] space', [
-            'space_id'   => $space->id,
-            'space_name' => $space->name,
-            'city_id'    => $space->city_id,
-        ]);
-
-        if (! $space->city_id) {
-            \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] bailing — space has no city_id');
-            return collect();
-        }
-
-        // Run a broader diagnostic query first (ignores productable_type so we see ALL products for this city_id)
-        $allForCity = Product::query()
-            ->where('city_id', $space->city_id)
-            ->get(['id', 'status', 'city_id', 'productable_type', 'productable_id']);
-
-        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] all products for city_id='.$space->city_id, $allForCity->toArray());
-
-        $productSpaceIds = Product::query()
-            ->where('status', ProductStatus::PUBLISHED->value)
+        return Product::query()
+            ->published()
+            ->where('city_id', $this->space->city_id)
             ->whereHas('eventSchedule')
-            ->where('city_id', $space->city_id)
-            ->where('productable_type', Space::class)
-            ->whereNotNull('productable_id')
-            ->when($excludeIds->isNotEmpty(), fn ($q) => $q->whereNotIn('productable_id', $excludeIds))
-            ->pluck('productable_id')
-            ->unique();
-
-        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] productable_ids found', $productSpaceIds->toArray());
-
-        if ($productSpaceIds->isEmpty()) {
-            return collect();
-        }
-
-        $spaces = Space::whereIn('id', $productSpaceIds)
-            ->isPageEnabled(true)
-            ->withStructuredUrl($locales)
-            ->with('translations', fn ($q) => $q->inLanguages($locales))
-            ->orderBy('name')
-            ->get();
-
-        \Illuminate\Support\Facades\Log::debug('[pitchSpacesFromProducts] spaces returned', $spaces->pluck('id', 'name')->toArray());
-
-        return $spaces;
+            ->with(['gallery', 'variants'])
+            ->get()
+            ->sortBy('displayName')
+            ->values();
     }
 
     public function eventDateTimeFormat(string $dateTime): string

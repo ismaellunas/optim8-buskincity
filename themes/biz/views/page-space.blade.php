@@ -129,53 +129,51 @@
                     @if ($hasPitches)
                         <h1 class="title is-2 mt-5 mb-2">{{ __('Pitches') }}</h1>
                         <div class="columns is-multiline is-mobile mt-3 city-pitch-cards">
-                            @foreach ($pitches as $spaceChild)
+                            @foreach ($pitches as $pitch)
                                 <div
                                     class="column is-12-desktop is-12-tablet is-12-mobile py-6 city-pitch-card"
-                                    data-pitch-id="{{ $spaceChild->id }}"
-                                    data-pitch-name="{{ $spaceChild->name }}"
+                                    data-pitch-id="{{ $pitch->id }}"
+                                    data-pitch-name="{{ $pitch->displayName }}"
                                 >
                                     <div class="columns is-multiline is-mobile is-hidden-tablet">
-                                        <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
-                                            <figure class="image is-250x250 is-inline-block">
-                                                <x-image
-                                                    src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
-                                                    alt="{{ $spaceChild->name }}"
-                                                    width="250"
-                                                    height="250"
-                                                    rounded="is-rounded"
-                                                    is-lazyload
-                                                />
-                                            </figure>
-                                        </div>
+                                        @if ($pitch->getCoverThumbnailUrl())
+                                            <div class="column is-12-desktop is-12-tablet is-12-mobile has-text-centered">
+                                                <figure class="image is-250x250 is-inline-block">
+                                                    <x-image
+                                                        src="{{ $pitch->getCoverThumbnailUrl() }}"
+                                                        alt="{{ $pitch->displayName }}"
+                                                        width="250"
+                                                        height="250"
+                                                        rounded="is-rounded"
+                                                        is-lazyload
+                                                    />
+                                                </figure>
+                                            </div>
+                                        @endif
                                         <div class="column is-12-desktop is-12-tablet is-12-mobile">
                                             <h4 class="title is-4 has-text-primary">
-                                                {{ ucwords($spaceChild->name) }}
+                                                {{ ucwords($pitch->displayName) }}
                                             </h4>
-                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
-                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
-                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+                                            @if ($pitch->locations && !empty($pitch->locations[0]['address']))
+                                                <b>Address: </b>{{ $pitch->locations[0]['address'] }}<br>
+                                            @endif
 
                                             <h6 class="title is-6 mt-4 mb-1 has-text-primary">
                                                 Description
                                             </h6>
                                             <p>
-                                                {{ $spaceChild->description ?? '-' }}
+                                                {{ $pitch->displayShortDescription ?: ($pitch->displayDescription ?: '-') }}
                                             </p>
-
-                                            @if ($spaceChild->hasEnabledPage())
-                                                <a href="{{ $spaceChild->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
-                                            @endif
                                         </div>
                                     </div>
 
                                     <div class="columns is-hidden-mobile is-multiline is-mobile">
-                                        @if ($loop->iteration % 2 == 0)
+                                        @if ($loop->iteration % 2 == 0 && $pitch->getCoverThumbnailUrl())
                                             <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                                 <figure class="image is-250x250 is-pulled-left">
                                                     <x-image
-                                                        src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
-                                                        alt="{{ $spaceChild->name }}"
+                                                        src="{{ $pitch->getCoverThumbnailUrl() }}"
+                                                        alt="{{ $pitch->displayName }}"
                                                         width="250"
                                                         height="250"
                                                         rounded="is-rounded"
@@ -187,30 +185,26 @@
 
                                         <div class="column is-8-desktop is-7-tablet is-12-mobile">
                                             <h4 class="title is-4 has-text-primary">
-                                                {{ ucwords($spaceChild->name) }}
+                                                {{ ucwords($pitch->displayName) }}
                                             </h4>
-                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
-                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
-                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+                                            @if ($pitch->locations && !empty($pitch->locations[0]['address']))
+                                                <b>Address: </b>{{ $pitch->locations[0]['address'] }}<br>
+                                            @endif
 
                                             <h6 class="title is-6 mt-4 mb-1 has-text-primary">
                                                 Description
                                             </h6>
                                             <p>
-                                                {{ $spaceChild->description ?? '-' }}
+                                                {{ $pitch->displayShortDescription ?: ($pitch->displayDescription ?: '-') }}
                                             </p>
-
-                                            @if ($spaceChild->hasEnabledPage())
-                                                <a href="{{ $spaceChild->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
-                                            @endif
                                         </div>
 
-                                        @if ($loop->iteration % 2 != 0)
+                                        @if ($loop->iteration % 2 != 0 && $pitch->getCoverThumbnailUrl())
                                             <div class="column is-4-desktop is-5-tablet is-12-mobile">
                                                 <figure class="image is-250x250 is-pulled-right">
                                                     <x-image
-                                                        src="{{ $spaceChild->getOptimizedLogoImageUrl(250, 250) }}"
-                                                        alt="{{ $spaceChild->name }}"
+                                                        src="{{ $pitch->getCoverThumbnailUrl() }}"
+                                                        alt="{{ $pitch->displayName }}"
                                                         width="250"
                                                         height="250"
                                                         rounded="is-rounded"
