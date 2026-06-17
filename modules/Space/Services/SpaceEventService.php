@@ -196,8 +196,17 @@ class SpaceEventService
                             ->where($this->pitchProductsUnderSpaceConstraint($space));
 
                         if (! empty($scopes['hasSpace'])) {
-                            $productQuery->where('productable_type', Space::class)
-                                ->where('productable_id', (int) $scopes['hasSpace']);
+                            $filterId = (int) $scopes['hasSpace'];
+
+                            $productQuery->where(function (Builder $pitchQuery) use ($filterId) {
+                                $pitchQuery
+                                    ->where($pitchQuery->qualifyColumn('id'), $filterId)
+                                    ->orWhere(function (Builder $linkedQuery) use ($filterId) {
+                                        $linkedQuery
+                                            ->where('productable_type', Space::class)
+                                            ->where('productable_id', $filterId);
+                                    });
+                            });
                         }
                     }
                 );
@@ -473,6 +482,31 @@ class SpaceEventService
         }
 
         return Space::find($product->productable_id);
+    }
+
+    /**
+     * Valid pitch filter IDs for the public events API `space` query param.
+     *
+     * City pages list pitch Products (city_id), while drill-down may use a
+     * sibling Pitch Space id — both must be accepted when filtering events.
+     *
+     * @return Collection<int, int>
+     */
+    public function getPitchFilterOptionIds(Space $space): Collection
+    {
+        $ids = $this->pitchSpaceIdsForContext($space);
+
+        if (($space->type?->name ?? null) === 'City' && $space->city_id) {
+            $productIds = Product::query()
+                ->where('status', ProductStatus::PUBLISHED->value)
+                ->where('city_id', $space->city_id)
+                ->whereHas('eventSchedule')
+                ->pluck('id');
+
+            $ids = $ids->merge($productIds);
+        }
+
+        return $ids->unique()->values();
     }
 
     public function getSpaceRecordOptions(

@@ -169,6 +169,58 @@ class PitchCityEventCalendarTest extends TestCase
     }
 
     /** @test */
+    public function city_space_events_api_accepts_product_id_from_city_pitch_cards(): void
+    {
+        $pitchStart = now()->addWeek()->startOfWeek(Carbon::MONDAY);
+        $product = $this->createPublishedPitchWithoutProductEvent([
+            'pitch_start' => $pitchStart,
+            'pitch_end' => $pitchStart->copy()->addDays(13),
+            'name' => 'Borås Konstmuseum - Pitch',
+            'city_name' => 'Borås',
+            'country_code' => 'SWE',
+        ]);
+
+        $countryTypeId = GlobalOption::where('name', 'Country')->value('id');
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+
+        $country = Space::create([
+            'name' => 'Sweden',
+            'type_id' => $countryTypeId,
+            'country_code' => 'SE',
+        ]);
+
+        $citySpace = Space::create([
+            'name' => 'Borås',
+            'type_id' => $cityTypeId,
+            'parent_id' => $country->id,
+            'city_id' => $product->city_id,
+            'country_code' => 'SE',
+        ]);
+
+        $bookDate = $this->nextBookableWeekday($pitchStart->copy()->addDays(2));
+        Carbon::setTestNow($bookDate->copy()->setTime(8, 0));
+
+        $this->actingAsPerformerOnUserPortal();
+
+        $this->post(route('booking.orders.book-event', $product), [
+            'date' => $bookDate->toDateString(),
+            'time' => '11:00',
+        ])->assertRedirect();
+
+        $cityRoute = route('api.space.space-events', [
+            'encryptedSpaceId' => encrypt($citySpace->id),
+        ]);
+
+        $response = $this->getJson($cityRoute.'?space='.$product->id);
+
+        $response->assertOk();
+        $response->assertJsonCount(1, 'records.data');
+        $response->assertJsonFragment([
+            'started_at' => $bookDate->copy()->setTime(11, 0)->format('d M Y H:i'),
+        ]);
+    }
+
+    /** @test */
     public function admin_city_space_events_tab_lists_booked_pitch_performances(): void
     {
         $this->seed(PermissionSeeder::class);

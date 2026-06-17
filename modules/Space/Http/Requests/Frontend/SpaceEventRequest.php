@@ -31,8 +31,7 @@ class SpaceEventRequest extends BaseFormRequest
             'space' => [
                 'nullable',
                 Rule::in(app(SpaceEventService::class)
-                    ->getSpaceRecordOptions($space)
-                    ->pluck('id')
+                    ->getPitchFilterOptionIds($space)
                 ),
             ],
             'dates' => [
