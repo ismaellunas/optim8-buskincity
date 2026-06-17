@@ -19,13 +19,19 @@ const appPageSpace = createApp({
     },
 
     mounted() {
+        const root = document.getElementById('app-page-space');
+
+        if (! root) {
+            return;
+        }
+
         const eventsTarget = document.getElementById('city-pitch-events');
 
         if (! eventsTarget) {
             return;
         }
 
-        const cards = this.$el.querySelectorAll('.city-pitch-card');
+        const cards = root.querySelectorAll('.city-pitch-card');
 
         if (! cards.length) {
             return;
