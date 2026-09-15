@@ -18,6 +18,14 @@ class EnsureLoginFromLoginRoute
      */
     public function handle(Request $request, Closure $next)
     {
+        $user = $request->user();
+
+        if ($user?->canAccessAdminPanel()) {
+            LoginService::applyIdentity($user);
+
+            return redirect(LoginService::redirectPathFor($user));
+        }
+
         // Allow authenticated JSON/Inertia requests to proceed
         if (auth()->check() && ($request->expectsJson() || $request->header('X-Inertia'))) {
             if (!LoginService::hasHomeUrl()) {
@@ -35,7 +43,7 @@ class EnsureLoginFromLoginRoute
             return $next($request);
 
         } elseif (! $request->expectsJson() && ! $request->header('X-Inertia')) {
-            return redirect(LoginService::getHomeUrl());
+            return redirect(LoginService::redirectPathFor($user) ?: LoginService::getHomeUrl());
         }
 
         abort(Response::HTTP_UNAUTHORIZED);

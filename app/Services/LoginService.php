@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use JoelButcher\Socialstream\Socialstream;
@@ -81,10 +82,52 @@ class LoginService
 
     public static function setHomeUrl(Request $request): void
     {
+        if ($request->user()) {
+            self::applyIdentity($request->user());
+
+            return;
+        }
+
         if ($request->routeIs('admin.*')) {
             self::setAdminHomeUrl();
         } else {
             self::setUserHomeUrl();
         }
+    }
+
+    /**
+     * Bind the session portal to the authenticated user, not the login form.
+     * One email has one identity: admin-capable users always get the admin portal.
+     */
+    public static function applyIdentity(?User $user): void
+    {
+        if ($user && $user->canAccessAdminPanel()) {
+            self::setAdminHomeUrl();
+
+            return;
+        }
+
+        self::setUserHomeUrl();
+    }
+
+    public static function redirectPathFor(?User $user): string
+    {
+        if (! $user || ! $user->canAccessAdminPanel()) {
+            return (string) config('fortify.home');
+        }
+
+        if ($user->can('system.dashboard')) {
+            return (string) config('fortify.admin_home');
+        }
+
+        if ($user->isCityAdministrator()) {
+            return route('admin.spaces.index');
+        }
+
+        if ($user->isSpecialEventsAdmin()) {
+            return route('admin.booking.products.index');
+        }
+
+        return (string) config('fortify.admin_home');
     }
 }

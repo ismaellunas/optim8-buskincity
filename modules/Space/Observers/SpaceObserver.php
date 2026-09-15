@@ -39,6 +39,7 @@ class SpaceObserver
             $space->descendants->all()
         );
 
+        app(SpaceService::class)->cascadeCanonicalRecords($space, $allSpaces);
         app(SpaceService::class)->removeAllMedia($allSpaces);
         app(SpaceService::class)->removeAllPages($allSpaces);
         app(SpaceService::class)->removeAllMenus($allSpaces);

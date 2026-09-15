@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\InScopedCityIds;
 use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends UserStoreRequest
@@ -44,6 +45,9 @@ class UserUpdateRequest extends UserStoreRequest
                 Rule::in($this->getRoleIds()),
             ];
         }
+
+        $rules['cities'] = ['sometimes', 'array', new InScopedCityIds()];
+        $rules['cities.*'] = ['integer', 'exists:cities,id'];
 
         return $rules;
     }

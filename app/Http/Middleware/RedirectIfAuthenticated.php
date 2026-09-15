@@ -23,19 +23,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if (
-                    Auth::user()->can('system.dashboard')
-                    && $request->routeIs('admin.login')
-                    && LoginService::isAdminHomeUrl()
-                ) {
-                    return redirect(config('fortify.admin_home'));
-                }
+                $user = Auth::user();
+                LoginService::applyIdentity($user);
 
-                if (
-                    $request->routeIs('login')
-                    && LoginService::isUserHomeUrl()
-                ) {
-                    return redirect(config('fortify.home'));
+                if ($request->routeIs('admin.login') || $request->routeIs('login')) {
+                    return redirect(LoginService::redirectPathFor($user));
                 }
             }
         }

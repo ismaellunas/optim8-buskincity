@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\City;
 use App\Models\User;
 use App\Rules\InScopedCityIds;
 use Illuminate\Http\Request;
@@ -26,12 +25,12 @@ class CityUserController extends Controller
 
         $cities = $request->input('cities', []);
 
-        // Route the write to the correct scope role. Special Events Admins are
-        // user_scope-only (no legacy city_user); City Admins dual-write.
-        if ($user->isSpecialEventsAdmin()) {
-            $user->syncScopeCities(config('permission.role_names.special_events_admin'), $cities);
+        if ($user->isSpecialEventsAdmin() || $user->isCityAdministrator()) {
+            $user->syncCitiesForCurrentRole($cities);
         } else {
-            $user->syncAdminCities($cities);
+            return response()->json([
+                'message' => 'Cities can only be assigned to a city-scoped role.',
+            ], 422);
         }
 
         return response()->json([

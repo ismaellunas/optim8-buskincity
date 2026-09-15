@@ -13,6 +13,7 @@ use App\Services\SettingService;
 use App\Services\UserScopeService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Lunar\FieldTypes\Text;
 use Lunar\FieldTypes\TranslatedText;
@@ -542,7 +543,9 @@ class SpaceController extends CrudController
 
     public function destroy(Space $space)
     {
-        $space->delete();
+        DB::transaction(function () use ($space) {
+            $space->delete();
+        });
 
         $this->generateFlashMessage('The :resource was deleted!', [
             'resource' => $this->title()

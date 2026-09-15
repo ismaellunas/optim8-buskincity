@@ -10,12 +10,9 @@ class PrepareAuthenticatedSession extends FortifyPrepareAuthenticatedSession
     /** @override */
     public function handle($request, $next)
     {
-        if ($request->routeIs('admin.*')) {
-            LoginService::setAdminHomeUrl();
-        } else {
-            LoginService::setUserHomeUrl();
-        }
+        $request->session()->regenerate();
+        LoginService::setHomeUrl($request);
 
-        return parent::handle($request, $next);
+        return $next($request);
     }
 }

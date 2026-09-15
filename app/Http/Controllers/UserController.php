@@ -134,14 +134,8 @@ class UserController extends CrudController
             app(UserRoleService::class)->syncSingleRole($user, $request->role);
         }
 
-        // Sync cities for the user's city-scoped role (City Admin dual-writes
-        // city_user + user_scope; Special Events Admin writes user_scope only).
         if ($request->has('cities') && is_array($request->cities)) {
-            if ($user->isSpecialEventsAdmin()) {
-                $user->syncScopeCities(config('permission.role_names.special_events_admin'), $request->cities);
-            } else {
-                $user->syncAdminCities($request->cities);
-            }
+            $user->syncCitiesForCurrentRole($request->cities);
         }
 
         $this->generateFlashMessage('The :resource was created!', [
@@ -226,6 +220,10 @@ class UserController extends CrudController
 
         if (! $user->isSuperAdministrator) {
             app(UserRoleService::class)->syncSingleRole($user, $request->role);
+        }
+
+        if ($request->has('cities') && is_array($request->cities)) {
+            $user->syncCitiesForCurrentRole($request->cities);
         }
 
         $this->generateFlashMessage('The :resource was updated!', [

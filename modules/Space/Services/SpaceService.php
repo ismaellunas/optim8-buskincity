@@ -3,16 +3,23 @@
 namespace Modules\Space\Services;
 
 use App\Models\City;
+use App\Models\Location;
+use App\Models\RoleApplication;
 use App\Models\User;
+use App\Models\UserScope;
+use App\Services\CityService;
 use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use App\Services\LegacyLandingNavFilter;
 use App\Services\MenuService;
+use App\Services\UserRoleService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Kalnoy\Nestedset\Collection as NestedSetCollection;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
@@ -319,7 +326,9 @@ class SpaceService
     }
 
     /**
-     * Persist `city_id` on a Space from explicit input or inherited parent (T3.3).
+     * Persist `city_id` on a Space from explicit input, inherited parent, or
+     * find-or-create on the canonical cities table so a recreated city/location
+     * Space is linked after cascade delete.
      */
     public function persistCityId(Space $space, array $inputs): void
     {
@@ -330,10 +339,143 @@ class SpaceService
             $cityId = $parent?->city_id;
         }
 
+        if (! $cityId) {
+            $cityName = $this->cityNameFromInput($inputs['city'] ?? $space->cityName());
+            $countryCode = $inputs['country_code'] ?? $space->country_code;
+
+            if ($cityName !== '' && ! empty($countryCode)) {
+                $city = app(CityService::class)->findOrCreate(
+                    $cityName,
+                    (string) $countryCode,
+                    isset($inputs['latitude']) ? (float) $inputs['latitude'] : $space->latitude,
+                    isset($inputs['longitude']) ? (float) $inputs['longitude'] : $space->longitude
+                );
+                $cityId = $city->id;
+            }
+        }
+
         if ($cityId && (int) $space->city_id !== (int) $cityId) {
             $space->city_id = (int) $cityId;
             $space->save();
         }
+    }
+
+    /**
+     * Remove canonical `cities` / `locations` rows (and city scopes) for Spaces
+     * about to be deleted so the same city/location can be recreated.
+     *
+     * @param  array<int, Space>  $spacesBeingDeleted
+     */
+    public function cascadeCanonicalRecords(Space $root, array $spacesBeingDeleted): void
+    {
+        $spaces = collect($spacesBeingDeleted);
+
+        if ($spaces->isEmpty()) {
+            $spaces = collect([$root])->merge($root->descendants);
+        }
+
+        $spaceIds = $spaces->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        if ($spaceIds === []) {
+            return;
+        }
+
+        Product::withTrashed()
+            ->where('productable_type', Space::class)
+            ->whereIn('productable_id', $spaceIds)
+            ->update([
+                'productable_type' => null,
+                'productable_id' => null,
+            ]);
+
+        Location::whereIn('space_id', $spaceIds)->delete();
+
+        $cityTypeId = $this->types()->firstWhere('name', 'City')?->id;
+
+        if (! $cityTypeId) {
+            return;
+        }
+
+        $cityIds = $spaces
+            ->filter(fn (Space $space) => (int) $space->type_id === (int) $cityTypeId)
+            ->pluck('city_id')
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        foreach ($cityIds as $cityId) {
+            $stillReferenced = Space::query()
+                ->where('city_id', $cityId)
+                ->where('type_id', $cityTypeId)
+                ->whereNotIn('id', $spaceIds)
+                ->exists();
+
+            if ($stillReferenced) {
+                continue;
+            }
+
+            $this->deleteCanonicalCity($cityId);
+        }
+    }
+
+    private function deleteCanonicalCity(int $cityId): void
+    {
+        $affectedUserIds = UserScope::query()
+            ->where('scope_type', 'city')
+            ->where('scope_id', $cityId)
+            ->pluck('user_id')
+            ->merge(
+                DB::table('city_user')->where('city_id', $cityId)->pluck('user_id')
+            )
+            ->unique()
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->values();
+
+        Location::where('city_id', $cityId)->delete();
+
+        UserScope::query()
+            ->where('scope_type', 'city')
+            ->where('scope_id', $cityId)
+            ->delete();
+
+        RoleApplication::where('city_id', $cityId)->delete();
+
+        City::whereKey($cityId)->delete();
+
+        $roleService = app(UserRoleService::class);
+        $cityAdminRole = config('permission.role_names.city_admin');
+
+        foreach ($affectedUserIds as $userId) {
+            $user = User::find($userId);
+
+            if (! $user || ! $user->isCityAdministrator()) {
+                continue;
+            }
+
+            $remaining = array_merge(
+                $user->scopeIdsFor($cityAdminRole, 'city'),
+                $user->adminCities()->pluck('cities.id')->map(fn ($id) => (int) $id)->all()
+            );
+
+            if ($remaining === []) {
+                $roleService->syncSingleRole($user, null);
+            }
+        }
+    }
+
+    private function cityNameFromInput(mixed $city): string
+    {
+        if (is_string($city)) {
+            return trim($city);
+        }
+
+        if (is_array($city) && ! empty($city['name'])) {
+            return trim((string) $city['name']);
+        }
+
+        return '';
     }
 
     public function ensureCitySpacesExist(User $user): void

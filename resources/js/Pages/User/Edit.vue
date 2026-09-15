@@ -290,6 +290,7 @@
                 photo: null,
                 is_photo_deleted: false,
                 language_id: props.record.language_id,
+                cities: (props.record.admin_cities || []).map(c => c.id),
             };
 
             if (!props.record.isSuperAdministrator) {
@@ -334,14 +335,14 @@
             },
 
             isAdminCitiesVisible() {
-                // Show the assigned-cities panel for any city-scoped role
-                // (City Administrator and Special Events Admin). Reflects the
-                // role currently saved on the record; changing the role requires
-                // saving the profile first.
-                const scopeRoles = ['city_administrator', 'special_events_admin'];
+                if (this.record.isSuperAdministrator) {
+                    return false;
+                }
 
-                return !!(this.record.roles
-                    && this.record.roles.some(r => scopeRoles.includes(r.name)));
+                const scopedRoles = ['City Administrator', 'Special Events Admin'];
+                const selected = this.roleOptions.find(r => r.id === this.profileForm.role);
+
+                return !!(selected && scopedRoles.includes(selected.value));
             },
         },
 
@@ -350,6 +351,9 @@
 
             onSubmit() {
                 const self = this;
+                self.profileForm.cities = self.isAdminCitiesVisible
+                    ? self.adminCities.map(c => c.id)
+                    : [];
                 self.profileForm.post(route(self.baseRouteName+'.update', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {

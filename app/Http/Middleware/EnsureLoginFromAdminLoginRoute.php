@@ -18,10 +18,16 @@ class EnsureLoginFromAdminLoginRoute
      */
     public function handle(Request $request, Closure $next)
     {
-        if (LoginService::hasHomeUrl() && LoginService::isAdminHomeUrl()) {
+        $user = $request->user();
+
+        if ($user?->canAccessAdminPanel()) {
+            LoginService::applyIdentity($user);
+
             return $next($request);
-        } else if (! $request->expectsJson()) {
-            return redirect(LoginService::getHomeUrl());
+        }
+
+        if (! $request->expectsJson()) {
+            return redirect(LoginService::redirectPathFor($user));
         }
 
         abort(Response::HTTP_UNAUTHORIZED);

@@ -45,7 +45,7 @@ class CustomOAuthController extends OAuthController
 
     protected function login($user)
     {
-        LoginService::setUserHomeUrl();
+        LoginService::applyIdentity($user);
 
         return parent::login($user);
     }

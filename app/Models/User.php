@@ -560,6 +560,29 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Write city assignments for whichever city-scoped role this user currently holds.
+     * No-op for roles that are not city-scoped, so leftover scopes cannot be re-created
+     * on a Performer / Author after a role change.
+     *
+     * @param  array<int, int|string>  $cityIds
+     */
+    public function syncCitiesForCurrentRole(array $cityIds): void
+    {
+        if ($this->isSpecialEventsAdmin()) {
+            $this->syncScopeCities(
+                config('permission.role_names.special_events_admin'),
+                $cityIds
+            );
+
+            return;
+        }
+
+        if ($this->isCityAdministrator()) {
+            $this->syncAdminCities($cityIds);
+        }
+    }
+
+    /**
      * Check if user is a City Administrator for a specific city
      */
     public function isCityAdmin(int $cityId): bool
