@@ -11,7 +11,7 @@
                     <p v-if="application.country_space">
                         <strong>Country:</strong> {{ application.country_space.name }}
                     </p>
-                    <p><strong>City:</strong> {{ application.city?.name }}</p>
+                    <p><strong>City:</strong> {{ application.city?.name || 'No longer available' }}</p>
                     <p><strong>Status:</strong> {{ application.status }}</p>
                 </div>
                 <div class="column is-half">
@@ -24,6 +24,25 @@
                         ({{ application.replaced_user.email }})
                     </p>
                 </div>
+            </div>
+
+            <div
+                v-if="approvalPreview && !approvalPreview.city_available"
+                class="notification is-danger is-light"
+            >
+                <p>
+                    This city is no longer available. The application cannot be approved.
+                </p>
+            </div>
+
+            <div
+                v-if="approvalPreview?.city_space_missing"
+                class="notification is-warning is-light"
+            >
+                <p>
+                    This city is no longer available in Location. Approving will recreate
+                    the city space and assign the applicant as City Administrator.
+                </p>
             </div>
 
             <div
@@ -49,7 +68,7 @@
                     <biz-button
                         class="is-success"
                         type="button"
-                        :disabled="approvalPreview?.requires_replace_confirmation && !confirmReplace"
+                        :disabled="(approvalPreview && !approvalPreview.city_available) || (approvalPreview?.requires_replace_confirmation && !confirmReplace)"
                         @click="approve"
                     >
                         Approve

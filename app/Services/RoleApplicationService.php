@@ -6,10 +6,12 @@ use App\Entities\CloudinaryStorage;
 use App\Enums\RoleApplicationStatus;
 use App\Mail\RoleApplicationApproved;
 use App\Models\City;
+use App\Models\GlobalOption;
 use App\Models\RoleApplication;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\UserScope;
+use Modules\Space\Entities\Space;
 use App\Rules\Password;
 use App\Rules\ProtectedAdminEmail;
 use App\Services\CountryService;
@@ -110,9 +112,12 @@ class RoleApplicationService
         $this->assertPending($application);
 
         $existingCityAdmin = null;
+        $hasOccupyingScope = false;
+        $cityId = (int) $application->city_id;
 
         if ($application->requested_role === config('permission.role_names.city_admin')) {
-            $existingCityAdmin = $this->findCityAdminForCity((int) $application->city_id);
+            $hasOccupyingScope = $this->findCityAdminScopeForCity($cityId) !== null;
+            $existingCityAdmin = $this->findLivingCityAdminForCity($cityId);
         }
 
         return [
@@ -124,6 +129,10 @@ class RoleApplicationService
                 'email' => $existingCityAdmin->email,
             ] : null,
             'city' => $application->city?->only(['id', 'name', 'country_code']),
+            'city_available' => $this->cityCatalogExists($cityId),
+            'city_space_missing' => $hasOccupyingScope
+                && $this->cityCatalogExists($cityId)
+                && ! $this->cityLocationSpaceExists($cityId),
             'country' => $application->countrySpace?->only(['id', 'name', 'country_code']),
             'applicant' => [
                 'name' => $application->applicant_full_name,
@@ -145,7 +154,13 @@ class RoleApplicationService
             ]);
         }
 
-        return DB::transaction(function () use ($application, $reviewer, $preview, $confirmReplace) {
+        if (! $preview['city_available']) {
+            throw ValidationException::withMessages([
+                'city_id' => [__('This city is no longer available. The application cannot be approved.')],
+            ]);
+        }
+
+        return DB::transaction(function () use ($application, $reviewer, $confirmReplace) {
             $application = RoleApplication::whereKey($application->id)
                 ->lockForUpdate()
                 ->firstOrFail();
@@ -154,14 +169,16 @@ class RoleApplicationService
 
             $this->assertProtectedEmail($application->email);
 
-            $replacedUser = null;
-
-            if ($preview['requires_replace_confirmation']) {
-                $replacedUser = $this->replaceExistingCityAdmin(
-                    (int) $application->city_id,
-                    $confirmReplace
-                );
+            if (! $this->cityCatalogExists((int) $application->city_id)) {
+                throw ValidationException::withMessages([
+                    'city_id' => [__('This city is no longer available. The application cannot be approved.')],
+                ]);
             }
+
+            $replacedUser = $this->replaceExistingCityAdmin(
+                (int) $application->city_id,
+                $confirmReplace
+            );
 
             $user = $this->resolveApplicantUser($application);
             $user->verifiyEmail();
@@ -211,69 +228,116 @@ class RoleApplicationService
 
     public function findCityAdminForCity(int $cityId): ?User
     {
-        $scope = UserScope::query()
-            ->where('role', config('permission.role_names.city_admin'))
-            ->where('scope_type', 'city')
-            ->where('scope_id', $cityId)
-            ->first();
-
-        return $scope ? User::find($scope->user_id) : null;
+        return $this->findLivingCityAdminForCity($cityId);
     }
 
-    private function replaceExistingCityAdmin(int $cityId, bool $confirmed): ?User
+    private function findCityAdminScopeForCity(int $cityId, bool $lock = false): ?UserScope
     {
-        $existing = UserScope::query()
+        $query = UserScope::query()
             ->where('role', config('permission.role_names.city_admin'))
             ->where('scope_type', 'city')
-            ->where('scope_id', $cityId)
-            ->lockForUpdate()
-            ->first();
+            ->where('scope_id', $cityId);
+
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        return $query->first();
+    }
+
+    private function findLivingCityAdminForCity(int $cityId): ?User
+    {
+        $scope = $this->findCityAdminScopeForCity($cityId);
+
+        if (! $scope) {
+            return null;
+        }
+
+        $user = User::withTrashed()->find($scope->user_id);
+
+        if (! $user || $user->trashed()) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * Release the occupying city_administrator scope for this city so the unique
+     * index user_scope_one_city_admin_per_city is free for the incoming admin.
+     *
+     * Living occupants require confirm_replace. Soft-deleted / missing users
+     * leave orphaned user_scope rows (FK cascade only runs on hard delete) and
+     * are cleared without confirmation.
+     */
+    private function replaceExistingCityAdmin(int $cityId, bool $confirmed): ?User
+    {
+        $role = config('permission.role_names.city_admin');
+
+        $existing = $this->findCityAdminScopeForCity($cityId, lock: true);
 
         if (! $existing) {
             return null;
         }
 
-        if (! $confirmed) {
+        $oldUser = User::withTrashed()->find($existing->user_id);
+        $isLivingOccupant = $oldUser && ! $oldUser->trashed();
+
+        if ($isLivingOccupant && ! $confirmed) {
             throw ValidationException::withMessages([
                 'confirm_replace' => [__('Replacing the existing City Administrator must be confirmed.')],
             ]);
         }
 
-        $oldUser = User::find($existing->user_id);
+        if ($oldUser?->isCityAdministrator()) {
+            $remainingCityIds = collect($oldUser->scopeIdsFor($role, 'city'))
+                ->merge($oldUser->adminCities()->pluck('cities.id'))
+                ->unique()
+                ->map(fn ($id) => (int) $id)
+                ->reject(fn ($id) => $id === $cityId)
+                ->values()
+                ->all();
 
-        if (! $oldUser) {
-            $existing->delete();
-
-            return null;
-        }
-
-        $remainingCityIds = collect($oldUser->scopeIdsFor(
-            config('permission.role_names.city_admin'),
-            'city'
-        ))
-            ->merge($oldUser->adminCities()->pluck('cities.id'))
-            ->unique()
-            ->map(fn ($id) => (int) $id)
-            ->reject(fn ($id) => $id === $cityId)
-            ->values()
-            ->all();
-
-        if ($oldUser->isCityAdministrator()) {
             $oldUser->syncAdminCities($remainingCityIds);
 
-            if ($remainingCityIds === []) {
+            if ($remainingCityIds === [] && $isLivingOccupant) {
                 $this->userRoleService->syncSingleRole($oldUser, null);
             }
-        } else {
-            UserScope::query()
+        }
+
+        UserScope::query()
+            ->where('role', $role)
+            ->where('scope_type', 'city')
+            ->where('scope_id', $cityId)
+            ->delete();
+
+        if ($oldUser) {
+            DB::table('city_user')
                 ->where('user_id', $oldUser->id)
-                ->where('role', config('permission.role_names.city_admin'))
-                ->where('scope_type', 'city')
-                ->where('scope_id', $cityId)
+                ->where('city_id', $cityId)
                 ->delete();
         }
 
         return $oldUser;
+    }
+
+    private function cityCatalogExists(int $cityId): bool
+    {
+        return $cityId > 0 && City::query()->whereKey($cityId)->exists();
+    }
+
+    private function cityLocationSpaceExists(int $cityId): bool
+    {
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+
+        if (! $cityTypeId) {
+            return false;
+        }
+
+        return Space::query()
+            ->where('type_id', $cityTypeId)
+            ->where('city_id', $cityId)
+            ->exists();
     }
 
     private function resolveApplicantUser(RoleApplication $application): User
@@ -313,6 +377,15 @@ class RoleApplicationService
         $this->userRoleService->syncSingleRole($user, $role);
 
         if ($role === config('permission.role_names.city_admin')) {
+            // Occupant must already have been released; sweep any leftover row so
+            // user_scope_one_city_admin_per_city cannot 500 on insert.
+            UserScope::query()
+                ->where('role', $role)
+                ->where('scope_type', 'city')
+                ->where('scope_id', $cityId)
+                ->where('user_id', '!=', $user->id)
+                ->delete();
+
             $user->syncAdminCities([$cityId]);
 
             return;

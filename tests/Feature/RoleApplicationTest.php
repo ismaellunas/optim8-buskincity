@@ -457,4 +457,170 @@ class RoleApplicationTest extends TestCase
             ->where('scope_id', $city->id)
             ->count());
     }
+
+    /** @test */
+    public function approving_city_admin_requires_confirmation_when_city_already_has_an_admin(): void
+    {
+        $city = City::factory()->create();
+
+        $existing = User::factory()->create();
+        $existing->assignRole(config('permission.role_names.city_admin'));
+        $existing->syncAdminCities([$city->id]);
+
+        $reviewer = User::factory()->create();
+        $reviewer->assignRole(config('permission.role_names.admin'));
+
+        $application = RoleApplication::create([
+            'email' => 'replacement@example.com',
+            'first_name' => 'Replace',
+            'last_name' => 'Admin',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+            'status' => RoleApplicationStatus::PENDING,
+        ]);
+
+        $this->actingAs($reviewer)->post(
+            route('admin.role-applications.approve', $application),
+            ['confirm_replace' => false]
+        )->assertSessionHasErrors('confirm_replace');
+
+        $this->assertSame(RoleApplicationStatus::PENDING, $application->fresh()->status);
+        $this->assertTrue($existing->fresh()->isCityAdmin($city->id));
+    }
+
+    /** @test */
+    public function approving_city_admin_clears_leftover_scope_when_previous_admin_was_deleted(): void
+    {
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
+
+        $existing = User::factory()->create();
+        $existing->assignRole(config('permission.role_names.city_admin'));
+        $existing->syncAdminCities([$city->id]);
+        $existing->delete();
+
+        $this->assertDatabaseHas('user_scope', [
+            'user_id' => $existing->id,
+            'role' => config('permission.role_names.city_admin'),
+            'scope_type' => 'city',
+            'scope_id' => $city->id,
+        ]);
+
+        $reviewer = User::factory()->create();
+        $reviewer->assignRole(config('permission.role_names.admin'));
+
+        $application = RoleApplication::create([
+            'email' => 'newadmin@example.com',
+            'first_name' => 'New',
+            'last_name' => 'Admin',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+            'country_space_id' => $countrySpace->id,
+            'status' => RoleApplicationStatus::PENDING,
+        ]);
+
+        $this->actingAs($reviewer)
+            ->get(route('admin.role-applications.show', $application))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('approvalPreview.requires_replace_confirmation', false)
+            );
+
+        $this->actingAs($reviewer)->post(
+            route('admin.role-applications.approve', $application),
+            ['confirm_replace' => false]
+        )->assertRedirect(route('admin.role-applications.show', $application));
+
+        $this->assertSame(RoleApplicationStatus::APPROVED, $application->fresh()->status);
+        $this->assertSame($existing->id, $application->fresh()->replaced_user_id);
+
+        $newAdmin = User::where('email', 'newadmin@example.com')->first();
+        $this->assertNotNull($newAdmin);
+        $this->assertTrue($newAdmin->isCityAdmin($city->id));
+
+        $this->assertDatabaseMissing('user_scope', [
+            'user_id' => $existing->id,
+            'role' => config('permission.role_names.city_admin'),
+            'scope_id' => $city->id,
+        ]);
+    }
+
+    /** @test */
+    public function approving_city_admin_recreates_city_when_location_space_is_gone(): void
+    {
+        $this->seedNavigableCountries();
+        $countrySpace = $this->createCountrySpace();
+        $city = City::factory()->create(['country_code' => 'NL']);
+
+        $reviewer = User::factory()->create();
+        $reviewer->assignRole(config('permission.role_names.admin'));
+        $this->actingAs($reviewer);
+
+        $cityTypeId = GlobalOption::where('name', 'City')->value('id');
+        $citySpace = Space::create([
+            'name' => $city->name,
+            'type_id' => $cityTypeId,
+            'city_id' => $city->id,
+            'country_code' => 'NL',
+            'parent_id' => $countrySpace->id,
+        ]);
+
+        $existing = User::factory()->create();
+        $existing->assignRole(config('permission.role_names.city_admin'));
+        $existing->syncAdminCities([$city->id]);
+        $existing->delete();
+
+        $citySpace->city_id = null;
+        $citySpace->save();
+        $citySpace->delete();
+
+        $this->assertDatabaseHas('cities', ['id' => $city->id]);
+        $this->assertDatabaseMissing('spaces', ['id' => $citySpace->id]);
+        $this->assertDatabaseHas('user_scope', [
+            'user_id' => $existing->id,
+            'role' => config('permission.role_names.city_admin'),
+            'scope_id' => $city->id,
+        ]);
+
+        $application = RoleApplication::create([
+            'email' => 'restored@example.com',
+            'first_name' => 'Restored',
+            'last_name' => 'Admin',
+            'requested_role' => config('permission.role_names.city_admin'),
+            'city_id' => $city->id,
+            'country_space_id' => $countrySpace->id,
+            'status' => RoleApplicationStatus::PENDING,
+        ]);
+
+        $this->actingAs($reviewer)
+            ->get(route('admin.role-applications.show', $application))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('approvalPreview.city_space_missing', true)
+                ->where('approvalPreview.city_available', true)
+                ->where('approvalPreview.requires_replace_confirmation', false)
+            );
+
+        $this->actingAs($reviewer)->post(
+            route('admin.role-applications.approve', $application),
+            ['confirm_replace' => false]
+        )->assertRedirect(route('admin.role-applications.show', $application));
+
+        $this->assertSame(RoleApplicationStatus::APPROVED, $application->fresh()->status);
+
+        $newAdmin = User::where('email', 'restored@example.com')->first();
+        $this->assertTrue($newAdmin->isCityAdmin($city->id));
+
+        $this->assertDatabaseHas('spaces', [
+            'type_id' => $cityTypeId,
+            'city_id' => $city->id,
+        ]);
+
+        $this->assertDatabaseMissing('user_scope', [
+            'user_id' => $existing->id,
+            'role' => config('permission.role_names.city_admin'),
+            'scope_id' => $city->id,
+        ]);
+    }
 }

@@ -71,7 +71,7 @@ class RoleApplication extends Model
 
     public function replacedUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'replaced_user_id');
+        return $this->belongsTo(User::class, 'replaced_user_id')->withTrashed();
     }
 
     public function isPending(): bool
